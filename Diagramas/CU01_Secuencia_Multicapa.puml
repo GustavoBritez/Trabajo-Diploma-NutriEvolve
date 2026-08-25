@@ -1,0 +1,150 @@
+@startuml Secuencia_CU01_Multicapa
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+skinparam shadowing false
+skinparam roundcorner 6
+autonumber "<b>[00]</b>"
+
+actor "Operador" as Operador
+
+box "Capa GUI" #EBF5FB
+    participant "FormTurnero_DNI101" as UI
+end box
+
+box "Capa BLL (Lógica de Negocio)" #E8F8F5
+    participant "AgendaMedicaBLL_DNI101" as AgendaBLL
+    participant "PacienteBLL_DNI101" as PacienteBLL
+    participant "TurnoBLL_DNI101" as TurnoBLL
+    participant "DigitoVerificadorBLL" as DVBLL
+    participant "EventoBLL" as BitacoraBLL
+end box
+
+box "Capa BE & Patrón State" #FEF9E7
+    participant "tutor: TutorBE_DNI101" as TutorBE
+    participant "paciente: PacienteBE_DNI101" as PacienteBE
+    participant "turno: TurnoBE_DNI101" as TurnoBE
+    participant "TurnoSolicitadoState" as State
+end box
+
+box "Capa DAL" #FDF2E9
+    participant "DAL" as DAL
+end box
+
+database "BASE ING" as SQL
+
+title Diagrama de Secuencia de Realización - CU01: Registrar / Agendar Turno (Multicapa)
+
+== 1. Consulta de Bloques Horarios Disponibles ==
+
+Operador -> UI: SeleccionarFechaYProfesional()
+activate UI
+UI -> AgendaBLL: ObtenerBloquesDisponibles(fecha, dni)
+activate AgendaBLL
+AgendaBLL -> DAL: ListarBloquesDisponibles(fecha, dni)
+activate DAL
+DAL -> SQL: SELECT BloquesHorarios
+SQL --> DAL: DataTable (Bloques)
+DAL --> AgendaBLL: List(BloqueHorarioBE)
+deactivate DAL
+AgendaBLL --> UI: List(BloqueHorarioBE)
+deactivate AgendaBLL
+UI -> UI: CargarComboBloques()
+
+== 2. Búsqueda o Alta del Paciente Pediátrico ==
+
+Operador -> UI: BuscarPaciente(dniNiño)
+UI -> PacienteBLL: ObtenerPacientePorDNI(dniNiño)
+activate PacienteBLL
+PacienteBLL -> DAL: ObtenerPorDNI(dniNiño)
+activate DAL
+DAL -> SQL: SELECT Pacientes_DNI101
+SQL --> DAL: DataTable (Paciente)
+DAL --> PacienteBLL: PacienteBE (o null)
+deactivate DAL
+PacienteBLL --> UI: PacienteBE (o null)
+deactivate PacienteBLL
+
+alt Paciente No Registrado (Punto de Extensión: Registrar Paciente y Tutor)
+    Operador -> UI: IngresarDatosTutorYNiño()
+    UI -> TutorBE **: new TutorBE_DNI101()
+    UI -> PacienteBLL: RegistrarTutor(tutorBE)
+    activate PacienteBLL
+    PacienteBLL -> DAL: GuardarTutor(tutorBE)
+    activate DAL
+    DAL -> SQL: INSERT INTO Tutores_DNI101
+    SQL --> DAL: idTutorGenerado
+    DAL --> PacienteBLL: idTutorGenerado
+    deactivate DAL
+    PacienteBLL --> UI: idTutor
+    deactivate PacienteBLL
+
+    UI -> PacienteBE **: new PacienteBE_DNI101()
+    UI -> PacienteBLL: RegistrarPaciente(pacienteBE)
+    activate PacienteBLL
+    PacienteBLL -> DAL: GuardarPaciente(pacienteBE)
+    activate DAL
+    DAL -> SQL: INSERT INTO Pacientes_DNI101
+    SQL --> DAL: idPacienteGenerado
+    DAL --> PacienteBLL: idPacienteGenerado
+    deactivate DAL
+    PacienteBLL --> UI: idPaciente
+    deactivate PacienteBLL
+end
+
+== 3. Agendamiento del Turno (Patrón State + Persistencia) ==
+
+Operador -> UI: Click btnAgendar
+UI -> TurnoBE **: new TurnoBE_DNI101()
+UI -> TurnoBLL: AgendarTurno(turnoBE)
+activate TurnoBLL
+
+TurnoBLL -> TurnoBE: GenerarCodigoUnico()
+TurnoBLL -> State **: new TurnoSolicitadoState()
+TurnoBLL -> TurnoBE: CambiarEstado(state)
+TurnoBLL -> TurnoBLL: CalcularDVHorizontal(turno)
+
+TurnoBLL -> DAL: GuardarTurno(turno)
+activate DAL
+DAL -> SQL: INSERT INTO Turnos_DNI101
+SQL --> DAL: OK (idTurno)
+DAL --> TurnoBLL: idTurnoGenerado
+deactivate DAL
+
+TurnoBLL -> DAL: ActualizarEstadoBloque(id, 'Ocupado')
+activate DAL
+DAL -> SQL: UPDATE BloquesHorarios
+SQL --> DAL: OK
+DAL --> TurnoBLL: true
+deactivate DAL
+
+== 4. Integridad (Dígito Verificador) y Auditoría (Bitácora) ==
+
+TurnoBLL -> DVBLL: RecalcularYPersistir()
+activate DVBLL
+DVBLL -> DAL: ActualizarDV(firmas)
+activate DAL
+DAL -> SQL: UPDATE dbo.DV
+SQL --> DAL: OK
+DAL --> DVBLL: true
+deactivate DAL
+DVBLL --> TurnoBLL: true
+deactivate DVBLL
+
+TurnoBLL -> BitacoraBLL: RegistrarEvento(1, 'Agendado', dni)
+activate BitacoraBLL
+BitacoraBLL -> DAL: GuardarBitacora(evento)
+activate DAL
+DAL -> SQL: INSERT INTO Bitacora
+SQL --> DAL: OK
+DAL --> BitacoraBLL: true
+deactivate DAL
+BitacoraBLL --> TurnoBLL: true
+deactivate BitacoraBLL
+
+TurnoBLL --> UI: true (Exito)
+deactivate TurnoBLL
+
+UI -> Operador: MostrarMensajeExito()
+deactivate UI
+
+@enduml

@@ -2,13 +2,13 @@ Idea General: Implementar el sistema de turnos.
 
 Desarrollo de la idea en lenguaje natural:
 
-Dentro de la GUI tenes que crear un nuevo Form que se denomine "Gestion_Turnos" y agregar un boton dentro de "Form1.cs" ( Este boton es de tipo button y necesita ser llamado como "button_Turnos" porlotanto su evento click correspondiente debe llamarse "btnTurnos_Click" al hacer click en este boton te debera llevar al nuevo formulario creado "Gestion_Turnos"  (Es importante que se integre correctamente la visibilidad de este nuevo formulario dentro de FormManager.cs de lo contrario tendra problemas de compatibilidad)   
+Dentro de la GUI tenes que crear un nuevo Form que se denomine "FormTurnero_DNI101" y agregar un boton dentro de "Form1.cs" ( Este boton es de tipo button y necesita ser llamado como "button_Turnos" porlotanto su evento click correspondiente debe llamarse "btnTurnos_Click" al hacer click en este boton te debera llevar al nuevo formulario creado "Gestion_Turnos"  (Es importante que se integre correctamente la visibilidad de este nuevo formulario dentro de FormManager.cs de lo contrario tendra problemas de compatibilidad)   
 
 
 
 Para la utilización de los métodos correspondientes se deberá integrar con las capas subyacentes que posee el proyecto, porlotanto cada clase nueva que tenemos
 
-Desarrollo de Tablas y entidades, Se deberá respetar exhaustivamente esta estructura
+Desarrollo de Tablas y entidades, Se deberá respetar exhaustivamente esta estructura (Si existe un error en la sintaxis debes corregirlo)
 
 Tablas
 
@@ -21,6 +21,7 @@ Tablas
 	- Email_DNI101 VARCHAR(100) NULL
 	- Parentesco_DNI101 VARCHAR(50) NOT NULL
 	- FechaRegistro_DNI101 DATETIME2(7) NOT NULL DEFAULT GETDATE()
+	- DV VARCHAR(255) NULL
 
 *Pacientes_DNI101*
 	- IdPaciente_DNI101 INT IDENTITY(1,1) PRIMARY KEY
@@ -31,12 +32,14 @@ Tablas
 	- Sexo_DNI101 VARCHAR(10) NOT NULL
 	- ObraSocial_DNI101 VARCHAR(100) NULL
 	- IdTutor_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[Tutores_DNI101 ([IdTutor_DNI101])
+	- DV VARCHAR(255) NULL
 
 *AgendasMedicas_DNI101*
 	- IdAgenda_DNI101 INT IDENTITY(1,1) PRIMARY KEY
 	- Fecha_DNI101 DATE NOT NULL
 	- EstadoAgenda_DNI101 VARCHAR(50) NOT NULL (ej: 'Abierta', 'Cerrada')
 	- DniNutricionista_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[Usuarios]([DNI])
+	- DV VARCHAR(255) NULL
 
 *BloquesHorarios_DNI101*
 	- IdBloque_DNI101 INT IDENTITY(1,1) PRIMARY KEY
@@ -44,7 +47,7 @@ Tablas
 	- HoraInicio_DNI101 TIME(7) NOT NULL
 	- HoraFin_DNI101 TIME(7) NOT NULL
 	- EstadoBloque_DNI101 VARCHAR(50) NOT NULL (ej: 'Disponible', 'Ocupado', 'Bloqueado')
-
+	- DV VARCHAR(255) NULL
 
 *Turnos_DNI101*
 	- IdTurno_DNI101 INT IDENTITY(1,1) PRIMARY KEY
@@ -56,7 +59,7 @@ Tablas
 	- IdPaciente_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[Pacientes_DNI101]([IdPaciente_DNI101])
 	- DniNutricionista_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[Usuarios]([DNI]) 
 	- IdBloque_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[BloquesHorarios_DNI101]([IdBloque_DNI101])
-
+	- DV VARCHAR(255) NULL
 
 Entidades:
 	- TutorBE_DNI101
@@ -69,6 +72,7 @@ Entidades:
 - string Parentesco_DNI101 { get; set; }
 - DateTime FechaRegistro_DNI101 { get; set; }
 - List<PacienteBE_DNI101> Pacientes_DNI101 { get; set; }
+- string? DV { get; set; }
 
 
 	- PacienteBE_DNI101
@@ -82,7 +86,7 @@ Entidades:
 - int IdTutor_DNI101 { get; set; }
 - TutorBE_DNI101 Tutor_DNI101 { get; set; }
 - int ObtenerEdadMeses() -> Retorna los meses transcurridos desde FechaNacimiento_DNI101.
-
+- string? DV { get; set; }
 
 	- AgendaMedicaBE_DNI101
 - int IdAgenda_DNI101 { get; set; }
@@ -90,6 +94,7 @@ Entidades:
 - string EstadoAgenda_DNI101 { get; set; }
 - int DniNutricionista_DNI101 { get; set; }
 - List<BloqueHorarioBE_DNI101> BloquesHorarios_DNI101 { get; set; }
+- string? DV { get; set; }
 
 	- BloqueHorarioBE_DNI101
 - int IdBloque_DNI101 { get; set; }
@@ -97,6 +102,7 @@ Entidades:
 - TimeSpan HoraInicio_DNI101 { get; set; }
 - TimeSpan HoraFin_DNI101 { get; set; }
 - string EstadoBloque_DNI101 { get; set; }
+- string? DV { get; set; }
 
 	*TurnoBE_DNI101*
 - int IdTurno_DNI101 { get; set; }
@@ -109,6 +115,7 @@ Entidades:
 - int DniNutricionista_DNI101 { get; set; }
 - int IdBloque_DNI101 { get; set; }
 - PacienteBE_DNI101 Paciente_DNI101 { get; set; }
+- string? DV { get; set; }
 - IEstadoTurno_DNI101 EstadoActual_DNI101 { get; set; } (Patrón State Context)
 - void CambiarEstado(IEstadoTurno_DNI101 nuevoEstado)
 - void Atender()
@@ -116,7 +123,8 @@ Entidades:
 - void Reprogramar(DateTime nuevaFecha, TimeSpan nuevaHora, int nuevoIdBloque)
 
 
-Persistencia DAL:
+Persistencia DAL
+Toda la interaccion con la base de datos se hace atravez de Conexion.cs
 	- TutorDAL_DNI101
 int Guardar(TutorBE_DNI101 tutor): Inserta un registro en [Tutores_DNI101] y retorna el IdTutor_DNI101 generado.
 bool Modificar(TutorBE_DNI101 tutor): Actualiza los datos del tutor por IdTutor_DNI101.
@@ -128,7 +136,7 @@ List<TutorBE_DNI101> ListarTodos(): Mapea toda la tabla [Tutores_DNI101] a una l
 int Guardar(PacienteBE_DNI101 paciente): Inserta un registro en [Pacientes_DNI101] y retorna el IdPaciente_DNI101 generado.
 bool Modificar(PacienteBE_DNI101 paciente): Actualiza los datos del paciente pediátrico por IdPaciente_DNI101.
 PacienteBE_DNI101 ObtenerPorId(int idPaciente): Retorna el paciente con la entidad TutorBE_DNI101 cargada mediante JOIN.
-PacienteBE_DNI101 ObtenerPorDNI(string dniNiño): Retorna el paciente por su DNI de niño.
+PacienteBE_DNI101 ObtenerPacientePorDNI(string dniNiño): Retorna el paciente por su DNI de niño.
 List<PacienteBE_DNI101> ListarTodos(): Bajar toda la tabla [Pacientes_DNI101] relacionando sus tutores.
 List<PacienteBE_DNI101> ListarPorTutor(int idTutor): Lista los niños asociados a un tutor específico.
 
@@ -159,7 +167,7 @@ void Reprogramar(TurnoBE_DNI101 turno, DateTime nuevaFecha, TimeSpan nuevaHora, 
 Implementa IEstadoTurno_DNI101. Permite confirmar el turno (pasa a TurnoConfirmadoState_DNI101), reprogramar o cancelar.
 
 	- TurnoConfirmadoState_DNI101
-Estado final. Lanza excepción si se intenta modificar o cancelar un turno finalizado.
+Estado final. Debe permitir pasar a Asistio, Reprogramar o Cancelar.
 
 	- TurnoAsistioState_DNI101
 Estado final. Lanza excepción si se intenta modificar o cancelar un turno finalizado.
@@ -195,7 +203,7 @@ Reglas de Negocio: Devuelve todos los tutores dados de alta.
 -int RegistrarPaciente(PacienteBE_DNI101 paciente):
 
 Retorno: int (ID asignado IdPaciente_DNI101).
-Reglas de Negocio: Valida paciente.IdTutor_DNI101 > 0. Verifica que la edad (paciente.ObtenerEdadMeses()) sea menor a 228 meses (19 años). Verifica PacienteDAL_DNI101.ObtenerPorDNI(paciente.DniNiño_DNI101); si existe, interrumpe con error. Ejecuta PacienteDAL_DNI101.Guardar(paciente).
+Reglas de Negocio: Valida paciente.IdTutor_DNI101 > 0. Verifica que la edad (paciente.ObtenerEdadMeses()) sea menor a 228 meses (19 años). Verifica PacienteDAL_DNI101.ObtenerPacientePorDNI(paciente.DniNiño_DNI101); si existe, interrumpe con error. Ejecuta PacienteDAL_DNI101.Guardar(paciente).
 
 - bool ModificarPaciente(PacienteBE_DNI101 paciente):
 Parámetros: paciente (PacienteBE_DNI101).
@@ -217,7 +225,6 @@ Parámetros: idTutor (int).
 Retorno: List<PacienteBE_DNI101>.
 Reglas de Negocio: Llama a PacienteDAL_DNI101.ListarPorTutor(idTutor).
 
------------------------------------------------------------------------------
 
 	- AgendaMedicaBLL_DNI101
 
@@ -252,5 +259,32 @@ Usar el botón de menú " btnTurnos con text = Gestión de Turnos " en el panelM
 
 
 
+Objetivo:
+Extender e integrar el sistema de integridad por Dígito Verificador (DV Horizontal individual, DV Horizontal de tabla, DV Vertical y Firma Global) a todo el nuevo módulo de Gestión de Turnos Nutricionales Pediátricos (Tutores, Pacientes, Agendas, Bloques y Turnos).
 
+Actualizar 'DigitoVerificadorBLL.cs' y 'DigitoVerificadorDAL.cs':
+1. Detección de Registros Corruptos en el Módulo de Turnos:
+   - Implementar métodos de diagnóstico granular:
+     * List<string> ObtenerTurnosCorruptos()
+     * List<string> ObtenerPacientesCorruptos()
+     * List<string> ObtenerTutoresCorruptos()
+   - Estos métodos deben recorrer las tablas 'Turnos_DNI101', 'Pacientes_DNI101' y 'Tutores_DNI101', recalcular el DVH fila por fila y comparar con el valor persistido en la columna 'DV'.
 
+2. Recálculo Masivo de Integridad:
+   - Actualizar el método 'RecalcularYPersistir()' para que ejecute:
+     * ActualizarDVIndividualesUsuarios()
+     * ActualizarDVIndividualesTurnos()
+     * ActualizarDVIndividualesPacientes()
+     * ActualizarDVIndividualesTutores()
+     * Recálculo de DVH y DVV por tabla (incluyendo las tablas _DNI101 descubiertas por INFORMATION_SCHEMA) y la firma global '__TOTAL_BD__'.
+3. Automatización en los flujos de negocio (TurnoBLL_DNI101 / PacienteBLL_DNI101):
+   - Al crear o modificar un Tutor o Paciente: calcular su DV individual antes de guardar y luego disparar la actualización de la tabla DV.
+   - Al Agendar, Confirmar, Reprogramar, Cancelar o Marcar Asistencia de un Turno:
+     * Actualizar el DV individual del turno y del bloque horario asociado.
+     * Actualizar las firmas globales mediante DigitoVerificadorBLL.RecalcularYPersistir().
+     * Registrar el evento correspondiente en Bitácora (EventoBLL).
+	 
+1. En MenuPrincipal.cs (btnVerificarDVMenu_Click):
+   - Si se detectan inconsistencias, incluir en el mensaje de alerta los turnos, pacientes o tutores que hayan sido alterados ilegítimamente.
+2. En caso de base corrupta:
+   - Mantener bloqueado el acceso a 'btnTurnos' hasta que el Administrador ejecute 'Recalcular DV' o restaure un respaldo.

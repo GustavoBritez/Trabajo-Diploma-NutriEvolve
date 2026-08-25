@@ -1,0 +1,169 @@
+@startuml Secuencia_CU02_Multicapa
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+skinparam shadowing false
+skinparam roundcorner 6
+autonumber "<b>[00]</b>"
+
+actor "Operador" as Operador
+
+box "Capa GUI" #EBF5FB
+    participant "FormTurnero_DNI101" as UI
+end box
+
+box "Capa BLL (Lógica de Negocio)" #E8F8F5
+    participant "TurnoBLL_DNI101" as TurnoBLL
+    participant "AgendaMedicaBLL_DNI101" as AgendaBLL
+    participant "DigitoVerificadorBLL" as DVBLL
+    participant "EventoBLL" as BitacoraBLL
+end box
+
+box "Capa BE & Patrón State" #FEF9E7
+    participant "turno: TurnoBE_DNI101" as TurnoBE
+    participant "estado: TurnoConfirmadoState_DNI101" as State
+end box
+
+box "Capa DAL" #FDF2E9
+    participant "DAL" as DAL
+end box
+
+database "BASE ING" as SQL
+
+title Diagrama de Secuencia de Realización - CU02: Reprogramar Turno (Multicapa)
+
+== 1. Búsqueda, Mapeo e Instanciación del Turno Existente ==
+
+Operador -> UI: SeleccionarTurnoGrilla(idTurno)
+activate UI
+UI -> TurnoBLL: ObtenerTurnoPorId(idTurno)
+activate TurnoBLL
+
+TurnoBLL -> DAL: ObtenerPorId(idTurno)
+activate DAL
+DAL -> SQL: SELECT Turnos_DNI101 JOIN Pacientes JOIN Bloques
+activate SQL
+SQL --> DAL: DataTable (Registro Turno)
+deactivate SQL
+DAL --> TurnoBLL: DataTable (Registro Turno)
+deactivate DAL
+
+TurnoBLL -> TurnoBE **: new TurnoBE_DNI101()
+TurnoBLL -> State **: new TurnoConfirmadoState_DNI101()
+TurnoBLL -> TurnoBE: CambiarEstado(estado)
+activate TurnoBE
+TurnoBE --> TurnoBLL: void
+deactivate TurnoBE
+
+TurnoBLL --> UI: turno (TurnoBE_DNI101)
+deactivate TurnoBLL
+UI -> UI: MostrarDetallesTurno()
+
+== 2. Inclusión: CU07 - Consultar Disponibilidad de Nueva Agenda ==
+
+Operador -> UI: SeleccionarNuevaFecha(nuevaFecha)
+UI -> AgendaBLL: ObtenerBloquesDisponibles(nuevaFecha, dniNutricionista)
+activate AgendaBLL
+AgendaBLL -> DAL: ListarBloquesDisponibles(nuevaFecha, dniNutricionista)
+activate DAL
+DAL -> SQL: SELECT BloquesHorarios_DNI101 WHERE Estado = 'Disponible'
+activate SQL
+SQL --> DAL: DataTable (Bloques Disponibles)
+deactivate SQL
+DAL --> AgendaBLL: DataTable (Bloques Disponibles)
+deactivate DAL
+AgendaBLL --> UI: List<BloqueHorarioBE_DNI101>
+deactivate AgendaBLL
+UI -> UI: CargarComboNuevosBloques()
+
+== 3. Validación y Ejecución de Reprogramación (Patrón State) ==
+
+Operador -> UI: Click btnReprogramar(nuevaFecha, nuevaHora, nuevoIdBloque)
+UI -> TurnoBLL: ReprogramarTurno(idTurno, nuevaFecha, nuevaHora, nuevoIdBloque)
+activate TurnoBLL
+
+alt Estado de Turno no permite modificación (Asistió / Cancelado)
+    TurnoBLL -> TurnoBE: Reprogramar(nuevaFecha, nuevaHora, nuevoIdBloque)
+    activate TurnoBE
+    TurnoBE -> State: Reprogramar(turno, nuevaFecha, nuevaHora, nuevoIdBloque)
+    activate State
+    State --> TurnoBE: throw InvalidOperationException("No se puede reprogramar")
+    deactivate State
+    TurnoBE --> TurnoBLL: Excepción capturada
+    deactivate TurnoBE
+    TurnoBLL --> UI: false (Mensaje de Error)
+    UI -> Operador: MostrarMensajeError("Estado de turno no permite reprogramación")
+else Estado Válido (Solicitado / Confirmado)
+    TurnoBLL -> TurnoBE: Reprogramar(nuevaFecha, nuevaHora, nuevoIdBloque)
+    activate TurnoBE
+    TurnoBE -> State: Reprogramar(turno, nuevaFecha, nuevaHora, nuevoIdBloque)
+    activate State
+    State -> TurnoBE: ActualizarDatos(nuevaFecha, nuevaHora, nuevoIdBloque)
+    State --> TurnoBE: void
+    deactivate State
+    TurnoBE --> TurnoBLL: void
+    deactivate TurnoBE
+
+    == 4. Persistencia en Base de Datos (Transaccional) ==
+
+    TurnoBLL -> DAL: ReprogramarTurno(idTurno, nuevaFecha, nuevaHora, nuevoIdBloque)
+    activate DAL
+    DAL -> SQL: UPDATE Turnos_DNI101 SET Fecha, Hora, IdBloque
+    activate SQL
+    SQL --> DAL: FilasAfectadas (1)
+    deactivate SQL
+    DAL --> TurnoBLL: true
+    deactivate DAL
+
+    TurnoBLL -> DAL: ActualizarEstadoBloque(idBloqueAnterior, 'Disponible')
+    activate DAL
+    DAL -> SQL: UPDATE BloquesHorarios_DNI101 SET Estado = 'Disponible'
+    activate SQL
+    SQL --> DAL: OK
+    deactivate SQL
+    DAL --> TurnoBLL: true
+    deactivate DAL
+
+    TurnoBLL -> DAL: ActualizarEstadoBloque(nuevoIdBloque, 'Ocupado')
+    activate DAL
+    DAL -> SQL: UPDATE BloquesHorarios_DNI101 SET Estado = 'Ocupado'
+    activate SQL
+    SQL --> DAL: OK
+    deactivate SQL
+    DAL --> TurnoBLL: true
+    deactivate DAL
+
+    == 5. Integridad (Dígito Verificador) y Auditoría (Bitácora) ==
+
+    TurnoBLL -> DVBLL: RecalcularYPersistir()
+    activate DVBLL
+    DVBLL -> DAL: ActualizarDV(firmas)
+    activate DAL
+    DAL -> SQL: UPDATE dbo.DV
+    activate SQL
+    SQL --> DAL: OK
+    deactivate SQL
+    DAL --> DVBLL: true
+    deactivate DAL
+    DVBLL --> TurnoBLL: true
+    deactivate DVBLL
+
+    TurnoBLL -> BitacoraBLL: RegistrarEvento(idUsuario, 'Reprogramación de Turno', idTurno)
+    activate BitacoraBLL
+    BitacoraBLL -> DAL: GuardarBitacora(evento)
+    activate DAL
+    DAL -> SQL: INSERT INTO Bitacora
+    activate SQL
+    SQL --> DAL: OK
+    deactivate SQL
+    DAL --> BitacoraBLL: true
+    deactivate DAL
+    BitacoraBLL --> TurnoBLL: true
+    deactivate BitacoraBLL
+
+    TurnoBLL --> UI: true (Reprogramación Exitosa)
+    deactivate TurnoBLL
+    UI -> Operador: MostrarMensajeExito("Turno Reprogramado Correctamente")
+    deactivate UI
+end
+
+@enduml

@@ -1,0 +1,1 @@
+Debes inyectar directamente todas las líneas de vida y mensajes de secuencia en mi archivo TD.EAP dentro de CU02: Reprogramar 
