@@ -1,0 +1,160 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam style strictuml
+
+package "G06.1 - Modelo Conceptual del Negocio Integrado (NutriEvolve)" {
+
+    ' ============================================================
+    ' MÓDULO PN1: TURNERO NUTRICIONAL
+    ' ============================================================
+    class Tutor {
+        - idTutor : int
+        - dniTutor : string
+        - nombre : string
+        - telefono : string
+        - email : string
+    }
+
+    class Paciente {
+        - idPaciente : int
+        - dniNiño : string
+        - nombre : string
+        - fechaNacimiento : DateTime
+        - sexo : string
+        + obtenerEdadMeses() : int
+    }
+
+    class AgendaMedica {
+        - idAgenda : int
+        - fecha : DateTime
+        + consultarDisponibilidad() : List<BloqueHorario>
+    }
+
+    class BloqueHorario {
+        - horaInicio : TimeSpan
+        - horaFin : TimeSpan
+        - estadoBloque : string
+        + marcarOcupado() : void
+        + liberarBloque() : void
+    }
+
+    class Turno <<Context-State>> {
+        - idTurno : int
+        - codigoTurno : string
+        - fechaTurno : DateTime
+        - horaTurno : TimeSpan
+        + cambiarEstado(nuevoEstado: IEstadoTurno) : void
+        + confirmarTurno() : void
+        + reprogramarTurno() : void
+        + cancelarTurno() : void
+        + registrarAsistencia() : void
+    }
+
+    interface IEstadoTurno <<State>> {
+        + atender(turno: Turno) : void
+        + cancelar(turno: Turno) : void
+    }
+
+    class TurnoSolicitadoState <<ConcreteState>>
+    class TurnoConfirmadoState <<ConcreteState>>
+    class TurnoAsistioState <<ConcreteState>>
+    class TurnoCanceladoState <<ConcreteState>>
+
+    class Nutricionista {
+        - idNutricionista : int
+        - legajo : string
+        - matricula : string
+        - nombre : string
+    }
+
+    class Recepcionista {
+        - idRecepcionista : int
+        - nombre : string
+    }
+
+    ' ============================================================
+    ' MÓDULO PN2: SEGUIMIENTO NUTRICIONAL PEDIÁTRICO
+    ' ============================================================
+    class ConsultaNutricional <<Subject-Observer>> {
+        - idConsulta : int
+        - fechaControl : DateTime
+        - edadMeses : int
+        - tipoLactancia : string
+        + registrarMedicion(m: MedicionAntropometrica)
+        + evaluarNutricion()
+        + notificarAlertas()
+    }
+
+    class MedicionAntropometrica {
+        - pesoKg : double
+        - tallaCm : double
+        - perimetroCefalicoCm : double
+        + calcularIMC() : double
+    }
+
+    interface IEstrategiaCalculoOMS <<Strategy>> {
+        + calcularZScores(m: MedicionAntropometrica, sexo: string) : ZScoreResultado
+    }
+
+    class CalculoOMS_Lactantes <<ConcreteStrategy>>
+    class CalculoOMS_Preescolares <<ConcreteStrategy>>
+    class CalculoOMS_Escolares <<ConcreteStrategy>>
+
+    class ZScoreResultado {
+        - zPesoEdad : double
+        - zTallaEdad : double
+        - zIMCEdad : double
+        - percentilIMC : double
+    }
+
+    interface IObservadorAlerta <<Observer>> {
+        + actualizarAlerta(alerta: string, severidad: string)
+    }
+
+    class AlertaClinicaVisual <<ConcreteObserver>> {
+        + dispararPopUpVisual()
+    }
+
+    class DiagnosticoNutricional {
+        - clasificacionOMS : string
+        - detalles : string
+    }
+
+    class PlanAlimentario {
+        - kcalTotales : double
+        - pautasFamiliares : string
+    }
+}
+
+' --- RELACIONES PN1 ---
+Tutor "1" -- "1..*" Paciente : tutor de >
+Paciente "1" -- "0..*" Turno : solicita >
+Nutricionista "1" -- "1" AgendaMedica : administra >
+AgendaMedica "1" *-- "1..*" BloqueHorario : compuesta por >
+BloqueHorario "1" -- "0..1" Turno : asignado a >
+Recepcionista "1" ..> Turno : gestiona >
+Turno "1" o-- "1" IEstadoTurno : estadoActual >
+IEstadoTurno <|.. TurnoSolicitadoState
+IEstadoTurno <|.. TurnoConfirmadoState
+IEstadoTurno <|.. TurnoAsistioState
+IEstadoTurno <|.. TurnoCanceladoState
+
+' --- CONEXIÓN E INTEGRACIÓN PN1 -> PN2 ---
+Turno "0..1" -- "0..1" ConsultaNutricional : da origen a >
+Nutricionista "1" -- "0..*" ConsultaNutricional : realiza >
+Paciente "1" -- "0..*" ConsultaNutricional : historial clínico >
+
+' --- RELACIONES PN2 ---
+ConsultaNutricional "1" *-- "1" MedicionAntropometrica : registra >
+ConsultaNutricional "1" *-- "1" DiagnosticoNutricional : emite >
+ConsultaNutricional "1" *-- "1" PlanAlimentario : prescribe >
+
+ConsultaNutricional "1" o-- "1" IEstrategiaCalculoOMS : aplica Strategy >
+IEstategoCalculoOMS <|.. CalculoOMS_Lactantes
+IEstrategiaCalculoOMS <|.. CalculoOMS_Preescolares
+IEstrategiaCalculoOMS <|.. CalculoOMS_Escolares
+IEstrategiaCalculoOMS ..> ZScoreResultado : produce >
+
+ConsultaNutricional "1" o-- "0..*" IObservadorAlerta : notifica Observer >
+IObservadorAlerta <|.. AlertaClinicaVisual
+@enduml

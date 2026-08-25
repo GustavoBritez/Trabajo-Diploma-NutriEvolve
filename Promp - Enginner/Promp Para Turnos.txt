@@ -1,0 +1,256 @@
+Idea General: Implementar el sistema de turnos.
+
+Desarrollo de la idea en lenguaje natural:
+
+Dentro de la GUI tenes que crear un nuevo Form que se denomine "Gestion_Turnos" y agregar un boton dentro de "Form1.cs" ( Este boton es de tipo button y necesita ser llamado como "button_Turnos" porlotanto su evento click correspondiente debe llamarse "btnTurnos_Click" al hacer click en este boton te debera llevar al nuevo formulario creado "Gestion_Turnos"  (Es importante que se integre correctamente la visibilidad de este nuevo formulario dentro de FormManager.cs de lo contrario tendra problemas de compatibilidad)   
+
+
+
+Para la utilización de los métodos correspondientes se deberá integrar con las capas subyacentes que posee el proyecto, porlotanto cada clase nueva que tenemos
+
+Desarrollo de Tablas y entidades, Se deberá respetar exhaustivamente esta estructura
+
+Tablas
+
+*Tutores_DNI101*
+	- IdTutor_DNI101 INT IDENTITY(1,1) PRIMARY KEY
+	- DniTutor_DNI101 VARCHAR(20) NOT NULL UNIQUE
+	- Nombre_DNI101 VARCHAR(50) NOT NULL
+	- Apellido_DNI101 VARCHAR(50) NOT NULL
+	- Telefono_DNI101 VARCHAR(50) NOT NULL
+	- Email_DNI101 VARCHAR(100) NULL
+	- Parentesco_DNI101 VARCHAR(50) NOT NULL
+	- FechaRegistro_DNI101 DATETIME2(7) NOT NULL DEFAULT GETDATE()
+
+*Pacientes_DNI101*
+	- IdPaciente_DNI101 INT IDENTITY(1,1) PRIMARY KEY
+	- DniNiño_DNI101 VARCHAR(20) NOT NULL UNIQUE
+	- Nombre_DNI101 VARCHAR(50) NOT NULL
+	- Apellido_DNI101 VARCHAR(50) NOT NULL
+	- FechaNacimiento_DNI101 DATETIME2(7) NOT NULL
+	- Sexo_DNI101 VARCHAR(10) NOT NULL
+	- ObraSocial_DNI101 VARCHAR(100) NULL
+	- IdTutor_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[Tutores_DNI101 ([IdTutor_DNI101])
+
+*AgendasMedicas_DNI101*
+	- IdAgenda_DNI101 INT IDENTITY(1,1) PRIMARY KEY
+	- Fecha_DNI101 DATE NOT NULL
+	- EstadoAgenda_DNI101 VARCHAR(50) NOT NULL (ej: 'Abierta', 'Cerrada')
+	- DniNutricionista_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[Usuarios]([DNI])
+
+*BloquesHorarios_DNI101*
+	- IdBloque_DNI101 INT IDENTITY(1,1) PRIMARY KEY
+	- IdAgenda_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[AgendasMedicas_DNI101]-([IdAgenda_DNI101])
+	- HoraInicio_DNI101 TIME(7) NOT NULL
+	- HoraFin_DNI101 TIME(7) NOT NULL
+	- EstadoBloque_DNI101 VARCHAR(50) NOT NULL (ej: 'Disponible', 'Ocupado', 'Bloqueado')
+
+
+*Turnos_DNI101*
+	- IdTurno_DNI101 INT IDENTITY(1,1) PRIMARY KEY
+	- CodigoTurno_DNI101 VARCHAR(50) NOT NULL UNIQUE
+	- FechaTurno_DNI101 DATETIME2(7) NOT NULL
+	- HoraTurno_DNI101 TIME(7) NOT NULL
+	- MotivoConsulta_DNI101 VARCHAR(255) NOT NULL
+	- EstadoTurno_DNI101 VARCHAR(50) NOT NULL (ej.: 'Solicitado', 'Confirmado', 'Asistio', 'Cancelado')
+	- IdPaciente_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[Pacientes_DNI101]([IdPaciente_DNI101])
+	- DniNutricionista_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[Usuarios]([DNI]) 
+	- IdBloque_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[BloquesHorarios_DNI101]([IdBloque_DNI101])
+
+
+Entidades:
+	- TutorBE_DNI101
+- int IdTutor_DNI101 { get; set; }
+- string DniTutor_DNI101 { get; set; }
+- string Nombre_DNI101 { get; set; }
+- string Apellido_DNI101 { get; set; }
+- string Telefono_DNI101 { get; set; }
+- string Email_DNI101 { get; set; }
+- string Parentesco_DNI101 { get; set; }
+- DateTime FechaRegistro_DNI101 { get; set; }
+- List<PacienteBE_DNI101> Pacientes_DNI101 { get; set; }
+
+
+	- PacienteBE_DNI101
+- int IdPaciente_DNI101 { get; set; }
+- string DniNiño_DNI101 { get; set; }
+- string Nombre_DNI101 { get; set; }
+- string Apellido_DNI101 { get; set; }
+- DateTime FechaNacimiento_DNI101 { get; set; }
+- string Sexo_DNI101 { get; set; }
+- string ObraSocial_DNI101 { get; set; }
+- int IdTutor_DNI101 { get; set; }
+- TutorBE_DNI101 Tutor_DNI101 { get; set; }
+- int ObtenerEdadMeses() -> Retorna los meses transcurridos desde FechaNacimiento_DNI101.
+
+
+	- AgendaMedicaBE_DNI101
+- int IdAgenda_DNI101 { get; set; }
+- DateTime Fecha_DNI101 { get; set; }
+- string EstadoAgenda_DNI101 { get; set; }
+- int DniNutricionista_DNI101 { get; set; }
+- List<BloqueHorarioBE_DNI101> BloquesHorarios_DNI101 { get; set; }
+
+	- BloqueHorarioBE_DNI101
+- int IdBloque_DNI101 { get; set; }
+- int IdAgenda_DNI101 { get; set; }
+- TimeSpan HoraInicio_DNI101 { get; set; }
+- TimeSpan HoraFin_DNI101 { get; set; }
+- string EstadoBloque_DNI101 { get; set; }
+
+	*TurnoBE_DNI101*
+- int IdTurno_DNI101 { get; set; }
+- string CodigoTurno_DNI101 { get; set; }
+- DateTime FechaTurno_DNI101 { get; set; }
+- TimeSpan HoraTurno_DNI101 { get; set; }
+- string MotivoConsulta_DNI101 { get; set; }
+- string EstadoTurno_DNI101 { get; set; }
+- int IdPaciente_DNI101 { get; set; }
+- int DniNutricionista_DNI101 { get; set; }
+- int IdBloque_DNI101 { get; set; }
+- PacienteBE_DNI101 Paciente_DNI101 { get; set; }
+- IEstadoTurno_DNI101 EstadoActual_DNI101 { get; set; } (Patrón State Context)
+- void CambiarEstado(IEstadoTurno_DNI101 nuevoEstado)
+- void Atender()
+- void Cancelar(string motivo)
+- void Reprogramar(DateTime nuevaFecha, TimeSpan nuevaHora, int nuevoIdBloque)
+
+
+Persistencia DAL:
+	- TutorDAL_DNI101
+int Guardar(TutorBE_DNI101 tutor): Inserta un registro en [Tutores_DNI101] y retorna el IdTutor_DNI101 generado.
+bool Modificar(TutorBE_DNI101 tutor): Actualiza los datos del tutor por IdTutor_DNI101.
+TutorBE_DNI101 ObtenerPorId(int idTutor): Retorna la entidad del tutor por su ID.
+TutorBE_DNI101 ObtenerPorDNI(string dniTutor): Retorna la entidad del tutor por su DNI.
+List<TutorBE_DNI101> ListarTodos(): Mapea toda la tabla [Tutores_DNI101] a una lista de objetos TutorBE_DNI101.
+
+	- PacienteDAL_DNI101
+int Guardar(PacienteBE_DNI101 paciente): Inserta un registro en [Pacientes_DNI101] y retorna el IdPaciente_DNI101 generado.
+bool Modificar(PacienteBE_DNI101 paciente): Actualiza los datos del paciente pediátrico por IdPaciente_DNI101.
+PacienteBE_DNI101 ObtenerPorId(int idPaciente): Retorna el paciente con la entidad TutorBE_DNI101 cargada mediante JOIN.
+PacienteBE_DNI101 ObtenerPorDNI(string dniNiño): Retorna el paciente por su DNI de niño.
+List<PacienteBE_DNI101> ListarTodos(): Bajar toda la tabla [Pacientes_DNI101] relacionando sus tutores.
+List<PacienteBE_DNI101> ListarPorTutor(int idTutor): Lista los niños asociados a un tutor específico.
+
+	- AgendaMedicaDAL_DNI101
+int GuardarAgenda(AgendaMedicaBE_DNI101 agenda): Crea la agenda diaria y sus bloques horarios asociados.
+AgendaMedicaBE_DNI101 ObtenerAgendaPorFecha(DateTime fecha, int dniNutricionista): Recupera la agenda y la lista de BloqueHorarioBE_DNI101.
+bool ActualizarEstadoBloque(int idBloque, string nuevoEstado): Modifica el estado del bloque (Disponible / Ocupado / Bloqueado).
+List<BloqueHorarioBE_DNI101> ListarBloquesDisponibles(DateTime fecha, int dniNutricionista): Retorna los bloques en estado 'Disponible'.
+
+	- TurnoDAL_DNI101
+int Guardar(TurnoBE_DNI101 turno): Inserta un registro en [Turnos_DNI101] y retorna el IdTurno_DNI101 generado.
+bool ActualizarEstado(int idTurno, string nuevoEstado): Actualiza el estado del turno ('Solicitado', 'Confirmado', 'Asistio', 'Cancelado').
+bool ReprogramarTurno(int idTurno, DateTime nuevaFecha, TimeSpan nuevaHora, int nuevoIdBloque): Cambia la fecha, hora y el bloque horario asignado.
+TurnoBE_DNI101 ObtenerPorId(int idTurno): Retorna un turno completo con PacienteBE_DNI101 y TutorBE_DNI101 asociados.
+TurnoBE_DNI101 ObtenerPorCodigo(string codigoTurno): Busca un turno por su código único.
+List<TurnoBE_DNI101> ListarTurnosPorFecha(DateTime fecha): Obtiene los turnos para un día específico.
+List<TurnoBE_DNI101> ListarTurnosPorPaciente(int idPaciente): Obtiene el historial de turnos de un niño.
+List<TurnoBE_DNI101> ListarTodos(): Bajar toda la tabla [Turnos_DNI101] uniendo pacientes, tutores y bloques horarios.
+
+
+Lógica BLL (Patrón State): 
+	- IEstadoTurno_DNI101
+void Atender(TurnoBE_DNI101 turno)
+void Cancelar(TurnoBE_DNI101 turno, string motivo)
+void Reprogramar(TurnoBE_DNI101 turno, DateTime nuevaFecha, TimeSpan nuevaHora, int nuevoIdBloque)
+
+	- TurnoSolicitadoState_DNI101
+Implementa IEstadoTurno_DNI101. Permite confirmar el turno (pasa a TurnoConfirmadoState_DNI101), reprogramar o cancelar.
+
+	- TurnoConfirmadoState_DNI101
+Estado final. Lanza excepción si se intenta modificar o cancelar un turno finalizado.
+
+	- TurnoAsistioState_DNI101
+Estado final. Lanza excepción si se intenta modificar o cancelar un turno finalizado.
+
+	- TurnoCanceladoState_DNI101
+Estado final. Libera el bloque horario en AgendaMedicaDAL_DNI101.
+
+-----------------------------------------------------------------------------
+
+	- PacienteBLL_DNI101
+
+-int RegistrarTutor(TutorBE_DNI101 tutor):
+
+Parámetros: tutor (TutorBE_DNI101 con DniTutor_DNI101, Nombre_DNI101, Apellido_DNI101, Telefono_DNI101, Email_DNI101, Parentesco_DNI101).
+Retorno: int (ID asignado IdTutor_DNI101).
+Reglas de Negocio: Valida que los campos requeridos no estén vacíos. Consulta TutorDAL_DNI101.ObtenerPorDNI(tutor.DniTutor_DNI101); si ya existe, lanza InvalidOperationException("El Tutor ya se encuentra registrado"). De lo contrario, llama a TutorDAL_DNI101.Guardar(tutor) y registra el evento en BitacoraBLL.
+
+-bool ModificarTutor(TutorBE_DNI101 tutor):
+
+Retorno: bool (Éxito o fallo).
+Reglas de Negocio: Valida tutor.IdTutor_DNI101 > 0 y ejecuta TutorDAL_DNI101.Modificar(tutor).
+
+-TutorBE_DNI101? ObtenerTutorPorDNI(string dniTutor):
+
+Retorno: TutorBE_DNI101 o null.
+Reglas de Negocio: Llama a TutorDAL_DNI101.ObtenerPorDNI(dniTutor). Si existe, recupera también la lista de sus pacientes asociados.
+
+-List<TutorBE_DNI101> ListarTutores():
+
+Retorno: List<TutorBE_DNI101>.
+Reglas de Negocio: Devuelve todos los tutores dados de alta.
+
+-int RegistrarPaciente(PacienteBE_DNI101 paciente):
+
+Retorno: int (ID asignado IdPaciente_DNI101).
+Reglas de Negocio: Valida paciente.IdTutor_DNI101 > 0. Verifica que la edad (paciente.ObtenerEdadMeses()) sea menor a 228 meses (19 años). Verifica PacienteDAL_DNI101.ObtenerPorDNI(paciente.DniNiño_DNI101); si existe, interrumpe con error. Ejecuta PacienteDAL_DNI101.Guardar(paciente).
+
+- bool ModificarPaciente(PacienteBE_DNI101 paciente):
+Parámetros: paciente (PacienteBE_DNI101).
+Retorno: bool.
+Reglas de Negocio: Actualiza la información del paciente en PacienteDAL_DNI101.Modificar(paciente).
+
+- PacienteBE_DNI101? ObtenerPacientePorDNI(string dniNiño):
+Parámetros: dniNiño (string).
+Retorno: PacienteBE_DNI101 o null.
+Reglas de Negocio: Devuelve el objeto completo del niño con su TutorBE_DNI101 enlazado.
+
+- List<PacienteBE_DNI101> ListarPacientes():
+Parámetros: Ninguno.
+Retorno: List<PacienteBE_DNI101>.
+Reglas de Negocio: Retorna todos los pacientes pediátricos registrados.
+
+- List<PacienteBE_DNI101> ListarPacientesPorTutor(int idTutor):
+Parámetros: idTutor (int).
+Retorno: List<PacienteBE_DNI101>.
+Reglas de Negocio: Llama a PacienteDAL_DNI101.ListarPorTutor(idTutor).
+
+-----------------------------------------------------------------------------
+
+	- AgendaMedicaBLL_DNI101
+
+
+	- TurnoBLL_DNI101
+bool AgendarTurno(TurnoBE_DNI101 turno): Valida la disponibilidad del bloque, genera el CodigoTurno_DNI101 único y lo persiste en TurnoDAL_DNI101.
+bool ConfirmarTurno(int idTurno): Transiciona el estado a Confirmado.
+bool ReprogramarTurno(int idTurno, DateTime nuevaFecha, TimeSpan nuevaHora, int nuevoIdBloque): Invoca la reprogramación mediante el patrón State.
+bool CancelarTurno(int idTurno, string motivo): Invoca la cancelación mediante el patrón State y libera el BloqueHorario_DNI101.
+bool MarcarAsistencia(int idTurno): Transiciona a Asistió.
+List<TurnoBE_DNI101> ListarTurnos(DateTime? fecha, string? estado): Retorna la lista filtrada de turnos bajan todos los objetos desde la DAL.
+
+Interfaz UI: 
+
+	- FormTurnero_DNI101.cs
+Formulario interactivo en WinForms con sufijo _DNI101:
+Controles de captura de Tutor (txtDniTutor, txtNombreTutor, txtApellidoTutor, txtTelefono, txtEmail, cmbParentesco).
+Controles de captura de Paciente Pediátrico (txtDniNiño, txtNombreNiño, dtpFechaNac, cmbSexo, txtObraSocial).
+Selección de Fecha y ComboBox/Grilla de Bloques Horarios disponibles.
+DataGridView principal que lista la totalidad de los turnos registrados.
+Panel de acciones: Botones btnAgendar, btnConfirmar, btnReprogramar, btnCancelar y btnMarcarAsistencia.
+
+	- FormTurnero_DNI101.Designer.cs (Debe ser un formulario interactivo)
+Controles de captura de Tutor (txtDniTutor, txtNombreTutor, txtApellidoTutor, txtTelefono, txtEmail, cmbParentesco).
+Controles de captura de Paciente Pediátrico (txtDniNiño, txtNombreNiño, dtpFechaNac, cmbSexo, txtObraSocial).
+Selección de Fecha y ComboBox/Grilla de Bloques Horarios disponibles.
+DataGridView principal que lista la totalidad de los turnos registrados.
+Panel de acciones: Botones btnAgendar, btnConfirmar, btnReprogramar, btnCancelar y btnMarcarAsistencia.
+
+	- Form1.cs
+Usar el botón de menú " btnTurnos con text = Gestión de Turnos " en el panelMenu para invocar FormManager.Navegar(this, new FormTurnero_DNI101())
+
+
+
+
+

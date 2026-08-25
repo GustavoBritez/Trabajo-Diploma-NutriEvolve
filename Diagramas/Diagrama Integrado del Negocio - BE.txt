@@ -1,0 +1,167 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam style strictuml
+
+package "Capa BE - Business Entities (NutriEvolve)" {
+
+    ' ============================================================
+    ' ENTIDADES DEL MÓDULO TURNERO (PN1)
+    ' ============================================================
+    class TutorBE {
+        - idTutor : int
+        - dniTutor : string
+        - nombre : string
+        - apellido : string
+        - telefono : string
+        - email : string
+        - parentesco : string
+    }
+
+    class PacienteBE {
+        - idPaciente : int
+        - dniNiño : string
+        - nombre : string
+        - apellido : string
+        - fechaNacimiento : DateTime
+        - sexo : string
+        - idTutor : int
+    }
+
+    class NutricionistaBE {
+        - idNutricionista : int
+        - legajo : string
+        - matricula : string
+        - nombre : string
+        - apellido : string
+    }
+
+    class RecepcionistaBE {
+        - idRecepcionista : int
+        - nombre : string
+        - apellido : string
+        - turnoTrabajo : string
+    }
+
+    class AgendaMedicaBE {
+        - idAgenda : int
+        - fecha : DateTime
+        - estadoAgenda : string
+        - idNutricionista : int
+    }
+
+    class BloqueHorarioBE {
+        - idBloque : int
+        - idAgenda : int
+        - horaInicio : TimeSpan
+        - horaFin : TimeSpan
+        - estadoBloque : string
+    }
+
+    class TurnoBE {
+        - idTurno : int
+        - codigoTurno : string
+        - fechaTurno : DateTime
+        - horaTurno : TimeSpan
+        - motivoConsulta : string
+        - estadoTurno : string
+        - idPaciente : int
+        - idNutricionista : int
+        - idBloque : int
+    }
+
+    ' ============================================================
+    ' ENTIDADES DEL MÓDULO SEGUIMIENTO NUTRICIONAL (PN2)
+    ' ============================================================
+    class ConsultaNutricionalBE {
+        - idConsulta : int
+        - idTurno : int
+        - idPaciente : int
+        - idNutricionista : int
+        - fechaControl : DateTime
+        - edadMeses : int
+        - tipoLactancia : string
+        - alimentacionComplementaria : string
+        - observaciones : string
+    }
+
+    class MedicionAntropometricaBE {
+        - idMedicion : int
+        - idConsulta : int
+        - pesoKg : double
+        - tallaCm : double
+        - perimetroCefalicoCm : double
+        - imc : double
+    }
+
+    class ZScoreResultadoBE {
+        - idZScore : int
+        - idConsulta : int
+        - zPesoEdad : double
+        - zTallaEdad : double
+        - zIMCEdad : double
+        - zPCEdad : double
+        - percentilPeso : double
+        - percentilTalla : double
+        - percentilIMC : double
+    }
+
+    class DiagnosticoNutricionalBE {
+        - idDiagnostico : int
+        - idConsulta : int
+        - clasificacionOMS : string
+        - detallesClinicos : string
+        - requiereAlerta : bool
+    }
+
+    class AlertaClinicaBE {
+        - idAlerta : int
+        - idConsulta : int
+        - tipoAlerta : string
+        - severidad : string
+        - mensajeAlerta : string
+        - fechaGeneracion : DateTime
+    }
+
+    class PlanAlimentarioBE {
+        - idPlan : int
+        - idConsulta : int
+        - requerimientoCalorico : double
+        - pctCarbohidratos : double
+        - pctProteinas : double
+        - pctGrasas : double
+        - pautasFamiliares : string
+    }
+
+    class Recordatorio24hBE {
+        - idRecordatorio : int
+        - idConsulta : int
+        - desayuno : string
+        - almuerzo : string
+        - merienda : string
+        - cena : string
+        - colaciones : string
+    }
+}
+
+' === RELACIONES ESTRUCTURALES PN1 ===
+TutorBE "1" -- "1..*" PacienteBE : tutor de >
+PacienteBE "1" -- "0..*" TurnoBE : posee >
+NutricionistaBE "1" -- "1" AgendaMedicaBE : posee >
+AgendaMedicaBE "1" *-- "1..*" BloqueHorarioBE : contiene >
+BloqueHorarioBE "1" -- "0..1" TurnoBE : asignado a >
+RecepcionistaBE "1" ..> TurnoBE : gestiona >
+NutricionistaBE "1" ..> TurnoBE : atiende >
+
+' === RELACIONES DE INTEGRACIÓN PN1 -> PN2 ===
+TurnoBE "0..1" -- "0..1" ConsultaNutricionalBE : origina >
+PacienteBE "1" -- "0..*" ConsultaNutricionalBE : historial >
+NutricionistaBE "1" -- "0..*" ConsultaNutricionalBE : realiza >
+
+' === RELACIONES ESTRUCTURALES PN2 ===
+ConsultaNutricionalBE "1" *-- "1" MedicionAntropometricaBE : contiene >
+ConsultaNutricionalBE "1" *-- "1" ZScoreResultadoBE : contiene >
+ConsultaNutricionalBE "1" *-- "1" DiagnosticoNutricionalBE : posee >
+ConsultaNutricionalBE "1" *-- "0..1" AlertaClinicaBE : posee >
+ConsultaNutricionalBE "1" *-- "1" PlanAlimentarioBE : posee >
+ConsultaNutricionalBE "1" *-- "0..1" Recordatorio24hBE : posee >
+@enduml
