@@ -1,0 +1,22 @@
+## Usar combinaciones de mayúsculas/minúsculas para carpetas de compilación
+[Bb]in/
+[Oo]bj/
+
+## Archivos y carpetas temporales de Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Archivos de caché del compilador y compilación interna
+*.userprefs
+*.pidb
+*.ide/
+_ReSharper*/
+*.[Cc]r[Oo]p[Jj].AssemblyReference.cache
+
+## Archivos de diagnóstico y logs
+*.log
+*.crash
+.Diagnostics/
