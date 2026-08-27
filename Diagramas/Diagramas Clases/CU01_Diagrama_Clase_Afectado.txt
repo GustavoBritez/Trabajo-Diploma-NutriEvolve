@@ -1,0 +1,160 @@
+@startuml
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam roundcorner 6
+
+class Tutor_DNI101 {
+    - IdTutor_DNI101 : int
+    - DniTutor_DNI101 : string
+    - Nombre_DNI101 : string
+    - Apellido_DNI101 : string
+    - Telefono_DNI101 : string
+    - Email_DNI101 : string
+    - Parentesco_DNI101 : string
+    - FechaRegistro_DNI101 : DateTime
+    - Pacientes_DNI101 : List<Paciente_DNI101>
+    - DV : string
+    + RegistrarTutor() : int
+    + ModificarTutor() : bool
+    + ObtenerTutorPorDNI(dniTutor: string) : Tutor_DNI101
+    + ListarTutores() : List<Tutor_DNI101>
+    + Guardar() : int
+    + Modificar() : bool
+    + ObtenerPorId(idTutor: int) : Tutor_DNI101
+    + ObtenerPorDNI(dniTutor: string) : Tutor_DNI101
+    + ListarTodos() : List<Tutor_DNI101>
+}
+
+class Paciente_DNI101 {
+    - IdPaciente_DNI101 : int
+    - DniNiño_DNI101 : string
+    - Nombre_DNI101 : string
+    - Apellido_DNI101 : string
+    - FechaNacimiento_DNI101 : DateTime
+    - Sexo_DNI101 : string
+    - ObraSocial_DNI101 : string
+    - IdTutor_DNI101 : int
+    - Tutor_DNI101 : Tutor_DNI101
+    - DV : string
+    + ObtenerEdadMeses() : int
+    + RegistrarPaciente() : int
+    + ModificarPaciente() : bool
+    + ObtenerPacientePorDNI(dniNiño: string) : Paciente_DNI101
+    + ListarPacientes() : List<Paciente_DNI101>
+    + ListarPacientesPorTutor(idTutor: int) : List<Paciente_DNI101>
+    + Guardar() : int
+    + Modificar() : bool
+    + ObtenerPorId(idPaciente: int) : Paciente_DNI101
+    + ListarTodos() : List<Paciente_DNI101>
+}
+
+class Turno_DNI101 <<Context>> {
+    - IdTurno_DNI101 : int
+    - CodigoTurno_DNI101 : string
+    - FechaTurno_DNI101 : DateTime
+    - HoraTurno_DNI101 : TimeSpan
+    - MotivoConsulta_DNI101 : string
+    - EstadoTurno_DNI101 : string
+    - IdPaciente_DNI101 : int
+    - DniNutricionista_DNI101 : int
+    - IdBloque_DNI101 : int
+    - Paciente_DNI101 : Paciente_DNI101
+    - EstadoActual_DNI101 : IEstadoTurno_DNI101
+    - DV : string
+    + CambiarEstado(nuevoEstado: IEstadoTurno_DNI101) : void
+    + Atender() : void
+    + Cancelar(motivo: string) : void
+    + Reprogramar(nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : void
+    + AgendarTurno() : bool
+    + ConfirmarTurno() : bool
+    + ReprogramarTurno(nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : bool
+    + CancelarTurno(motivo: string) : bool
+    + MarcarAsistencia() : bool
+    + ListarTurnos(fecha: DateTime?, estado: string?) : List<Turno_DNI101>
+    + Guardar() : int
+    + ActualizarEstado(nuevoEstado: string) : bool
+    + ObtenerPorId(idTurno: int) : Turno_DNI101
+    + ObtenerPorCodigo(codigoTurno: string) : Turno_DNI101
+    + ListarTurnosPorFecha(fecha: DateTime) : List<Turno_DNI101>
+    + ListarTurnosPorPaciente(idPaciente: int) : List<Turno_DNI101>
+    + ListarTodos() : List<Turno_DNI101>
+}
+
+interface IEstadoTurno_DNI101 <<State>> {
+    + Atender(turno: Turno_DNI101) : void
+    + Cancelar(turno: Turno_DNI101, motivo: string) : void
+    + Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : void
+}
+
+class TurnoSolicitadoState_DNI101 <<ConcreteState>> {
+    + Atender(turno: Turno_DNI101) : void
+    + Cancelar(turno: Turno_DNI101, motivo: string) : void
+    + Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : void
+}
+
+class TurnoConfirmadoState_DNI101 <<ConcreteState>> {
+    + Atender(turno: Turno_DNI101) : void
+    + Cancelar(turno: Turno_DNI101, motivo: string) : void
+    + Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : void
+}
+
+class TurnoAsistioState_DNI101 <<ConcreteState>> {
+    + Atender(turno: Turno_DNI101) : void
+    + Cancelar(turno: Turno_DNI101, motivo: string) : void
+    + Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : void
+}
+
+class TurnoCanceladoState_DNI101 <<ConcreteState>> {
+    + Atender(turno: Turno_DNI101) : void
+    + Cancelar(turno: Turno_DNI101, motivo: string) : void
+    + Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : void
+}
+
+class AgendaMedica_DNI101 {
+    - IdAgenda_DNI101 : int
+    - Fecha_DNI101 : DateTime
+    - EstadoAgenda_DNI101 : string
+    - DniNutricionista_DNI101 : int
+    - BloquesHorarios_DNI101 : List<BloqueHorario_DNI101>
+    - DV : string
+    + GuardarAgenda() : int
+    + ObtenerAgendaPorFecha(fecha: DateTime, dniNutricionista: int) : AgendaMedica_DNI101
+    + ActualizarEstadoBloque(idBloque: int, nuevoEstado: string) : bool
+    + ListarBloquesDisponibles(fecha: DateTime, dniNutricionista: int) : List<BloqueHorario_DNI101>
+}
+
+class BloqueHorario_DNI101 {
+    - IdBloque_DNI101 : int
+    - IdAgenda_DNI101 : int
+    - HoraInicio_DNI101 : TimeSpan
+    - HoraFin_DNI101 : TimeSpan
+    - EstadoBloque_DNI101 : string
+    - DV : string
+}
+
+class DigitoVerificador {
+    + ObtenerTurnosCorruptos() : List<string>
+    + ObtenerPacientesCorruptos() : List<string>
+    + ObtenerTutoresCorruptos() : List<string>
+    + RecalcularYPersistir() : void
+    + ActualizarDVIndividualesTurnos() : void
+    + ActualizarDVIndividualesPacientes() : void
+    + ActualizarDVIndividualesTutores() : void
+}
+
+' --- RELACIONES DE DOMINIO ---
+
+Tutor_DNI101 "1" -- "1..*" Paciente_DNI101 : tutor de >
+Paciente_DNI101 "1" -- "0..*" Turno_DNI101 : posee >
+AgendaMedica_DNI101 "1" *-- "1..*" BloqueHorario_DNI101 : contiene >
+BloqueHorario_DNI101 "1" -- "0..1" Turno_DNI101 : asignado a >
+
+Turno_DNI101 "1" o-- "1" IEstadoTurno_DNI101 : estadoActual >
+IEstadoTurno_DNI101 <|.. TurnoSolicitadoState_DNI101
+IEstadoTurno_DNI101 <|.. TurnoConfirmadoState_DNI101
+IEstadoTurno_DNI101 <|.. TurnoAsistioState_DNI101
+IEstadoTurno_DNI101 <|.. TurnoCanceladoState_DNI101
+
+Turno_DNI101 ..> DigitoVerificador : valida integridad >
+@enduml

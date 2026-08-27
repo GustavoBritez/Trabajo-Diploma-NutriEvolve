@@ -1,0 +1,92 @@
+@startuml DER_RF1_Turnos
+skinparam style strictuml
+skinparam roundcorner 6
+skinparam shadowing false
+
+' ============================================================
+' DIAGRAMA ENTIDAD-RELACIÓN (DER) / MODELO RELACIONAL (RF1)
+' Módulo: Gestión de Turnos Nutricionales Pediátricos
+' ============================================================
+
+entity "Tutores_DNI101" as Tutores {
+    * **IdTutor_DNI101** : INT <<PK, IDENTITY>>
+    --
+    * DniTutor_DNI101 : VARCHAR(20) <<UNIQUE>>
+    * Nombre_DNI101 : VARCHAR(50)
+    * Apellido_DNI101 : VARCHAR(50)
+    * Telefono_DNI101 : VARCHAR(50)
+    Email_DNI101 : VARCHAR(100)
+    * Parentesco_DNI101 : VARCHAR(50)
+    * FechaRegistro_DNI101 : DATETIME2(7)
+    DV : VARCHAR(255)
+}
+
+entity "Pacientes_DNI101" as Pacientes {
+    * **IdPaciente_DNI101** : INT <<PK, IDENTITY>>
+    --
+    * DniNiño_DNI101 : VARCHAR(20) <<UNIQUE>>
+    * Nombre_DNI101 : VARCHAR(50)
+    * Apellido_DNI101 : VARCHAR(50)
+    * FechaNacimiento_DNI101 : DATETIME2(7)
+    * Sexo_DNI101 : VARCHAR(10)
+    ObraSocial_DNI101 : VARCHAR(100)
+    * **IdTutor_DNI101** : INT <<FK>>
+    DV : VARCHAR(255)
+}
+
+entity "Usuarios" as Usuarios {
+    * **DNI** : INT <<PK>>
+    --
+    * Nombre : VARCHAR(50)
+    * Apellido : VARCHAR(50)
+}
+
+entity "AgendasMedicas_DNI101" as Agendas {
+    * **IdAgenda_DNI101** : INT <<PK, IDENTITY>>
+    --
+    * Fecha_DNI101 : DATE
+    * EstadoAgenda_DNI101 : VARCHAR(50)
+    * **DniNutricionista_DNI101** : INT <<FK>>
+    DV : VARCHAR(255)
+}
+
+entity "BloquesHorarios_DNI101" as Bloques {
+    * **IdBloque_DNI101** : INT <<PK, IDENTITY>>
+    --
+    * **IdAgenda_DNI101** : INT <<FK>>
+    * HoraInicio_DNI101 : TIME(7)
+    * HoraFin_DNI101 : TIME(7)
+    * EstadoBloque_DNI101 : VARCHAR(50)
+    DV : VARCHAR(255)
+}
+
+entity "Turnos_DNI101" as Turnos {
+    * **IdTurno_DNI101** : INT <<PK, IDENTITY>>
+    --
+    * CodigoTurno_DNI101 : VARCHAR(50) <<UNIQUE>>
+    * FechaTurno_DNI101 : DATETIME2(7)
+    * HoraTurno_DNI101 : TIME(7)
+    * MotivoConsulta_DNI101 : VARCHAR(255)
+    * EstadoTurno_DNI101 : VARCHAR(50)
+    * **IdPaciente_DNI101** : INT <<FK>>
+    * **DniNutricionista_DNI101** : INT <<FK>>
+    * **IdBloque_DNI101** : INT <<FK>>
+    DV : VARCHAR(255)
+}
+
+entity "DV" as TablaDV {
+    * **Tabla** : VARCHAR(100) <<PK>>
+    --
+    * DVV : VARCHAR(255)
+}
+
+' --- RELACIONES Y CARDINALIDADES RELACIONALES ---
+
+Tutores ||--|{ Pacientes : "1 : N (es tutor de)"
+Pacientes ||--o{ Turnos : "1 : N (solicita)"
+Usuarios ||--o{ Agendas : "1 : N (posee)"
+Agendas ||--|{ Bloques : "1 : N (contiene)"
+Bloques ||--o| Turnos : "1 : 1..0 (reserva)"
+Usuarios ||--o{ Turnos : "1 : N (atiende)"
+
+@enduml
