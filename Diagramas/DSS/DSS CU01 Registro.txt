@@ -130,7 +130,7 @@ deactivate DAL
 DVBLL --> TurnoBLL: true
 deactivate DVBLL
 
-TurnoBLL -> BitacoraBLL: RegistrarEvento(1, 'Agendado', dni)
+TurnoBLL -> BitacoraBLL: RegistrarEvento("Turnos", "Agendamiento de Turno", dni, "Medio")
 activate BitacoraBLL
 BitacoraBLL -> DAL: GuardarBitacora(evento)
 activate DAL

@@ -1,92 +1,112 @@
-@startuml DER_RF1_Turnos
+@startuml CU01_DER
 skinparam style strictuml
 skinparam roundcorner 6
 skinparam shadowing false
 
 ' ============================================================
-' DIAGRAMA ENTIDAD-RELACIÓN (DER) / MODELO RELACIONAL (RF1)
-' Módulo: Gestión de Turnos Nutricionales Pediátricos
+' MODELO RELACIONAL DE DATOS / DER AFECTADO - CU01: REGISTRAR TURNO
+' Módulo: Gestión de Turnos Nutricionales Pediátricos (RF1)
+' Entidades Reutilizadas: Usuarios y Bitacora (ING SOFTWARE)
 ' ============================================================
 
 entity "Tutores_DNI101" as Tutores {
-    * **IdTutor_DNI101** : INT <<PK, IDENTITY>>
+    * **IdTutor_DNI101** : INT <<PK, IDENTITY(1,1)>>
     --
-    * DniTutor_DNI101 : VARCHAR(20) <<UNIQUE>>
-    * Nombre_DNI101 : VARCHAR(50)
-    * Apellido_DNI101 : VARCHAR(50)
-    * Telefono_DNI101 : VARCHAR(50)
-    Email_DNI101 : VARCHAR(100)
-    * Parentesco_DNI101 : VARCHAR(50)
-    * FechaRegistro_DNI101 : DATETIME2(7)
-    DV : VARCHAR(255)
+    * DniTutor_DNI101 : VARCHAR(20) <<UNIQUE, NOT NULL>>
+    * Nombre_DNI101 : VARCHAR(50) <<NOT NULL>>
+    * Apellido_DNI101 : VARCHAR(50) <<NOT NULL>>
+    * Telefono_DNI101 : VARCHAR(50) <<NOT NULL>>
+    Email_DNI101 : VARCHAR(100) <<NULL>>
+    * Parentesco_DNI101 : VARCHAR(50) <<NOT NULL>>
+    * FechaRegistro_DNI101 : DATETIME2(7) <<NOT NULL, DEFAULT GETDATE()>>
+    DV : VARCHAR(255) <<NULL>>
 }
 
 entity "Pacientes_DNI101" as Pacientes {
-    * **IdPaciente_DNI101** : INT <<PK, IDENTITY>>
+    * **IdPaciente_DNI101** : INT <<PK, IDENTITY(1,1)>>
     --
-    * DniNiño_DNI101 : VARCHAR(20) <<UNIQUE>>
-    * Nombre_DNI101 : VARCHAR(50)
-    * Apellido_DNI101 : VARCHAR(50)
-    * FechaNacimiento_DNI101 : DATETIME2(7)
-    * Sexo_DNI101 : VARCHAR(10)
-    ObraSocial_DNI101 : VARCHAR(100)
-    * **IdTutor_DNI101** : INT <<FK>>
-    DV : VARCHAR(255)
+    * DniNiño_DNI101 : VARCHAR(20) <<UNIQUE, NOT NULL>>
+    * Nombre_DNI101 : VARCHAR(50) <<NOT NULL>>
+    * Apellido_DNI101 : VARCHAR(50) <<NOT NULL>>
+    * FechaNacimiento_DNI101 : DATETIME2(7) <<NOT NULL>>
+    * Sexo_DNI101 : VARCHAR(10) <<NOT NULL>>
+    ObraSocial_DNI101 : VARCHAR(100) <<NULL>>
+    * **IdTutor_DNI101** : INT <<FK, NOT NULL>>
+    DV : VARCHAR(255) <<NULL>>
 }
 
-entity "Usuarios" as Usuarios {
+entity "Usuarios" as Usuarios <<Base / Seguridad T02>> {
     * **DNI** : INT <<PK>>
     --
-    * Nombre : VARCHAR(50)
-    * Apellido : VARCHAR(50)
+    * Nombre : VARCHAR(50) <<NOT NULL>>
+    * Apellido : VARCHAR(50) <<NOT NULL>>
+    * NombreUsuario : VARCHAR(50) <<UNIQUE, NOT NULL>>
+    * Contraseña : VARCHAR(255) <<NOT NULL>>
+    * Email : VARCHAR(100) <<NOT NULL>>
+    * Bloqueado : BIT <<NOT NULL, DEFAULT 0>>
+    * Intentos : INT <<NOT NULL, DEFAULT 0>>
+    * NombreRol : VARCHAR(50) <<NOT NULL>>
+    * Nombre_Idioma : VARCHAR(25) <<NOT NULL>>
+    DV : VARCHAR(255) <<NULL>>
 }
 
 entity "AgendasMedicas_DNI101" as Agendas {
-    * **IdAgenda_DNI101** : INT <<PK, IDENTITY>>
+    * **IdAgenda_DNI101** : INT <<PK, IDENTITY(1,1)>>
     --
-    * Fecha_DNI101 : DATE
-    * EstadoAgenda_DNI101 : VARCHAR(50)
-    * **DniNutricionista_DNI101** : INT <<FK>>
-    DV : VARCHAR(255)
+    * Fecha_DNI101 : DATE <<NOT NULL>>
+    * EstadoAgenda_DNI101 : VARCHAR(50) <<NOT NULL>>
+    * **DniNutricionista_DNI101** : INT <<FK, NOT NULL>>
+    DV : VARCHAR(255) <<NULL>>
 }
 
 entity "BloquesHorarios_DNI101" as Bloques {
-    * **IdBloque_DNI101** : INT <<PK, IDENTITY>>
+    * **IdBloque_DNI101** : INT <<PK, IDENTITY(1,1)>>
     --
-    * **IdAgenda_DNI101** : INT <<FK>>
-    * HoraInicio_DNI101 : TIME(7)
-    * HoraFin_DNI101 : TIME(7)
-    * EstadoBloque_DNI101 : VARCHAR(50)
-    DV : VARCHAR(255)
+    * **IdAgenda_DNI101** : INT <<FK, NOT NULL>>
+    * HoraInicio_DNI101 : TIME(7) <<NOT NULL>>
+    * HoraFin_DNI101 : TIME(7) <<NOT NULL>>
+    * EstadoBloque_DNI101 : VARCHAR(50) <<NOT NULL>>
+    DV : VARCHAR(255) <<NULL>>
 }
 
 entity "Turnos_DNI101" as Turnos {
-    * **IdTurno_DNI101** : INT <<PK, IDENTITY>>
+    * **IdTurno_DNI101** : INT <<PK, IDENTITY(1,1)>>
     --
-    * CodigoTurno_DNI101 : VARCHAR(50) <<UNIQUE>>
-    * FechaTurno_DNI101 : DATETIME2(7)
-    * HoraTurno_DNI101 : TIME(7)
-    * MotivoConsulta_DNI101 : VARCHAR(255)
-    * EstadoTurno_DNI101 : VARCHAR(50)
-    * **IdPaciente_DNI101** : INT <<FK>>
-    * **DniNutricionista_DNI101** : INT <<FK>>
-    * **IdBloque_DNI101** : INT <<FK>>
-    DV : VARCHAR(255)
+    * CodigoTurno_DNI101 : VARCHAR(50) <<UNIQUE, NOT NULL>>
+    * FechaTurno_DNI101 : DATETIME2(7) <<NOT NULL>>
+    * HoraTurno_DNI101 : TIME(7) <<NOT NULL>>
+    * MotivoConsulta_DNI101 : VARCHAR(255) <<NOT NULL>>
+    * EstadoTurno_DNI101 : VARCHAR(50) <<NOT NULL>>
+    * **IdPaciente_DNI101** : INT <<FK, NOT NULL>>
+    * **DniNutricionista_DNI101** : INT <<FK, NOT NULL>>
+    * **IdBloque_DNI101** : INT <<FK, NOT NULL>>
+    DV : VARCHAR(255) <<NULL>>
 }
 
-entity "DV" as TablaDV {
+entity "DV" as TablaDV <<Seguridad T08>> {
     * **Tabla** : VARCHAR(100) <<PK>>
     --
-    * DVV : VARCHAR(255)
+    * DVV : VARCHAR(255) <<NOT NULL>>
+}
+
+entity "Bitacora" as Bitacora <<Seguridad T06>> {
+    * **Numero** : INT <<PK, IDENTITY(1,1)>>
+    --
+    * Fecha : DATETIME2(7) <<NOT NULL, DEFAULT GETDATE()>>
+    * **DNI** : INT <<FK, NOT NULL>>
+    * Modulo : VARCHAR(50) <<NOT NULL>>
+    * Descripcion : VARCHAR(255) <<NOT NULL>>
+    * Criticidad : VARCHAR(50) <<NOT NULL>>
 }
 
 ' --- RELACIONES Y CARDINALIDADES RELACIONALES ---
 
 Tutores ||--|{ Pacientes : "1 : N (es tutor de)"
-Pacientes ||--o{ Turnos : "1 : N (solicita)"
-Usuarios ||--o{ Agendas : "1 : N (posee)"
+Pacientes ||--o{ Turnos : "1 : N (posee)"
+Usuarios ||--o{ Agendas : "1 : N (organiza)"
 Agendas ||--|{ Bloques : "1 : N (contiene)"
 Bloques ||--o| Turnos : "1 : 0..1 (reserva)"
 Usuarios ||--o{ Turnos : "1 : N (atiende)"
+Usuarios ||--o{ Bitacora : "1 : N (genera)"
 
 @enduml

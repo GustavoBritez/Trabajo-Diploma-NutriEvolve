@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "sFu7wq/DCZs=",
+  "success": true,
+  "projectFilePath": "c:\\Users\\Navegador\\Desktop\\td\\scratch\\ea_manager\\ea_manager.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Navegador\\.nuget\\packages\\system.configuration.configurationmanager\\9.0.2\\system.configuration.configurationmanager.9.0.2.nupkg.sha512",
+    "C:\\Users\\Navegador\\.nuget\\packages\\system.data.oledb\\9.0.2\\system.data.oledb.9.0.2.nupkg.sha512",
+    "C:\\Users\\Navegador\\.nuget\\packages\\system.diagnostics.eventlog\\9.0.2\\system.diagnostics.eventlog.9.0.2.nupkg.sha512",
+    "C:\\Users\\Navegador\\.nuget\\packages\\system.diagnostics.performancecounter\\9.0.2\\system.diagnostics.performancecounter.9.0.2.nupkg.sha512",
+    "C:\\Users\\Navegador\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.2\\system.security.cryptography.protecteddata.9.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

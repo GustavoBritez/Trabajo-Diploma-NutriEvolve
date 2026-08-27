@@ -1,0 +1,119 @@
+@startuml CU01_Diagrama_Actividad
+skinparam style strictuml
+skinparam roundcorner 6
+skinparam shadowing false
+
+' ============================================================
+' DIAGRAMA DE ACTIVIDADES - CU01: REGISTRAR TURNO
+' Módulo: Gestión de Turnos Nutricionales Pediátricos
+' ============================================================
+
+|#EBF5FB|Nutricionista (Operador)|
+start
+:Acceder al módulo de Gestión de Turnos;
+:Seleccionar fecha de consulta y profesional nutricionista;
+
+|#E8F8F5|Sistema (GUI / BLL)|
+:Ejecutar CU07: Consultar Disponibilidad;
+
+|#FDF2E9|Base de Datos (SQL Server)|
+:Consultar bloques horarios para la fecha y profesional;
+
+|#E8F8F5|Sistema (GUI / BLL)|
+if (¿Existen bloques disponibles en la fecha?) then (No [Flujo Alt 4.1])
+    :Mostrar mensaje: "No hay horarios disponibles para el profesional";
+    |#EBF5FB|Nutricionista (Operador)|
+    :Evaluar seleccionar otra fecha/profesional o cancelar;
+    stop
+else (Sí)
+    :Cargar selector de bloques horarios disponibles;
+endif
+
+|#EBF5FB|Nutricionista (Operador)|
+:Ingresar DNI del niño y presionar "Buscar Paciente";
+
+|#E8F8F5|Sistema (GUI / BLL)|
+:Buscar paciente pediátrico y tutor asociado;
+
+|#FDF2E9|Base de Datos (SQL Server)|
+:Consultar tablas Pacientes_DNI101 y Tutores_DNI101;
+
+|#E8F8F5|Sistema (GUI / BLL)|
+if (¿Paciente se encuentra registrado?) then (No [Flujo Alt 6.1 / CU08])
+    :Informar que el DNI no existe en el padrón;
+    |#EBF5FB|Nutricionista (Operador)|
+    :Ingresar datos personales del Tutor\n(DNI, Nombre, Apellido, Teléfono, Email, Parentesco);
+    |#E8F8F5|Sistema (GUI / BLL)|
+    :Validar formato y datos obligatorios del Tutor;
+    |#FDF2E9|Base de Datos (SQL Server)|
+    :Insertar registro en Tutores_DNI101;
+    
+    |#EBF5FB|Nutricionista (Operador)|
+    :Ingresar datos del Niño\n(DNI, Nombre, Apellido, Fecha Nacimiento, Sexo, Obra Social);
+    |#E8F8F5|Sistema (GUI / BLL)|
+    :Validar edad pediátrica (< 19 años / 228 meses);
+    |#FDF2E9|Base de Datos (SQL Server)|
+    :Insertar registro en Pacientes_DNI101;
+else (Sí)
+    |#E8F8F5|Sistema (GUI / BLL)|
+    :Recuperar y mostrar datos del Niño y Tutor en pantalla;
+endif
+
+|#EBF5FB|Nutricionista (Operador)|
+label retry_horario
+:Seleccionar bloque horario deseado;
+:Ingresar motivo de consulta médica;
+:Presionar botón "Agendar Turno";
+
+|#E8F8F5|Sistema (GUI / BLL)|
+if (¿Campos obligatorios completos?) then (No [Flujo Alt 9.1])
+    :Resaltar campos faltantes y denegar operación;
+    |#EBF5FB|Nutricionista (Operador)|
+    :Completar los campos requeridos;
+    goto retry_horario
+else (Sí)
+endif
+
+:Verificar disponibilidad concurrente del bloque horario;
+|#FDF2E9|Base de Datos (SQL Server)|
+:Consultar estado actual en BloquesHorarios_DNI101;
+
+|#E8F8F5|Sistema (GUI / BLL)|
+if (¿Bloque horario continúa 'Disponible'?) then (No [Flujo Alt 9.2])
+    :Mostrar alerta de conflicto de concurrencia;
+    :Recargar lista de horarios disponibles;
+    |#EBF5FB|Nutricionista (Operador)|
+    goto retry_horario
+else (Sí)
+endif
+
+|#E8F8F5|Sistema (GUI / BLL)|
+:Generar código único de turno (CodigoTurno_DNI101);
+:Instanciar Turno en estado "Solicitado" (TurnoSolicitadoState_DNI101);
+:Calcular Dígito Verificador Horizontal individual (DVH);
+
+|#FDF2E9|Base de Datos (SQL Server)|
+:Insertar registro en Turnos_DNI101;
+:Actualizar estado del bloque horario a "Ocupado";
+
+|#E8F8F5|Sistema (GUI / BLL)|
+:Invocar DigitoVerificadorBLL.RecalcularYPersistir();
+
+|#FDF2E9|Base de Datos (SQL Server)|
+:Actualizar tabla DV (DVV vertical y firma total de base de datos);
+
+|#E8F8F5|Sistema (GUI / BLL)|
+:Registrar evento de agendamiento en Bitácora;
+
+|#FDF2E9|Base de Datos (SQL Server)|
+:Insertar evento en tabla Bitacora;
+
+|#E8F8F5|Sistema (GUI / BLL)|
+:Mostrar mensaje de éxito con el código de turno generado;
+:Actualizar la grilla general de turnos;
+
+|#EBF5FB|Nutricionista (Operador)|
+:Visualizar confirmación de turno agendado;
+stop
+
+@enduml

@@ -1,8 +1,13 @@
-@startuml
+@startuml CU01_Diagrama_Clase_Afectado
 skinparam style strictuml
 skinparam classAttributeIconSize 0
 skinparam shadowing false
 skinparam roundcorner 6
+
+' ============================================================
+' DIAGRAMA DE CLASES AFECTADAS - CU01: REGISTRAR TURNO
+' Modelo Unificado del Negocio / Dominio
+' ============================================================
 
 class Tutor_DNI101 {
     - IdTutor_DNI101 : int
@@ -15,15 +20,10 @@ class Tutor_DNI101 {
     - FechaRegistro_DNI101 : DateTime
     - Pacientes_DNI101 : List<Paciente_DNI101>
     - DV : string
-    + RegistrarTutor() : int
-    + ModificarTutor() : bool
+    + RegistrarTutor(tutor: Tutor_DNI101) : int
+    + ModificarTutor(tutor: Tutor_DNI101) : bool
     + ObtenerTutorPorDNI(dniTutor: string) : Tutor_DNI101
     + ListarTutores() : List<Tutor_DNI101>
-    + Guardar() : int
-    + Modificar() : bool
-    + ObtenerPorId(idTutor: int) : Tutor_DNI101
-    + ObtenerPorDNI(dniTutor: string) : Tutor_DNI101
-    + ListarTodos() : List<Tutor_DNI101>
 }
 
 class Paciente_DNI101 {
@@ -38,15 +38,11 @@ class Paciente_DNI101 {
     - Tutor_DNI101 : Tutor_DNI101
     - DV : string
     + ObtenerEdadMeses() : int
-    + RegistrarPaciente() : int
-    + ModificarPaciente() : bool
+    + RegistrarPaciente(paciente: Paciente_DNI101) : int
+    + ModificarPaciente(paciente: Paciente_DNI101) : bool
     + ObtenerPacientePorDNI(dniNiño: string) : Paciente_DNI101
     + ListarPacientes() : List<Paciente_DNI101>
     + ListarPacientesPorTutor(idTutor: int) : List<Paciente_DNI101>
-    + Guardar() : int
-    + Modificar() : bool
-    + ObtenerPorId(idPaciente: int) : Paciente_DNI101
-    + ListarTodos() : List<Paciente_DNI101>
 }
 
 class Turno_DNI101 <<Context>> {
@@ -60,25 +56,24 @@ class Turno_DNI101 <<Context>> {
     - DniNutricionista_DNI101 : int
     - IdBloque_DNI101 : int
     - Paciente_DNI101 : Paciente_DNI101
+    - Nutricionista_DNI101 : Usuario
+    - BloqueHorario_DNI101 : BloqueHorario_DNI101
     - EstadoActual_DNI101 : IEstadoTurno_DNI101
     - DV : string
     + CambiarEstado(nuevoEstado: IEstadoTurno_DNI101) : void
     + Atender() : void
     + Cancelar(motivo: string) : void
     + Reprogramar(nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : void
-    + AgendarTurno() : bool
-    + ConfirmarTurno() : bool
-    + ReprogramarTurno(nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : bool
-    + CancelarTurno(motivo: string) : bool
-    + MarcarAsistencia() : bool
+    + AgendarTurno(turno: Turno_DNI101) : bool
+    + ConfirmarTurno(idTurno: int) : bool
+    + ReprogramarTurno(idTurno: int, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : bool
+    + CancelarTurno(idTurno: int, motivo: string) : bool
+    + MarcarAsistencia(idTurno: int) : bool
     + ListarTurnos(fecha: DateTime?, estado: string?) : List<Turno_DNI101>
-    + Guardar() : int
-    + ActualizarEstado(nuevoEstado: string) : bool
     + ObtenerPorId(idTurno: int) : Turno_DNI101
     + ObtenerPorCodigo(codigoTurno: string) : Turno_DNI101
     + ListarTurnosPorFecha(fecha: DateTime) : List<Turno_DNI101>
     + ListarTurnosPorPaciente(idPaciente: int) : List<Turno_DNI101>
-    + ListarTodos() : List<Turno_DNI101>
 }
 
 interface IEstadoTurno_DNI101 <<State>> {
@@ -118,7 +113,7 @@ class AgendaMedica_DNI101 {
     - DniNutricionista_DNI101 : int
     - BloquesHorarios_DNI101 : List<BloqueHorario_DNI101>
     - DV : string
-    + GuardarAgenda() : int
+    + GuardarAgenda(agenda: AgendaMedica_DNI101) : int
     + ObtenerAgendaPorFecha(fecha: DateTime, dniNutricionista: int) : AgendaMedica_DNI101
     + ActualizarEstadoBloque(idBloque: int, nuevoEstado: string) : bool
     + ListarBloquesDisponibles(fecha: DateTime, dniNutricionista: int) : List<BloqueHorario_DNI101>
@@ -133,7 +128,23 @@ class BloqueHorario_DNI101 {
     - DV : string
 }
 
-class DigitoVerificador {
+class Usuario <<Base / Seguridad T02>> {
+    - DNI : int
+    - Nombre : string
+    - Apellido : string
+    - NombreUsuario : string
+    - Contraseña : string
+    - Email : string
+    - Bloqueado : bool
+    - Intentos : int
+    - Rol : string
+    - Idioma : string
+    - DV : string
+    + ObtenerPorDNI(dni: int) : Usuario
+    + ListarActivos() : List<Usuario>
+}
+
+class DigitoVerificador <<Seguridad T08>> {
     + ObtenerTurnosCorruptos() : List<string>
     + ObtenerPacientesCorruptos() : List<string>
     + ObtenerTutoresCorruptos() : List<string>
@@ -141,14 +152,27 @@ class DigitoVerificador {
     + ActualizarDVIndividualesTurnos() : void
     + ActualizarDVIndividualesPacientes() : void
     + ActualizarDVIndividualesTutores() : void
+    + CalcularDVH(registro: object) : string
 }
 
-' --- RELACIONES DE DOMINIO ---
+class BitacoraAuditoria <<Seguridad T06>> {
+    - Numero : int
+    - Fecha : DateTime
+    - DNI : string
+    - Modulo : string
+    - Descripcion : string
+    - Criticidad : string
+    + RegistrarEvento(modulo: string, descripcion: string, dni: string, criticidad: string) : bool
+}
+
+' --- RELACIONES Y CARDINALIDADES ---
 
 Tutor_DNI101 "1" -- "1..*" Paciente_DNI101 : tutor de >
 Paciente_DNI101 "1" -- "0..*" Turno_DNI101 : posee >
+Usuario "1" -- "0..*" AgendaMedica_DNI101 : posee agenda >
+Usuario "1" -- "0..*" Turno_DNI101 : atiende >
 AgendaMedica_DNI101 "1" *-- "1..*" BloqueHorario_DNI101 : contiene >
-BloqueHorario_DNI101 "1" -- "0..1" Turno_DNI101 : asignado a >
+BloqueHorario_DNI101 "1" -- "0..1" Turno_DNI101 : reservado por >
 
 Turno_DNI101 "1" o-- "1" IEstadoTurno_DNI101 : estadoActual >
 IEstadoTurno_DNI101 <|.. TurnoSolicitadoState_DNI101
@@ -157,4 +181,6 @@ IEstadoTurno_DNI101 <|.. TurnoAsistioState_DNI101
 IEstadoTurno_DNI101 <|.. TurnoCanceladoState_DNI101
 
 Turno_DNI101 ..> DigitoVerificador : valida integridad >
+Turno_DNI101 ..> BitacoraAuditoria : audita evento >
+
 @enduml

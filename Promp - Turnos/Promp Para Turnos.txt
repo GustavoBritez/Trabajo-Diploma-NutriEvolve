@@ -61,7 +61,33 @@ Tablas
 	- IdBloque_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[BloquesHorarios_DNI101]([IdBloque_DNI101])
 	- DV VARCHAR(255) NULL
 
+*Usuarios* (Entidad existente en base del sistema de seguridad - ING SOFTWARE)
+	- DNI INT PRIMARY KEY
+	- Nombre VARCHAR(50) NOT NULL
+	- Apellido VARCHAR(50) NOT NULL
+	- NombreUsuario VARCHAR(50) NOT NULL UNIQUE
+	- Contraseña VARCHAR(255) NOT NULL
+	- Email VARCHAR(100) NOT NULL
+	- Bloqueado BIT NOT NULL DEFAULT 0
+	- Intentos INT NOT NULL DEFAULT 0
+	- NombreRol VARCHAR(50) NOT NULL
+	- Nombre_Idioma VARCHAR(25) NOT NULL
+	- DV VARCHAR(255) NULL
+
 Entidades:
+	- UsuarioBE (Clase existente en capa BE del proyecto base - Reutilizada)
+- int DNI { get; set; }
+- string Nombre { get; set; }
+- string Apellido { get; set; }
+- string NombreUsuario { get; set; }
+- string Contraseña { get; set; }
+- string Email { get; set; }
+- bool Bloqueado { get; set; }
+- int Intentos { get; set; }
+- string Rol { get; set; }
+- string Idioma { get; set; }
+- string? DV { get; set; }
+
 	- TutorBE_DNI101
 - int IdTutor_DNI101 { get; set; }
 - string DniTutor_DNI101 { get; set; }
@@ -156,6 +182,17 @@ List<TurnoBE_DNI101> ListarTurnosPorFecha(DateTime fecha): Obtiene los turnos pa
 List<TurnoBE_DNI101> ListarTurnosPorPaciente(int idPaciente): Obtiene el historial de turnos de un niño.
 List<TurnoBE_DNI101> ListarTodos(): Bajar toda la tabla [Turnos_DNI101] uniendo pacientes, tutores y bloques horarios.
 
+	- UsuarioDAL (Clase existente en capa DAL de ING SOFTWARE - Reutilizada)
+void Agregar(UsuarioBE usuario): Inserta nuevo usuario en [dbo].[Usuarios].
+bool Modificar(UsuarioBE usuario): Actualiza datos del usuario.
+bool Eliminar(int dni): Elimina usuario por DNI.
+List<UsuarioBE> Listar(): Retorna la totalidad de usuarios.
+UsuarioBE ObtenerPorDNI(int dni): Busca un usuario/profesional por su DNI.
+UsuarioBE Obtener(string nombreUsuario, string contraseña): Valida credenciales contra la BD.
+bool Bloquear(int dni): Marca Bloqueado = 1.
+bool DesbloquearUsuario(int dni): Marca Bloqueado = 0 e Intentos = 0.
+bool CambiarContraseña(int dni, string passNueva): Actualiza hash SHA-256 de la clave.
+
 
 Lógica BLL (Patrón State): 
 	- IEstadoTurno_DNI101
@@ -176,6 +213,23 @@ Estado final. Lanza excepción si se intenta modificar o cancelar un turno final
 Estado final. Libera el bloque horario en AgendaMedicaDAL_DNI101.
 
 -----------------------------------------------------------------------------
+
+	- UsuarioBLL (Clase existente en capa BLL de ING SOFTWARE - Reutilizada)
+void Agregar(UsuarioBE usuario): Valida DNI no duplicado, encripta clave con SHA-256 y persiste en DAL.
+bool Modificar(UsuarioBE usuario): Valida y actualiza información del usuario.
+bool Eliminar(UsuarioBE usuario): Valida y elimina lógicamente o físicamente.
+List<UsuarioBE> Listar(): Lista todos los usuarios.
+List<UsuarioBE> ListarActivos(): Lista usuarios con Bloqueado = false.
+UsuarioBE ObtenerPorDNI(int dni): Obtiene datos de usuario/nutricionista por DNI.
+int Login(UsuarioBE usuario): Valida credenciales, maneja intentos fallidos (bloqueo a los 3 intentos) y registra en bitácora.
+int LogOut(UsuarioBE usuario): Cierra sesión activa en SessionManager.
+bool DesbloquearUsuario(int dni): Desbloquea al usuario.
+
+	- AgendaMedicaBLL_DNI101
+int GuardarAgenda(AgendaMedicaBE_DNI101 agenda): Valida y persiste la agenda médica con sus bloques.
+AgendaMedicaBE_DNI101 ObtenerAgendaPorFecha(DateTime fecha, int dniNutricionista): Obtiene la agenda de un profesional.
+List<BloqueHorarioBE_DNI101> ListarBloquesDisponibles(DateTime fecha, int dniNutricionista): Retorna bloques en estado 'Disponible' para la fecha y profesional.
+bool ActualizarEstadoBloque(int idBloque, string nuevoEstado): Cambia el estado del bloque (Disponible / Ocupado / Bloqueado).
 
 	- PacienteBLL_DNI101
 
