@@ -11,7 +11,7 @@ class Program
         using var conn = new OleDbConnection(connStr);
         conn.Open();
 
-        using (var cmd = new OleDbCommand("SELECT Diagram_ID, Name, Diagram_Type, ParentID FROM t_diagram WHERE ParentID = 12", conn))
+        using (var cmd = new OleDbCommand("SELECT Diagram_ID, Name, Diagram_Type, Package_ID, ParentID FROM t_diagram WHERE Diagram_ID = 28", conn))
         using (var reader = cmd.ExecuteReader())
         {
             while (reader.Read())

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ea_manager")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6599be2de7e209c227d1a42a9ac38067c5bcac18")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+06e8d5b01151555ac82e30ae1b584500709cc8d4")]
 [assembly: System.Reflection.AssemblyProductAttribute("ea_manager")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ea_manager")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

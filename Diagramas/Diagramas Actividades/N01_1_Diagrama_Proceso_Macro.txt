@@ -1,0 +1,94 @@
+@startuml N01_1_Diagrama_Proceso_Macro
+skinparam style strictuml
+skinparam roundcorner 8
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+' =============================================================================
+' N01.1 PROCESO DE NEGOCIO #1: GESTIÓN DE TURNOS NUTRICIONALES PEDIÁTRICOS (PN1)
+' DIAGRAMA DE PROCESO MACRO (INTEGRACIÓN CU01, CU02, CU03, CU07, CU08)
+' =============================================================================
+
+|#EBF5FB|Tutor / Adulto Responsable|
+start
+:Solicitar turno nutricional brindando datos\n(DNI Niño, Tutor, Fecha y Horario preferido);
+
+|#E8F8F5|Nutricionista (Operador)|
+:Acceder al sistema y consultar agenda médica;
+
+|#FEF9E7|Sistema NutriEvolve|
+:Ejecutar **CU07: Consultar Disponibilidad**\n(Listar bloques horarios libres en la fecha);
+
+|#E8F8F5|Nutricionista (Operador)|
+:Ingresar DNI del niño y buscar en el sistema;
+
+|#FEF9E7|Sistema NutriEvolve|
+if (¿Paciente registrado en el padrón?) then (No)
+    |#E8F8F5|Nutricionista (Operador)|
+    :Solicitar e ingresar datos del Tutor\n(DNI, Nombre, Teléfono, Parentesco);
+    :Ingresar datos del Niño\n(DNI, Nombre, Nacimiento, Obra Social);
+    |#FEF9E7|Sistema NutriEvolve|
+    :Ejecutar **CU08: Registrar Paciente y Tutor**\n(Validar edad < 19 años y persistir en BD);
+else (Sí)
+    |#FEF9E7|Sistema NutriEvolve|
+    :Recuperar y mostrar datos del Niño y Tutor;
+endif
+
+|#E8F8F5|Nutricionista (Operador)|
+:Seleccionar bloque horario e ingresar motivo de consulta;
+:Presionar "Agendar Turno";
+
+|#FEF9E7|Sistema NutriEvolve|
+:Ejecutar **CU01: Registrar Turno**;
+:Generar código único de turno;
+:Crear Turno en estado **'Solicitado'**;
+:Actualizar estado del bloque horario a **'Ocupado'**;
+:Recalcular Dígito Verificador Vertical (**T08**);
+:Registrar evento en Bitácora de Auditoría (**T06**);
+
+|#EBF5FB|Tutor / Adulto Responsable|
+:Recibir confirmación del turno agendado;
+
+' =============================================================================
+' CICLO DE VIDA POSTERIOR DEL TURNO (REPROGRAMACIÓN, CANCELACIÓN O ASISTENCIA)
+' =============================================================================
+if (¿Evolución / Solicitud posterior del Tutor?) then (Reprogramar Turno)
+    |#EBF5FB|Tutor / Adulto Responsable|
+    :Solicitar cambio de fecha u horario;
+    |#E8F8F5|Nutricionista (Operador)|
+    :Buscar turno por código y consultar nueva disponibilidad (**CU07**);
+    :Seleccionar nuevo bloque horario disponible;
+    |#FEF9E7|Sistema NutriEvolve|
+    :Ejecutar **CU02: Reprogramar Turno**;
+    :Liberar bloque horario anterior (**'Disponible'**);
+    :Asignar y ocupar nuevo bloque horario (**'Ocupado'**);
+    :Actualizar fecha y hora del Turno;
+    :Recalcular DV y auditar en Bitácora;
+    |#EBF5FB|Tutor / Adulto Responsable|
+    :Recibir nueva fecha y horario confirmado;
+
+else if (Cancelar Turno)
+    |#EBF5FB|Tutor / Adulto Responsable|
+    :Solicitar cancelación del turno programado;
+    |#E8F8F5|Nutricionista (Operador)|
+    :Buscar turno por código e ingresar motivo de baja;
+    |#FEF9E7|Sistema NutriEvolve|
+    :Ejecutar **CU03: Cancelar Turno**;
+    :Transicionar estado del Turno a **'Cancelado'**;
+    :Liberar bloque horario a **'Disponible'**;
+    :Recalcular DV y auditar en Bitácora;
+    |#E8F8F5|Nutricionista (Operador)|
+    :Notificar cancelación del turno al tutor;
+    stop
+
+else (Asistir a la consulta)
+    |#EBF5FB|Tutor / Adulto Responsable|
+    :Presentarse en el consultorio con el paciente pediátrico;
+    |#E8F8F5|Nutricionista (Operador)|
+    :Marcar estado del turno como **'Asistió'**;
+    :Iniciar atención clínica del paciente\n(Deriva a **PN2: Seguimiento Nutricional Pediátrico**);
+endif
+
+stop
+@enduml
