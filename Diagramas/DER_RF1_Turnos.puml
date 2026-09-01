@@ -5,11 +5,12 @@ skinparam shadowing false
 
 ' ============================================================
 ' MODELO RELACIONAL DE DATOS / DER AFECTADO - CU01: REGISTRAR TURNO
-' Módulo: Gestión de Turnos Nutricionales Pediátricos (RF1)
+' Notación: Information Engineering (Pata de Gallo / Crow's Foot)
+' Módulo: Gestión de Turnos Nutricionales Pediátricos (RF01)
 ' Entidades Reutilizadas: Usuarios y Bitacora (ING SOFTWARE)
 ' ============================================================
 
-entity "Tutores_DNI101" as Tutores {
+entity "Tutores_DNI101" as Tutores <<table, #E8F8F5>> {
     * **IdTutor_DNI101** : INT <<PK, IDENTITY(1,1)>>
     --
     * DniTutor_DNI101 : VARCHAR(20) <<UNIQUE, NOT NULL>>
@@ -22,7 +23,7 @@ entity "Tutores_DNI101" as Tutores {
     DV : VARCHAR(255) <<NULL>>
 }
 
-entity "Pacientes_DNI101" as Pacientes {
+entity "Pacientes_DNI101" as Pacientes <<table, #E8F8F5>> {
     * **IdPaciente_DNI101** : INT <<PK, IDENTITY(1,1)>>
     --
     * DniNiño_DNI101 : VARCHAR(20) <<UNIQUE, NOT NULL>>
@@ -35,7 +36,7 @@ entity "Pacientes_DNI101" as Pacientes {
     DV : VARCHAR(255) <<NULL>>
 }
 
-entity "Usuarios" as Usuarios <<Base / Seguridad T02>> {
+entity "Usuarios" as Usuarios <<table, #EBF5FB>> {
     * **DNI** : INT <<PK>>
     --
     * Nombre : VARCHAR(50) <<NOT NULL>>
@@ -50,7 +51,7 @@ entity "Usuarios" as Usuarios <<Base / Seguridad T02>> {
     DV : VARCHAR(255) <<NULL>>
 }
 
-entity "AgendasMedicas_DNI101" as Agendas {
+entity "AgendasMedicas_DNI101" as Agendas <<table, #E8F8F5>> {
     * **IdAgenda_DNI101** : INT <<PK, IDENTITY(1,1)>>
     --
     * Fecha_DNI101 : DATE <<NOT NULL>>
@@ -59,7 +60,7 @@ entity "AgendasMedicas_DNI101" as Agendas {
     DV : VARCHAR(255) <<NULL>>
 }
 
-entity "BloquesHorarios_DNI101" as Bloques {
+entity "BloquesHorarios_DNI101" as Bloques <<table, #E8F8F5>> {
     * **IdBloque_DNI101** : INT <<PK, IDENTITY(1,1)>>
     --
     * **IdAgenda_DNI101** : INT <<FK, NOT NULL>>
@@ -69,7 +70,7 @@ entity "BloquesHorarios_DNI101" as Bloques {
     DV : VARCHAR(255) <<NULL>>
 }
 
-entity "Turnos_DNI101" as Turnos {
+entity "Turnos_DNI101" as Turnos <<table, #FEF9E7>> {
     * **IdTurno_DNI101** : INT <<PK, IDENTITY(1,1)>>
     --
     * CodigoTurno_DNI101 : VARCHAR(50) <<UNIQUE, NOT NULL>>
@@ -83,13 +84,13 @@ entity "Turnos_DNI101" as Turnos {
     DV : VARCHAR(255) <<NULL>>
 }
 
-entity "DV" as TablaDV <<Seguridad T08>> {
+entity "DV" as TablaDV <<table, #FADBD8>> {
     * **Tabla** : VARCHAR(100) <<PK>>
     --
     * DVV : VARCHAR(255) <<NOT NULL>>
 }
 
-entity "Bitacora" as Bitacora <<Seguridad T06>> {
+entity "Bitacora" as Bitacora <<table, #FADBD8>> {
     * **Numero** : INT <<PK, IDENTITY(1,1)>>
     --
     * Fecha : DATETIME2(7) <<NOT NULL, DEFAULT GETDATE()>>
@@ -99,14 +100,14 @@ entity "Bitacora" as Bitacora <<Seguridad T06>> {
     * Criticidad : VARCHAR(50) <<NOT NULL>>
 }
 
-' --- RELACIONES Y CARDINALIDADES RELACIONALES ---
+' --- CARDINALIDADES PATA DE GALLO (Information Engineering) ---
 
-Tutores ||--|{ Pacientes : "1 : N (es tutor de)"
-Pacientes ||--o{ Turnos : "1 : N (posee)"
-Usuarios ||--o{ Agendas : "1 : N (organiza)"
-Agendas ||--|{ Bloques : "1 : N (contiene)"
-Bloques ||--o| Turnos : "1 : 0..1 (reserva)"
-Usuarios ||--o{ Turnos : "1 : N (atiende)"
-Usuarios ||--o{ Bitacora : "1 : N (genera)"
+Tutores ||--|{ Pacientes : "es tutor de"
+Pacientes ||--o{ Turnos : "posee"
+Usuarios ||--o{ Agendas : "organiza"
+Agendas ||--|{ Bloques : "contiene"
+Bloques ||--o| Turnos : "reserva"
+Usuarios ||--o{ Turnos : "atiende"
+Usuarios ||--o{ Bitacora : "genera"
 
 @enduml

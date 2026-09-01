@@ -1,0 +1,388 @@
+
+=== PAGE 1 ===
+UNIVERSIDAD  ABIERTA  INTERAMERICANA  Facultad  de  Tecnología  Informática  Ingeniería  de  Sistemas  Informáticos  
+ 
+ 
+NutriEvolve  
+Plataforma
+ 
+de
+ 
+Monitoreo
+ 
+Nutricional
+ 
+Pediátrico 
+Materia:  Trabajo  de  Diploma  Localización:  Centro  
+Alumno:  Britez  Alvarenga  Gustavo  Daniel  
+Comisión:  3-B-M  |  Turno:  Mañana  
+  
+Docente:  Ing.  Leonel  Jimenez  Gamboa  Año  2026  
+ 
+=== PAGE 2 ===
+Historial  de  Revisión Fecha  Versión  Autor  Descripción  
+27/  08/2026  
+ 
+ 
+26/08/2026  
+ 
+ 
+25/08/2026  
+ 
+ 
+ 
+24/08/2026  
+ 
+ 
+ 
+23/08/2026  
+ 
+21/08/2026  
+1.0  
+ 
+ 
+1.0  
+ 
+ 
+1.0  
+ 
+ 
+ 
+1.0  
+ 
+ 
+ 
+1.0  
+ 
+1.0  
+Britez  Alvarenga  Gustavo  Daniel  
+ 
+ 
+Britez  Alvarenga  Gustavo  Daniel  
+ 
+Britez  Alvarenga  Gustavo  Daniel  
+ 
+ 
+Britez  Alvarenga  Gustavo  Daniel  
+ 
+ 
+ 
+Britez  Alvarenga  Gustavo  Daniel  
+Britez  Alvarenga  Gustavo  Daniel  
+ 
+Cargamos  el  CU01_Completo  
+ 
+ 
+Agregamos  las  UI  que  vamos  a  usar  en  RF1   
+Agregamos  CU01  -  CU02  y  sus  respectivos  DSS  
+ 
+ 
+Confección  inicial  de  la  carpeta  con  estructura  oficial  detallada  (G,  N,  T)  y  Realizacion  de  G06  
+Realizacion  de  RF01  y  RF02  y  G05  
+Realizacion  de  G01,G03,G04  
+ 
+ÍNDICE  GENERAL  DETALLADO  DEL  PROYECTO G00.  DESCRIPCIÓN  GLOBAL  DEL  PRODUCTO   ├──  G01.  Propósito   │    ├──  Párrafo  1:  Contexto  de  la  Organización   
+=== PAGE 3 ===
+  │    ├──  Párrafo  2:  Problemática  General  de  Procesamiento  de  Datos  e  Información   │    ├──  Párrafo  3:  Definición  de  Módulos  /  Procesos  de  Negocio   │    ├──  Párrafo  4:  Solución  Propuesta     │    └──  Párrafo  5:  Beneficios  y  Mejoras  Organizacionales   ├──  G02.  Descripción  Funcional  del  Producto  y  Alcance   │    ├──  Tabla  de  Código  de  Colores  para  Análisis  Funcional     │    ├──  RFN  1  /  PN1:  Turnero  Nutricional     │    ├──  RFN  2  /  PN2:  Seguimiento  Nutricional  Pediátrico     │    └──  Límites  del  Alcance  y  Exclusiones  del  Sistema     ├──  G03.  Definiciones,  Acrónimos  y  Abreviaciones   │    ├──  Definiciones     │    ├──  Acrónimos   │    └──  Abreviaciones     ├──  G04.  Descripción  de  los  Participantes  en  el  Desarrollo  y  Usuarios  (Roles)   │    ├──  1.  Usuarios  del  Sistema     │    └──  2.  Participantes  en  el  Desarrollo     ├──  G05.  Otros  Requisitos   │    ├──  A.  Del  Producto   │    │    ├──  Estándares  Aplicables     │    │    ├──  Diseño  e  Interfaz  de  Usuario   │    │    ├──  Requisitos  del  Sistema  y  Arquitectura     │    │    ├──  Requisitos  de  Desempeño     │    │    ├──  Requisitos  de  Entorno  y  Hardware   │    │    └──  Entorno  de  Medición  de  RNF   │    └──  B.  De  Documentación   │        ├──  RNF-017  Manual  de  Usuario   │        ├──  RNF-018  Ayuda  en  Línea   │        └──  RNF-019  Guías  de  Instalación,  Configuración  y  Fichero  Léame   ├──  G06.  Diagramas  de  Clases  Integrados   │    ├──  G06.1  Diagrama  de  Clases  General  del  Negocio     │    ├──  G06.2  Diagrama  de  Clases  General  Técnico  y  de  Servicios   │    └──  G06.3  Diagrama  de  Clases  del  Negocio  por  Capas     └──  G07.  Modelo  Relacional  de  Datos  (DER)       ├──  G07.1  DER  General  del  Negocio         └──  G07.2  DER  General  Técnico  y  de  Servicios  
+N00.  PROCESOS  DE  NEGOCIO  (Especificación  Funcional  Detallada) 
+=== PAGE 4 ===
+  ├──  N01.  Especificación  Funcional  por  Proceso  de  Negocio   │    ├──  N01.1  Proceso  #1:  Turnero  Nutricional   │    │    ├──  A.  Identificación  de  Roles  Intervinientes     │    │    ├──  B.  Descripción  Funcional  del  Proceso     │    │    ├──  C.  Diagrama  de  Proceso     │    │    └──  D.  Modelo  Conceptual  del  Proceso     │    └──  N01.2  Proceso  #2:  Seguimiento  Nutricional  Pediátrico   │        ├──  A.  Identificación  de  Roles  Intervinientes   │        ├──  B.  Descripción  Funcional  del  Proceso     │        ├──  C.  Diagrama  de  Proceso   │        └──  D.  Modelo  Conceptual  del  Proceso     └──  N02.  Especificaciones  de  Casos  de  Uso  (Unidades  Documentales)       ├──  N02.1  CU01:  Registrar         ├──  N02.2  CU02:  Reprogramar         ├──  N02.3  CU03:  Cancelar  Turno    (Debo  agregar  C07  y  CU08)        ├──  N02.4  CU04:  Registrar  Mediciones  Antropométricas  y  Calcular  Z-Scores  OMS       ├──  N02.5  CU05:  Crear  Diagnóstico  y  Curvas  OMS       └──  N02.6  CU06:  Prescribir  Plan  Alimentario     (Debo  agregar  C09  y  CU10)   
+T00.  DOCUMENTOS  DE  ASPECTOS  TÉCNICOS  Y  SERVICIOS  QUE  PROVEE  EL  SISTEMA   ├──  T01.  Arquitectura  Base   │    ├──  T01.1  Diseño  de  la  Arquitectura  en  5  Capas     │    ├──  T01.2  Configuración  del  Esquema  de  Persistencia   │    ├──  T01.3  Diagrama  de  Componentes  y  Despliegue   │    ├──  T01.4  Mapa  de  Navegación  de  GUIs   │    └──  T01.5  Diagramas  de  Secuencia  de  Persistencia  y  Consulta  de  Datos   ├──  T02.  Gestión  de  Log  In  /  Log  Out  del  Sistema  (Patrón  Singleton)   ├──  T03.  Gestión  de  Encriptado  (Simétrico  /  Asimétrico  /  Hash  SHA-256)   ├──  T04.  Gestión  de  Perfiles  de  Usuario  (Patrón  Composite)   ├──  T05.  Gestión  de  Múltiples  Idiomas  (Patrón  Observer)   ├──  T06.  Gestión  de  Bitácora  y  Control  de  Cambios   │    ├──  T06a.  Gestión  de  Bitácora   │    └──  T06b.  Control  de  Cambios  /  Auditoría  de  Entidades   ├──  T07.  Gestión  de  Backup  (Copias  de  Seguridad) 
+=== PAGE 5 ===
+  └──  T08.  Gestión  de  Dígitos  Verificadores  (DV  Horizontal  y  Vertical)  
+A00.  CARACTERÍSTICAS  Y  FUNCIONALIDADES  ADICIONALES   ├──  A01.  Instalador  Automático  (setup.exe)   ├──  A02.  Informe  y  Exportación  a  PDF   └──  A03.  Serialización  de  Archivos  
+D00.  DOCUMENTACIÓN  ADICIONAL   ├──  D01.  Manual  de  Instalación   ├──  D02.  Ayuda  en  Línea   └──  D03.  Material  de  Apoyo  al  Usuario  Final  (Guías  de  Usuario,  Operación  y  Mantenimiento)  
+ 
+ 
+C00.  ESPECIFICACIÓN  DE  CASOS  DE  PRUEBA   ├──  C01.  Pruebas  Unitarias   └──  C02.  Pruebas  de  Integración  y  Regresión  
+G00.  DESCRIPCIÓN  GLOBAL  DEL  PRODUCTO 
+G01.  Propósito NutriEvolve  es  un  centro  de  atención  nutricional  pediátrica  ubicado  en  la  Ciudad  Autónoma  de  Buenos  Aires  (CABA)  que  realiza  el  seguimiento  infantojuvenil  de  0  a  19  años.  Su  misión  es  brindar  atención  nutricional  siguiendo  los  parámetros  de  la  Organización  Mundial  de  la  Salud  (OMS)  y  la  Organización  Panamericana  de  la  Salud  (OPS).  Su  visión  es  proporcionar  una  plataforma  de  software  accesible  y  de  alto  rendimiento  para  nutricionistas  independientes  y  pequeñas  PyMEs  del  sector  de  la  salud.  En  la  actualidad,  la  organización  enfrenta  la  problemática  de  que  el  profesional  registra  los  turnos  en  archivos  sueltos  y  calcula  las  mediciones  antropométricas  manualmente  sobre  tablas  impresas  o  de  Excel.  Esta  modalidad  consume  tiempo  valioso  durante  la  consulta  médica,  carece  de  precisión  matemática  inmediata  y  dificulta  el  seguimiento  continuo  de  la  evolución  del  paciente  en  su  registro  local.  
+=== PAGE 6 ===
+Para  resolver  esta  situación,  se  definieron  dos  Procesos  de  Negocio  (PN)  principales:  la  Gestión  de  Turnos  Nutricionales  (PN1),  enfocada  en  el  registro,  asignación,  reprogramación  y  confirmación  de  turnos  centralizando  los  datos  entre  recepción  y  consultorio;  y  el  Seguimiento  Nutricional  Pediátrico  (PN2),  centrado  en  la  captura  de  datos  antropométricos,  el  cálculo  automatizado  de  Z-Scores  y  percentiles  OMS,  la  generación  de  diagnósticos  y  el  resguardo  de  la  historia  clínica.  Como  solución  propuesta,  se  desarrollará  la  plataforma  de  software  NutriEvolve.  Este  Sistema  de  Información  (SI)  integrará  la  administración  automatizada  de  turnos  con  el  registro  antropométrico  inteligente  bajo  normas  OMS.  El  sistema  calculará  en  tiempo  real  los  Z-Scores  exactos  mediante  el  método  LMS,  graficará  automáticamente  las  curvas  de  crecimiento  infantojuvenil,  ofrecerá  un  módulo  analítico  para  consolidar  información  clínica  y  proporcionará  el  guardado  seguro  de  la  historia  clínica  evolutiva  local.  La  implementación  de  este  sistema  optimizará  significativamente  el  flujo  de  información  en  el  centro  nutricional,  reducirá  los  tiempos  operativos  por  consulta  y  eliminará  el  error  humano  en  los  diagnósticos  basados  en  patrones  OMS.  Asimismo,  permitirá  contar  con  historias  clínicas  digitales  unificadas,  trazables  y  disponibles  en  tiempo  real  para  el  equipo  profesional.  
+G02.  Descripción  Funcional  del  Producto  y  Alcance 
+Código  de  Colores  para  Análisis  Funcional  de  Operaciones Código  de  Color  Significado  Funcional  
+ROSA  Acción,  responde  a  ¿QUÉ?  
+AMARILLO  Actor  activo,  responde  a  ¿QUIÉN?  
+CELESTE  Conjunto  detallado  de  datos  
+VERDE  Actor  pasivo  (emite  o  recibe  info),  responde  a  ¿QUIÉN?  
+GRIS  Caso  decisión  (Si  entonces...)  
+ 
+RF  01:  Turnero  Nutricional  (PN1) 1.  El  Paciente/Tutor  se  comunica  con  el  Nutricionista  y  solicita  un  turno  nutricional  brindando  sus  datos  (Nombre,  Apellido,  DNI  Tutor,  DNI  Niño,  Teléfono,  Email,  Obra  Social,  Fecha  Solicitada,  Horario  Solicitado,  Motivo  de  Consulta) .  
+=== PAGE 7 ===
+2.  El  Nutricionista  busca  y  verifica  la  disponibilidad  en  su  agenda  médica  local  considerando  la  fecha  y  horario  de  la  consulta  (Fecha,  Horario,  Motivo  de  Consulta) .  3.  Si  existe  superposición  con  un  turno  previamente  asignado,  el  Nutricionista  le  comunicará  al  Paciente/Tutor  las  opciones  disponibles  (horarios  libres/Alternativos) .  4.  Si  el  Paciente/Tutor  no  se  encuentra  registrado  en  la  base  de  datos,  el  Nutricionista  registrará  los  nuevos  datos  en  la  plataforma  (Nombre,  Apellido,  DNI  Tutor,  DNI  Niño,  Teléfono,  Email,  Obra  Social) .  5.  El  Nutricionista  registrará  la  solicitud  del  turno  en  el  sistema  local  (Código  de  Turno,  DNI  Paciente,  Fecha,  Horario,  Motivo  de  Consulta,  Estado:  Confirmado) .  6.  El  Módulo  actualizará  automáticamente  la  agenda  del  profesional  marcando  el  bloque  horario  correspondiente  como  (Estado:  Ocupado) .  7.  Si  el  paciente/Tutor  solicita  modificar  o  cancelar  un  turno,  el  Nutricionista  buscará  y  modificará  o  cancelará  el  registro  (Código  de  Turno,  Nueva  Fecha/Hora  o  Motivo  de  Cancelación) .  8.  Si  es  cancelación,  el  Módulo  liberará  el  horario  en  la  agenda  del  profesional  marcándolo  como  (Estado:  Disponible) .  9.  Finalizada  la  atención,  el  Nutricionista  registrará  el  estado  final  del  turno  en  el  sistema  local  (Estado:  Asistió  /  Ausente  /  Cancelado) . 
+RF  02:  Seguimiento  Nutricional  Pediátrico  (PN2) 1.  El  Nutricionista  buscará  al  paciente  en  el  sistema  local  (DNI  Niño,  DNI  Tutor,  Nombre,  Apellido)  para  desplegar  su  historia  clínica.  2.  El  Nutricionista  registrará  los  datos  antropométricos  medidos  al  niño  (Fecha  de  Control,  Edad  en  Meses/Años,  Peso  en  kg,  Talla  en  cm,  Perímetro  Cefálico  en  cm) .  3.  El  Módulo  calculará  automáticamente  el  IMC  y  los  Z-Scores  oficializados  por  la  OMS   (Z-Score  Peso/Edad,  Z-Score  Talla/Edad,  Z-Score  IMC/Edad,  Z-Score  PC/Edad) .  4.  El  Módulo  graficará  automáticamente  la  posición  del  paciente  sobre  los  patrones  de  crecimiento  OMS  (Curvas  de  Percentiles  P3,  P15,  P50,  P85,  P97) .  5.  El  Módulo  generará  el  diagnóstico  nutricional  automatizado  según  parámetros  calculados  (Normopeso,  Desnutrición  Severa,  Desmedro,  Riesgo  de  Sobrepeso,  Obesidad) .  6.  Si  se  detecta  una  desviación  crítica  o  caída  abrupta  de  percentil  respecto  al  control  previo,  el  Módulo  emitirá  una  Alerta  Clínica  Visual  de  Crecimiento.  7.  El  Nutricionista  registrará  los  datos  complementarios  de  la  consulta  (Tipo  de  Lactancia,  Alimentación  Complementaria,  Recordatorio  24h,  Frecuencia  de  Alimentos,  Alergias,  Antecedentes  Familiares) .  
+=== PAGE 8 ===
+8.  El  Nutricionista  prescribirá  y  registrará  la  indicación  alimentaria  personalizada  (Requerimiento  Calórico,  Distribución  de  Macronutrientes,  Pautas  para  la  Familia,  Metas  de  Salud) .  9.  El  Módulo  actualizará  y  guardará  de  forma  definitiva  el  registro  evolutivo  en  la  historia  clínica  local  (Histórico  de  Consultas,  Gráficos  Recalculados,  Diagnósticos  e  Indicaciones) .  
+Límites  del  Alcance  y  Exclusiones  del  Sistema  (Pedir  feedback  a  compañeros) Gestión  de  Pagos  y  Pasarelas  Financieras:  El  sistema  no  incluye  integración  con  pasarelas  de  pago  externas  (tales  como  Mercado  Pago  API,  Posnet  en  línea  o  pasarelas  bancarias).  La  cobranza  de  honorarios  se  considera  un  proceso  administrativo  externo  al  software,  registrándose  únicamente  de  forma  manual.  Interoperabilidad  con  Laboratorios  Externos :  El  sistema  no  cuenta  con  interfaces  de  comunicación  automatizada  ni  intercambio  de  datos  estándar  con  laboratorios  de  análisis  clínicos  para  la  importación  automática  de  resultados.  Prescripción  Farmacológica  y  Firma  Digital  Médica:  El  alcance  se  restringe  exclusivamente  al  seguimiento  nutricional  pediátrico  (evaluación  antropométrica,  Z-Scores  OMS  y  planes  alimentarios).  No  se  incluye  el  módulo  de  prescripción  de  fármacos  ni  infraestructura  de  firma  digital  con  validez  jurídica  regulada.  Portal  Web  o  App  Móvil  Autogestionable  para  Pacientes:  NutriEvolve  está  diseñado  como  un  software  de  escritorio  para  uso  exclusivo  del  personal  interno  del  centro  (Nutricionistas,  Recepcionistas  y  Administradores).  No  incluye  portal  web  ni  una  app  móvil  para  que  los  tutores  reserven  turnos  de  manera  autónoma.  Módulo  de  Telemedicina:  No  se  incluye  la  realización  ni  transmisión  de  videollamadas,  consultas  virtuales  síncronas  ni  chat  en  tiempo  real  integrado  en  la  aplicación.  
+G03.  Definiciones,  Acrónimos  y  Abreviaciones  
+Definiciones  Descripción  
+PACIENTE  PEDIÁTRICO  Niño,  niña  o  adolescente  entre  0  y  19  años  de  edad  que  recibe  atención  en  el  centro  nutricional.  
+Z-SCORE  (PUNTUACIÓN  Z)  
+Medida  estadística  que  indica  la  desviación  de  un  valor  individual  respecto  a  la  media  de  la  población  de  referencia  OMS,  expresada  en  desviaciones  estándar  (σ).  
+=== PAGE 9 ===
+MÉTODO  LMS  (OMS)  Método  desarrollado  por  Cole  y  Green  utilizado  por  la  OMS  para  calcular  Z-Scores  exactos  a  partir  de  tres  parámetros  dependientes  de  la  edad  y  sexo:  L  (Sesgo/Box-Cox),  M  (Mediana)  y  S  (Coeficiente  de  variación).  
+PERCENTIL  OMS  Posición  relativa  del  paciente  en  una  distribución  porcentual  de  referencia  (P3,  P15,  P50,  P85,  P97).  Un  percentil  50  indica  que  el  50%  de  los  niños  sanos  de  la  misma  edad  y  sexo  están  por  debajo  de  ese  valor.  
+ANAMNESIS  NUTRICIONAL  
+Conjunto  de  datos  recabados  en  la  entrevista  clínica  sobre  hábitos  alimentarios,  antecedentes  de  salud,  lactancia  y  antecedentes  familiares  del  paciente  pediátrico.  
+RECORDATORIO  DE  24  HORAS  
+Método  de  evaluación  dietaria  que  consiste  en  recolectar  la  información  detallada  de  todos  los  alimentos  y  bebidas  consumidos  por  el  paciente  durante  el  día  anterior  a  la  consulta.  
+PERÍMETRO  CEFEÁLICO  
+Medida  antropométrica  del  contorno  de  la  cabeza  del  lactante,  fundamental  para  evaluar  el  desarrollo  neurológico  y  cerebral  en  los  primeros  años  de  vida.  
+  
+Acronimos  Descripcion  
+    
+Abreviaciones  Descripcion  
+      
+=== PAGE 10 ===
+G04.  Descripción  de  los  Participantes  en  el  Desarrollo  y  Usuarios  (Roles) 
+1.  Usuarios  del  Sistema Nombre  /  Puesto  Descripción  Responsabilidad  
+Lucía  Martínez  (Nutricionista)  
+Profesional  de  la  salud  responsable  de  la  atención  clínica  pediátrica  y  diagnóstico.  
+Registro  de  mediciones  antropométricas,  cálculo  OMS,  diagnóstico,  prescripción  de  planes  alimentarios  y  atención  de  turnos  (RF  01,  RF  02).  
+Juan  Vega  (Administrador)  
+Usuario  responsable  del  control  del  sistema,  gestión  de  perfiles,  bitácora  y  backups.  
+Administración  global  del  software,  asignación  de  permisos,  auditoría  y  mantenimiento  de  datos  (RF  01,  RF  02,  T01-T08).  
+ 
+2.  Participantes  en  el  Desarrollo  del  Sistema Nombre  /  Puesto  Descripción  Responsabilidad  
+Hugo  Flores  (Analista  Funcional)  
+Encargado  de  relevar  necesidades  clínicas,  definir  requerimientos  y  documentar  procesos.  
+Especificación  funcional  de  requerimientos  (RF  01,  RF  02)  y  elaboración  de  casos  de  uso.  
+Mario  Luis  (Desarrollador)  
+Encargado  de  programar  la  lógica  de  negocio,  arquitectura  multicapa  y  base  de  datos.  
+Implementación  en  C#  .NET  8,  formularios  WinForms,  procedimientos  almacenados  y  lógica  OMS.  
+Mario  Pereyra  (Project  Manager)  
+Coordinador  del  proyecto,  asignación  de  tiempos  y  cumplimiento  de  entregables.  
+Planificación  del  proyecto,  seguimiento  de  iteraciones  y  control  de  calidad.  
+=== PAGE 11 ===
+G05.  Otros  Requisitos 
+A.  Del  Producto RNF-001.  Norma  de  Calidad  ISO/IEC  25010:  El  sistema  debe  basarse  en  el  modelo  de  calidad  de  software  ISO/IEC  25010,  priorizando  la  adecuación  funcional,  la  fiabilidad,  la  usabilidad,  la  eficiencia  de  desempeño  y  la  mantenibilidad.  RNF-002.  Estándar  de  Interfaz  y  Ergonomía:  La  interfaz  de  usuario  debe  seguir  un  diseño  clínico  minimalista  y  profesional,  manteniendo  coherencia  visual  en  tipografías,  colores  suaves  (verdes  y  neutros)  y  alineación  estándar  de  controles  para  minimizar  la  fatiga  visual.  RNF-003.  Plataforma  de  Desarrollo:  El  sistema  deberá  desarrollarse  utilizando  el  lenguaje  C#  sobre  .NET  8  mediante  una  aplicación  de  escritorio  Windows  Forms.  RNF-004.  Motor  de  Persistencia:  El  sistema  almacenará  la  información  de  manera  relacional  utilizando  Microsoft  SQL  Server  2019  o  superior.  RNF-005.  Arquitectura  Multicapa:  El  sistema  se  implementará  siguiendo  una  arquitectura  de  al  menos  5  capas  (Presentación/UI,  Lógica  de  Negocio/BLL,  Entidades/BE,  Acceso  a  Datos/DAL  y  Servicios)  RNF-006.  Velocidad  de  Registro:  El  sistema  deberá  registrar  información  clínica,  consultas  nutricionales,  mediciones  antropométricas  y  turnos  en  un  tiempo  inferior  a  3  segundos  bajo  condiciones  normales  de  uso.  RNF-007.  Velocidad  de  Consulta:  El  sistema  deberá  recuperar  y  visualizar  historiales  clínicos  completos  de  pacientes  en  un  tiempo  inferior  a  2  segundos.  RNF-008.  Generación  de  Gráficos  y  Percentiles  OMS:  El  sistema  deberá  calcular  los  Z-Scores  y  generar  gráficos  comparativos  e  indicadores  nutricionales  en  un  tiempo  inferior  a  5  segundos.  RNF-009.  Búsqueda  de  Información:  El  sistema  deberá  permitir  la  búsqueda  de  pacientes  mediante  DNI  o  datos  personales  en  un  tiempo  inferior  a  2  segundos.  RNF-010.  Respaldo  y  Recuperación:  El  sistema  dispondrá  de  mecanismos  de  respaldo  (backup)  y  recuperación  que  permitan  preservar  la  integridad  y  disponibilidad  de  la  información  almacenada.  RNF-011.  Gestión  de  Recursos:  El  sistema  optimizará  el  uso  de  memoria  y  recursos  mediante  la  reutilización  de  conexiones  y  la  carga  bajo  demanda  de  gráficos  y  reportes.  RNF-012.  Entorno  de  Ejecución:  El  sistema  se  ejecutará  en  sistemas  operativos  Windows  (10/11)  sin  requerir  conexión  continua  a  Internet  para  su  funcionamiento  normal.  
+=== PAGE 12 ===
+RNF-013.  Comunicación  en  Red:  El  sistema  operará  sobre  una  red  local  (LAN),  garantizando  una  comunicación  estable  entre  las  estaciones  de  trabajo  cliente  y  el  servidor  de  base  de  datos.  RNF-014.  Hardware  Mínimo  Cliente:  Procesador  Intel  Core  i3  o  equivalente,  4  GB  de  memoria  RAM  y  una  resolución  mínima  de  pantalla  de  1366x768  píxeles.  RNF-015.  Hardware  Recomendado  Cliente:  Procesador  Intel  Core  i5  o  superior,  8  GB  de  memoria  RAM  y  unidad  de  almacenamiento  SSD.  RNF-016.  Servidor  de  Base  de  Datos:  Procesador  Intel  Core  i5  o  superior,  8  GB  de  memoria  RAM  y  20  GB  de  almacenamiento  SSD  disponible.  
+B.  De  Documentación RNF-017.  Manual  de  Usuario:  Se  entregará  un  manual  completo  de  fácil  lectura  con  capturas  de  pantalla  y  guías  paso  a  paso  para  el  acceso  a  cada  funcionalidad,  garantizando  que  no  exista  gap  semántico.  RNF-018.  Ayuda  en  Línea:  El  sistema  contará  con  un  mecanismo  de  ayuda  contextual  y  canal  directo  de  soporte  técnico  para  asistir  a  los  usuarios  durante  la  operación.  RNF-019.  Guía  de  Instalación,  Configuración  y  Fichero  Léame:  Se  proveerán  las  instrucciones  detalladas  para  descargar  el  instalador,  ejecutar  setup.exe  con  permisos  de  administrador,  desplegar  el  esquema  de  base  de  datos  SQL  Server  y  verificar  la  correcta  instalación.   
+ 
+ 
+ 
+ 
+ 
+ 
+G06.  Diagramas  de  Clases  Integrados 
+G06.1  Modelo  Conceptual  del  Negocio  Integrado  (Dominio)   
+=== PAGE 13 ===
+ 
+Lo  tengo  en  GitHub  falta  pegar.  
+                  
+ 
+ 
+ 
+  
+ 
+=== PAGE 14 ===
+ 
+G06.2  Diagrama  de  Clases  General  Técnico  y  de  Servicios No  se  que  hacer  acá…  es  decir  copio  los  diagramas  que  tengo  sobre  la  estructura  del  Proyecto  ?   La  pregunta  es  qué  servicio  tenemos  en  esta  materia  por  que  anteriormente  si  teniamos  servicios  ,              
+G06.3  Diagrama  de  Clases  por  Capas  (BE,  BLL,  DAL) 
+Diagrama  de  Clase  del  Negocio  –  BE  
+ 
+Lo  tengo  en  GitHub  falta  pegar. 
+=== PAGE 15 ===
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Diagrama  de  Clase  del  Negocio  –  BLL  (FALT  ANO  LO  TENGO)  
+ 
+ 
+ 
+=== PAGE 16 ===
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Diagrama  de  Clase  del  Negocio  –  DAL  (  Falta  no  lo  tengo)  
+ 
+ 
+ 
+ 
+=== PAGE 17 ===
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+G07.  Modelo  Relacional  de  Datos  (DER)  
+DER  Tecnico     
+=== PAGE 18 ===
+ 
+DER  Negocios                     
+N00.  PROCESOS  DE  NEGOCIO  (Especificación  Funcional  Detallada) [Sección  reservada  para  N01  (Especificación  funcional  por  proceso)  y  N02  (Casos  de  Uso  del  CU01  al  CU06  con  sus  14  sub-ítems  documentales).]   N02.  Especificaciones  de  Casos  de  Uso  (Unidades  Documentales)   N02.1  CU01:  Registrar  Turno   
+=== PAGE 19 ===
+ ID  y  Nombre                            CU01  -  Registrar  Turno  Estado:  Pendiente  Descripción:  El  Operador  (Nutricionista)  consulta  la  disponibilidad  de  la  agenda  médica  y  registra  un  nuevo  turno  para  un  paciente.  Actor  principal:  Nutricionista  Actor  secundario:  -  Precondiciones:  1.  El  Operador  debe  haber  iniciado  sesión  en  el  sistema  y  contar  con  los  permisos  correspondientes.  2.  El  sistema  de  Dígito  Verificador  (DV)  debe  encontrarse  en  estado  consistente  (base  de  datos  íntegra  sin  bloqueos).  3.  Debe  existir  una  agenda  médica  abierta  generada  previamente  para  el  profesional  y  la  fecha  solicitada.  Puntos  de  inclusión:  CU07:  Consultar  Disponibilidad  (utilizado  para  obtener  y  listar  los  bloques  horarios  libres).  Puntos  de  extensión:  CU08:  Registrar  Paciente  y  Tutor  (Punto  de  extensión:  "Paciente  no  Registrado"  en  el  paso  6).  Escenario  principal:  1.  El  Nutricionista  accede  al  módulo  de  Gestión  de  Turnos.  2.  El  modulo  muestra  la  interfaz  de  turnos  con  el  calendario,  selector  de  profesionales  y  la  grilla  de  turnos.  3.  El  Nutricionista  selecciona  la  fecha  de  consulta  y  el  profesional  nutricionista  deseado.  4.  El  modulo  ejecuta  el   “CU07:  Consultar  Disponibilidad”,  recupera  los  bloques  horarios  libres  y  carga  el  selector  de  horarios  disponibles.  5.  El  Nutricionista  ingresa  el  DNI  del  niño  y  presiona  "Buscar  Paciente".  6.  El  modulo  busca  al  niño  en  la  base  de  datos,  recupera  sus  datos  junto  con  los  del  tutor  asociado  y  los  muestra  en  pantalla.  7.  El  Nutricionista  selecciona  el  bloque  horario  deseado  de  la  lista  de  horarios  disponibles  e  ingresa  el  motivo  de  consulta.  8.  El  Nutricionista  presiona  el  botón  "Agendar  Turno".  9.  El  modulo  valida  que  los  datos  requeridos  estén  completos  y  que  el  bloque  horario  continúe  disponible.  10.  El  modulo  genera  el  código  único  de  turno,  creamos  un  Turno  en  estado  "Solicitado".  11.  El  modulo  persiste  el  nuevo  turno  en  la  base  de  datos.  12.  El  modulo  actualiza  el  estado  del  bloque  horario  asignado  a  "Ocupado".  13.  El  modulo  calcula  los  Dígitos  Verificadores  .  14.  El  modulo  registra  el  evento  de  agendamiento  en  la  bitácora  de  auditoría.  15.  El  modulo  muestra  un  mensaje  de  éxito,  informa  el  código  de  turno  generado  y  actualiza  la  grilla  general  de  turnos.  Flujos  alternativos:  4.1  No  existen  bloques  disponibles:  El  sistema  informa:  "No  hay  horarios  disponibles  para  el  profesional  en  la  fecha  seleccionada.  6.1  Paciente  no  registrado  (Punto  de  Extensión:  CU08).  6.1.1  El  sistema  informa  que  el  DNI  no  se  encuentra  en  el  padrón  de  pacientes.  6.1.2  El  Nutricionista  ingresa  los  datos  personales  del  Tutor  (DNI,  Nombre,  Apellido,  Teléfono,  Email,  Parentesco).  6.1.3  El  sistema  valida  los  datos  y  registra  al  nuevo  Tutor.  6.1.4  El  operador  ingresa  los  datos  del  Niño  (DNI,  Nombre,  Apellido,  Fecha  de  Nacimiento,  Sexo,  Obra  Social).  6.1.5  El  sistema  valida  que  sea  menor  a  19  años  y  registra  al  Paciente .  
+=== PAGE 20 ===
+9.1  Campos  obligatorios  incompletos:  El  sistema  resalta  los  campos  faltantes  y  no  permite  avanzar   9.2  Conflicto  en  el  bloque  horario:  El  sistema  detecta  que  otro  usuario  ocupó  el  bloque  horario  mientras  se  completaban  los  datos,  muestra  una  alerta,  recarga  los  bloques  disponibles  y  vuelve  al  paso  7.  Postcondiciones:  El  sistema  da  de  alta  el  turno  con  estado  "Solicitado"  y  el  horario  pasa  a  estado  "Ocupado".  Diagrama  de  clase  (Con  las  clases  afectadas)                      Diagrama  de  Secuencia  :  CU01:  Registrar  Turno          
+=== PAGE 21 ===
+                                     
+=== PAGE 22 ===
+  DER  (con  las  entidades  afectadas  por  esta  especificación).         
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+=== PAGE 23 ===
+ 
+ 
+ 
+ 
+ 
+Prototipo  de  interfaz  de  usuario                           
+ 
+  
+=== PAGE 24 ===
+                                     
+=== PAGE 25 ===
+N02.2  CU02:  Reprogramar  Turno  ID  y  Nombre                            CU02-Reprogramar  Turno  Estado:   Pendiente  Descripción:   El  Operador  modifica  la  fecha,  hora  y  bloque  horario  de  un  turno  previamente  asignado,  validando  el  estado  actual  y  permitiendo  la  modificación,  liberando  el  horario  previo  y  ocupando  el  nuevo.  Actor  principal:   Nutricionista  Actor  secundario:   -  Precondiciones:   Sesión  iniciada  y  el  Turno  en  estado  Solicitado/Confirmado  
+Escenario  principal:  1.  El  Nutricionista  accede  al  módulo  de  Gestión  de  Turnos  y  visualiza  la  grilla  de  turnos  existentes.  
+2.  El  Nutricionista  selecciona  el  turno  a  reprogramar  desde  la  grilla  de  la  agenda  actual.  
+3.  El  modulo  recupera  Turno  con  su  Estado  desde  la  base  de  datos  
+4.  El  Nutricionista  selecciona  la  nueva  fecha  y  profesional  deseado  para  la  reprogramación.  
+5.  El  modulo  ejecuta  el  caso  de  uso  incluido  CU07:  Consultar  Disponibilidad,  recupera  los  bloques  horarios  libres  y  carga  los  horarios  disponibles  para  la  nueva  fecha.  
+6.  El  Nutricionista  selecciona  el  nuevo  bloque  horario  deseado  y  presiona  el  botón  "Reprogramar  Turno".  
+7.  El  modulo  delega  la  lógica  de  cambio  de  estado  y  validación  de  reglas  de  negocio  a  la  clase  concreta  del  estado  actual,  asegurando  que  la  transición  sea  válida.  
+8.  El  modulo  persiste  la  actualización  y  actualiza  el  estado  del  bloque  horario  anterior  a  "Disponible"  y  el  nuevo  bloque  a  "Ocupado"   
+9.  El  modulo  recalcula  los  Dígitos  Verificadores  y  registra  el  evento  de  reprogramación  en  la  bitácora  de  auditoría  
+10.  El  modulo  muestra  un  mensaje  de  confirmación  de  operación  exitosa  y  refresca  la  grilla  de  turnos  para  reflejar  los  cambios.  
+Flujos  alternativos:   3.1  Turno  no  seleccionado.   6.1  Sin  bloques  disponibles.   9.1  Conflicto  de  concurrencia.   10.1  Estado  no  permite  modificación  (Asistió/Cancelado).  Postcondiciones:   Turno  actualizado  
+  
+=== PAGE 26 ===
+Diagrama  de  clase  (Con  las  clases  afectadas)   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+    
+ 
+ 
+ 
+LO  TENGO  EN  GITHUB  PERO  EN  PAPEL  Y  LAPIZ  !!!  ESTA  FEO,  SUBIR  DESPUES  Diagrama  de  Secuencia  -  CU02:  Reprogramar  Turno  
+=== PAGE 27 ===
+                                     
+=== PAGE 28 ===
+    DER  (con  las  entidades  afectadas  por  esta  especificación).   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+=== PAGE 29 ===
+ 
+ 
+Prototipo  de  interfaz  de  usuario                           
+ 
+ 
+ 
+ 
+  
+=== PAGE 30 ===
+ N02.3  CU03:  Cancelar  Turno  ID  y  Nombre                            CU03-Cancelar  Turno  Estado:   Pendiente  Descripción:    Actor  principal:    Actor  secundario:    Precondiciones:    
+Escenario  principal:   
+Flujos  alternativos:    
+Postcondiciones:    
+  
+ 
+ 
+ 
+ 
+ 
+       
+=== PAGE 31 ===
+ 
+Diagrama  de  clase  (Con  las  clases  afectadas)                            
+=== PAGE 32 ===
+Diagrama  de  Secuencia  -  CU03:  Cancelar  Turno                              
+=== PAGE 33 ===
+DER  (con  las  entidades  afectadas  por  esta  especificación).                              
+=== PAGE 34 ===
+Prototipo  de  interfaz  de  usuario                
+T00.  DOCUMENTOS  DE  ASPECTOS  TÉCNICOS  Y  SERVICIOS  QUE  PROVEE  EL  SISTEMA [Sección  reservada  para  T01  Arquitectura  Base,  T02  Login/Singleton,  T03  Encriptado,  T04  Composite,  T05  Idioma  Observer,  T06  Bitácora/Auditoría,  T07  Backup,  T08  DV.]  
+A00.  CARACTERÍSTICAS  Y  FUNCIONALIDADES  ADICIONALES [Sección  reservada  para  A01  Instalador  setup.exe,  A02  Reportes  PDF,  A03  Serialización.]  
+D00.  DOCUMENTACIÓN  ADICIONAL [Sección  reservada  para  D01  Manual  de  Instalación,  D02  Ayuda  en  línea,  D03  Guías  de  usuario.]  
+C00.  ESPECIFICACIÓN  DE  CASOS  DE  PRUEBA [Sección  reservada  para  C01  Pruebas  Unitarias  y  C02  Pruebas  de  Integración.]     
+=== PAGE 35 ===
+ANALIZAR  EN  LA  SEMANA   (  Una  vez  aprobado  eliminar  del  Titulo  “  RF1  ”  )   
