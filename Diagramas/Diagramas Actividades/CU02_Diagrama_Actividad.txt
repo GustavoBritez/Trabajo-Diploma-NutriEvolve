@@ -1,0 +1,63 @@
+@startuml CU02_Diagrama_Actividad
+skinparam style strictuml
+skinparam roundcorner 6
+skinparam shadowing false
+skinparam defaultTextAlignment center
+
+|#EBF5FB|Nutricionista (Operador)|
+|#F4F6F7|Sistema (NutriEvolve)|
+
+|Nutricionista (Operador)|
+start
+:Acceder a Gestión de Turnos\ny seleccionar turno de la grilla;
+
+|Sistema (NutriEvolve)|
+:Recuperar datos de Turno y\nverificar EstadoActual (IEstadoTurno);
+if (¿Estado permite reprogramación?) then ([No: Asistió / Cancelado])
+    :Mostrar alerta: Turno finalizado o\ncancelado no modificable (Flujo Alt 10.1);
+    stop
+else ([Sí: Solicitado / Confirmado])
+endif
+
+|Nutricionista (Operador)|
+:Seleccionar nueva fecha y\nprofesional nutricionista;
+
+|Sistema (NutriEvolve)|
+:Ejecutar CU07: Consultar Disponibilidad;
+if (¿Existen bloques disponibles en la nueva fecha?) then ([No])
+    :Mostrar alerta: Sin horarios disponibles\nen la fecha seleccionada (Flujo Alt 4.1);
+    stop
+else ([Sí])
+endif
+:Cargar selector con nuevos bloques\nhorarios disponibles;
+
+|Nutricionista (Operador)|
+:Seleccionar nuevo bloque horario\ny presionar 'Reprogramar Turno';
+
+|Sistema (NutriEvolve)|
+if (¿Nuevo bloque continúa 'Disponible'?) then ([No: Concurrencia])
+    :Mostrar alerta: Conflicto de concurrencia\nen bloque y recargar grilla (Flujo Alt 9.2);
+    stop
+else ([Sí])
+endif
+:Delegar reprogramación a State\n(TurnoBE_DNI101.Reprogramar);
+
+fork
+    :Liberar bloque horario anterior\n(Estado = 'Disponible');
+fork again
+    :Asignar y ocupar nuevo bloque horario\n(Estado = 'Ocupado');
+fork again
+    :Actualizar Fecha, Hora e IdBloque\nen Turnos_DNI101;
+fork again
+    :Recalcular DVH y DVV persistiendo\nen tabla DV (T08);
+fork again
+    :Registrar evento de reprogramación\nen Bitacora (T06);
+end fork
+
+:Mostrar mensaje de éxito y\nrefrescar grilla general de turnos;
+
+|Nutricionista (Operador)|
+:Visualizar confirmación de reprogramación\ny turno actualizado;
+stop
+
+@enduml

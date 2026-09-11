@@ -11,15 +11,15 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("ea_manager")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("ocr_app")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d825bbc2bb6b2944ee5d12b6f56b3776a40cc739")]
-[assembly: System.Reflection.AssemblyProductAttribute("ea_manager")]
-[assembly: System.Reflection.AssemblyTitleAttribute("ea_manager")]
+[assembly: System.Reflection.AssemblyProductAttribute("ocr_app")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ocr_app")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
-[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
-[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows10.0.19041.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows10.0.19041.0")]
 
 // Generado por la clase WriteCodeFragment de MSBuild.
 
