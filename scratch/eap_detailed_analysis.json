@@ -1,0 +1,4711 @@
+{
+  "packages": [
+    {
+      "Package_ID": "1",
+      "Name": "Model",
+      "Parent_ID": "0",
+      "Notes": null
+    },
+    {
+      "Package_ID": "2",
+      "Name": "Use Case Model",
+      "Parent_ID": "1",
+      "Notes": null
+    },
+    {
+      "Package_ID": "3",
+      "Name": "Actors",
+      "Parent_ID": "2",
+      "Notes": null
+    },
+    {
+      "Package_ID": "4",
+      "Name": "Primary Use Cases",
+      "Parent_ID": "2",
+      "Notes": null
+    },
+    {
+      "Package_ID": "5",
+      "Name": "Domain Model",
+      "Parent_ID": "1",
+      "Notes": null
+    },
+    {
+      "Package_ID": "6",
+      "Name": "Domain Objects",
+      "Parent_ID": "5",
+      "Notes": null
+    },
+    {
+      "Package_ID": "7",
+      "Name": "Class Model",
+      "Parent_ID": "1",
+      "Notes": null
+    },
+    {
+      "Package_ID": "8",
+      "Name": "System",
+      "Parent_ID": "7",
+      "Notes": null
+    },
+    {
+      "Package_ID": "9",
+      "Name": "Frameworks",
+      "Parent_ID": "7",
+      "Notes": null
+    },
+    {
+      "Package_ID": "15",
+      "Name": "N01.1 Proceso #1: Turnero Nutricional",
+      "Parent_ID": "2",
+      "Notes": null
+    }
+  ],
+  "diagrams": [
+    {
+      "Diagram_ID": "27",
+      "Name": "CU01: Diagrama de Actividad",
+      "Diagram_Type": "Activity",
+      "Package_ID": "4",
+      "Notes": null,
+      "Author": "Danie",
+      "Version": "1.0",
+      "CreatedDate": "27/08/2026",
+      "ModifiedDate": "30/08/2026",
+      "objects": [
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "438",
+          "Name": "Acceder al módulo de Gestión de Turnos",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-90",
+          "RectLeft": "130",
+          "RectBottom": "-135",
+          "RectRight": "390"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "439",
+          "Name": "Seleccionar fecha y profesional nutricionista",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-175",
+          "RectLeft": "130",
+          "RectBottom": "-220",
+          "RectRight": "390"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "440",
+          "Name": "Ejecutar CU07: Consultar Disponibilidad",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-173",
+          "RectLeft": "552",
+          "RectBottom": "-218",
+          "RectRight": "832"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "441",
+          "Name": "¿Existen bloques disponibles en la fecha?",
+          "Object_Type": "Decision",
+          "Stereotype": null,
+          "RectTop": "-258",
+          "RectLeft": "647",
+          "RectBottom": "-298",
+          "RectRight": "737"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "442",
+          "Name": "Mostrar alerta: No hay horarios disponibles (Flujo Alt 4.1)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-258",
+          "RectLeft": "902",
+          "RectBottom": "-303",
+          "RectRight": "1122"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "443",
+          "Name": "Cargar selector de bloques horarios disponibles",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-343",
+          "RectLeft": "553",
+          "RectBottom": "-388",
+          "RectRight": "833"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "444",
+          "Name": "Ingresar DNI del niño y presionar 'Buscar Paciente'",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-430",
+          "RectLeft": "130",
+          "RectBottom": "-475",
+          "RectRight": "390"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "505",
+          "Name": null,
+          "Object_Type": "Synchronization",
+          "Stereotype": null,
+          "RectTop": "-1036",
+          "RectLeft": "601",
+          "RectBottom": "-1042",
+          "RectRight": "764"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "497",
+          "Name": "Visualizar confirmacion de turno y codigo generado",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-1290",
+          "RectLeft": "130",
+          "RectBottom": "-1335",
+          "RectRight": "390"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "498",
+          "Name": "Fin_Alt4_1",
+          "Object_Type": "StateNode",
+          "Stereotype": null,
+          "RectTop": "-343",
+          "RectLeft": "1002",
+          "RectBottom": "-363",
+          "RectRight": "1022"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "501",
+          "Name": "Nutricionista (Operador)",
+          "Object_Type": "Boundary",
+          "Stereotype": null,
+          "RectTop": "-10",
+          "RectLeft": "40",
+          "RectBottom": "-1430",
+          "RectRight": "480"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "502",
+          "Name": "Sistema (NutriEvolve)",
+          "Object_Type": "Boundary",
+          "Stereotype": null,
+          "RectTop": "-8",
+          "RectLeft": "502",
+          "RectBottom": "-1428",
+          "RectRight": "1152"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "504",
+          "Name": "ActivityInitial",
+          "Object_Type": "StateNode",
+          "Stereotype": null,
+          "RectTop": "-39",
+          "RectLeft": "251",
+          "RectBottom": "-59",
+          "RectRight": "271"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "506",
+          "Name": null,
+          "Object_Type": "Synchronization",
+          "Stereotype": null,
+          "RectTop": "-1250",
+          "RectLeft": "821",
+          "RectBottom": "-1256",
+          "RectRight": "929"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "507",
+          "Name": "ActivityFinal",
+          "Object_Type": "StateNode",
+          "Stereotype": null,
+          "RectTop": "-1376",
+          "RectLeft": "249",
+          "RectBottom": "-1396",
+          "RectRight": "269"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "445",
+          "Name": "Buscar niño y tutor en BD",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-428",
+          "RectLeft": "552",
+          "RectBottom": "-473",
+          "RectRight": "832"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "446",
+          "Name": "¿Paciente registrado?",
+          "Object_Type": "Decision",
+          "Stereotype": null,
+          "RectTop": "-513",
+          "RectLeft": "647",
+          "RectBottom": "-553",
+          "RectRight": "737"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "447",
+          "Name": "Ingresar datos del Tutor y persistir en Tutores_DNI101 (CU08)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-515",
+          "RectLeft": "130",
+          "RectBottom": "-560",
+          "RectRight": "390"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "448",
+          "Name": "Ingresar datos del Niño, validar edad (<19 años) y persistir en Pacientes_DNI101",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-595",
+          "RectLeft": "120",
+          "RectBottom": "-645",
+          "RectRight": "400"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "449",
+          "Name": "Mostrar datos del Niño y Tutor en pantalla",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-593",
+          "RectLeft": "552",
+          "RectBottom": "-638",
+          "RectRight": "832"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "450",
+          "Name": "Seleccionar bloque horario e ingresar motivo de consulta",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-685",
+          "RectLeft": "130",
+          "RectBottom": "-730",
+          "RectRight": "390"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "451",
+          "Name": "Presionar botón 'Agendar Turno'",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-770",
+          "RectLeft": "150",
+          "RectBottom": "-815",
+          "RectRight": "370"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "452",
+          "Name": "¿Campos completos?",
+          "Object_Type": "Decision",
+          "Stereotype": null,
+          "RectTop": "-768",
+          "RectLeft": "647",
+          "RectBottom": "-808",
+          "RectRight": "737"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "453",
+          "Name": "Resaltar campos faltantes (Flujo Alt 9.1)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-681",
+          "RectLeft": "909",
+          "RectBottom": "-726",
+          "RectRight": "1129"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "454",
+          "Name": "¿Bloque continúa 'Disponible'?",
+          "Object_Type": "Decision",
+          "Stereotype": null,
+          "RectTop": "-863",
+          "RectLeft": "647",
+          "RectBottom": "-903",
+          "RectRight": "737"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "455",
+          "Name": "Mostrar alerta conflicto concurrencia y recargar grilla (Flujo Alt 9.2)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-863",
+          "RectLeft": "902",
+          "RectBottom": "-908",
+          "RectRight": "1122"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "456",
+          "Name": "Generar CodigoTurno_DNI101 e instanciar TurnoSolicitadoState_DNI101",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-953",
+          "RectLeft": "542",
+          "RectBottom": "-1003",
+          "RectRight": "842"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "457",
+          "Name": "Insertar en Turnos_DNI101 y actualizar bloque a 'Ocupado'",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-1083",
+          "RectLeft": "522",
+          "RectBottom": "-1133",
+          "RectRight": "772"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "458",
+          "Name": "Calcular DVH e invocar DigitoVerificadorBLL.RecalcularYPersistir()",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-1070",
+          "RectLeft": "888",
+          "RectBottom": "-1140",
+          "RectRight": "1138"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "459",
+          "Name": "Registrar evento de agendamiento en Bitacora (T06)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-1163",
+          "RectLeft": "522",
+          "RectBottom": "-1208",
+          "RectRight": "772"
+        },
+        {
+          "Diagram_ID": "27",
+          "Object_ID": "460",
+          "Name": "Mostrar mensaje de éxito y refrescar grilla general de turnos",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-1336",
+          "RectLeft": "577",
+          "RectBottom": "-1381",
+          "RectRight": "857"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "32",
+      "Name": "CU02: Diagrama de Actividad",
+      "Diagram_Type": "Activity",
+      "Package_ID": "4",
+      "Notes": null,
+      "Author": "Danie",
+      "Version": "1",
+      "CreatedDate": "11/09/2026",
+      "ModifiedDate": "11/09/2026",
+      "objects": [
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "501",
+          "Name": "Nutricionista (Operador)",
+          "Object_Type": "Boundary",
+          "Stereotype": null,
+          "RectTop": "-20",
+          "RectLeft": "38",
+          "RectBottom": "-1210",
+          "RectRight": "478"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "502",
+          "Name": "Sistema (NutriEvolve)",
+          "Object_Type": "Boundary",
+          "Stereotype": null,
+          "RectTop": "-13",
+          "RectLeft": "502",
+          "RectBottom": "-1203",
+          "RectRight": "1202"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "614",
+          "Name": null,
+          "Object_Type": "StateNode",
+          "Stereotype": null,
+          "RectTop": "-45",
+          "RectLeft": "248",
+          "RectBottom": "-65",
+          "RectRight": "268"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "615",
+          "Name": "Acceder a Gestion de Turnos y seleccionar turno de la grilla",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-90",
+          "RectLeft": "118",
+          "RectBottom": "-135",
+          "RectRight": "398"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "616",
+          "Name": "Recuperar datos de Turno y verificar EstadoActual (IEstadoTurno)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-83",
+          "RectLeft": "562",
+          "RectBottom": "-128",
+          "RectRight": "882"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "617",
+          "Name": "Estado permite reprogramar?",
+          "Object_Type": "Decision",
+          "Stereotype": null,
+          "RectTop": "-158",
+          "RectLeft": "677",
+          "RectBottom": "-198",
+          "RectRight": "767"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "618",
+          "Name": "Mostrar alerta: Turno finalizado o cancelado no modificable (Flujo Alt 10.1)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-158",
+          "RectLeft": "932",
+          "RectBottom": "-203",
+          "RectRight": "1172"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "619",
+          "Name": "Fin_Alt10_1",
+          "Object_Type": "StateNode",
+          "Stereotype": null,
+          "RectTop": "-228",
+          "RectLeft": "1042",
+          "RectBottom": "-248",
+          "RectRight": "1062"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "620",
+          "Name": "Seleccionar nueva fecha y profesional nutricionista",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-240",
+          "RectLeft": "118",
+          "RectBottom": "-285",
+          "RectRight": "398"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "621",
+          "Name": "Ejecutar CU07: Consultar Disponibilidad",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-233",
+          "RectLeft": "562",
+          "RectBottom": "-278",
+          "RectRight": "882"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "622",
+          "Name": "Existen bloques disponibles en la nueva fecha?",
+          "Object_Type": "Decision",
+          "Stereotype": null,
+          "RectTop": "-308",
+          "RectLeft": "677",
+          "RectBottom": "-348",
+          "RectRight": "767"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "623",
+          "Name": "Mostrar alerta: Sin disponibilidad en la fecha seleccionada (Flujo Alt 4.1)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-308",
+          "RectLeft": "932",
+          "RectBottom": "-353",
+          "RectRight": "1172"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "624",
+          "Name": "Fin_Alt4_1",
+          "Object_Type": "StateNode",
+          "Stereotype": null,
+          "RectTop": "-378",
+          "RectLeft": "1042",
+          "RectBottom": "-398",
+          "RectRight": "1062"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "625",
+          "Name": "Cargar selector con nuevos bloques horarios disponibles",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-378",
+          "RectLeft": "562",
+          "RectBottom": "-423",
+          "RectRight": "882"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "626",
+          "Name": "Seleccionar nuevo bloque horario y presionar 'Reprogramar Turno'",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-455",
+          "RectLeft": "118",
+          "RectBottom": "-500",
+          "RectRight": "398"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "627",
+          "Name": "Nuevo bloque continua 'Disponible'?",
+          "Object_Type": "Decision",
+          "Stereotype": null,
+          "RectTop": "-505",
+          "RectLeft": "679",
+          "RectBottom": "-545",
+          "RectRight": "769"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "628",
+          "Name": "Mostrar alerta: Conflicto de concurrencia en bloque y recargar grilla (Flujo Alt 9.2)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-448",
+          "RectLeft": "932",
+          "RectBottom": "-493",
+          "RectRight": "1172"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "629",
+          "Name": "Delegar reprogramacion a State (TurnoBE_DNI101.Reprogramar)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-592",
+          "RectLeft": "560",
+          "RectBottom": "-637",
+          "RectRight": "900"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "630",
+          "Name": null,
+          "Object_Type": "Synchronization",
+          "Stereotype": null,
+          "RectTop": "-675",
+          "RectLeft": "522",
+          "RectBottom": "-681",
+          "RectRight": "1182"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "631",
+          "Name": "Liberar bloque anterior (Disponible) y ocupar nuevo bloque (Ocupado)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-704",
+          "RectLeft": "522",
+          "RectBottom": "-754",
+          "RectRight": "822"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "632",
+          "Name": "Actualizar Fecha, Hora e IdBloque en Turnos_DNI101",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-791",
+          "RectLeft": "527",
+          "RectBottom": "-841",
+          "RectRight": "827"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "633",
+          "Name": "Registrar evento de reprogramacion en Bitacora (T06)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-876",
+          "RectLeft": "524",
+          "RectBottom": "-926",
+          "RectRight": "824"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "634",
+          "Name": "Recalcular DVH y DVV persistiendo en tabla DV (T08)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-878",
+          "RectLeft": "875",
+          "RectBottom": "-928",
+          "RectRight": "1175"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "635",
+          "Name": null,
+          "Object_Type": "Synchronization",
+          "Stereotype": null,
+          "RectTop": "-963",
+          "RectLeft": "703",
+          "RectBottom": "-969",
+          "RectRight": "1185"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "636",
+          "Name": "Mostrar mensaje de exito y refrescar grilla general de turnos",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-1014",
+          "RectLeft": "792",
+          "RectBottom": "-1059",
+          "RectRight": "1112"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "637",
+          "Name": "Visualizar confirmacion de reprogramacion y turno actualizado",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-1009",
+          "RectLeft": "105",
+          "RectBottom": "-1054",
+          "RectRight": "385"
+        },
+        {
+          "Diagram_ID": "32",
+          "Object_ID": "638",
+          "Name": "ActivityFinal",
+          "Object_Type": "StateNode",
+          "Stereotype": null,
+          "RectTop": "-1099",
+          "RectLeft": "232",
+          "RectBottom": "-1119",
+          "RectRight": "252"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "28",
+      "Name": "N01.1: Diagrama de Proceso Macro (PN1)",
+      "Diagram_Type": "Activity",
+      "Package_ID": "15",
+      "Notes": null,
+      "Author": "Danie",
+      "Version": "1.0",
+      "CreatedDate": "27/08/2026",
+      "ModifiedDate": "27/08/2026",
+      "objects": [
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "483",
+          "Name": "Buscar turno por código e ingresar motivo de baja",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-960",
+          "RectLeft": "280",
+          "RectBottom": "-1005",
+          "RectRight": "480"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "484",
+          "Name": "Ejecutar CU03: Cancelar Turno (Estado 'Cancelado', liberar bloque, DV T08 y Bitácora)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-1025",
+          "RectLeft": "270",
+          "RectBottom": "-1085",
+          "RectRight": "490"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "485",
+          "Name": "Notificar cancelación del turno al tutor",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-1105",
+          "RectLeft": "280",
+          "RectBottom": "-1150",
+          "RectRight": "480"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "486",
+          "Name": null,
+          "Object_Type": "StateNode",
+          "Stereotype": "ActivityFinal",
+          "RectTop": "-1170",
+          "RectLeft": "370",
+          "RectBottom": "-1190",
+          "RectRight": "390"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "487",
+          "Name": "Presentarse en el consultorio con el paciente pediátrico",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-895",
+          "RectLeft": "530",
+          "RectBottom": "-945",
+          "RectRight": "730"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "488",
+          "Name": "Marcar estado del turno como 'Asistió'",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-965",
+          "RectLeft": "530",
+          "RectBottom": "-1010",
+          "RectRight": "730"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "489",
+          "Name": "Iniciar atención clínica del paciente (Deriva a PN2: Seguimiento Nutricional Pediátrico)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-1030",
+          "RectLeft": "520",
+          "RectBottom": "-1090",
+          "RectRight": "740"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "490",
+          "Name": null,
+          "Object_Type": "StateNode",
+          "Stereotype": "ActivityFinal",
+          "RectTop": "-1110",
+          "RectLeft": "620",
+          "RectBottom": "-1130",
+          "RectRight": "640"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "463",
+          "Name": null,
+          "Object_Type": "StateNode",
+          "Stereotype": "ActivityInitial",
+          "RectTop": "-30",
+          "RectLeft": "250",
+          "RectBottom": "-50",
+          "RectRight": "270"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "464",
+          "Name": "Solicitar turno nutricional brindando datos (DNI Niño, Tutor, Fecha y Horario preferido)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-90",
+          "RectLeft": "100",
+          "RectBottom": "-140",
+          "RectRight": "420"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "465",
+          "Name": "Acceder al sistema y consultar agenda médica",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-160",
+          "RectLeft": "120",
+          "RectBottom": "-205",
+          "RectRight": "400"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "466",
+          "Name": "Ejecutar CU07: Consultar Disponibilidad (Listar bloques horarios libres)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-225",
+          "RectLeft": "110",
+          "RectBottom": "-270",
+          "RectRight": "410"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "467",
+          "Name": "Ingresar DNI del niño y buscar en el sistema",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-290",
+          "RectLeft": "120",
+          "RectBottom": "-335",
+          "RectRight": "400"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "468",
+          "Name": "¿Paciente registrado en el padrón?",
+          "Object_Type": "Decision",
+          "Stereotype": null,
+          "RectTop": "-355",
+          "RectLeft": "210",
+          "RectBottom": "-400",
+          "RectRight": "310"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "469",
+          "Name": "Solicitar e ingresar datos del Tutor (DNI, Nombre, Teléfono, Parentesco)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-355",
+          "RectLeft": "460",
+          "RectBottom": "-400",
+          "RectRight": "730"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "470",
+          "Name": "Ingresar datos del Niño (<19 años) y persistir en BD (CU08: Registrar Paciente y Tutor)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-415",
+          "RectLeft": "460",
+          "RectBottom": "-465",
+          "RectRight": "750"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "471",
+          "Name": "Recuperar y mostrar datos del Niño y Tutor",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-485",
+          "RectLeft": "130",
+          "RectBottom": "-530",
+          "RectRight": "390"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "472",
+          "Name": "Seleccionar bloque horario e ingresar motivo de consulta",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-550",
+          "RectLeft": "120",
+          "RectBottom": "-595",
+          "RectRight": "400"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "473",
+          "Name": "Presionar botón 'Agendar Turno'",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-615",
+          "RectLeft": "180",
+          "RectBottom": "-660",
+          "RectRight": "340"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "474",
+          "Name": "Ejecutar CU01: Registrar Turno (Crear Turno 'Solicitado', ocupar bloque, DV T08 y Bitácora T06)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-680",
+          "RectLeft": "80",
+          "RectBottom": "-735",
+          "RectRight": "440"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "475",
+          "Name": "Recibir confirmación del turno agendado",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-755",
+          "RectLeft": "140",
+          "RectBottom": "-800",
+          "RectRight": "380"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "476",
+          "Name": "¿Evolución / Solicitud posterior del Tutor?",
+          "Object_Type": "Decision",
+          "Stereotype": null,
+          "RectTop": "-820",
+          "RectLeft": "210",
+          "RectBottom": "-865",
+          "RectRight": "310"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "477",
+          "Name": "Solicitar cambio de fecha u horario",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-895",
+          "RectLeft": "30",
+          "RectBottom": "-940",
+          "RectRight": "230"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "478",
+          "Name": "Buscar turno por código y consultar nueva disponibilidad (CU07)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-960",
+          "RectLeft": "30",
+          "RectBottom": "-1010",
+          "RectRight": "230"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "479",
+          "Name": "Seleccionar nuevo bloque horario disponible",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-1030",
+          "RectLeft": "30",
+          "RectBottom": "-1075",
+          "RectRight": "230"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "480",
+          "Name": "Ejecutar CU02: Reprogramar Turno (Liberar bloque previo, ocupar nuevo bloque, DV T08 y Bitácora)",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-1095",
+          "RectLeft": "20",
+          "RectBottom": "-1155",
+          "RectRight": "240"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "481",
+          "Name": "Recibir nueva fecha y horario confirmado",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-1175",
+          "RectLeft": "30",
+          "RectBottom": "-1220",
+          "RectRight": "230"
+        },
+        {
+          "Diagram_ID": "28",
+          "Object_ID": "482",
+          "Name": "Solicitar cancelación del turno programado",
+          "Object_Type": "Action",
+          "Stereotype": null,
+          "RectTop": "-895",
+          "RectLeft": "280",
+          "RectBottom": "-940",
+          "RectRight": "480"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "7",
+      "Name": "Class Model",
+      "Diagram_Type": "Logical",
+      "Package_ID": "7",
+      "Notes": null,
+      "Author": "Danie",
+      "Version": "1.0",
+      "CreatedDate": "25/08/2026",
+      "ModifiedDate": "25/08/2026",
+      "objects": [
+        {
+          "Diagram_ID": "7",
+          "Object_ID": "28",
+          "Name": null,
+          "Object_Type": "Note",
+          "Stereotype": null,
+          "RectTop": "-169",
+          "RectLeft": "571",
+          "RectBottom": "-224",
+          "RectRight": "686"
+        },
+        {
+          "Diagram_ID": "7",
+          "Object_ID": "26",
+          "Name": null,
+          "Object_Type": "Note",
+          "Stereotype": null,
+          "RectTop": "-41",
+          "RectLeft": "564",
+          "RectBottom": "-96",
+          "RectRight": "679"
+        },
+        {
+          "Diagram_ID": "7",
+          "Object_ID": "25",
+          "Name": "$help://class_model_pattern.htm",
+          "Object_Type": "Text",
+          "Stereotype": null,
+          "RectTop": "-206",
+          "RectLeft": "36",
+          "RectBottom": "-227",
+          "RectRight": "195"
+        },
+        {
+          "Diagram_ID": "7",
+          "Object_ID": "29",
+          "Name": "$help://classdiagram.htm",
+          "Object_Type": "Text",
+          "Stereotype": null,
+          "RectTop": "-233",
+          "RectLeft": "36",
+          "RectBottom": "-253",
+          "RectRight": "217"
+        },
+        {
+          "Diagram_ID": "7",
+          "Object_ID": "27",
+          "Name": "Note",
+          "Object_Type": "Note",
+          "Stereotype": null,
+          "RectTop": "-26",
+          "RectLeft": "36",
+          "RectBottom": "-193",
+          "RectRight": "347"
+        },
+        {
+          "Diagram_ID": "7",
+          "Object_ID": "30",
+          "Name": "Frameworks",
+          "Object_Type": "Package",
+          "Stereotype": null,
+          "RectTop": "-152",
+          "RectLeft": "389",
+          "RectBottom": "-242",
+          "RectRight": "529"
+        },
+        {
+          "Diagram_ID": "7",
+          "Object_ID": "31",
+          "Name": "System",
+          "Object_Type": "Package",
+          "Stereotype": null,
+          "RectTop": "-31",
+          "RectLeft": "387",
+          "RectBottom": "-124",
+          "RectRight": "527"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "26",
+      "Name": "CU01: DER (Modelo Relacional)",
+      "Diagram_Type": "Logical",
+      "Package_ID": "4",
+      "Notes": null,
+      "Author": "Danie",
+      "Version": "1.0",
+      "CreatedDate": "27/08/2026",
+      "ModifiedDate": "30/08/2026",
+      "objects": [
+        {
+          "Diagram_ID": "26",
+          "Object_ID": "429",
+          "Name": "Tutores_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "0",
+          "RectLeft": "72",
+          "RectBottom": "-238",
+          "RectRight": "291"
+        },
+        {
+          "Diagram_ID": "26",
+          "Object_ID": "430",
+          "Name": "Pacientes_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-421",
+          "RectLeft": "76",
+          "RectBottom": "-659",
+          "RectRight": "311"
+        },
+        {
+          "Diagram_ID": "26",
+          "Object_ID": "434",
+          "Name": "Turnos_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-660",
+          "RectLeft": "641",
+          "RectBottom": "-910",
+          "RectRight": "881"
+        },
+        {
+          "Diagram_ID": "26",
+          "Object_ID": "433",
+          "Name": "BloquesHorarios_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-373",
+          "RectLeft": "737",
+          "RectBottom": "-553",
+          "RectRight": "947"
+        },
+        {
+          "Diagram_ID": "26",
+          "Object_ID": "432",
+          "Name": "AgendasMedicas_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-32",
+          "RectLeft": "749",
+          "RectBottom": "-202",
+          "RectRight": "969"
+        },
+        {
+          "Diagram_ID": "26",
+          "Object_ID": "431",
+          "Name": "Usuarios",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-285",
+          "RectLeft": "367",
+          "RectBottom": "-549",
+          "RectRight": "597"
+        },
+        {
+          "Diagram_ID": "26",
+          "Object_ID": "435",
+          "Name": "DV",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-764",
+          "RectLeft": "84",
+          "RectBottom": "-864",
+          "RectRight": "274"
+        },
+        {
+          "Diagram_ID": "26",
+          "Object_ID": "436",
+          "Name": "Bitacora",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-20",
+          "RectLeft": "352",
+          "RectBottom": "-200",
+          "RectRight": "582"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "25",
+      "Name": "CU01: Diagrama de Clases Afectadas",
+      "Diagram_Type": "Logical",
+      "Package_ID": "4",
+      "Notes": null,
+      "Author": null,
+      "Version": "1.0",
+      "CreatedDate": "27/08/2026",
+      "ModifiedDate": "27/08/2026",
+      "objects": [
+        {
+          "Diagram_ID": "25",
+          "Object_ID": "416",
+          "Name": "Tutor_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "50",
+          "RectBottom": "-220",
+          "RectRight": "230"
+        },
+        {
+          "Diagram_ID": "25",
+          "Object_ID": "417",
+          "Name": "Paciente_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-270",
+          "RectLeft": "50",
+          "RectBottom": "-480",
+          "RectRight": "250"
+        },
+        {
+          "Diagram_ID": "25",
+          "Object_ID": "418",
+          "Name": "Turno_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "Context",
+          "RectTop": "-50",
+          "RectLeft": "320",
+          "RectBottom": "-420",
+          "RectRight": "560"
+        },
+        {
+          "Diagram_ID": "25",
+          "Object_ID": "419",
+          "Name": "IEstadoTurno_DNI101",
+          "Object_Type": "Interface",
+          "Stereotype": "State",
+          "RectTop": "-50",
+          "RectLeft": "640",
+          "RectBottom": "-170",
+          "RectRight": "840"
+        },
+        {
+          "Diagram_ID": "25",
+          "Object_ID": "420",
+          "Name": "TurnoSolicitadoState_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "ConcreteState",
+          "RectTop": "-210",
+          "RectLeft": "640",
+          "RectBottom": "-300",
+          "RectRight": "840"
+        },
+        {
+          "Diagram_ID": "25",
+          "Object_ID": "421",
+          "Name": "TurnoConfirmadoState_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "ConcreteState",
+          "RectTop": "-320",
+          "RectLeft": "640",
+          "RectBottom": "-410",
+          "RectRight": "840"
+        },
+        {
+          "Diagram_ID": "25",
+          "Object_ID": "422",
+          "Name": "TurnoAsistioState_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "ConcreteState",
+          "RectTop": "-430",
+          "RectLeft": "640",
+          "RectBottom": "-520",
+          "RectRight": "840"
+        },
+        {
+          "Diagram_ID": "25",
+          "Object_ID": "423",
+          "Name": "TurnoCanceladoState_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "ConcreteState",
+          "RectTop": "-540",
+          "RectLeft": "640",
+          "RectBottom": "-630",
+          "RectRight": "840"
+        },
+        {
+          "Diagram_ID": "25",
+          "Object_ID": "424",
+          "Name": "AgendaMedica_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-520",
+          "RectLeft": "50",
+          "RectBottom": "-680",
+          "RectRight": "270"
+        },
+        {
+          "Diagram_ID": "25",
+          "Object_ID": "425",
+          "Name": "BloqueHorario_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-520",
+          "RectLeft": "320",
+          "RectBottom": "-660",
+          "RectRight": "520"
+        },
+        {
+          "Diagram_ID": "25",
+          "Object_ID": "426",
+          "Name": "Usuario",
+          "Object_Type": "Class",
+          "Stereotype": "Base / Seguridad T02",
+          "RectTop": "-720",
+          "RectLeft": "50",
+          "RectBottom": "-940",
+          "RectRight": "250"
+        },
+        {
+          "Diagram_ID": "25",
+          "Object_ID": "427",
+          "Name": "DigitoVerificador",
+          "Object_Type": "Class",
+          "Stereotype": "Seguridad T08",
+          "RectTop": "-720",
+          "RectLeft": "320",
+          "RectBottom": "-900",
+          "RectRight": "560"
+        },
+        {
+          "Diagram_ID": "25",
+          "Object_ID": "428",
+          "Name": "BitacoraAuditoria",
+          "Object_Type": "Class",
+          "Stereotype": "Seguridad T06",
+          "RectTop": "-720",
+          "RectLeft": "640",
+          "RectBottom": "-900",
+          "RectRight": "860"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "31",
+      "Name": "CU02: DER (Modelo Relacional)",
+      "Diagram_Type": "Logical",
+      "Package_ID": "4",
+      "Notes": null,
+      "Author": null,
+      "Version": "1",
+      "CreatedDate": "11/09/2026",
+      "ModifiedDate": "11/09/2026",
+      "objects": [
+        {
+          "Diagram_ID": "31",
+          "Object_ID": "429",
+          "Name": "Tutores_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-30",
+          "RectLeft": "60",
+          "RectBottom": "-270",
+          "RectRight": "280"
+        },
+        {
+          "Diagram_ID": "31",
+          "Object_ID": "430",
+          "Name": "Pacientes_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-420",
+          "RectLeft": "60",
+          "RectBottom": "-660",
+          "RectRight": "300"
+        },
+        {
+          "Diagram_ID": "31",
+          "Object_ID": "435",
+          "Name": "DV",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-780",
+          "RectLeft": "60",
+          "RectBottom": "-880",
+          "RectRight": "260"
+        },
+        {
+          "Diagram_ID": "31",
+          "Object_ID": "436",
+          "Name": "Bitacora",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-30",
+          "RectLeft": "360",
+          "RectBottom": "-210",
+          "RectRight": "590"
+        },
+        {
+          "Diagram_ID": "31",
+          "Object_ID": "431",
+          "Name": "Usuarios",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-320",
+          "RectLeft": "360",
+          "RectBottom": "-590",
+          "RectRight": "600"
+        },
+        {
+          "Diagram_ID": "31",
+          "Object_ID": "432",
+          "Name": "AgendasMedicas_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-30",
+          "RectLeft": "740",
+          "RectBottom": "-200",
+          "RectRight": "970"
+        },
+        {
+          "Diagram_ID": "31",
+          "Object_ID": "433",
+          "Name": "BloquesHorarios_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-340",
+          "RectLeft": "740",
+          "RectBottom": "-520",
+          "RectRight": "960"
+        },
+        {
+          "Diagram_ID": "31",
+          "Object_ID": "434",
+          "Name": "Turnos_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "table",
+          "RectTop": "-650",
+          "RectLeft": "680",
+          "RectBottom": "-900",
+          "RectRight": "940"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "30",
+      "Name": "CU02: Diagrama de Clases Afectadas",
+      "Diagram_Type": "Logical",
+      "Package_ID": "4",
+      "Notes": null,
+      "Author": null,
+      "Version": "1",
+      "CreatedDate": "11/09/2026",
+      "ModifiedDate": "11/09/2026",
+      "objects": [
+        {
+          "Diagram_ID": "30",
+          "Object_ID": "416",
+          "Name": "Tutor_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-40",
+          "RectLeft": "40",
+          "RectBottom": "-290",
+          "RectRight": "350"
+        },
+        {
+          "Diagram_ID": "30",
+          "Object_ID": "417",
+          "Name": "Paciente_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-340",
+          "RectLeft": "40",
+          "RectBottom": "-600",
+          "RectRight": "350"
+        },
+        {
+          "Diagram_ID": "30",
+          "Object_ID": "424",
+          "Name": "AgendaMedica_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-660",
+          "RectLeft": "40",
+          "RectBottom": "-880",
+          "RectRight": "380"
+        },
+        {
+          "Diagram_ID": "30",
+          "Object_ID": "426",
+          "Name": "Usuario",
+          "Object_Type": "Class",
+          "Stereotype": "Base / Seguridad T02",
+          "RectTop": "-950",
+          "RectLeft": "40",
+          "RectBottom": "-1210",
+          "RectRight": "350"
+        },
+        {
+          "Diagram_ID": "30",
+          "Object_ID": "418",
+          "Name": "Turno_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "Context",
+          "RectTop": "-40",
+          "RectLeft": "440",
+          "RectBottom": "-540",
+          "RectRight": "920"
+        },
+        {
+          "Diagram_ID": "30",
+          "Object_ID": "425",
+          "Name": "BloqueHorario_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-660",
+          "RectLeft": "520",
+          "RectBottom": "-820",
+          "RectRight": "840"
+        },
+        {
+          "Diagram_ID": "30",
+          "Object_ID": "427",
+          "Name": "DigitoVerificador",
+          "Object_Type": "Class",
+          "Stereotype": "Seguridad T08",
+          "RectTop": "-930",
+          "RectLeft": "470",
+          "RectBottom": "-1170",
+          "RectRight": "890"
+        },
+        {
+          "Diagram_ID": "30",
+          "Object_ID": "419",
+          "Name": "IEstadoTurno_DNI101",
+          "Object_Type": "Interface",
+          "Stereotype": "State",
+          "RectTop": "-40",
+          "RectLeft": "990",
+          "RectBottom": "-160",
+          "RectRight": "1520"
+        },
+        {
+          "Diagram_ID": "30",
+          "Object_ID": "420",
+          "Name": "TurnoSolicitadoState_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "ConcreteState",
+          "RectTop": "-190",
+          "RectLeft": "990",
+          "RectBottom": "-300",
+          "RectRight": "1520"
+        },
+        {
+          "Diagram_ID": "30",
+          "Object_ID": "421",
+          "Name": "TurnoConfirmadoState_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "ConcreteState",
+          "RectTop": "-330",
+          "RectLeft": "990",
+          "RectBottom": "-440",
+          "RectRight": "1520"
+        },
+        {
+          "Diagram_ID": "30",
+          "Object_ID": "422",
+          "Name": "TurnoAsistioState_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "ConcreteState",
+          "RectTop": "-470",
+          "RectLeft": "990",
+          "RectBottom": "-580",
+          "RectRight": "1520"
+        },
+        {
+          "Diagram_ID": "30",
+          "Object_ID": "423",
+          "Name": "TurnoCanceladoState_DNI101",
+          "Object_Type": "Class",
+          "Stereotype": "ConcreteState",
+          "RectTop": "-610",
+          "RectLeft": "990",
+          "RectBottom": "-720",
+          "RectRight": "1520"
+        },
+        {
+          "Diagram_ID": "30",
+          "Object_ID": "428",
+          "Name": "BitacoraAuditoria",
+          "Object_Type": "Class",
+          "Stereotype": "Seguridad T06",
+          "RectTop": "-820",
+          "RectLeft": "990",
+          "RectBottom": "-1060",
+          "RectRight": "1520"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "5",
+      "Name": "Domain Model",
+      "Diagram_Type": "Logical",
+      "Package_ID": "5",
+      "Notes": null,
+      "Author": "Danie",
+      "Version": "1.0",
+      "CreatedDate": "25/08/2026",
+      "ModifiedDate": "25/08/2026",
+      "objects": [
+        {
+          "Diagram_ID": "5",
+          "Object_ID": "18",
+          "Name": "$help://domain_model_pattern.htm",
+          "Object_Type": "Text",
+          "Stereotype": null,
+          "RectTop": "-183",
+          "RectLeft": "31",
+          "RectBottom": "-209",
+          "RectRight": "229"
+        },
+        {
+          "Diagram_ID": "5",
+          "Object_ID": "19",
+          "Name": "Domain Objects",
+          "Object_Type": "Package",
+          "Stereotype": null,
+          "RectTop": "-55",
+          "RectLeft": "346",
+          "RectBottom": "-143",
+          "RectRight": "486"
+        },
+        {
+          "Diagram_ID": "5",
+          "Object_ID": "17",
+          "Name": "Note",
+          "Object_Type": "Note",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "31",
+          "RectBottom": "-152",
+          "RectRight": "272"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "6",
+      "Name": "Domain Objects",
+      "Diagram_Type": "Logical",
+      "Package_ID": "6",
+      "Notes": null,
+      "Author": null,
+      "Version": "1.0",
+      "CreatedDate": "25/08/2026",
+      "ModifiedDate": "25/08/2026",
+      "objects": [
+        {
+          "Diagram_ID": "6",
+          "Object_ID": "21",
+          "Name": "Class3",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-81",
+          "RectLeft": "543",
+          "RectBottom": "-151",
+          "RectRight": "633"
+        },
+        {
+          "Diagram_ID": "6",
+          "Object_ID": "20",
+          "Name": "Class2",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-217",
+          "RectLeft": "372",
+          "RectBottom": "-287",
+          "RectRight": "462"
+        },
+        {
+          "Diagram_ID": "6",
+          "Object_ID": "22",
+          "Name": "Class1",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-81",
+          "RectLeft": "371",
+          "RectBottom": "-151",
+          "RectRight": "461"
+        },
+        {
+          "Diagram_ID": "6",
+          "Object_ID": "23",
+          "Name": "Note",
+          "Object_Type": "Note",
+          "Stereotype": null,
+          "RectTop": "-73",
+          "RectLeft": "51",
+          "RectBottom": "-152",
+          "RectRight": "292"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "9",
+      "Name": "Frameworks",
+      "Diagram_Type": "Logical",
+      "Package_ID": "9",
+      "Notes": null,
+      "Author": null,
+      "Version": "1.0",
+      "CreatedDate": "25/08/2026",
+      "ModifiedDate": "25/08/2026",
+      "objects": [
+        {
+          "Diagram_ID": "9",
+          "Object_ID": "36",
+          "Name": "Note",
+          "Object_Type": "Note",
+          "Stereotype": null,
+          "RectTop": "-67",
+          "RectLeft": "73",
+          "RectBottom": "-165",
+          "RectRight": "319"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "8",
+      "Name": "System",
+      "Diagram_Type": "Logical",
+      "Package_ID": "8",
+      "Notes": null,
+      "Author": null,
+      "Version": "1.0",
+      "CreatedDate": "25/08/2026",
+      "ModifiedDate": "25/08/2026",
+      "objects": [
+        {
+          "Diagram_ID": "8",
+          "Object_ID": "35",
+          "Name": "Interface1",
+          "Object_Type": "Interface",
+          "Stereotype": "interface",
+          "RectTop": "-332",
+          "RectLeft": "148",
+          "RectBottom": "-422",
+          "RectRight": "238"
+        },
+        {
+          "Diagram_ID": "8",
+          "Object_ID": "33",
+          "Name": "Class3",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-193",
+          "RectLeft": "338",
+          "RectBottom": "-263",
+          "RectRight": "428"
+        },
+        {
+          "Diagram_ID": "8",
+          "Object_ID": "34",
+          "Name": "Class2",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-59",
+          "RectLeft": "145",
+          "RectBottom": "-129",
+          "RectRight": "235"
+        },
+        {
+          "Diagram_ID": "8",
+          "Object_ID": "32",
+          "Name": "Class1",
+          "Object_Type": "Class",
+          "Stereotype": null,
+          "RectTop": "-193",
+          "RectLeft": "146",
+          "RectBottom": "-263",
+          "RectRight": "236"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "12",
+      "Name": "CU01: Registrar",
+      "Diagram_Type": "Sequence",
+      "Package_ID": "4",
+      "Notes": null,
+      "Author": "Danie",
+      "Version": "1.0",
+      "CreatedDate": "25/08/2026",
+      "ModifiedDate": "21/09/2026",
+      "objects": [
+        {
+          "Diagram_ID": "12",
+          "Object_ID": "219",
+          "Name": "Nutricionista",
+          "Object_Type": "Actor",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "34",
+          "RectBottom": "-1834",
+          "RectRight": "145"
+        },
+        {
+          "Diagram_ID": "12",
+          "Object_ID": "220",
+          "Name": "FormTurnero_DNI101",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "160",
+          "RectBottom": "-1834",
+          "RectRight": "270"
+        },
+        {
+          "Diagram_ID": "12",
+          "Object_ID": "221",
+          "Name": "AgendaMedicaBLL_DNI101",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "314",
+          "RectBottom": "-1834",
+          "RectRight": "451"
+        },
+        {
+          "Diagram_ID": "12",
+          "Object_ID": "222",
+          "Name": "PacienteBLL_DNI101",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "480",
+          "RectBottom": "-1834",
+          "RectRight": "590"
+        },
+        {
+          "Diagram_ID": "12",
+          "Object_ID": "223",
+          "Name": "TutorBE_DNI101",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "586",
+          "RectBottom": "-1834",
+          "RectRight": "696"
+        },
+        {
+          "Diagram_ID": "12",
+          "Object_ID": "224",
+          "Name": "PacienteBE_DNI101",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "670",
+          "RectBottom": "-1834",
+          "RectRight": "780"
+        },
+        {
+          "Diagram_ID": "12",
+          "Object_ID": "225",
+          "Name": "TurnoBLL_DNI101",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "730",
+          "RectBottom": "-1834",
+          "RectRight": "840"
+        },
+        {
+          "Diagram_ID": "12",
+          "Object_ID": "226",
+          "Name": "TurnoBE_DNI101",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "910",
+          "RectBottom": "-1834",
+          "RectRight": "1020"
+        },
+        {
+          "Diagram_ID": "12",
+          "Object_ID": "227",
+          "Name": "TurnoSolicitadoState",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "1053",
+          "RectBottom": "-1834",
+          "RectRight": "1163"
+        },
+        {
+          "Diagram_ID": "12",
+          "Object_ID": "228",
+          "Name": "DAL",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "1330",
+          "RectBottom": "-1834",
+          "RectRight": "1440"
+        },
+        {
+          "Diagram_ID": "12",
+          "Object_ID": "229",
+          "Name": "DigitoVerificadorBLL",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "1175",
+          "RectBottom": "-1834",
+          "RectRight": "1285"
+        },
+        {
+          "Diagram_ID": "12",
+          "Object_ID": "230",
+          "Name": "EventoBLL",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "952",
+          "RectBottom": "-1834",
+          "RectRight": "1062"
+        },
+        {
+          "Diagram_ID": "12",
+          "Object_ID": "232",
+          "Name": "Paciente No Registrado (Punto de Extension)",
+          "Object_Type": "InteractionFragment",
+          "Stereotype": null,
+          "RectTop": "-285",
+          "RectLeft": "26",
+          "RectBottom": "-540",
+          "RectRight": "1481"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "13",
+      "Name": "CU02: Reprogramar",
+      "Diagram_Type": "Sequence",
+      "Package_ID": "4",
+      "Notes": null,
+      "Author": "Danie",
+      "Version": "1",
+      "CreatedDate": "25/08/2026",
+      "ModifiedDate": "11/09/2026",
+      "objects": [
+        {
+          "Diagram_ID": "13",
+          "Object_ID": "266",
+          "Name": "Nutricionista",
+          "Object_Type": "Actor",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "35",
+          "RectBottom": "-1746",
+          "RectRight": "145"
+        },
+        {
+          "Diagram_ID": "13",
+          "Object_ID": "267",
+          "Name": "FormTurnero_DNI101",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "160",
+          "RectBottom": "-1746",
+          "RectRight": "270"
+        },
+        {
+          "Diagram_ID": "13",
+          "Object_ID": "268",
+          "Name": "TurnoBLL_DNI101",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "285",
+          "RectBottom": "-1746",
+          "RectRight": "395"
+        },
+        {
+          "Diagram_ID": "13",
+          "Object_ID": "269",
+          "Name": "AgendaMedicaBLL_DNI101",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "410",
+          "RectBottom": "-1746",
+          "RectRight": "547"
+        },
+        {
+          "Diagram_ID": "13",
+          "Object_ID": "270",
+          "Name": "TurnoBE_DNI101",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "535",
+          "RectBottom": "-1746",
+          "RectRight": "645"
+        },
+        {
+          "Diagram_ID": "13",
+          "Object_ID": "271",
+          "Name": "TurnoConfirmadoState_DNI101",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "654",
+          "RectBottom": "-1746",
+          "RectRight": "806"
+        },
+        {
+          "Diagram_ID": "13",
+          "Object_ID": "272",
+          "Name": "DAL",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "1077",
+          "RectBottom": "-1746",
+          "RectRight": "1187"
+        },
+        {
+          "Diagram_ID": "13",
+          "Object_ID": "273",
+          "Name": "DigitoVerificadorBLL",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "931",
+          "RectBottom": "-1746",
+          "RectRight": "1041"
+        },
+        {
+          "Diagram_ID": "13",
+          "Object_ID": "274",
+          "Name": "EventoBLL",
+          "Object_Type": "Object",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "774",
+          "RectBottom": "-1746",
+          "RectRight": "884"
+        },
+        {
+          "Diagram_ID": "13",
+          "Object_ID": "276",
+          "Name": "Validacion Estado Turno (alt)",
+          "Object_Type": "InteractionFragment",
+          "Stereotype": null,
+          "RectTop": "-205",
+          "RectLeft": "34",
+          "RectBottom": "-657",
+          "RectRight": "1339"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "33",
+      "Name": "Secuencia General",
+      "Diagram_Type": "Sequence",
+      "Package_ID": "4",
+      "Notes": null,
+      "Author": "Danie",
+      "Version": "1.0",
+      "CreatedDate": "20/09/2026",
+      "ModifiedDate": "22/09/2026",
+      "objects": [
+        {
+          "Diagram_ID": "33",
+          "Object_ID": "643",
+          "Name": "Paciente",
+          "Object_Type": "Actor",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "84",
+          "RectBottom": "-272",
+          "RectRight": "174"
+        },
+        {
+          "Diagram_ID": "33",
+          "Object_ID": "644",
+          "Name": "Nutricionista",
+          "Object_Type": "Actor",
+          "Stereotype": null,
+          "RectTop": "-50",
+          "RectLeft": "316",
+          "RectBottom": "-272",
+          "RectRight": "406"
+        },
+        {
+          "Diagram_ID": "33",
+          "Object_ID": "646",
+          "Name": null,
+          "Object_Type": "InteractionFragment",
+          "Stereotype": null,
+          "RectTop": "-146",
+          "RectLeft": "73",
+          "RectBottom": "-207",
+          "RectRight": "495"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "2",
+      "Name": "Actors",
+      "Diagram_Type": "Use Case",
+      "Package_ID": "3",
+      "Notes": null,
+      "Author": "Danie",
+      "Version": "1.0",
+      "CreatedDate": "25/08/2026",
+      "ModifiedDate": "25/08/2026",
+      "objects": [
+        {
+          "Diagram_ID": "2",
+          "Object_ID": "10",
+          "Name": "Nutricionista",
+          "Object_Type": "Actor",
+          "Stereotype": null,
+          "RectTop": "-130",
+          "RectLeft": "160",
+          "RectBottom": "-230",
+          "RectRight": "210"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "3",
+      "Name": "Primary Use Cases",
+      "Diagram_Type": "Use Case",
+      "Package_ID": "4",
+      "Notes": null,
+      "Author": "Danie",
+      "Version": "1.0",
+      "CreatedDate": "25/08/2026",
+      "ModifiedDate": "21/09/2026",
+      "objects": [
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "15",
+          "Name": "Modulo : Turnero Nutricional",
+          "Object_Type": "Boundary",
+          "Stereotype": null,
+          "RectTop": "-48",
+          "RectLeft": "240",
+          "RectBottom": "-395",
+          "RectRight": "738"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "12",
+          "Name": "CU01: Registrar",
+          "Object_Type": "UseCase",
+          "Stereotype": null,
+          "RectTop": "-91",
+          "RectLeft": "267",
+          "RectBottom": "-171",
+          "RectRight": "387"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "10",
+          "Name": "Nutricionista",
+          "Object_Type": "Actor",
+          "Stereotype": null,
+          "RectTop": "-162",
+          "RectLeft": "77",
+          "RectBottom": "-262",
+          "RectRight": "127"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "13",
+          "Name": "CU02: Reprogramar",
+          "Object_Type": "UseCase",
+          "Stereotype": null,
+          "RectTop": "-309",
+          "RectLeft": "258",
+          "RectBottom": "-389",
+          "RectRight": "378"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "40",
+          "Name": "Modulo : Seguimiento Nutricional Pediátrico ",
+          "Object_Type": "Boundary",
+          "Stereotype": null,
+          "RectTop": "-444",
+          "RectLeft": "219",
+          "RectBottom": "-785",
+          "RectRight": "734"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "41",
+          "Name": "Nutricionista",
+          "Object_Type": "Actor",
+          "Stereotype": null,
+          "RectTop": "-588",
+          "RectLeft": "118",
+          "RectBottom": "-690",
+          "RectRight": "169"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "42",
+          "Name": "CU04 : Registrar Medicion",
+          "Object_Type": "UseCase",
+          "Stereotype": null,
+          "RectTop": "-493",
+          "RectLeft": "261",
+          "RectBottom": "-563",
+          "RectRight": "366"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "43",
+          "Name": "CU05: Crear Diagnóstico y Curvas OMS",
+          "Object_Type": "UseCase",
+          "Stereotype": null,
+          "RectTop": "-612",
+          "RectLeft": "272",
+          "RectBottom": "-682",
+          "RectRight": "377"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "44",
+          "Name": "CU06 : Prescribir Plan Alimentario ",
+          "Object_Type": "UseCase",
+          "Stereotype": null,
+          "RectTop": "-709",
+          "RectLeft": "247",
+          "RectBottom": "-779",
+          "RectRight": "352"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "45",
+          "Name": "CU09 : Buscar Historia Clinica",
+          "Object_Type": "UseCase",
+          "Stereotype": null,
+          "RectTop": "-490",
+          "RectLeft": "487",
+          "RectBottom": "-560",
+          "RectRight": "592"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "46",
+          "Name": "CU10 : Calcular Zcore",
+          "Object_Type": "UseCase",
+          "Stereotype": null,
+          "RectTop": "-600",
+          "RectLeft": "486",
+          "RectBottom": "-670",
+          "RectRight": "591"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "37",
+          "Name": "CU03: Cancelar Turno",
+          "Object_Type": "UseCase",
+          "Stereotype": null,
+          "RectTop": "-204",
+          "RectLeft": "279",
+          "RectBottom": "-274",
+          "RectRight": "384"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "38",
+          "Name": "CU08: Agendar Parciente",
+          "Object_Type": "UseCase",
+          "Stereotype": null,
+          "RectTop": "-94",
+          "RectLeft": "583",
+          "RectBottom": "-164",
+          "RectRight": "688"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "39",
+          "Name": "CU07: Consultar Disponibilidad",
+          "Object_Type": "UseCase",
+          "Stereotype": null,
+          "RectTop": "-224",
+          "RectLeft": "525",
+          "RectBottom": "-294",
+          "RectRight": "630"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "639",
+          "Name": "Nutricionista",
+          "Object_Type": "Actor",
+          "Stereotype": null,
+          "RectTop": "-874",
+          "RectLeft": "354",
+          "RectBottom": "-964",
+          "RectRight": "399"
+        },
+        {
+          "Diagram_ID": "3",
+          "Object_ID": "640",
+          "Name": "Paciente",
+          "Object_Type": "Actor",
+          "Stereotype": null,
+          "RectTop": "-875",
+          "RectLeft": "240",
+          "RectBottom": "-965",
+          "RectRight": "285"
+        }
+      ],
+      "links": []
+    },
+    {
+      "Diagram_ID": "1",
+      "Name": "Use Case Model",
+      "Diagram_Type": "Use Case",
+      "Package_ID": "2",
+      "Notes": null,
+      "Author": "Danie",
+      "Version": "1.0",
+      "CreatedDate": "25/08/2026",
+      "ModifiedDate": "25/08/2026",
+      "objects": [
+        {
+          "Diagram_ID": "1",
+          "Object_ID": "5",
+          "Name": null,
+          "Object_Type": "Note",
+          "Stereotype": null,
+          "RectTop": "-294",
+          "RectLeft": "537",
+          "RectBottom": "-464",
+          "RectRight": "725"
+        },
+        {
+          "Diagram_ID": "1",
+          "Object_ID": "2",
+          "Name": null,
+          "Object_Type": "Note",
+          "Stereotype": null,
+          "RectTop": "-26",
+          "RectLeft": "537",
+          "RectBottom": "-235",
+          "RectRight": "728"
+        },
+        {
+          "Diagram_ID": "1",
+          "Object_ID": "7",
+          "Name": "$help://usecasediagram.htm",
+          "Object_Type": "Text",
+          "Stereotype": null,
+          "RectTop": "-333",
+          "RectLeft": "47",
+          "RectBottom": "-359",
+          "RectRight": "257"
+        },
+        {
+          "Diagram_ID": "1",
+          "Object_ID": "3",
+          "Name": "$help://use_case_model_pattern.htm",
+          "Object_Type": "Text",
+          "Stereotype": null,
+          "RectTop": "-275",
+          "RectLeft": "47",
+          "RectBottom": "-305",
+          "RectRight": "257"
+        },
+        {
+          "Diagram_ID": "1",
+          "Object_ID": "4",
+          "Name": "$help://actor.htm",
+          "Object_Type": "Text",
+          "Stereotype": null,
+          "RectTop": "-305",
+          "RectLeft": "47",
+          "RectBottom": "-335",
+          "RectRight": "257"
+        },
+        {
+          "Diagram_ID": "1",
+          "Object_ID": "8",
+          "Name": "Primary Use Cases",
+          "Object_Type": "Package",
+          "Stereotype": null,
+          "RectTop": "-295",
+          "RectLeft": "336",
+          "RectBottom": "-500",
+          "RectRight": "559"
+        },
+        {
+          "Diagram_ID": "1",
+          "Object_ID": "9",
+          "Name": "Actors",
+          "Object_Type": "Package",
+          "Stereotype": null,
+          "RectTop": "-34",
+          "RectLeft": "336",
+          "RectBottom": "-124",
+          "RectRight": "476"
+        },
+        {
+          "Diagram_ID": "1",
+          "Object_ID": "6",
+          "Name": "Note",
+          "Object_Type": "Note",
+          "Stereotype": null,
+          "RectTop": "-35",
+          "RectLeft": "21",
+          "RectBottom": "-258",
+          "RectRight": "285"
+        }
+      ],
+      "links": []
+    }
+  ],
+  "use_cases": [
+    {
+      "Object_ID": "12",
+      "Name": "CU01: Registrar",
+      "Note": null,
+      "Status": "Proposed",
+      "Phase": "1.0",
+      "Complexity": "1"
+    },
+    {
+      "Object_ID": "13",
+      "Name": "CU02: Reprogramar",
+      "Note": null,
+      "Status": "Proposed",
+      "Phase": "1.0",
+      "Complexity": "1"
+    },
+    {
+      "Object_ID": "37",
+      "Name": "CU03: Cancelar Turno",
+      "Note": null,
+      "Status": "Proposed",
+      "Phase": "1.0",
+      "Complexity": "1"
+    },
+    {
+      "Object_ID": "42",
+      "Name": "CU04 : Registrar Medicion",
+      "Note": null,
+      "Status": "Proposed",
+      "Phase": "1.0",
+      "Complexity": "1"
+    },
+    {
+      "Object_ID": "43",
+      "Name": "CU05: Crear Diagnóstico y Curvas OMS",
+      "Note": null,
+      "Status": "Proposed",
+      "Phase": "1.0",
+      "Complexity": "1"
+    },
+    {
+      "Object_ID": "44",
+      "Name": "CU06 : Prescribir Plan Alimentario ",
+      "Note": null,
+      "Status": "Proposed",
+      "Phase": "1.0",
+      "Complexity": "1"
+    },
+    {
+      "Object_ID": "39",
+      "Name": "CU07: Consultar Disponibilidad",
+      "Note": null,
+      "Status": "Proposed",
+      "Phase": "1.0",
+      "Complexity": "1"
+    },
+    {
+      "Object_ID": "38",
+      "Name": "CU08: Agendar Parciente",
+      "Note": null,
+      "Status": "Proposed",
+      "Phase": "1.0",
+      "Complexity": "1"
+    },
+    {
+      "Object_ID": "45",
+      "Name": "CU09 : Buscar Historia Clinica",
+      "Note": null,
+      "Status": "Proposed",
+      "Phase": "1.0",
+      "Complexity": "1"
+    },
+    {
+      "Object_ID": "46",
+      "Name": "CU10 : Calcular Zcore",
+      "Note": null,
+      "Status": "Proposed",
+      "Phase": "1.0",
+      "Complexity": "1"
+    }
+  ],
+  "actors": [
+    {
+      "Object_ID": "644",
+      "Name": "Nutricionista",
+      "Note": null
+    },
+    {
+      "Object_ID": "639",
+      "Name": "Nutricionista",
+      "Note": null
+    },
+    {
+      "Object_ID": "266",
+      "Name": "Nutricionista",
+      "Note": null
+    },
+    {
+      "Object_ID": "41",
+      "Name": "Nutricionista",
+      "Note": null
+    },
+    {
+      "Object_ID": "219",
+      "Name": "Nutricionista",
+      "Note": null
+    },
+    {
+      "Object_ID": "10",
+      "Name": "Nutricionista",
+      "Note": null
+    },
+    {
+      "Object_ID": "643",
+      "Name": "Paciente",
+      "Note": null
+    },
+    {
+      "Object_ID": "640",
+      "Name": "Paciente",
+      "Note": null
+    }
+  ],
+  "classes": [
+    {
+      "Object_ID": "424",
+      "Name": "AgendaMedica_DNI101",
+      "Stereotype": null,
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "IdAgenda_DNI101",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Fecha_DNI101",
+          "Type": "DateTime",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "EstadoAgenda_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "DniNutricionista_DNI101",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "BloquesHorarios_DNI101",
+          "Type": "List<BloqueHorario_DNI101>",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "DV",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        }
+      ],
+      "operations": [
+        {
+          "OperationID": "202",
+          "Name": "GuardarAgenda(agenda: AgendaMedica_DNI101)",
+          "Type": "int",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "203",
+          "Name": "ObtenerAgendaPorFecha(fecha: DateTime, dniNutricionista: int)",
+          "Type": "AgendaMedica_DNI101",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "204",
+          "Name": "ActualizarEstadoBloque(idBloque: int, nuevoEstado: string)",
+          "Type": "bool",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "205",
+          "Name": "ListarBloquesDisponibles(fecha: DateTime, dniNutricionista: int)",
+          "Type": "List<BloqueHorario_DNI101>",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        }
+      ]
+    },
+    {
+      "Object_ID": "432",
+      "Name": "AgendasMedicas_DNI101",
+      "Stereotype": "table",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "IdAgenda_DNI101",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Fecha_DNI101",
+          "Type": "DATE",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "EstadoAgenda_DNI101",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "DniNutricionista_DNI101",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "DV",
+          "Type": "VARCHAR(255)",
+          "Scope": "Public",
+          "Notes": null
+        }
+      ],
+      "operations": []
+    },
+    {
+      "Object_ID": "436",
+      "Name": "Bitacora",
+      "Stereotype": "table",
+      "Note": "Seguridad T06",
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "Numero",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Fecha",
+          "Type": "DATETIME2(7)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "DNI",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Modulo",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Descripcion",
+          "Type": "VARCHAR(255)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Criticidad",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        }
+      ],
+      "operations": []
+    },
+    {
+      "Object_ID": "428",
+      "Name": "BitacoraAuditoria",
+      "Stereotype": "Seguridad T06",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "Numero",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Fecha",
+          "Type": "DateTime",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "DNI",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Modulo",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Descripcion",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Criticidad",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        }
+      ],
+      "operations": [
+        {
+          "OperationID": "216",
+          "Name": "RegistrarEvento(modulo: string, descripcion: string, dni: int, criticidad: string)",
+          "Type": "bool",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        }
+      ]
+    },
+    {
+      "Object_ID": "425",
+      "Name": "BloqueHorario_DNI101",
+      "Stereotype": null,
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "IdBloque_DNI101",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "IdAgenda_DNI101",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "HoraInicio_DNI101",
+          "Type": "TimeSpan",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "HoraFin_DNI101",
+          "Type": "TimeSpan",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "EstadoBloque_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "DV",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        }
+      ],
+      "operations": []
+    },
+    {
+      "Object_ID": "433",
+      "Name": "BloquesHorarios_DNI101",
+      "Stereotype": "table",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "IdBloque_DNI101",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "IdAgenda_DNI101",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "HoraInicio_DNI101",
+          "Type": "TIME(7)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "HoraFin_DNI101",
+          "Type": "TIME(7)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "EstadoBloque_DNI101",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "DV",
+          "Type": "VARCHAR(255)",
+          "Scope": "Public",
+          "Notes": null
+        }
+      ],
+      "operations": []
+    },
+    {
+      "Object_ID": "22",
+      "Name": "Class1",
+      "Stereotype": null,
+      "Note": null,
+      "Package_ID": "6",
+      "attributes": [],
+      "operations": []
+    },
+    {
+      "Object_ID": "32",
+      "Name": "Class1",
+      "Stereotype": null,
+      "Note": null,
+      "Package_ID": "8",
+      "attributes": [],
+      "operations": []
+    },
+    {
+      "Object_ID": "20",
+      "Name": "Class2",
+      "Stereotype": null,
+      "Note": null,
+      "Package_ID": "6",
+      "attributes": [],
+      "operations": []
+    },
+    {
+      "Object_ID": "34",
+      "Name": "Class2",
+      "Stereotype": null,
+      "Note": null,
+      "Package_ID": "8",
+      "attributes": [],
+      "operations": []
+    },
+    {
+      "Object_ID": "33",
+      "Name": "Class3",
+      "Stereotype": null,
+      "Note": null,
+      "Package_ID": "8",
+      "attributes": [],
+      "operations": []
+    },
+    {
+      "Object_ID": "21",
+      "Name": "Class3",
+      "Stereotype": null,
+      "Note": null,
+      "Package_ID": "6",
+      "attributes": [],
+      "operations": []
+    },
+    {
+      "Object_ID": "427",
+      "Name": "DigitoVerificador",
+      "Stereotype": "Seguridad T08",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [],
+      "operations": [
+        {
+          "OperationID": "208",
+          "Name": "ObtenerTurnosCorruptos()",
+          "Type": "List<string>",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "209",
+          "Name": "ObtenerPacientesCorruptos()",
+          "Type": "List<string>",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "210",
+          "Name": "ObtenerTutoresCorruptos()",
+          "Type": "List<string>",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "211",
+          "Name": "RecalcularYPersistir()",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "212",
+          "Name": "ActualizarDVIndividualesTurnos()",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "213",
+          "Name": "ActualizarDVIndividualesPacientes()",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "214",
+          "Name": "ActualizarDVIndividualesTutores()",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "215",
+          "Name": "CalcularDVH(registro: object)",
+          "Type": "string",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        }
+      ]
+    },
+    {
+      "Object_ID": "435",
+      "Name": "DV",
+      "Stereotype": "table",
+      "Note": "Seguridad T08",
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "Tabla",
+          "Type": "VARCHAR(100)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "DVV",
+          "Type": "VARCHAR(255)",
+          "Scope": "Public",
+          "Notes": null
+        }
+      ],
+      "operations": []
+    },
+    {
+      "Object_ID": "419",
+      "Name": "IEstadoTurno_DNI101",
+      "Stereotype": "State",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [],
+      "operations": [
+        {
+          "OperationID": "187",
+          "Name": "Atender(turno: Turno_DNI101)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "188",
+          "Name": "Cancelar(turno: Turno_DNI101, motivo: string)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "189",
+          "Name": "Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        }
+      ]
+    },
+    {
+      "Object_ID": "35",
+      "Name": "Interface1",
+      "Stereotype": "interface",
+      "Note": null,
+      "Package_ID": "8",
+      "attributes": [],
+      "operations": []
+    },
+    {
+      "Object_ID": "417",
+      "Name": "Paciente_DNI101",
+      "Stereotype": null,
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "IdPaciente_DNI101",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "DniNiño_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Nombre_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Apellido_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "FechaNacimiento_DNI101",
+          "Type": "DateTime",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Sexo_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "ObraSocial_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "IdTutor_DNI101",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Tutor_DNI101",
+          "Type": "Tutor_DNI101",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "DV",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        }
+      ],
+      "operations": [
+        {
+          "OperationID": "167",
+          "Name": "ObtenerEdadMeses()",
+          "Type": "int",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "168",
+          "Name": "RegistrarPaciente(paciente: Paciente_DNI101)",
+          "Type": "int",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "169",
+          "Name": "ModificarPaciente(paciente: Paciente_DNI101)",
+          "Type": "bool",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "170",
+          "Name": "ObtenerPacientePorDNI(dniNiño: string)",
+          "Type": "Paciente_DNI101",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "171",
+          "Name": "ListarPacientes()",
+          "Type": "List<Paciente_DNI101>",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "172",
+          "Name": "ListarPacientesPorTutor(idTutor: int)",
+          "Type": "List<Paciente_DNI101>",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        }
+      ]
+    },
+    {
+      "Object_ID": "430",
+      "Name": "Pacientes_DNI101",
+      "Stereotype": "table",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "IdPaciente_DNI101",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "DniNiño_DNI101",
+          "Type": "VARCHAR(20)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Nombre_DNI101",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Apellido_DNI101",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "FechaNacimiento_DNI101",
+          "Type": "DATETIME2(7)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Sexo_DNI101",
+          "Type": "VARCHAR(10)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "ObraSocial_DNI101",
+          "Type": "VARCHAR(100)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "IdTutor_DNI101",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "DV",
+          "Type": "VARCHAR(255)",
+          "Scope": "Public",
+          "Notes": null
+        }
+      ],
+      "operations": []
+    },
+    {
+      "Object_ID": "418",
+      "Name": "Turno_DNI101",
+      "Stereotype": "Context",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "IdTurno_DNI101",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "CodigoTurno_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "FechaTurno_DNI101",
+          "Type": "DateTime",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "HoraTurno_DNI101",
+          "Type": "TimeSpan",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "MotivoConsulta_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "EstadoTurno_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "IdPaciente_DNI101",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "DniNutricionista_DNI101",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "IdBloque_DNI101",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Paciente_DNI101",
+          "Type": "Paciente_DNI101",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Nutricionista_DNI101",
+          "Type": "Usuario",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "BloqueHorario_DNI101",
+          "Type": "BloqueHorario_DNI101",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "EstadoActual_DNI101",
+          "Type": "IEstadoTurno_DNI101",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "DV",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        }
+      ],
+      "operations": [
+        {
+          "OperationID": "173",
+          "Name": "CambiarEstado(nuevoEstado: IEstadoTurno_DNI101)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "174",
+          "Name": "Atender()",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "175",
+          "Name": "Cancelar(motivo: string)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "176",
+          "Name": "Reprogramar(nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "177",
+          "Name": "AgendarTurno(turno: Turno_DNI101)",
+          "Type": "bool",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "178",
+          "Name": "ConfirmarTurno(idTurno: int)",
+          "Type": "bool",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "179",
+          "Name": "ReprogramarTurno(idTurno: int, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int)",
+          "Type": "bool",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "180",
+          "Name": "CancelarTurno(idTurno: int, motivo: string)",
+          "Type": "bool",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "181",
+          "Name": "MarcarAsistencia(idTurno: int)",
+          "Type": "bool",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "182",
+          "Name": "ListarTurnos(fecha: DateTime?, estado: string?)",
+          "Type": "List<Turno_DNI101>",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "183",
+          "Name": "ObtenerPorId(idTurno: int)",
+          "Type": "Turno_DNI101",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "184",
+          "Name": "ObtenerPorCodigo(codigoTurno: string)",
+          "Type": "Turno_DNI101",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "185",
+          "Name": "ListarTurnosPorFecha(fecha: DateTime)",
+          "Type": "List<Turno_DNI101>",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "186",
+          "Name": "ListarTurnosPorPaciente(idPaciente: int)",
+          "Type": "List<Turno_DNI101>",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        }
+      ]
+    },
+    {
+      "Object_ID": "422",
+      "Name": "TurnoAsistioState_DNI101",
+      "Stereotype": "ConcreteState",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [],
+      "operations": [
+        {
+          "OperationID": "196",
+          "Name": "Atender(turno: Turno_DNI101)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "197",
+          "Name": "Cancelar(turno: Turno_DNI101, motivo: string)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "198",
+          "Name": "Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        }
+      ]
+    },
+    {
+      "Object_ID": "423",
+      "Name": "TurnoCanceladoState_DNI101",
+      "Stereotype": "ConcreteState",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [],
+      "operations": [
+        {
+          "OperationID": "199",
+          "Name": "Atender(turno: Turno_DNI101)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "200",
+          "Name": "Cancelar(turno: Turno_DNI101, motivo: string)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "201",
+          "Name": "Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        }
+      ]
+    },
+    {
+      "Object_ID": "421",
+      "Name": "TurnoConfirmadoState_DNI101",
+      "Stereotype": "ConcreteState",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [],
+      "operations": [
+        {
+          "OperationID": "193",
+          "Name": "Atender(turno: Turno_DNI101)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "194",
+          "Name": "Cancelar(turno: Turno_DNI101, motivo: string)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "195",
+          "Name": "Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        }
+      ]
+    },
+    {
+      "Object_ID": "434",
+      "Name": "Turnos_DNI101",
+      "Stereotype": "table",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "IdTurno_DNI101",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "CodigoTurno_DNI101",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "FechaTurno_DNI101",
+          "Type": "DATETIME2(7)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "HoraTurno_DNI101",
+          "Type": "TIME(7)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "MotivoConsulta_DNI101",
+          "Type": "VARCHAR(255)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "EstadoTurno_DNI101",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "IdPaciente_DNI101",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "DniNutricionista_DNI101",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "IdBloque_DNI101",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "DV",
+          "Type": "VARCHAR(255)",
+          "Scope": "Public",
+          "Notes": null
+        }
+      ],
+      "operations": []
+    },
+    {
+      "Object_ID": "420",
+      "Name": "TurnoSolicitadoState_DNI101",
+      "Stereotype": "ConcreteState",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [],
+      "operations": [
+        {
+          "OperationID": "190",
+          "Name": "Atender(turno: Turno_DNI101)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "191",
+          "Name": "Cancelar(turno: Turno_DNI101, motivo: string)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "192",
+          "Name": "Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int)",
+          "Type": "void",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        }
+      ]
+    },
+    {
+      "Object_ID": "416",
+      "Name": "Tutor_DNI101",
+      "Stereotype": null,
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "IdTutor_DNI101",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "DniTutor_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Nombre_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Apellido_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Telefono_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Email_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Parentesco_DNI101",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "FechaRegistro_DNI101",
+          "Type": "DateTime",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Pacientes_DNI101",
+          "Type": "List<Paciente_DNI101>",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "DV",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        }
+      ],
+      "operations": [
+        {
+          "OperationID": "163",
+          "Name": "RegistrarTutor(tutor: Tutor_DNI101)",
+          "Type": "int",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "164",
+          "Name": "ModificarTutor(tutor: Tutor_DNI101)",
+          "Type": "bool",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "165",
+          "Name": "ObtenerTutorPorDNI(dniTutor: string)",
+          "Type": "Tutor_DNI101",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "166",
+          "Name": "ListarTutores()",
+          "Type": "List<Tutor_DNI101>",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        }
+      ]
+    },
+    {
+      "Object_ID": "429",
+      "Name": "Tutores_DNI101",
+      "Stereotype": "table",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "IdTutor_DNI101",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "DniTutor_DNI101",
+          "Type": "VARCHAR(20)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Nombre_DNI101",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Apellido_DNI101",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Telefono_DNI101",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Email_DNI101",
+          "Type": "VARCHAR(100)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Parentesco_DNI101",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "FechaRegistro_DNI101",
+          "Type": "DATETIME2(7)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "DV",
+          "Type": "VARCHAR(255)",
+          "Scope": "Public",
+          "Notes": null
+        }
+      ],
+      "operations": []
+    },
+    {
+      "Object_ID": "426",
+      "Name": "Usuario",
+      "Stereotype": "Base / Seguridad T02",
+      "Note": null,
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "DNI",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Nombre",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Apellido",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "NombreUsuario",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Contraseña",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Email",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Bloqueado",
+          "Type": "bool",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Intentos",
+          "Type": "int",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Rol",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "Idioma",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        },
+        {
+          "Name": "DV",
+          "Type": "string",
+          "Scope": "Private",
+          "Notes": null
+        }
+      ],
+      "operations": [
+        {
+          "OperationID": "206",
+          "Name": "ObtenerPorDNI(dni: int)",
+          "Type": "Usuario",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        },
+        {
+          "OperationID": "207",
+          "Name": "ListarActivos()",
+          "Type": "List<Usuario>",
+          "Scope": "Public",
+          "Notes": null,
+          "params": []
+        }
+      ]
+    },
+    {
+      "Object_ID": "431",
+      "Name": "Usuarios",
+      "Stereotype": "table",
+      "Note": "Base / Seguridad T02",
+      "Package_ID": "4",
+      "attributes": [
+        {
+          "Name": "DNI",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Nombre",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Apellido",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "NombreUsuario",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Contraseña",
+          "Type": "VARCHAR(255)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Email",
+          "Type": "VARCHAR(100)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Bloqueado",
+          "Type": "BIT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Intentos",
+          "Type": "INT",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "NombreRol",
+          "Type": "VARCHAR(50)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "Nombre_Idioma",
+          "Type": "VARCHAR(25)",
+          "Scope": "Public",
+          "Notes": null
+        },
+        {
+          "Name": "DV",
+          "Type": "VARCHAR(255)",
+          "Scope": "Public",
+          "Notes": null
+        }
+      ],
+      "operations": []
+    }
+  ],
+  "sequence_messages": [],
+  "activity_elements": [
+    {
+      "Object_ID": "438",
+      "Name": "Acceder al módulo de Gestión de Turnos",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "465",
+      "Name": "Acceder al sistema y consultar agenda médica",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "445",
+      "Name": "Buscar niño y tutor en BD",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "483",
+      "Name": "Buscar turno por código e ingresar motivo de baja",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "478",
+      "Name": "Buscar turno por código y consultar nueva disponibilidad (CU07)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "458",
+      "Name": "Calcular DVH e invocar DigitoVerificadorBLL.RecalcularYPersistir()",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "443",
+      "Name": "Cargar selector de bloques horarios disponibles",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "474",
+      "Name": "Ejecutar CU01: Registrar Turno (Crear Turno 'Solicitado', ocupar bloque, DV T08 y Bitácora T06)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "480",
+      "Name": "Ejecutar CU02: Reprogramar Turno (Liberar bloque previo, ocupar nuevo bloque, DV T08 y Bitácora)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "484",
+      "Name": "Ejecutar CU03: Cancelar Turno (Estado 'Cancelado', liberar bloque, DV T08 y Bitácora)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "440",
+      "Name": "Ejecutar CU07: Consultar Disponibilidad",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "466",
+      "Name": "Ejecutar CU07: Consultar Disponibilidad (Listar bloques horarios libres)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "456",
+      "Name": "Generar CodigoTurno_DNI101 e instanciar TurnoSolicitadoState_DNI101",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "470",
+      "Name": "Ingresar datos del Niño (<19 años) y persistir en BD (CU08: Registrar Paciente y Tutor)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "448",
+      "Name": "Ingresar datos del Niño, validar edad (<19 años) y persistir en Pacientes_DNI101",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "447",
+      "Name": "Ingresar datos del Tutor y persistir en Tutores_DNI101 (CU08)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "467",
+      "Name": "Ingresar DNI del niño y buscar en el sistema",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "444",
+      "Name": "Ingresar DNI del niño y presionar 'Buscar Paciente'",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "489",
+      "Name": "Iniciar atención clínica del paciente (Deriva a PN2: Seguimiento Nutricional Pediátrico)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "457",
+      "Name": "Insertar en Turnos_DNI101 y actualizar bloque a 'Ocupado'",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "488",
+      "Name": "Marcar estado del turno como 'Asistió'",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "455",
+      "Name": "Mostrar alerta conflicto concurrencia y recargar grilla (Flujo Alt 9.2)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "442",
+      "Name": "Mostrar alerta: No hay horarios disponibles (Flujo Alt 4.1)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "449",
+      "Name": "Mostrar datos del Niño y Tutor en pantalla",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "460",
+      "Name": "Mostrar mensaje de éxito y refrescar grilla general de turnos",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "485",
+      "Name": "Notificar cancelación del turno al tutor",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "487",
+      "Name": "Presentarse en el consultorio con el paciente pediátrico",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "473",
+      "Name": "Presionar botón 'Agendar Turno'",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "451",
+      "Name": "Presionar botón 'Agendar Turno'",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "475",
+      "Name": "Recibir confirmación del turno agendado",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "481",
+      "Name": "Recibir nueva fecha y horario confirmado",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "471",
+      "Name": "Recuperar y mostrar datos del Niño y Tutor",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "459",
+      "Name": "Registrar evento de agendamiento en Bitacora (T06)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "453",
+      "Name": "Resaltar campos faltantes (Flujo Alt 9.1)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "450",
+      "Name": "Seleccionar bloque horario e ingresar motivo de consulta",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "472",
+      "Name": "Seleccionar bloque horario e ingresar motivo de consulta",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "439",
+      "Name": "Seleccionar fecha y profesional nutricionista",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "479",
+      "Name": "Seleccionar nuevo bloque horario disponible",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "477",
+      "Name": "Solicitar cambio de fecha u horario",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "482",
+      "Name": "Solicitar cancelación del turno programado",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "469",
+      "Name": "Solicitar e ingresar datos del Tutor (DNI, Nombre, Teléfono, Parentesco)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "464",
+      "Name": "Solicitar turno nutricional brindando datos (DNI Niño, Tutor, Fecha y Horario preferido)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "497",
+      "Name": "Visualizar confirmacion de turno y codigo generado",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "454",
+      "Name": "¿Bloque continúa 'Disponible'?",
+      "Object_Type": "Decision",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "452",
+      "Name": "¿Campos completos?",
+      "Object_Type": "Decision",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "476",
+      "Name": "¿Evolución / Solicitud posterior del Tutor?",
+      "Object_Type": "Decision",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "441",
+      "Name": "¿Existen bloques disponibles en la fecha?",
+      "Object_Type": "Decision",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "468",
+      "Name": "¿Paciente registrado en el padrón?",
+      "Object_Type": "Decision",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "446",
+      "Name": "¿Paciente registrado?",
+      "Object_Type": "Decision",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "461",
+      "Name": null,
+      "Object_Type": "StateNode",
+      "Stereotype": "ActivityFinal",
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "486",
+      "Name": null,
+      "Object_Type": "StateNode",
+      "Stereotype": "ActivityFinal",
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "437",
+      "Name": null,
+      "Object_Type": "StateNode",
+      "Stereotype": "ActivityInitial",
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "463",
+      "Name": null,
+      "Object_Type": "StateNode",
+      "Stereotype": "ActivityInitial",
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "490",
+      "Name": null,
+      "Object_Type": "StateNode",
+      "Stereotype": "ActivityFinal",
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "498",
+      "Name": "Fin_Alt4_1",
+      "Object_Type": "StateNode",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "0"
+    },
+    {
+      "Object_ID": "494",
+      "Name": "Action1",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "12"
+    },
+    {
+      "Object_ID": "507",
+      "Name": "ActivityFinal",
+      "Object_Type": "StateNode",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "12"
+    },
+    {
+      "Object_ID": "504",
+      "Name": "ActivityInitial",
+      "Object_Type": "StateNode",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "12"
+    },
+    {
+      "Object_ID": "615",
+      "Name": "Acceder a Gestion de Turnos y seleccionar turno de la grilla",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "632",
+      "Name": "Actualizar Fecha, Hora e IdBloque en Turnos_DNI101",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "625",
+      "Name": "Cargar selector con nuevos bloques horarios disponibles",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "629",
+      "Name": "Delegar reprogramacion a State (TurnoBE_DNI101.Reprogramar)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "621",
+      "Name": "Ejecutar CU07: Consultar Disponibilidad",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "631",
+      "Name": "Liberar bloque anterior (Disponible) y ocupar nuevo bloque (Ocupado)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "628",
+      "Name": "Mostrar alerta: Conflicto de concurrencia en bloque y recargar grilla (Flujo Alt 9.2)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "623",
+      "Name": "Mostrar alerta: Sin disponibilidad en la fecha seleccionada (Flujo Alt 4.1)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "618",
+      "Name": "Mostrar alerta: Turno finalizado o cancelado no modificable (Flujo Alt 10.1)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "636",
+      "Name": "Mostrar mensaje de exito y refrescar grilla general de turnos",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "634",
+      "Name": "Recalcular DVH y DVV persistiendo en tabla DV (T08)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "616",
+      "Name": "Recuperar datos de Turno y verificar EstadoActual (IEstadoTurno)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "633",
+      "Name": "Registrar evento de reprogramacion en Bitacora (T06)",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "620",
+      "Name": "Seleccionar nueva fecha y profesional nutricionista",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "626",
+      "Name": "Seleccionar nuevo bloque horario y presionar 'Reprogramar Turno'",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "637",
+      "Name": "Visualizar confirmacion de reprogramacion y turno actualizado",
+      "Object_Type": "Action",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "617",
+      "Name": "Estado permite reprogramar?",
+      "Object_Type": "Decision",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "622",
+      "Name": "Existen bloques disponibles en la nueva fecha?",
+      "Object_Type": "Decision",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "627",
+      "Name": "Nuevo bloque continua 'Disponible'?",
+      "Object_Type": "Decision",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "614",
+      "Name": null,
+      "Object_Type": "StateNode",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "638",
+      "Name": "ActivityFinal",
+      "Object_Type": "StateNode",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "619",
+      "Name": "Fin_Alt10_1",
+      "Object_Type": "StateNode",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    },
+    {
+      "Object_ID": "624",
+      "Name": "Fin_Alt4_1",
+      "Object_Type": "StateNode",
+      "Stereotype": null,
+      "Note": null,
+      "ParentID": "13"
+    }
+  ],
+  "all_connectors": []
+}

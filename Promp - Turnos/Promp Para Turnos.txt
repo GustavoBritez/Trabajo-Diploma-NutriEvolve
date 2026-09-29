@@ -12,17 +12,6 @@ Desarrollo de Tablas y entidades, Se deberá respetar exhaustivamente esta estru
 
 Tablas
 
-*Tutores_DNI101*
-	- IdTutor_DNI101 INT IDENTITY(1,1) PRIMARY KEY
-	- DniTutor_DNI101 VARCHAR(20) NOT NULL UNIQUE
-	- Nombre_DNI101 VARCHAR(50) NOT NULL
-	- Apellido_DNI101 VARCHAR(50) NOT NULL
-	- Telefono_DNI101 VARCHAR(50) NOT NULL
-	- Email_DNI101 VARCHAR(100) NULL
-	- Parentesco_DNI101 VARCHAR(50) NOT NULL
-	- FechaRegistro_DNI101 DATETIME2(7) NOT NULL DEFAULT GETDATE()
-	- DV VARCHAR(255) NULL
-
 *Pacientes_DNI101*
 	- IdPaciente_DNI101 INT IDENTITY(1,1) PRIMARY KEY
 	- DniNiño_DNI101 VARCHAR(20) NOT NULL UNIQUE
@@ -102,17 +91,14 @@ Entidades:
 
 
 	- PacienteBE_DNI101
-- int IdPaciente_DNI101 { get; set; }
-- string DniNiño_DNI101 { get; set; }
-- string Nombre_DNI101 { get; set; }
 - string Apellido_DNI101 { get; set; }
-- DateTime FechaNacimiento_DNI101 { get; set; }
-- string Sexo_DNI101 { get; set; }
-- string ObraSocial_DNI101 { get; set; }
-- int IdTutor_DNI101 { get; set; }
-- TutorBE_DNI101 Tutor_DNI101 { get; set; }
-- int ObtenerEdadMeses() -> Retorna los meses transcurridos desde FechaNacimiento_DNI101.
+- string DNINiño_DNI101 { get; set; }
 - string? DV { get; set; }
+- DateTime FechaNacimiento_DNI101 { get; set; }
+- int IdPaciente_DNI101 { get; set; }
+- string Nombre_DNI101 { get; set; }
+- string ObraSocial_DNI101 { get; set; }
+- string Sexo_DNI101 { get; set; }
 
 	- AgendaMedicaBE_DNI101
 - int IdAgenda_DNI101 { get; set; }

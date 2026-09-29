@@ -1,0 +1,335 @@
+Idea General: Implementar el sistema de Seguimiento Nutricional Pediátrico (PN2).
+
+Desarrollo de la idea en lenguaje natural:
+
+Dentro de la GUI tenes que crear un nuevo Form que se denomine "FormSeguimientoNutricional_DNI101" y agregar un botón dentro de "MenuPrincipal.cs" / "Form1.cs" (Este botón es de tipo button y necesita ser llamado como "button_SeguimientoNutricional" por lo tanto su evento click correspondiente debe llamarse "btnSeguimientoNutricional_Click", al hacer click en este botón te deberá llevar al nuevo formulario creado "FormSeguimientoNutricional_DNI101"). Es importante que se integre correctamente la visibilidad y navegación de este nuevo formulario dentro de FormManager.cs de lo contrario tendrá problemas de compatibilidad.
+
+Para la utilización de los métodos correspondientes se deberá integrar con las capas subyacentes que posee el proyecto (Capa BE, Capa DAL, Capa BLL, Patrones GoF y Capa de Servicios transversales).
+
+Desarrollo de Tablas y entidades, Se deberá respetar exhaustivamente esta estructura (Si existe un error en la sintaxis debes corregirlo):
+
+=============================================================================
+TABLAS DE BASE DE DATOS (SQL Server)
+=============================================================================
+
+*ConsultasNutricionales_DNI101*
+	- IdConsulta_DNI101 INT IDENTITY(1,1) PRIMARY KEY
+	- IdPaciente_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[Pacientes_DNI101]([IdPaciente_DNI101])
+	- DniNutricionista_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[Usuarios]([DNI])
+	- IdTurno_DNI101 INT NULL FOREIGN KEY REFERENCES [dbo].[Turnos_DNI101]([IdTurno_DNI101])
+	- FechaControl_DNI101 DATETIME2(7) NOT NULL
+	- EdadMeses_DNI101 INT NOT NULL
+	- TipoLactancia_DNI101 VARCHAR(50) NULL (ej: 'Materna Exclusiva', 'Formula', 'Mixta', 'Destete')
+	- AlimentacionComplementaria_DNI101 VARCHAR(255) NULL
+	- Alergias_DNI101 VARCHAR(255) NULL
+	- AntecedentesFamiliares_DNI101 VARCHAR(255) NULL
+	- Observaciones_DNI101 VARCHAR(500) NULL
+	- DV VARCHAR(255) NULL
+
+*MedicionesAntropometricas_DNI101*
+	- IdMedicion_DNI101 INT IDENTITY(1,1) PRIMARY KEY
+	- IdConsulta_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[ConsultasNutricionales_DNI101]([IdConsulta_DNI101])
+	- PesoKg_DNI101 DECIMAL(5,2) NOT NULL
+	- TallaCm_DNI101 DECIMAL(5,2) NOT NULL
+	- PerimetroCefalicoCm_DNI101 DECIMAL(5,2) NOT NULL
+	- CircunferenciaCinturaCm_DNI101 DECIMAL(5,2) NULL
+	- IMC_DNI101 DECIMAL(5,2) NOT NULL
+	- DV VARCHAR(255) NULL
+
+*ZScoresResultados_DNI101*
+	- IdZScore_DNI101 INT IDENTITY(1,1) PRIMARY KEY
+	- IdConsulta_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[ConsultasNutricionales_DNI101]([IdConsulta_DNI101])
+	- ZPesoEdad_DNI101 DECIMAL(4,2) NOT NULL
+	- ZTallaEdad_DNI101 DECIMAL(4,2) NOT NULL
+	- ZIMCEdad_DNI101 DECIMAL(4,2) NOT NULL
+	- ZPCEdad_DNI101 DECIMAL(4,2) NOT NULL
+	- PercentilPeso_DNI101 DECIMAL(5,2) NOT NULL
+	- PercentilTalla_DNI101 DECIMAL(5,2) NOT NULL
+	- PercentilIMC_DNI101 DECIMAL(5,2) NOT NULL
+	- DV VARCHAR(255) NULL
+
+*DiagnosticosNutricionales_DNI101*
+	- IdDiagnostico_DNI101 INT IDENTITY(1,1) PRIMARY KEY
+	- IdConsulta_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[ConsultasNutricionales_DNI101]([IdConsulta_DNI101])
+	- ClasificacionOMS_DNI101 VARCHAR(100) NOT NULL (ej: 'Eutrófico / Normal', 'Riesgo de Desnutrición', 'Desnutrición Aguda', 'Riesgo de Sobrepeso', 'Sobrepeso', 'Obesidad')
+	- DetallesClinicos_DNI101 VARCHAR(500) NOT NULL
+	- RequiereAlerta_DNI101 BIT NOT NULL DEFAULT 0
+	- DV VARCHAR(255) NULL
+
+*AlertasClinicas_DNI101*
+	- IdAlerta_DNI101 INT IDENTITY(1,1) PRIMARY KEY
+	- IdConsulta_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[ConsultasNutricionales_DNI101]([IdConsulta_DNI101])
+	- TipoAlerta_DNI101 VARCHAR(50) NOT NULL (ej: 'Caída Abrupta de Percentil', 'Desviación Z-Score Severa', 'Bajo Peso Crítico')
+	- Severidad_DNI101 VARCHAR(20) NOT NULL ('Baja', 'Media', 'Alta', 'Crítica')
+	- MensajeAlerta_DNI101 VARCHAR(255) NOT NULL
+	- FechaGeneracion_DNI101 DATETIME2(7) NOT NULL
+	- DV VARCHAR(255) NULL
+
+*PlanesAlimentarios_DNI101*
+	- IdPlan_DNI101 INT IDENTITY(1,1) PRIMARY KEY
+	- IdConsulta_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[ConsultasNutricionales_DNI101]([IdConsulta_DNI101])
+	- RequerimientoCalorico_DNI101 DECIMAL(6,2) NOT NULL (Kcal/día)
+	- PctCarbohidratos_DNI101 DECIMAL(4,2) NOT NULL (ej: 55.00)
+	- PctProteinas_DNI101 DECIMAL(4,2) NOT NULL (ej: 15.00)
+	- PctGrasas_DNI101 DECIMAL(4,2) NOT NULL (ej: 30.00)
+	- PautasFamiliares_DNI101 VARCHAR(1000) NOT NULL
+	- MetasSalud_DNI101 VARCHAR(500) NOT NULL
+	- DV VARCHAR(255) NULL
+
+*Recordatorios24h_DNI101*
+	- IdRecordatorio_DNI101 INT IDENTITY(1,1) PRIMARY KEY
+	- IdConsulta_DNI101 INT NOT NULL FOREIGN KEY REFERENCES [dbo].[ConsultasNutricionales_DNI101]([IdConsulta_DNI101])
+	- Desayuno_DNI101 VARCHAR(255) NOT NULL
+	- Almuerzo_DNI101 VARCHAR(255) NOT NULL
+	- Merienda_DNI101 VARCHAR(255) NOT NULL
+	- Cena_DNI101 VARCHAR(255) NOT NULL
+	- Colaciones_DNI101 VARCHAR(255) NULL
+	- FrecuenciaAlimentos_DNI101 VARCHAR(500) NULL
+	- DV VARCHAR(255) NULL
+
+=============================================================================
+ENTIDADES PARA LOS DIAGRAMAS DE CLASES (Capa BE)
+=============================================================================
+
+	- ConsultaNutricionalBE_DNI101
+- int IdConsulta_DNI101 { get; set; }
+- int IdPaciente_DNI101 { get; set; }
+- int DniNutricionista_DNI101 { get; set; }
+- int? IdTurno_DNI101 { get; set; }
+- DateTime FechaControl_DNI101 { get; set; }
+- int EdadMeses_DNI101 { get; set; }
+- string? TipoLactancia_DNI101 { get; set; }
+- string? AlimentacionComplementaria_DNI101 { get; set; }
+- string? Alergias_DNI101 { get; set; }
+- string? AntecedentesFamiliares_DNI101 { get; set; }
+- string? Observaciones_DNI101 { get; set; }
+- PacienteBE_DNI101 Paciente_DNI101 { get; set; }
+- MedicionAntropometricaBE_DNI101 Medicion_DNI101 { get; set; }
+- ZScoreResultadoBE_DNI101 ZScores_DNI101 { get; set; }
+- DiagnosticoNutricionalBE_DNI101 Diagnostico_DNI101 { get; set; }
+- AlertaClinicaBE_DNI101? Alerta_DNI101 { get; set; }
+- PlanAlimentarioBE_DNI101 PlanAlimentario_DNI101 { get; set; }
+- Recordatorio24hBE_DNI101? Recordatorio_DNI101 { get; set; }
+- string? DV { get; set; }
+
+	- MedicionAntropometricaBE_DNI101
+- int IdMedicion_DNI101 { get; set; }
+- int IdConsulta_DNI101 { get; set; }
+- double PesoKg_DNI101 { get; set; }
+- double TallaCm_DNI101 { get; set; }
+- double PerimetroCefalicoCm_DNI101 { get; set; }
+- double? CircunferenciaCinturaCm_DNI101 { get; set; }
+- double IMC_DNI101 { get; set; }
+- string? DV { get; set; }
+
+	- ZScoreResultadoBE_DNI101
+- int IdZScore_DNI101 { get; set; }
+- int IdConsulta_DNI101 { get; set; }
+- double ZPesoEdad_DNI101 { get; set; }
+- double ZTallaEdad_DNI101 { get; set; }
+- double ZIMCEdad_DNI101 { get; set; }
+- double ZPCEdad_DNI101 { get; set; }
+- double PercentilPeso_DNI101 { get; set; }
+- double PercentilTalla_DNI101 { get; set; }
+- double PercentilIMC_DNI101 { get; set; }
+- string? DV { get; set; }
+
+	- DiagnosticoNutricionalBE_DNI101
+- int IdDiagnostico_DNI101 { get; set; }
+- int IdConsulta_DNI101 { get; set; }
+- string ClasificacionOMS_DNI101 { get; set; }
+- string DetallesClinicos_DNI101 { get; set; }
+- bool RequiereAlerta_DNI101 { get; set; }
+- string? DV { get; set; }
+
+	- AlertaClinicaBE_DNI101
+- int IdAlerta_DNI101 { get; set; }
+- int IdConsulta_DNI101 { get; set; }
+- string TipoAlerta_DNI101 { get; set; }
+- string Severidad_DNI101 { get; set; }
+- string MensajeAlerta_DNI101 { get; set; }
+- DateTime FechaGeneracion_DNI101 { get; set; }
+- string? DV { get; set; }
+
+	- PlanAlimentarioBE_DNI101
+- int IdPlan_DNI101 { get; set; }
+- int IdConsulta_DNI101 { get; set; }
+- double RequerimientoCalorico_DNI101 { get; set; }
+- double PctCarbohidratos_DNI101 { get; set; }
+- double PctProteinas_DNI101 { get; set; }
+- double PctGrasas_DNI101 { get; set; }
+- string PautasFamiliares_DNI101 { get; set; }
+- string MetasSalud_DNI101 { get; set; }
+- string? DV { get; set; }
+
+	- Recordatorio24hBE_DNI101
+- int IdRecordatorio_DNI101 { get; set; }
+- int IdConsulta_DNI101 { get; set; }
+- string Desayuno_DNI101 { get; set; }
+- string Almuerzo_DNI101 { get; set; }
+- string Merienda_DNI101 { get; set; }
+- string Cena_DNI101 { get; set; }
+- string? Colaciones_DNI101 { get; set; }
+- string? FrecuenciaAlimentos_DNI101 { get; set; }
+- string? DV { get; set; }
+
+=============================================================================
+PERSISTENCIA DAL (Acceso a Datos ADO.NET mediante Conexion.cs)
+=============================================================================
+
+	- ConsultaNutricionalDAL_DNI101
+int Guardar(ConsultaNutricionalBE_DNI101 consulta): Inserta la cabecera en [ConsultasNutricionales_DNI101] y retorna el IdConsulta_DNI101 generado.
+bool Modificar(ConsultaNutricionalBE_DNI101 consulta): Actualiza datos generales de la consulta por IdConsulta_DNI101.
+ConsultaNutricionalBE_DNI101? ObtenerPorId(int idConsulta): Retorna la consulta completa con sus mediciones, Z-Scores, diagnósticos y plan enlazados mediante JOINs.
+List<ConsultaNutricionalBE_DNI101> ListarHistorialPorPaciente(int idPaciente): Retorna la lista histórica ordenada cronológicamente de todas las consultas de un paciente pediátrico.
+
+	- MedicionAntropometricaDAL_DNI101
+int Guardar(MedicionAntropometricaBE_DNI101 medicion): Inserta registro en [MedicionesAntropometricas_DNI101] asociado a IdConsulta_DNI101.
+MedicionAntropometricaBE_DNI101? ObtenerPorConsulta(int idConsulta): Retorna los valores corporales tomados en una consulta específica.
+List<MedicionAntropometricaBE_DNI101> ListarEvolucionPorPaciente(int idPaciente): Obtiene las mediciones sucesivas para alimentar el motor de graficación de percentiles.
+
+	- ZScoreResultadoDAL_DNI101
+int Guardar(ZScoreResultadoBE_DNI101 zscore): Persiste los cálculos de desviaciones estándar y percentiles en [ZScoresResultados_DNI101].
+ZScoreResultadoBE_DNI101? ObtenerPorConsulta(int idConsulta): Retorna los Z-Scores y percentiles calculados de una consulta.
+
+	- DiagnosticoNutricionalDAL_DNI101
+int Guardar(DiagnosticoNutricionalBE_DNI101 diagnostico): Inserta la clasificación OMS y detalles clínicos en [DiagnosticosNutricionales_DNI101].
+DiagnosticoNutricionalBE_DNI101? ObtenerPorConsulta(int idConsulta): Retorna el diagnóstico médico-nutricional de la consulta.
+
+	- AlertaClinicaDAL_DNI101
+int Guardar(AlertaClinicaBE_DNI101 alerta): Registra una alerta clínica en [AlertasClinicas_DNI101].
+List<AlertaClinicaBE_DNI101> ListarAlertasPorPaciente(int idPaciente): Lista las alertas emitidas en el historial del paciente.
+List<AlertaClinicaBE_DNI101> ListarAlertasActivas(): Lista las alertas críticas no resueltas en el consultorio.
+
+	- PlanAlimentarioDAL_DNI101
+int Guardar(PlanAlimentarioBE_DNI101 plan): Inserta el plan nutricional y distribución calórica en [PlanesAlimentarios_DNI101].
+PlanAlimentarioBE_DNI101? ObtenerPorConsulta(int idConsulta): Retorna el plan alimentario prescripto.
+
+	- Recordatorio24hDAL_DNI101
+int Guardar(Recordatorio24hBE_DNI101 recordatorio): Guarda el detalle de la ingesta de 24 horas y frecuencias de consumo en [Recordatorios24h_DNI101].
+Recordatorio24hBE_DNI101? ObtenerPorConsulta(int idConsulta): Recupera la anamnesis alimentaria.
+
+=============================================================================
+LÓGICA DE NEGOCIO BLL Y PATRONES DE DISEÑO GOF
+=============================================================================
+
+1. PATRÓN STRATEGY (Cálculo de Z-Scores y Curvas OMS)
+   Objetivo: Encapsular y desacoplar los algoritmos de cálculo antropométrico y tablas LMS oficiales de la OMS según grupo etario y sexo del niño.
+
+	- IEstrategiaCalculoOMS_DNI101
+ZScoreResultadoBE_DNI101 CalcularZScores(MedicionAntropometricaBE_DNI101 medicion, int edadMeses, string sexo);
+DiagnosticoNutricionalBE_DNI101 EvaluarClasificacionOMS(ZScoreResultadoBE_DNI101 zscore);
+
+	- CalculoOMS_Lactantes_DNI101 (ConcreteStrategy para 0 a 24 meses)
+Implementa IEstrategiaCalculoOMS_DNI101 aplicando el estándar OMS para lactantes (Peso/Edad, Talla/Edad, Perímetro Cefálico/Edad con tablas LMS de 0-2 años).
+
+	- CalculoOMS_PreescolaresEscolares_DNI101 (ConcreteStrategy para 2 a 19 años)
+Implementa IEstrategiaCalculoOMS_DNI101 aplicando el estándar OMS para preescolares y adolescentes (IMC/Edad, Talla/Edad con tablas LMS de 2-19 años).
+
+	- EvaluadorNutricionalContext_DNI101 (Context)
+Permite seleccionar dinámicamente la estrategia adecuada según 'edadMeses' e invocar el cálculo de forma transparente.
+
+-----------------------------------------------------------------------------
+
+2. PATRÓN OBSERVER (Alertas Clínicas Visuales ante Caídas de Percentil)
+   Objetivo: Notificar inmediatamente al entorno visual y a la auditoría clínica cuando un cálculo antropométrico evidencie una caída abrupta de percentil o una desviación nutricional de riesgo.
+
+	- IObservadorAlertaClinica_DNI101 (IObserver)
+void NotificarAlerta(AlertaClinicaBE_DNI101 alerta);
+
+	- AlertaVisualUIObserver_DNI101 (ConcreteObserver UI)
+Actualiza un indicador gráfico visual prominente (Alerta Clínica Visual de Crecimiento en color Rojo/Ámbar con mensaje en pantalla).
+
+	- BitacoraAlertaObserver_DNI101 (ConcreteObserver Auditoría)
+Registra la emisión de la alerta en la Bitácora de Auditoría del sistema (EventoBLL / Seguridad T06).
+
+	- EvaluadorCrecimientoSubject_DNI101 (Subject)
+Mantiene la lista de observadores. Al registrar una nueva medición, compara los percentiles actuales contra la consulta anterior del paciente. Si detecta una caída > 2 canales de percentiles o Z-Score < -2 / > +2, genera la entidad AlertaClinicaBE_DNI101 y dispara 'Notificar(alerta)'.
+
+-----------------------------------------------------------------------------
+
+	- SeguimientoNutricionalBLL_DNI101 (Servicio / Fachada del Proceso PN2)
+
+- ConsultaNutricionalBE_DNI101 RegistrarConsulta(ConsultaNutricionalBE_DNI101 consulta):
+  Reglas de Negocio:
+  1. Valida que el paciente exista en Pacientes_DNI101 y que el profesional nutricionista tenga sesión activa.
+  2. Calcula automáticamente la edad en meses según FechaNacimiento_DNI101 y FechaControl_DNI101.
+  3. Calcula el IMC = PesoKg / ((TallaCm / 100) ^ 2).
+  4. Ejecuta la estrategia OMS correspondiente (Patrón Strategy) obteniendo Z-Scores y Percentiles.
+  5. Genera el diagnóstico nutricional oficializado por OMS.
+  6. Evalúa si hay caída de percentil comparando con la última consulta histórica; si amerita, dispara las alertas mediante el Patrón Observer.
+  7. Persiste la consulta, medición, Z-Scores, diagnósticos, plan alimentario y recordatorio en una transacción atómica mediante las clases DAL.
+  8. Si la consulta se originó a partir de un Turno (IdTurno_DNI101 > 0), actualiza el estado del turno a 'Asistio' en TurnoBLL_DNI101.
+  9. Recalcula el Dígito Verificador (DV) de los registros impactados y lo registra en Bitácora.
+
+- ZScoreResultadoBE_DNI101 CalcularZScoresEnVivo(double peso, double talla, double perimetroCefalico, int edadMeses, string sexo):
+  Permite previsualizar en pantalla los percentiles y Z-Scores antes de guardar definitivamente la consulta.
+
+- List<ConsultaNutricionalBE_DNI101> ObtenerHistoriaClinica(int idPaciente):
+  Retorna el historial completo del paciente pediátrico con todos sus controles médicos.
+
+- PlanAlimentarioBE_DNI101 PrescribirPlanAlimentario(int idConsulta, double kcal, double pctCho, double pctProt, double pctGrasas, string pautas, string metas):
+  Valida que la suma de porcentajes de macronutrientes sea exactamente 100% y persiste el plan terapéutico.
+
+=============================================================================
+INTERFAZ GRÁFICA UI (Windows Forms)
+=============================================================================
+
+	- FormSeguimientoNutricional_DNI101.cs
+Formulario interactivo y profesional para la consulta de nutrición:
+1. Panel Superior - Selector de Paciente e Historia Clínica:
+   - Controles: txtDniNiño, btnBuscarPaciente, lblNombrePaciente, lblEdadMeses, lblObraSocial.
+   - Grilla histórica (dgvHistorialConsultas) que lista las fechas de controles anteriores y diagnósticos previos.
+
+2. Pestaña 1 - Mediciones Antropométricas y Curvas OMS:
+   - Inputs numéricos: numPeso, numTalla, numPerimetroCefalico, numCircunferenciaCintura.
+   - Botón 'btnCalcularZScore': Muestra al instante los labels calculados (lblIMC, lblZPeso, lblZTalla, lblZIMC, lblPercentiles).
+   - Componente gráfico (Panel / Chart / ZedGraph) donde se dibujan las curvas patrón OMS (P3, P15, P50, P85, P97) y se grafica el punto de evolución del paciente.
+
+3. Pestaña 2 - Diagnóstico Nutricional y Alertas Clínicas:
+   - Visualización de Clasificación OMS (lblClasificacionOMS).
+   - Panel de Alerta Clínica Visual de Crecimiento: Banner visual resaltado que se activa en rojo con sonido/ícono de alerta en caso de caída abrupta de percentil.
+   - txtDetallesClinicos: Observaciones médicas del profesional.
+
+4. Pestaña 3 - Anamnesis y Recordatorio 24h:
+   - cmbTipoLactancia, txtAlimentacionComplementaria, txtAlergias, txtAntecedentesFamiliares.
+   - Grilla o inputs para comidas: txtDesayuno, txtAlmuerzo, txtMerienda, txtCena, txtColaciones, txtFrecuenciaAlimentos.
+
+5. Pestaña 4 - Prescripción del Plan Alimentario:
+   - numRequerimientoCalorico (Kcal).
+   - Sliders / inputs numéricos para macronutrientes (% Carbohidratos, % Proteínas, % Grasas) con validación automática de suma = 100%.
+   - txtPautasFamiliares y txtMetasSalud.
+   - Botón 'btnGuardarConsulta': Ejecuta la persistencia completa, emite mensaje de confirmación y refresca la historia clínica.
+
+	- FormSeguimientoNutricional_DNI101.Designer.cs
+Diseño completo de controles interactivos, tabs, labels, textboxes, numericUpDowns, paneles de alerta y grillas.
+
+	- Form1.cs / MenuPrincipal.cs
+Agregar el botón de acceso rápido "btnSeguimientoNutricional" con Text = "Seguimiento Nutricional" en el panel lateral de navegación, invocando FormManager.Navegar(this, new FormSeguimientoNutricional_DNI101()).
+
+=============================================================================
+INTEGRIDAD POR DÍGITO VERIFICADOR (DV) Y AUDITORÍA
+=============================================================================
+
+Actualizar 'DigitoVerificadorBLL.cs' y 'DigitoVerificadorDAL.cs':
+1. Detección de Registros Corruptos en el Módulo de Seguimiento Nutricional:
+   - Implementar métodos granulares:
+     * List<string> ObtenerConsultasNutricionalesCorruptas()
+     * List<string> ObtenerMedicionesCorruptas()
+     * List<string> ObtenerZScoresCorruptos()
+     * List<string> ObtenerDiagnosticosCorruptos()
+     * List<string> ObtenerPlanesAlimentariosCorruptos()
+   - Estos métodos recorren las tablas correspondientes, recalculan el DV individual por fila y detectan inconsistencias.
+
+2. Recálculo Masivo de Integridad en RecalcularYPersistir():
+   - Incorporar la actualización y firma de las tablas de PN2:
+     * ActualizarDVIndividualesConsultas()
+     * ActualizarDVIndividualesMediciones()
+     * ActualizarDVIndividualesZScores()
+     * ActualizarDVIndividualesDiagnosticos()
+     * ActualizarDVIndividualesPlanesAlimentarios()
+     * Recálculo de DVV y recalculo de la firma global '__TOTAL_BD__'.
+
+3. Automatización en el flujo de negocio:
+   - Cada consulta guardada calcula el DVH de cada fila insertada y actualiza la tabla de control de integridad.
+   - Se registra el evento en Bitácora: "Se registró Consulta Nutricional Pediátrica para el Paciente [DNI] por el Profesional [DNI]".

@@ -13,6 +13,7 @@ namespace UI
         private static Bitacora _bitacora;
         private static Perfiles _perfiles;
         private static Respaldo _respaldo;
+        private static frmTurnero_DNI101 _frmTurnero;
 
 
         public static Login ObtenerLogin()
@@ -76,6 +77,16 @@ namespace UI
             return _respaldo;
         }
 
+        public static frmTurnero_DNI101 ObtenerFrmTurnero()
+        {
+            if (_frmTurnero == null || _frmTurnero.IsDisposed)
+            {
+                _frmTurnero = new frmTurnero_DNI101();
+            }
+            AplicarSeguridad(_frmTurnero);
+            return _frmTurnero;
+        }
+
         public static void Navegar(Form formularioActual, Form formularioDestino)
         {
             try
@@ -110,10 +121,15 @@ namespace UI
             {
                 _gestionUsuario.Dispose();
             }
+            if (_frmTurnero != null && !_frmTurnero.IsDisposed)
+            {
+                _frmTurnero.Dispose();
+            }
 
             _Login = null;
             _MenuPrincipal = null;
             _gestionUsuario = null;
+            _frmTurnero = null;
         }
 
         // 1. El m�todo principal que llama tu pantalla

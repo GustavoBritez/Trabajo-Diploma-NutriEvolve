@@ -1,0 +1,185 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0">
+  <diagram id="pn1" name="Proceso PN1">
+    <mxGraphModel dx="1071" dy="704" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="pool" parent="1" style="swimlane;childLayout=stackLayout;horizontal=0;horizontalStack=1;startSize=30;labelBackgroundColor=none;" value="PN1: Turnero Nutricional" vertex="1">
+          <mxGeometry height="900" width="1000" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_paciente" parent="pool" style="swimlane;horizontal=1;startSize=30;labelBackgroundColor=none;" value="PACIENTE" vertex="1">
+          <mxGeometry height="900" width="300" x="30" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="lane_paciente" style="ellipse;labelBackgroundColor=none;fillColor=#0D0D0D;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="130" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p_datos_turno" parent="lane_paciente" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=15;labelBackgroundColor=none;" value="Datos del turno" vertex="1">
+          <mxGeometry height="40" width="150" x="70" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="p_datos_fil" parent="lane_paciente" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=15;labelBackgroundColor=none;" value="Datos filiatorios" vertex="1">
+          <mxGeometry height="40" width="150" x="70" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="p_horario" parent="lane_paciente" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=15;labelBackgroundColor=none;" value="Horario seleccionado" vertex="1">
+          <mxGeometry height="40" width="150" x="70" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="p_confirm" parent="lane_paciente" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=15;labelBackgroundColor=none;" value="Confirmación del turno" vertex="1">
+          <mxGeometry height="40" width="150" x="70" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_nutricionista" parent="pool" style="swimlane;horizontal=1;startSize=30;labelBackgroundColor=none;" value="NUTRICIONISTA" vertex="1">
+          <mxGeometry height="900" width="350" x="330" as="geometry" />
+        </mxCell>
+        <mxCell id="n_consultar" parent="lane_nutricionista" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Consultar disponibilidad&#xa;en agenda médica" vertex="1">
+          <mxGeometry height="50" width="170" x="90" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="d_existe_bd" parent="lane_nutricionista" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="¿Paciente&#xa;existe en BD?" vertex="1">
+          <mxGeometry height="60" width="130" x="110" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="n_registrar" parent="lane_nutricionista" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Registrar Paciente" vertex="1">
+          <mxGeometry height="40" width="170" x="90" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="d_superp" parent="lane_nutricionista" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="¿Existe&#xa;superposición?" vertex="1">
+          <mxGeometry height="60" width="130" x="110" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="n_reprogramar" parent="lane_nutricionista" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Reprogramar y ofrecer&#xa;horarios alternativos libres" vertex="1">
+          <mxGeometry height="50" width="170" x="90" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="n_seleccionar" parent="lane_nutricionista" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Seleccionar turno disponible&#xa;en la agenda médica" vertex="1">
+          <mxGeometry height="50" width="170" x="90" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="n_actualizar" parent="lane_nutricionista" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Actualizar agenda médica&#xa;(bloque horario como &#39;Ocupado&#39;)" vertex="1">
+          <mxGeometry height="50" width="190" x="80" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="d_cambios" parent="lane_nutricionista" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="¿Solicita cambios&#xa;en el turno?" vertex="1">
+          <mxGeometry height="60" width="130" x="110" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="n_mod_cancel" parent="lane_nutricionista" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Modificar turno por cancelación" vertex="1">
+          <mxGeometry height="50" width="130" x="20" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="n_mod_reprog" parent="lane_nutricionista" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Modificar turno por reprogramación" vertex="1">
+          <mxGeometry height="50" width="130" x="200" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="end_cancel" parent="lane_nutricionista" style="ellipse;html=1;shape=endState;labelBackgroundColor=none;fillColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="70" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="c6" edge="1" parent="lane_nutricionista" source="d_existe_bd" style="exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="d_superp" value="Sí">
+          <mxGeometry relative="1" x="-0.9171" y="10" as="geometry">
+            <mxPoint x="1" as="offset" />
+            <Array as="points">
+              <mxPoint x="280" y="210" />
+              <mxPoint x="290" y="290" />
+              <mxPoint x="280" y="370" />
+            </Array>
+            <mxPoint x="340" y="210" as="sourcePoint" />
+            <mxPoint x="340" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c9" edge="1" parent="lane_nutricionista" source="d_superp" style="labelBackgroundColor=none;fontColor=default;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="n_seleccionar" value="No">
+          <mxGeometry relative="1" x="-0.0428" y="10" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="280" y="367.5" />
+              <mxPoint x="280" y="542.5" />
+            </Array>
+            <mxPoint x="329.9999999999998" y="367.5" as="sourcePoint" />
+            <mxPoint x="349.9999999999998" y="542.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lane_db" parent="pool" style="swimlane;horizontal=1;startSize=30;labelBackgroundColor=none;" value="ALMACENAMIENTO DE DATOS NUTRIEVOLVE" vertex="1">
+          <mxGeometry height="900" width="320" x="680" as="geometry" />
+        </mxCell>
+        <mxCell id="db_agenda" parent="lane_db" style="shape=folder;fontStyle=1;tabWidth=110;tabHeight=20;tabPosition=left;html=1;boundedLbl=1;labelBackgroundColor=none;" value="AGENDA Y TURNOS" vertex="1">
+          <mxGeometry height="50" width="160" x="140" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="db_pacientes" parent="lane_db" style="shape=folder;fontStyle=1;tabWidth=90;tabHeight=20;tabPosition=left;html=1;boundedLbl=1;labelBackgroundColor=none;" value="PACIENTES" vertex="1">
+          <mxGeometry height="50" width="160" x="130" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="db_bloques" parent="lane_db" style="shape=folder;fontStyle=1;tabWidth=120;tabHeight=20;tabPosition=left;html=1;boundedLbl=1;labelBackgroundColor=none;" value="BLOQUES HORARIOS" vertex="1">
+          <mxGeometry height="50" width="160" x="140" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="c1" edge="1" parent="1" source="start" style="labelBackgroundColor=none;fontColor=default;" target="p_datos_turno">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c2" edge="1" parent="1" source="p_datos_turno" style="labelBackgroundColor=none;fontColor=default;" target="n_consultar">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c3" edge="1" parent="1" source="n_consultar" style="labelBackgroundColor=none;fontColor=default;" target="d_existe_bd">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c4" edge="1" parent="1" source="d_existe_bd" style="labelBackgroundColor=none;fontColor=default;" target="p_datos_fil" value="No">
+          <mxGeometry relative="1" x="-0.7037" y="-8" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="435" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5" edge="1" parent="1" source="p_datos_fil" style="labelBackgroundColor=none;fontColor=default;" target="n_registrar">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c7" edge="1" parent="1" source="n_registrar" style="labelBackgroundColor=none;fontColor=default;" target="d_superp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c8" edge="1" parent="1" source="d_superp" style="labelBackgroundColor=none;fontColor=default;" target="n_reprogramar" value="Sí">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c10" edge="1" parent="1" source="n_reprogramar" style="labelBackgroundColor=none;fontColor=default;" target="p_horario">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c11" edge="1" parent="1" source="p_horario" style="labelBackgroundColor=none;fontColor=default;" target="n_seleccionar">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c12" edge="1" parent="1" source="n_seleccionar" style="labelBackgroundColor=none;fontColor=default;" target="n_actualizar">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c13" edge="1" parent="1" source="n_actualizar" style="labelBackgroundColor=none;fontColor=default;" target="p_confirm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c14" edge="1" parent="1" source="n_actualizar" style="labelBackgroundColor=none;fontColor=default;" target="d_cambios">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c15" edge="1" parent="1" source="d_cambios" style="labelBackgroundColor=none;fontColor=default;" target="n_mod_cancel" value="Cancelación">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c16" edge="1" parent="1" source="d_cambios" style="labelBackgroundColor=none;fontColor=default;" target="n_mod_reprog" value="Reprogramación">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c17" edge="1" parent="1" source="n_mod_cancel" style="labelBackgroundColor=none;fontColor=default;" target="end_cancel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="db_c1" edge="1" parent="1" source="n_consultar" style="dashed=1;labelBackgroundColor=none;fontColor=default;" target="db_agenda">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="db_c2" edge="1" parent="1" source="n_registrar" style="dashed=1;labelBackgroundColor=none;fontColor=default;" target="db_pacientes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="db_c3" edge="1" parent="1" source="n_actualizar" style="dashed=1;labelBackgroundColor=none;fontColor=default;" target="db_bloques">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bvvsrokt2kGKxfwxT6TQ-1" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="ENTRADAS" vertex="1">
+          <mxGeometry height="190" width="250" x="100" y="1165" as="geometry" />
+        </mxCell>
+        <mxCell id="bvvsrokt2kGKxfwxT6TQ-2" parent="bvvsrokt2kGKxfwxT6TQ-1" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;ul&gt;&lt;li&gt;&lt;span id=&quot;docs-internal-guid-eede19e8-7fff-6787-533f-48a9126b678b&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size: 14pt; font-family: Calibri, sans-serif; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Datos del turno&lt;/span&gt;&lt;/p&gt;&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size: 14pt; font-family: Calibri, sans-serif; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;&lt;span style=&quot;font-weight:normal;&quot; id=&quot;docs-internal-guid-b5d40f62-7fff-a452-dbdb-f5510e0a64f8&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size:13.999999999999998pt;font-family:Calibri,sans-serif;color:#000000;background-color:transparent;font-weight:700;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;&quot;&gt;Datos afiliatorios&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size:13.999999999999998pt;font-family:Calibri,sans-serif;color:#000000;background-color:transparent;font-weight:700;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;&quot;&gt;&lt;span style=&quot;font-weight:normal;&quot; id=&quot;docs-internal-guid-979338d9-7fff-c4c8-c291-b7b764b44410&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size:13.999999999999998pt;font-family:Calibri,sans-serif;color:#000000;background-color:transparent;font-weight:700;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;&quot;&gt;Horario Seleccionado&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size:13.999999999999998pt;font-family:Calibri,sans-serif;color:#000000;background-color:transparent;font-weight:700;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;&quot;&gt;&lt;span style=&quot;font-weight:normal;&quot; id=&quot;docs-internal-guid-0ba237fc-7fff-d89d-e405-e292855ba98c&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size:13.999999999999998pt;font-family:Calibri,sans-serif;color:#000000;background-color:transparent;font-weight:700;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;&quot;&gt;Confirmación del turno&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;" vertex="1">
+          <mxGeometry height="140" width="250" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bvvsrokt2kGKxfwxT6TQ-3" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="COMPORTAMIENTO" vertex="1">
+          <mxGeometry height="230" width="230" x="450" y="1140" as="geometry" />
+        </mxCell>
+        <mxCell id="bvvsrokt2kGKxfwxT6TQ-4" parent="bvvsrokt2kGKxfwxT6TQ-3" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;ul&gt;&lt;li&gt;&lt;span id=&quot;docs-internal-guid-ab26565c-7fff-9d94-516d-8446f6328755&quot;&gt;&lt;span style=&quot;font-size: 14pt; font-family: Calibri, sans-serif; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Registrar Paciente&lt;/span&gt;&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;&lt;span style=&quot;font-size: 14pt; font-family: Calibri, sans-serif; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;&lt;span style=&quot;font-weight:normal;&quot; id=&quot;docs-internal-guid-00b44568-7fff-b049-1ea0-a9adca5aafb8&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size: 14pt; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline;&quot;&gt;Reprogramar Turno&lt;/span&gt;&lt;/p&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;div&gt;&lt;span style=&quot;font-size: 14pt; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline;&quot;&gt;&lt;span style=&quot;font-weight:normal;&quot; id=&quot;docs-internal-guid-6a757c7f-7fff-c234-7807-ce345e53a6b1&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size: 14pt; font-family: Calibri, sans-serif; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Seleccionar Turno&lt;/span&gt;&lt;/p&gt;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;/li&gt;&lt;li&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size: 14pt; font-family: Calibri, sans-serif; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Cancelar Turno&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;div&gt;&lt;span style=&quot;font-size: 14pt; font-family: Calibri, sans-serif; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;&lt;span style=&quot;font-weight:normal;&quot; id=&quot;docs-internal-guid-a02e15c8-7fff-cd76-a654-b18adb9ef2e2&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size: 14pt; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline;&quot;&gt;Actualizar Turno&lt;/span&gt;&lt;/p&gt;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;/li&gt;&lt;li&gt;&lt;div&gt;&lt;span style=&quot;font-size: 14pt; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline;&quot;&gt;&lt;span style=&quot;font-weight:normal;&quot; id=&quot;docs-internal-guid-55a005d8-7fff-d822-031b-1a3896da3b5b&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size: 14pt; font-family: Calibri, sans-serif; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Modificar Turno&lt;/span&gt;&lt;/p&gt;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;" vertex="1">
+          <mxGeometry height="180" width="230" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bvvsrokt2kGKxfwxT6TQ-5" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="SALIDAS" vertex="1">
+          <mxGeometry height="180" width="230" x="780" y="1170" as="geometry" />
+        </mxCell>
+        <mxCell id="bvvsrokt2kGKxfwxT6TQ-6" parent="bvvsrokt2kGKxfwxT6TQ-5" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;ul&gt;&lt;li&gt;&lt;span id=&quot;docs-internal-guid-87085873-7fff-57d0-aec3-ed23392f34ac&quot;&gt;&lt;span style=&quot;font-size: 14pt; font-family: Calibri, sans-serif; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Turno Registrado&lt;/span&gt;&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;&lt;span style=&quot;font-size: 14pt; font-family: Calibri, sans-serif; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;&lt;span style=&quot;font-weight:normal;&quot; id=&quot;docs-internal-guid-0e799664-7fff-6db8-b166-d44531c4d105&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size: 14pt; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline;&quot;&gt;Paciente Registrado&lt;/span&gt;&lt;/p&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;div&gt;&lt;span style=&quot;font-size: 14pt; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline;&quot;&gt;&lt;span style=&quot;font-weight:normal;&quot; id=&quot;docs-internal-guid-91549df1-7fff-7da8-b29e-0c35483eb524&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.3800000000000001;margin-top:0pt;margin-bottom:0pt;&quot;&gt;&lt;span style=&quot;font-size: 14pt; font-family: Calibri, sans-serif; background-color: transparent; font-weight: 700; font-variant: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;Bloque Horario Confirmado&lt;/span&gt;&lt;/p&gt;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;" vertex="1">
+          <mxGeometry height="130" width="230" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bvvsrokt2kGKxfwxT6TQ-7" edge="1" parent="1" source="bvvsrokt2kGKxfwxT6TQ-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.014;entryY=0.43;entryDx=0;entryDy=0;entryPerimeter=0;" target="bvvsrokt2kGKxfwxT6TQ-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bvvsrokt2kGKxfwxT6TQ-8" edge="1" parent="1" source="bvvsrokt2kGKxfwxT6TQ-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.014;entryY=0.178;entryDx=0;entryDy=0;entryPerimeter=0;" target="bvvsrokt2kGKxfwxT6TQ-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

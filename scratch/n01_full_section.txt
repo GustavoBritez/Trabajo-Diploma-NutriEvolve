@@ -1,0 +1,19 @@
+[P184 | Heading 1] N01 Especificación funcional por proceso de negocio
+[P185 | normal] 
+[P186 | normal] PN1: Turnero Nutricional
+[P187 | normal] 
+[P188 | normal] Roles intervinientes
+[P189 | normal] Paciente (Persona, No es un actor directo por que solo provee información y no usa la UI)
+[P190 | normal] Nutricionista ( Persona, Es un actor primario por que usa la UI )
+[P191 | normal] 
+[P192 | Heading 1] Diagrama de Roles
+[P193 | normal] 
+[P194 | normal] 
+[P195 | normal] 
+[P196 | normal] 
+[P197 | normal] 
+[P198 | normal] Diagrama de Secuencia
+[P199 | normal] 
+[P200 | normal] 
+[P201 | normal] 
+[P202 | normal] 

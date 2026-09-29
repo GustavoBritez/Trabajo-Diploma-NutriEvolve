@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ocr_app")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d825bbc2bb6b2944ee5d12b6f56b3776a40cc739")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b61e30151fa661f669486b5fcb2a19618d37a86c")]
 [assembly: System.Reflection.AssemblyProductAttribute("ocr_app")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ocr_app")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

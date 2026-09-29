@@ -1,4 +1,4 @@
-﻿namespace UI
+namespace UI
 {
     partial class MenuPrincipal
     {
@@ -29,17 +29,17 @@
         private void InitializeComponent()
         {
             panelMenu = new Panel();
-            btnGestionarPerfiles = new Button();
-            btnRespaldo = new Button();
-            btnCambiarContrasena = new Button();
-            btnLogin = new Button();
-            btnLogout = new Button();
-            btnAyuda = new Button();
-            btnUsuarios = new Button();
-            btnReportes = new Button();
-            btnSeguimiento = new Button();
-            btnTurnos = new Button();
+            btnAyuda = new UI.Controles.BotonFuturista();
+            btnRespaldo = new UI.Controles.BotonFuturista();
+            btnGestionarPerfiles = new UI.Controles.BotonFuturista();
+            btnUsuarios = new UI.Controles.BotonFuturista();
+            btnReportes = new UI.Controles.BotonFuturista();
+            btnSeguimiento = new UI.Controles.BotonFuturista();
+            btnTurnos = new UI.Controles.BotonFuturista();
             lblModulo = new Label();
+            btnCambiarContrasena = new UI.Controles.BotonFuturista();
+            btnLogin = new UI.Controles.BotonFuturista();
+            btnLogout = new UI.Controles.BotonFuturista();
             panelTop = new Panel();
             cmbIdioma = new ComboBox();
             label6 = new Label();
@@ -50,8 +50,8 @@
             ChangePassPanel = new Panel();
             label5 = new Label();
             txtActualPass = new TextBox();
-            btnCancelarMP = new Button();
-            btnAceptar = new Button();
+            btnCancelarMP = new UI.Controles.BotonFuturista();
+            btnAceptar = new UI.Controles.BotonFuturista();
             txtRepPass = new TextBox();
             label3 = new Label();
             label2 = new Label();
@@ -66,65 +66,194 @@
             // panelMenu
             // 
             panelMenu.BackColor = Color.FromArgb(76, 124, 89);
-            panelMenu.Controls.Add(btnGestionarPerfiles);
-            panelMenu.Controls.Add(btnRespaldo);
-            panelMenu.Controls.Add(btnCambiarContrasena);
-            panelMenu.Controls.Add(btnLogin);
-            panelMenu.Controls.Add(btnLogout);
             panelMenu.Controls.Add(btnAyuda);
+            panelMenu.Controls.Add(btnRespaldo);
+            panelMenu.Controls.Add(btnGestionarPerfiles);
             panelMenu.Controls.Add(btnUsuarios);
             panelMenu.Controls.Add(btnReportes);
             panelMenu.Controls.Add(btnSeguimiento);
             panelMenu.Controls.Add(btnTurnos);
             panelMenu.Controls.Add(lblModulo);
+            panelMenu.Controls.Add(btnCambiarContrasena);
+            panelMenu.Controls.Add(btnLogin);
+            panelMenu.Controls.Add(btnLogout);
             panelMenu.Dock = DockStyle.Left;
             panelMenu.Location = new Point(0, 0);
             panelMenu.Name = "panelMenu";
-            panelMenu.Size = new Size(259, 700);
+            panelMenu.Size = new Size(260, 700);
             panelMenu.TabIndex = 0;
+            // 
+            // lblModulo
+            // 
+            lblModulo.AutoSize = true;
+            lblModulo.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblModulo.ForeColor = Color.White;
+            lblModulo.Location = new Point(18, 20);
+            lblModulo.Name = "lblModulo";
+            lblModulo.Size = new Size(182, 21);
+            lblModulo.TabIndex = 0;
+            lblModulo.Text = "MÓDULOS DEL SISTEMA";
+            // 
+            // btnTurnos
+            // 
+            btnTurnos.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            btnTurnos.BackColor = Color.Transparent;
+            btnTurnos.Cursor = Cursors.Hand;
+            btnTurnos.EsMenuLateral = true;
+            btnTurnos.FlatAppearance.BorderSize = 0;
+            btnTurnos.FlatStyle = FlatStyle.Flat;
+            btnTurnos.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            btnTurnos.ForeColor = Color.White;
+            btnTurnos.Location = new Point(12, 56);
+            btnTurnos.Name = "btnTurnos";
+            btnTurnos.PaddingIzquierdo = 18;
+            btnTurnos.RadioBorde = 24;
+            btnTurnos.Size = new Size(236, 44);
+            btnTurnos.TabIndex = 1;
+            btnTurnos.Text = "📅  Gestión de Turnos";
+            btnTurnos.TextAlign = ContentAlignment.MiddleLeft;
+            btnTurnos.UseVisualStyleBackColor = false;
+            btnTurnos.Click += btnTurnos_Click;
+            // 
+            // btnSeguimiento
+            // 
+            btnSeguimiento.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            btnSeguimiento.BackColor = Color.Transparent;
+            btnSeguimiento.Cursor = Cursors.Hand;
+            btnSeguimiento.EsMenuLateral = true;
+            btnSeguimiento.FlatAppearance.BorderSize = 0;
+            btnSeguimiento.FlatStyle = FlatStyle.Flat;
+            btnSeguimiento.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            btnSeguimiento.ForeColor = Color.White;
+            btnSeguimiento.Location = new Point(12, 106);
+            btnSeguimiento.Name = "btnSeguimiento";
+            btnSeguimiento.PaddingIzquierdo = 18;
+            btnSeguimiento.RadioBorde = 24;
+            btnSeguimiento.Size = new Size(236, 44);
+            btnSeguimiento.TabIndex = 2;
+            btnSeguimiento.Text = "🥗  Seguimiento Nutricional";
+            btnSeguimiento.TextAlign = ContentAlignment.MiddleLeft;
+            btnSeguimiento.UseVisualStyleBackColor = false;
+            // 
+            // btnReportes
+            // 
+            btnReportes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            btnReportes.BackColor = Color.Transparent;
+            btnReportes.Cursor = Cursors.Hand;
+            btnReportes.EsMenuLateral = true;
+            btnReportes.FlatAppearance.BorderSize = 0;
+            btnReportes.FlatStyle = FlatStyle.Flat;
+            btnReportes.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            btnReportes.ForeColor = Color.White;
+            btnReportes.Location = new Point(12, 156);
+            btnReportes.Name = "btnReportes";
+            btnReportes.PaddingIzquierdo = 18;
+            btnReportes.RadioBorde = 24;
+            btnReportes.Size = new Size(236, 44);
+            btnReportes.TabIndex = 3;
+            btnReportes.Text = "📒  Bitacora";
+            btnReportes.TextAlign = ContentAlignment.MiddleLeft;
+            btnReportes.UseVisualStyleBackColor = false;
+            btnReportes.Click += btnBitacora_Click;
+            // 
+            // btnUsuarios
+            // 
+            btnUsuarios.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            btnUsuarios.BackColor = Color.Transparent;
+            btnUsuarios.Cursor = Cursors.Hand;
+            btnUsuarios.EsMenuLateral = true;
+            btnUsuarios.FlatAppearance.BorderSize = 0;
+            btnUsuarios.FlatStyle = FlatStyle.Flat;
+            btnUsuarios.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            btnUsuarios.ForeColor = Color.White;
+            btnUsuarios.Location = new Point(12, 206);
+            btnUsuarios.Name = "btnUsuarios";
+            btnUsuarios.PaddingIzquierdo = 18;
+            btnUsuarios.RadioBorde = 24;
+            btnUsuarios.Size = new Size(236, 44);
+            btnUsuarios.TabIndex = 4;
+            btnUsuarios.Text = "👤  Gestión de Usuarios";
+            btnUsuarios.TextAlign = ContentAlignment.MiddleLeft;
+            btnUsuarios.UseVisualStyleBackColor = false;
+            btnUsuarios.Click += btnUsuarios_Click;
             // 
             // btnGestionarPerfiles
             // 
-            btnGestionarPerfiles.BackColor = Color.FromArgb(76, 124, 89);
+            btnGestionarPerfiles.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            btnGestionarPerfiles.BackColor = Color.Transparent;
+            btnGestionarPerfiles.Cursor = Cursors.Hand;
+            btnGestionarPerfiles.EsMenuLateral = true;
             btnGestionarPerfiles.FlatAppearance.BorderSize = 0;
             btnGestionarPerfiles.FlatStyle = FlatStyle.Flat;
-            btnGestionarPerfiles.Font = new Font("Segoe UI", 10F);
+            btnGestionarPerfiles.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnGestionarPerfiles.ForeColor = Color.White;
-            btnGestionarPerfiles.Location = new Point(10, 285);
+            btnGestionarPerfiles.Location = new Point(12, 256);
             btnGestionarPerfiles.Name = "btnGestionarPerfiles";
-            btnGestionarPerfiles.Size = new Size(239, 45);
+            btnGestionarPerfiles.PaddingIzquierdo = 18;
+            btnGestionarPerfiles.RadioBorde = 24;
+            btnGestionarPerfiles.Size = new Size(236, 44);
             btnGestionarPerfiles.TabIndex = 10;
-            btnGestionarPerfiles.Text = "🔑 Perfiles";
+            btnGestionarPerfiles.Text = "🔑  Perfiles";
             btnGestionarPerfiles.TextAlign = ContentAlignment.MiddleLeft;
             btnGestionarPerfiles.UseVisualStyleBackColor = false;
             btnGestionarPerfiles.Click += btnGestionarPerfiles_Click;
             // 
             // btnRespaldo
             // 
-            btnRespaldo.BackColor = Color.FromArgb(76, 124, 89);
+            btnRespaldo.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            btnRespaldo.BackColor = Color.Transparent;
+            btnRespaldo.Cursor = Cursors.Hand;
+            btnRespaldo.EsMenuLateral = true;
             btnRespaldo.FlatAppearance.BorderSize = 0;
             btnRespaldo.FlatStyle = FlatStyle.Flat;
-            btnRespaldo.Font = new Font("Segoe UI", 10F);
+            btnRespaldo.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnRespaldo.ForeColor = Color.White;
-            btnRespaldo.Location = new Point(10, 413);
+            btnRespaldo.Location = new Point(12, 306);
             btnRespaldo.Name = "btnRespaldo";
-            btnRespaldo.Size = new Size(239, 45);
+            btnRespaldo.PaddingIzquierdo = 18;
+            btnRespaldo.RadioBorde = 24;
+            btnRespaldo.Size = new Size(236, 44);
             btnRespaldo.TabIndex = 9;
-            btnRespaldo.Text = "🔒 Respaldo";
+            btnRespaldo.Text = "🔒  Respaldo";
             btnRespaldo.TextAlign = ContentAlignment.MiddleLeft;
             btnRespaldo.UseVisualStyleBackColor = false;
             btnRespaldo.Click += btnRespaldo_Click;
             // 
+            // btnAyuda
+            // 
+            btnAyuda.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            btnAyuda.BackColor = Color.Transparent;
+            btnAyuda.Cursor = Cursors.Hand;
+            btnAyuda.EsMenuLateral = true;
+            btnAyuda.FlatAppearance.BorderSize = 0;
+            btnAyuda.FlatStyle = FlatStyle.Flat;
+            btnAyuda.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            btnAyuda.ForeColor = Color.White;
+            btnAyuda.Location = new Point(12, 356);
+            btnAyuda.Name = "btnAyuda";
+            btnAyuda.PaddingIzquierdo = 18;
+            btnAyuda.RadioBorde = 24;
+            btnAyuda.Size = new Size(236, 44);
+            btnAyuda.TabIndex = 5;
+            btnAyuda.Text = "❓  Ayuda";
+            btnAyuda.TextAlign = ContentAlignment.MiddleLeft;
+            btnAyuda.UseVisualStyleBackColor = false;
+            // 
             // btnCambiarContrasena
             // 
-            btnCambiarContrasena.BackColor = Color.FromArgb(78, 122, 84);
+            btnCambiarContrasena.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            btnCambiarContrasena.BackColor = Color.Transparent;
+            btnCambiarContrasena.Cursor = Cursors.Hand;
+            btnCambiarContrasena.EsBotonSecundario = true;
+            btnCambiarContrasena.FlatAppearance.BorderSize = 0;
             btnCambiarContrasena.FlatStyle = FlatStyle.Flat;
-            btnCambiarContrasena.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            btnCambiarContrasena.ForeColor = Color.Transparent;
-            btnCambiarContrasena.Location = new Point(11, 564);
+            btnCambiarContrasena.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnCambiarContrasena.ForeColor = Color.White;
+            btnCambiarContrasena.Location = new Point(12, 558);
             btnCambiarContrasena.Margin = new Padding(2);
             btnCambiarContrasena.Name = "btnCambiarContrasena";
-            btnCambiarContrasena.Size = new Size(240, 38);
+            btnCambiarContrasena.RadioBorde = 38;
+            btnCambiarContrasena.Size = new Size(236, 38);
             btnCambiarContrasena.TabIndex = 8;
             btnCambiarContrasena.Text = "Cambiar Contraseña";
             btnCambiarContrasena.UseVisualStyleBackColor = false;
@@ -132,14 +261,22 @@
             // 
             // btnLogin
             // 
-            btnLogin.BackColor = Color.FromArgb(78, 122, 84);
+            btnLogin.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            btnLogin.BackColor = Color.Transparent;
+            btnLogin.ColorGlow = Color.DarkSeaGreen;
+            btnLogin.ColorPrincipal = Color.FromArgb(78, 122, 84);
+            btnLogin.ColorSecundario = Color.FromArgb(50, 82, 55);
+            btnLogin.Cursor = Cursors.Hand;
+            btnLogin.EsBotonSecundario = false;
+            btnLogin.FlatAppearance.BorderSize = 0;
             btnLogin.FlatStyle = FlatStyle.Flat;
-            btnLogin.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnLogin.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
             btnLogin.ForeColor = Color.White;
-            btnLogin.Location = new Point(11, 606);
+            btnLogin.Location = new Point(12, 602);
             btnLogin.Margin = new Padding(2);
             btnLogin.Name = "btnLogin";
-            btnLogin.Size = new Size(240, 38);
+            btnLogin.RadioBorde = 38;
+            btnLogin.Size = new Size(236, 38);
             btnLogin.TabIndex = 7;
             btnLogin.Text = "Iniciar Sesión";
             btnLogin.UseVisualStyleBackColor = false;
@@ -147,107 +284,25 @@
             // 
             // btnLogout
             // 
-            btnLogout.BackColor = Color.FromArgb(76, 124, 89);
+            btnLogout.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            btnLogout.BackColor = Color.Transparent;
+            btnLogout.ColorGlow = Color.FromArgb(240, 160, 160);
+            btnLogout.ColorPrincipal = Color.FromArgb(160, 70, 70);
+            btnLogout.ColorSecundario = Color.FromArgb(120, 45, 45);
+            btnLogout.Cursor = Cursors.Hand;
+            btnLogout.EsBotonSecundario = false;
             btnLogout.FlatAppearance.BorderSize = 0;
             btnLogout.FlatStyle = FlatStyle.Flat;
-            btnLogout.Font = new Font("Segoe UI", 10F);
+            btnLogout.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
             btnLogout.ForeColor = Color.White;
-            btnLogout.Location = new Point(24, 649);
+            btnLogout.Location = new Point(12, 646);
             btnLogout.Name = "btnLogout";
-            btnLogout.Size = new Size(215, 45);
+            btnLogout.RadioBorde = 38;
+            btnLogout.Size = new Size(236, 38);
             btnLogout.TabIndex = 6;
             btnLogout.Text = "🚪 Cerrar Sesión";
-            btnLogout.TextAlign = ContentAlignment.MiddleLeft;
             btnLogout.UseVisualStyleBackColor = false;
             btnLogout.Click += btnLogout_Click;
-            // 
-            // btnAyuda
-            // 
-            btnAyuda.BackColor = Color.FromArgb(76, 124, 89);
-            btnAyuda.FlatAppearance.BorderSize = 0;
-            btnAyuda.FlatStyle = FlatStyle.Flat;
-            btnAyuda.Font = new Font("Segoe UI", 10F);
-            btnAyuda.ForeColor = Color.White;
-            btnAyuda.Location = new Point(9, 464);
-            btnAyuda.Name = "btnAyuda";
-            btnAyuda.Size = new Size(239, 45);
-            btnAyuda.TabIndex = 5;
-            btnAyuda.Text = "❓ Ayuda";
-            btnAyuda.TextAlign = ContentAlignment.MiddleLeft;
-            btnAyuda.UseVisualStyleBackColor = false;
-            // 
-            // btnUsuarios
-            // 
-            btnUsuarios.BackColor = Color.FromArgb(76, 124, 89);
-            btnUsuarios.FlatAppearance.BorderSize = 0;
-            btnUsuarios.FlatStyle = FlatStyle.Flat;
-            btnUsuarios.Font = new Font("Segoe UI", 10F);
-            btnUsuarios.ForeColor = Color.White;
-            btnUsuarios.Location = new Point(10, 225);
-            btnUsuarios.Name = "btnUsuarios";
-            btnUsuarios.Size = new Size(239, 45);
-            btnUsuarios.TabIndex = 4;
-            btnUsuarios.Text = "👤 Gestión de Usuarios";
-            btnUsuarios.TextAlign = ContentAlignment.MiddleLeft;
-            btnUsuarios.UseVisualStyleBackColor = false;
-            btnUsuarios.Click += btnUsuarios_Click;
-            // 
-            // btnReportes
-            // 
-            btnReportes.BackColor = Color.FromArgb(76, 124, 89);
-            btnReportes.FlatAppearance.BorderSize = 0;
-            btnReportes.FlatStyle = FlatStyle.Flat;
-            btnReportes.Font = new Font("Segoe UI", 10F);
-            btnReportes.ForeColor = Color.White;
-            btnReportes.Location = new Point(10, 170);
-            btnReportes.Name = "btnReportes";
-            btnReportes.Size = new Size(239, 45);
-            btnReportes.TabIndex = 3;
-            btnReportes.Text = "📒 Bitacora";
-            btnReportes.TextAlign = ContentAlignment.MiddleLeft;
-            btnReportes.UseVisualStyleBackColor = false;
-            btnReportes.Click += btnBitacora_Click;
-            // 
-            // btnSeguimiento
-            // 
-            btnSeguimiento.BackColor = Color.FromArgb(76, 124, 89);
-            btnSeguimiento.FlatAppearance.BorderSize = 0;
-            btnSeguimiento.FlatStyle = FlatStyle.Flat;
-            btnSeguimiento.Font = new Font("Segoe UI", 10F);
-            btnSeguimiento.ForeColor = Color.White;
-            btnSeguimiento.Location = new Point(10, 111);
-            btnSeguimiento.Name = "btnSeguimiento";
-            btnSeguimiento.Size = new Size(241, 45);
-            btnSeguimiento.TabIndex = 2;
-            btnSeguimiento.Text = "\U0001f957 Seguimiento Nutricional";
-            btnSeguimiento.TextAlign = ContentAlignment.MiddleLeft;
-            btnSeguimiento.UseVisualStyleBackColor = false;
-            // 
-            // btnTurnos
-            // 
-            btnTurnos.BackColor = Color.FromArgb(76, 124, 89);
-            btnTurnos.FlatAppearance.BorderSize = 0;
-            btnTurnos.FlatStyle = FlatStyle.Flat;
-            btnTurnos.Font = new Font("Segoe UI", 10F);
-            btnTurnos.ForeColor = Color.White;
-            btnTurnos.Location = new Point(10, 60);
-            btnTurnos.Name = "btnTurnos";
-            btnTurnos.Size = new Size(239, 45);
-            btnTurnos.TabIndex = 1;
-            btnTurnos.Text = "📅 Gestión de Turnos";
-            btnTurnos.TextAlign = ContentAlignment.MiddleLeft;
-            btnTurnos.UseVisualStyleBackColor = false;
-            // 
-            // lblModulo
-            // 
-            lblModulo.AutoSize = true;
-            lblModulo.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            lblModulo.ForeColor = Color.White;
-            lblModulo.Location = new Point(24, 25);
-            lblModulo.Name = "lblModulo";
-            lblModulo.Size = new Size(86, 25);
-            lblModulo.TabIndex = 0;
-            lblModulo.Text = "Módulos";
             // 
             // panelTop
             // 
@@ -257,73 +312,83 @@
             panelTop.Controls.Add(label4);
             panelTop.Controls.Add(lblTitulo);
             panelTop.Dock = DockStyle.Top;
-            panelTop.Location = new Point(259, 0);
+            panelTop.Location = new Point(260, 0);
             panelTop.Name = "panelTop";
-            panelTop.Size = new Size(951, 60);
+            panelTop.Size = new Size(950, 60);
             panelTop.TabIndex = 1;
             // 
             // cmbIdioma
             // 
+            cmbIdioma.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cmbIdioma.BackColor = Color.DarkSeaGreen;
-            cmbIdioma.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            cmbIdioma.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbIdioma.FlatStyle = FlatStyle.Flat;
+            cmbIdioma.Font = new Font("Segoe UI Semibold", 10.5F, FontStyle.Bold);
             cmbIdioma.FormattingEnabled = true;
             cmbIdioma.Items.AddRange(new object[] { "Español", "English", "Portugues" });
-            cmbIdioma.Location = new Point(784, 16);
+            cmbIdioma.Location = new Point(780, 16);
             cmbIdioma.Name = "cmbIdioma";
-            cmbIdioma.Size = new Size(164, 29);
+            cmbIdioma.Size = new Size(150, 27);
             cmbIdioma.TabIndex = 2;
             cmbIdioma.SelectedIndexChanged += cmdIdioma_SelectedIndexChanged;
             // 
             // label6
             // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            label6.ForeColor = Color.MistyRose;
-            label6.Location = new Point(285, 20);
+            label6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label6.AutoEllipsis = true;
+            label6.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
+            label6.ForeColor = Color.FromArgb(240, 252, 242);
+            label6.Location = new Point(480, 18);
             label6.Name = "label6";
-            label6.Size = new Size(0, 25);
+            label6.Size = new Size(290, 25);
             label6.TabIndex = 10;
+            label6.TextAlign = ContentAlignment.MiddleRight;
             // 
             // label4
             // 
+            label4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            label4.ForeColor = Color.MistyRose;
-            label4.Location = new Point(192, 20);
+            label4.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
+            label4.ForeColor = Color.FromArgb(220, 240, 222);
+            label4.Location = new Point(410, 20);
             label4.Name = "label4";
-            label4.Size = new Size(87, 25);
+            label4.Size = new Size(69, 20);
             label4.TabIndex = 9;
             label4.Text = "Usuario: ";
             // 
             // lblTitulo
             // 
             lblTitulo.AutoSize = true;
-            lblTitulo.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+            lblTitulo.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
             lblTitulo.ForeColor = Color.White;
-            lblTitulo.Location = new Point(25, 15);
+            lblTitulo.Location = new Point(25, 14);
             lblTitulo.Name = "lblTitulo";
-            lblTitulo.Size = new Size(124, 28);
+            lblTitulo.Size = new Size(137, 30);
             lblTitulo.TabIndex = 0;
             lblTitulo.Text = "NutriEvolve";
             // 
             // panelContenedor
             // 
+            panelContenedor.AutoScroll = true;
             panelContenedor.BackColor = Color.FromArgb(225, 240, 228);
             panelContenedor.Controls.Add(label1);
             panelContenedor.Controls.Add(ChangePassPanel);
             panelContenedor.Dock = DockStyle.Fill;
-            panelContenedor.Location = new Point(259, 60);
+            panelContenedor.Location = new Point(260, 60);
             panelContenedor.Name = "panelContenedor";
-            panelContenedor.Size = new Size(951, 640);
+            panelContenedor.Size = new Size(950, 640);
             panelContenedor.TabIndex = 2;
+            panelContenedor.Resize += panelContenedor_Resize;
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 10F);
-            label1.Location = new Point(675, 512);
+            label1.Font = new Font("Segoe UI", 9F);
+            label1.ForeColor = Color.FromArgb(120, 150, 125);
+            label1.Location = new Point(670, 610);
             label1.Name = "label1";
-            label1.Size = new Size(0, 19);
+            label1.Size = new Size(0, 15);
             label1.TabIndex = 1;
             // 
             // ChangePassPanel
@@ -337,95 +402,112 @@
             ChangePassPanel.Controls.Add(label3);
             ChangePassPanel.Controls.Add(label2);
             ChangePassPanel.Controls.Add(txtNewPass);
-            ChangePassPanel.Location = new Point(25, 412);
+            ChangePassPanel.Location = new Point(280, 200);
             ChangePassPanel.Name = "ChangePassPanel";
-            ChangePassPanel.Size = new Size(388, 216);
+            ChangePassPanel.Size = new Size(388, 220);
             ChangePassPanel.TabIndex = 0;
             ChangePassPanel.Visible = false;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+            label5.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
             label5.ForeColor = Color.White;
-            label5.Location = new Point(157, 20);
+            label5.Location = new Point(155, 22);
             label5.Name = "label5";
-            label5.Size = new Size(185, 28);
+            label5.Size = new Size(135, 20);
             label5.TabIndex = 13;
             label5.Text = "Contraseña Actual";
             // 
             // txtActualPass
             // 
-            txtActualPass.Location = new Point(39, 20);
+            txtActualPass.Font = new Font("Segoe UI", 10F);
+            txtActualPass.Location = new Point(25, 20);
             txtActualPass.Name = "txtActualPass";
-            txtActualPass.Size = new Size(100, 23);
+            txtActualPass.PasswordChar = '●';
+            txtActualPass.Size = new Size(120, 25);
             txtActualPass.TabIndex = 11;
-            // 
-            // btnCancelarMP
-            // 
-            btnCancelarMP.BackColor = Color.Red;
-            btnCancelarMP.FlatStyle = FlatStyle.Flat;
-            btnCancelarMP.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            btnCancelarMP.ForeColor = Color.Transparent;
-            btnCancelarMP.Location = new Point(208, 157);
-            btnCancelarMP.Margin = new Padding(2);
-            btnCancelarMP.Name = "btnCancelarMP";
-            btnCancelarMP.Size = new Size(123, 38);
-            btnCancelarMP.TabIndex = 10;
-            btnCancelarMP.Text = "Cancelar";
-            btnCancelarMP.UseVisualStyleBackColor = false;
-            btnCancelarMP.Click += btnCancelar_Click;
-            // 
-            // btnAceptar
-            // 
-            btnAceptar.BackColor = Color.FromArgb(76, 124, 99);
-            btnAceptar.FlatStyle = FlatStyle.Flat;
-            btnAceptar.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            btnAceptar.ForeColor = Color.Transparent;
-            btnAceptar.Location = new Point(39, 157);
-            btnAceptar.Margin = new Padding(2);
-            btnAceptar.Name = "btnAceptar";
-            btnAceptar.Size = new Size(123, 38);
-            btnAceptar.TabIndex = 9;
-            btnAceptar.Text = "Aceptar";
-            btnAceptar.UseVisualStyleBackColor = false;
-            btnAceptar.Click += btnAceptar_Click;
-            // 
-            // txtRepPass
-            // 
-            txtRepPass.Location = new Point(39, 107);
-            txtRepPass.Name = "txtRepPass";
-            txtRepPass.Size = new Size(100, 23);
-            txtRepPass.TabIndex = 5;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
-            label3.ForeColor = Color.White;
-            label3.Location = new Point(157, 99);
-            label3.Name = "label3";
-            label3.Size = new Size(193, 28);
-            label3.TabIndex = 4;
-            label3.Text = "Repetir Contraseña";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+            label2.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
             label2.ForeColor = Color.White;
-            label2.Location = new Point(157, 57);
+            label2.Location = new Point(155, 62);
             label2.Name = "label2";
-            label2.Size = new Size(185, 28);
+            label2.Size = new Size(135, 20);
             label2.TabIndex = 3;
             label2.Text = "Nueva Contraseña";
             // 
             // txtNewPass
             // 
-            txtNewPass.Location = new Point(39, 65);
+            txtNewPass.Font = new Font("Segoe UI", 10F);
+            txtNewPass.Location = new Point(25, 60);
             txtNewPass.Name = "txtNewPass";
-            txtNewPass.Size = new Size(100, 23);
+            txtNewPass.PasswordChar = '●';
+            txtNewPass.Size = new Size(120, 25);
             txtNewPass.TabIndex = 1;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
+            label3.ForeColor = Color.White;
+            label3.Location = new Point(155, 102);
+            label3.Name = "label3";
+            label3.Size = new Size(141, 20);
+            label3.TabIndex = 4;
+            label3.Text = "Repetir Contraseña";
+            // 
+            // txtRepPass
+            // 
+            txtRepPass.Font = new Font("Segoe UI", 10F);
+            txtRepPass.Location = new Point(25, 100);
+            txtRepPass.Name = "txtRepPass";
+            txtRepPass.PasswordChar = '●';
+            txtRepPass.Size = new Size(120, 25);
+            txtRepPass.TabIndex = 5;
+            // 
+            // btnAceptar
+            // 
+            btnAceptar.BackColor = Color.Transparent;
+            btnAceptar.ColorGlow = Color.DarkSeaGreen;
+            btnAceptar.ColorPrincipal = Color.FromArgb(78, 122, 84);
+            btnAceptar.ColorSecundario = Color.FromArgb(50, 82, 55);
+            btnAceptar.Cursor = Cursors.Hand;
+            btnAceptar.EsBotonSecundario = false;
+            btnAceptar.FlatAppearance.BorderSize = 0;
+            btnAceptar.FlatStyle = FlatStyle.Flat;
+            btnAceptar.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnAceptar.ForeColor = Color.White;
+            btnAceptar.Location = new Point(25, 155);
+            btnAceptar.Margin = new Padding(2);
+            btnAceptar.Name = "btnAceptar";
+            btnAceptar.RadioBorde = 36;
+            btnAceptar.Size = new Size(150, 40);
+            btnAceptar.TabIndex = 9;
+            btnAceptar.Text = "Aceptar";
+            btnAceptar.UseVisualStyleBackColor = false;
+            btnAceptar.Click += btnAceptar_Click;
+            // 
+            // btnCancelarMP
+            // 
+            btnCancelarMP.BackColor = Color.Transparent;
+            btnCancelarMP.Cursor = Cursors.Hand;
+            btnCancelarMP.EsBotonSecundario = true;
+            btnCancelarMP.FlatAppearance.BorderSize = 0;
+            btnCancelarMP.FlatStyle = FlatStyle.Flat;
+            btnCancelarMP.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnCancelarMP.ForeColor = Color.White;
+            btnCancelarMP.Location = new Point(210, 155);
+            btnCancelarMP.Margin = new Padding(2);
+            btnCancelarMP.Name = "btnCancelarMP";
+            btnCancelarMP.RadioBorde = 36;
+            btnCancelarMP.Size = new Size(150, 40);
+            btnCancelarMP.TabIndex = 10;
+            btnCancelarMP.Text = "Cancelar";
+            btnCancelarMP.UseVisualStyleBackColor = false;
+            btnCancelarMP.Click += btnCancelar_Click;
             // 
             // MenuPrincipal
             // 
@@ -437,7 +519,8 @@
             Controls.Add(panelTop);
             Controls.Add(panelMenu);
             Font = new Font("Segoe UI", 9F);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
+            FormBorderStyle = FormBorderStyle.Sizable;
+            MinimumSize = new Size(1000, 650);
             Name = "MenuPrincipal";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Sistema NutriEvolve";
@@ -450,13 +533,10 @@
             ChangePassPanel.ResumeLayout(false);
             ChangePassPanel.PerformLayout();
             ResumeLayout(false);
-            //
-            // btnActive
-            //
-
         }
 
         #endregion
+
         private System.Windows.Forms.Panel panelMenu;
         private System.Windows.Forms.Panel panelTop;
         private System.Windows.Forms.Panel panelContenedor;
@@ -464,20 +544,17 @@
         private System.Windows.Forms.Label lblModulo;
         private System.Windows.Forms.Label lblTitulo;
 
-        // Botones creados manualmente 
-        private FormManager.ButtonActive btnActive;
-
-        private System.Windows.Forms.Button btnTurnos;
-        private System.Windows.Forms.Button btnSeguimiento;
-        private System.Windows.Forms.Button btnReportes;
-        private System.Windows.Forms.Button btnUsuarios;
-        private System.Windows.Forms.Button btnAyuda;
-        private System.Windows.Forms.Button btnLogout;
-        private Button btnCambiarContrasena;
-        private Button btnLogin;
+        private UI.Controles.BotonFuturista btnTurnos;
+        private UI.Controles.BotonFuturista btnSeguimiento;
+        private UI.Controles.BotonFuturista btnReportes;
+        private UI.Controles.BotonFuturista btnUsuarios;
+        private UI.Controles.BotonFuturista btnAyuda;
+        private UI.Controles.BotonFuturista btnLogout;
+        private UI.Controles.BotonFuturista btnCambiarContrasena;
+        private UI.Controles.BotonFuturista btnLogin;
         private Panel ChangePassPanel;
-        private Button btnCancelarMP;
-        private Button btnAceptar;
+        private UI.Controles.BotonFuturista btnCancelarMP;
+        private UI.Controles.BotonFuturista btnAceptar;
         private TextBox txtRepPass;
         private Label label3;
         private Label label2;
@@ -489,7 +566,7 @@
         private Label label6;
         private Label label4;
         private ComboBox cmbIdioma;
-        private Button btnRespaldo;
-        private Button btnGestionarPerfiles;
+        private UI.Controles.BotonFuturista btnRespaldo;
+        private UI.Controles.BotonFuturista btnGestionarPerfiles;
     }
 }

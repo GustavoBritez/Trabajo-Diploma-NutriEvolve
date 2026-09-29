@@ -1,0 +1,21 @@
+Desbes revisar el diagrama de secuecnia y hacerlo tal cual el flujo de programa que tenemos en el codigo CU04:Modificar Turno
+
+El Nutricionista comienza haciendo clic en "btn_Modificar_Turno_Click2 y aqui esta bien puesto el ObtnerTurnoSeleccionado, luego nos vamos a frm ModificarTurno-DNI101 y por parametro entra turnoSeleccionado que es linea 183 del frmTurnero_DNI101.cs y aqui se ejecuta el guardar, revisar el metodo de linea 152 string codigoTurno = _turnoActual.CodigoTurno_DNI101; que courre dentro de frmModificarTurno_DNI101.cs en el metodo private void btnGuardar_Click(object sender, EventArgs e), luego saltamos a la linea 186 que es                 bool exito = _turnoBLL.ModificarTurno(codigoTurno, nuevoMotivo, nuevoEstado); y de aqui nos movemos a TurnoBLL que estamos dentro de public bool ModificarTurno(string codigoTurno, string motivo, string estado) y en su linea 243 vamos a var turno = _turnoDAL.ObtenerPorCodigo(codigoTurno); aqui ocurre algo con el patron state pero bueno fijate como diagramarlo en el diagrama de secuncia que yo me marie.luego en linea 292             turno.DV = ServicioBcrypt.CalcularDV(cadenaDV); y linea 295 entramos a             bool ok = _turnoDAL.ModificarTurnoEstadoYMotivo(turno.IdTurno_DNI101, motivo, turno.EstadoTurno_DNI101, turno.DV); es decir volvemos a la DAL con este metodo luego linea 306 podemos ver una alternancia en caso de que el nuevoestado es cancelado liberar bloque horario // Paso 8: Si el nuevo estado es Cancelado, liberar bloque horario
+if (liberarBloque)
+{
+    try
+    {
+        new AgendaMedicaDAL_DNI101().ActualizarEstadoBloque(turno.IdBloque_DNI101!.Value, "Disponible");
+    }
+    catch { }
+}    esta alternancia es ida y vuelva recordemos eso ademas viene de la entidad AgendaMedicaDL_DN101
+
+ luego linea 314 vamos a new DigitoVerificadorBLL().RecalcularYPersistir();
+
+luego linea 321 tenemos el sessionmanager                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual(); y volvemos en linea 322 a pegarle a la base de datos ->                 _bitacoraBLL.RegistrarEvento(2, $"Turno {codigoTurno} modificado con éxito (CUN04). Estado: '{turno.EstadoTurno_DNI101}', Motivo: '{motivo}'", dniActual, "TurneroNutricional");
+apartir de aqui regresamos al frmModificarTurno_DNI101 
+ 
+
+ 
+ 
+

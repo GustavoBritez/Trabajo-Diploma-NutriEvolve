@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ea_manager")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d825bbc2bb6b2944ee5d12b6f56b3776a40cc739")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b61e30151fa661f669486b5fcb2a19618d37a86c")]
 [assembly: System.Reflection.AssemblyProductAttribute("ea_manager")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ea_manager")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -13,8 +13,8 @@ namespace UI
         private IdiomaBLL idiomaBLL = new IdiomaBLL();
         private GroupBox gbDV;
         private Label lblDVEtiquetaMenu;
-        private Button btnVerificarDVMenu;
-        private Button btnRecalcularDVMenu;
+        private UI.Controles.BotonFuturista btnVerificarDVMenu;
+        private UI.Controles.BotonFuturista btnRecalcularDVMenu;
 
         public MenuPrincipal()
         {
@@ -107,15 +107,16 @@ namespace UI
         {
             gbDV = new GroupBox();
             lblDVEtiquetaMenu = new Label();
-            btnVerificarDVMenu = new Button();
-            btnRecalcularDVMenu = new Button();
+            btnVerificarDVMenu = new UI.Controles.BotonFuturista();
+            btnRecalcularDVMenu = new UI.Controles.BotonFuturista();
 
             gbDV.Name = "gbDV";
-            gbDV.Text = "Digito Verificador";
+            gbDV.Text = "Dígito Verificador (Integridad de Base de Datos)";
             gbDV.Visible = false;
             gbDV.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            gbDV.Size = new Size(860, 120);
-            gbDV.Location = new Point(25, 120);
+            gbDV.Location = new Point(25, 25);
+            gbDV.Size = new Size(Math.Max(400, panelContenedor.ClientSize.Width - 50), 125);
+            gbDV.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             gbDV.BackColor = Color.FromArgb(225, 240, 228);
 
             lblDVEtiquetaMenu.Name = "lblDVEtiquetaMenu";
@@ -125,23 +126,23 @@ namespace UI
             lblDVEtiquetaMenu.Text = "Verifique la consistencia o fuerce el recálculo de todos los DV.";
 
             btnVerificarDVMenu.Name = "btnVerificarDV";
-            btnVerificarDVMenu.BackColor = Color.FromArgb(40, 120, 60);
-            btnVerificarDVMenu.FlatStyle = FlatStyle.Flat;
-            btnVerificarDVMenu.ForeColor = Color.White;
+            btnVerificarDVMenu.ColorPrincipal = Color.FromArgb(40, 120, 60);
+            btnVerificarDVMenu.ColorSecundario = Color.FromArgb(30, 85, 45);
+            btnVerificarDVMenu.ColorGlow = Color.DarkSeaGreen;
+            btnVerificarDVMenu.RadioBorde = 38;
             btnVerificarDVMenu.Location = new Point(25, 65);
             btnVerificarDVMenu.Size = new Size(170, 38);
             btnVerificarDVMenu.Text = "Verificar DV";
-            btnVerificarDVMenu.UseVisualStyleBackColor = false;
             btnVerificarDVMenu.Click += btnVerificarDVMenu_Click;
 
             btnRecalcularDVMenu.Name = "btnRecalcularDV";
-            btnRecalcularDVMenu.BackColor = Color.FromArgb(46, 94, 67);
-            btnRecalcularDVMenu.FlatStyle = FlatStyle.Flat;
-            btnRecalcularDVMenu.ForeColor = Color.White;
+            btnRecalcularDVMenu.ColorPrincipal = Color.FromArgb(46, 94, 67);
+            btnRecalcularDVMenu.ColorSecundario = Color.FromArgb(32, 68, 48);
+            btnRecalcularDVMenu.ColorGlow = Color.DarkSeaGreen;
+            btnRecalcularDVMenu.RadioBorde = 38;
             btnRecalcularDVMenu.Location = new Point(210, 65);
             btnRecalcularDVMenu.Size = new Size(190, 38);
             btnRecalcularDVMenu.Text = "Recalcular DV";
-            btnRecalcularDVMenu.UseVisualStyleBackColor = false;
             btnRecalcularDVMenu.Click += btnRecalcularDVMenu_Click;
 
             gbDV.Controls.Add(lblDVEtiquetaMenu);
@@ -248,7 +249,7 @@ namespace UI
  
         private void ApuntarComboBox()
         {
-            string idioma = ServicesSessionManager.Instancia.ObtenerIdioma().Nombre;
+            string idioma = "Español";
 
             if (idioma == "Español")
             {
@@ -418,9 +419,34 @@ namespace UI
                 ChangePassPanel.Visible = false;
             }
         }
+        private void panelContenedor_Resize(object? sender, EventArgs e)
+        {
+            CentrarPanelCambioPass();
+            if (gbDV != null && panelContenedor != null)
+            {
+                gbDV.Width = Math.Max(400, panelContenedor.ClientSize.Width - 50);
+            }
+        }
+
+        private void CentrarPanelCambioPass()
+        {
+            if (ChangePassPanel != null && panelContenedor != null)
+            {
+                ChangePassPanel.Location = new Point(
+                    Math.Max(20, (panelContenedor.ClientSize.Width - ChangePassPanel.Width) / 2),
+                    Math.Max(20, (panelContenedor.ClientSize.Height - ChangePassPanel.Height) / 2)
+                );
+            }
+        }
+
         private void btnCambiarContrasena_Click(object sender, EventArgs e)
         {
             ChangePassPanel.Visible = !ChangePassPanel.Visible;
+            if (ChangePassPanel.Visible)
+            {
+                CentrarPanelCambioPass();
+                ChangePassPanel.BringToFront();
+            }
         }
         private void btnCancelar_Click(object sender, EventArgs e)
         {
@@ -481,18 +507,53 @@ namespace UI
             FormManager.Navegar(this, FormManager.ObtenerRespaldo());
         }
 
-
         private void btnGestionarPerfiles_Click(object sender, EventArgs e)
         {
             FormManager.Navegar(this, new Perfiles());
         }
 
-        /*
-        private void btnGestionarPerfiles_Click(object sender, EventArgs e)
+        private frmTurnero_DNI101? _frmTurneroContenido;
+
+        private void btnTurnos_Click(object sender, EventArgs e)
         {
-            FormManager.Navegar(this, new Perfiles());
+            try
+            {
+                UsuarioBE usuarioActivo = ServicesSessionManager.Instancia.ObtenerUsuarioActivo();
+                if (usuarioActivo == null)
+                {
+                    idiomaBLL.MostrarMensaje("msg_error_nosesion", "titulo_error_nosesion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                MostrarTurneroEnContenedor();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir la gestión de turnos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
-        */
+
+        public void MostrarTurneroEnContenedor()
+        {
+            if (_frmTurneroContenido == null || _frmTurneroContenido.IsDisposed)
+            {
+                _frmTurneroContenido = new frmTurnero_DNI101();
+            }
+
+            if (ChangePassPanel != null)
+            {
+                ChangePassPanel.Visible = false;
+            }
+
+            panelContenedor.Controls.Clear();
+            _frmTurneroContenido.TopLevel = false;
+            _frmTurneroContenido.FormBorderStyle = FormBorderStyle.None;
+            _frmTurneroContenido.Dock = DockStyle.Fill;
+            panelContenedor.Controls.Add(_frmTurneroContenido);
+            _frmTurneroContenido.Show();
+            _frmTurneroContenido.BringToFront();
+            _frmTurneroContenido.CargarTurnos();
+        }
     }
 
 }

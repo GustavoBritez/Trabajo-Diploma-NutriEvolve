@@ -1,0 +1,43 @@
+[P30] Para resolver esta situación, se definieron dos Procesos de Negocio (PN) principales: la Gestión de Turnos Nutricionales (PN1), enfocada en el registro, asignación, reprogramación y confirmación de turnos centralizando los datos entre recepción y consultorio; y el Seguimiento Nutricional Pediátrico (PN2), centrado en la captura de datos antropométricos, el cálculo automatizado de Z-Scores y percentiles OMS, la generación de diagnósticos y el resguardo de la historia clínica.
+
+[P52] PN1: Turnero Nutricional
+
+[P56] Operaciones Concretas involucradas en el PN1:
+
+[P76] PN2: Seguimiento nutricional
+
+[P122] El sistema contará con una interfaz gráfica simple, intuitiva y arreglable para el usuario priorizando la facilidad de navegación y accesibilidad a las distintas funcionalidades. La pantalla principal incluirá accesos a Gestión de Turnos, Seguimiento Nutricional, Bitácora, Gestión de Usuarios, Perfiles, Respaldo, Ayuda, Cambiar Contraseña e Iniciar Sesión.
+
+[P144] El sistema deberá responder a las acciones principales del usuario en un tiempo menor a 3 segundos bajo condiciones normales de uso, para evitar que el sistema se ralentice y permitir que el usuario pueda realizar sus actividades de manera rápida. Así la navegación por ecosistema, gestión de turnos y Seguimiento Nutricional  serán procesadas de manera efectiva y eficiente para evitar demoras durante la consulta.
+
+[P184] N01 Especificación funcional por proceso de negocio
+
+[P186] PN1: Turnero Nutricional
+
+[P198] Diagrama de Secuencia
+
+[P256] T01.3 Diagrama de secuencia de persistencia de datos
+
+[P260] T01.4 Diagrama de secuencia de consulta de datos
+
+[P285] Diagrama de Secuencia
+
+[P313] Diagrama de secuencia
+
+[P341] Diagrama de Secuencia
+
+[P360] T02 4.4 Diagrama de Secuencia
+
+[P376] Diagrama de secuencia
+
+[P392] Diagrama de Secuencia
+
+[P413] Diagrama de Secuencia
+
+[P487] T06a 5 Diagrama de secuencia
+
+[P515] T04.1.4 Diagrama de Secuencia
+
+[P544] T04.2.4 Diagrama de Secuencia
+
+[P568] T05-Diagrama de Secuencia

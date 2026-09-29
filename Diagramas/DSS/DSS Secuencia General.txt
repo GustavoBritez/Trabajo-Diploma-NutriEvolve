@@ -1,0 +1,64 @@
+@startuml Secuencia_General_PN1
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+skinparam shadowing false
+skinparam roundcorner 6
+autonumber "<b>[00]</b>"
+
+actor "Paciente / Tutor\n(Actor Pasivo)" as Paciente
+actor "Nutricionista\n(Actor Activo)" as Nutri
+
+title Diagrama de Secuencia General de Negocio - PN1: Turnero Nutricional
+
+== 1. Solicitud y Oferta de Turno ==
+
+Paciente -> Nutri: SolicitarTurno(dniNiño, datosTutor, fechaPreferencia)
+activate Paciente
+activate Nutri
+Nutri -> Paciente: OfrecerHorariosDisponibles(listaBloquesLibres)
+Paciente -> Nutri: SeleccionarHorarioPreferido(fecha, hora)
+
+== 2. Validación de Padrón de Pacientes ==
+
+alt [Paciente Nuevo (No registrado en Padrón)]
+    Nutri -> Paciente: SolicitarDatosFiliatorios()
+    Paciente --> Nutri: EntregarDatos(nombreNiño, fechaNac, datosTutor)
+else [Paciente Registrado]
+    Nutri -> Paciente: ConfirmarDatosExistentes()
+    Paciente --> Nutri: ValidarDatos()
+end
+
+== 3. Confirmación y Entrega de Comprobante ==
+
+Nutri -> Paciente: EntregarComprobanteTurno(codigoTurno, fecha, hora)
+deactivate Paciente
+deactivate Nutri
+
+== 4. Ciclo de Vida y Eventos Posteriores (PN1) ==
+
+alt [Caso 1: Asistencia en Consultorio - Flujo Normal]
+    Paciente -> Nutri: PresentarseEnConsultorio(codigoTurno)
+    activate Paciente
+    activate Nutri
+    Nutri -> Paciente: IniciarConsultaNutricional() [Deriva a PN2]
+    deactivate Paciente
+    deactivate Nutri
+
+else [Caso 2: Reprogramación de Turno]
+    Paciente -> Nutri: SolicitarReprogramacion(codigoTurno, nuevaFecha)
+    activate Paciente
+    activate Nutri
+    Nutri -> Paciente: EntregarNuevoComprobante(codigoTurno, nuevaFecha, nuevaHora)
+    deactivate Paciente
+    deactivate Nutri
+
+else [Caso 3: Cancelación de Turno]
+    Paciente -> Nutri: SolicitarCancelacion(codigoTurno, motivo)
+    activate Paciente
+    activate Nutri
+    Nutri -> Paciente: NotificarCancelacionExitosa(codigoTurno)
+    deactivate Paciente
+    deactivate Nutri
+end
+
+@enduml

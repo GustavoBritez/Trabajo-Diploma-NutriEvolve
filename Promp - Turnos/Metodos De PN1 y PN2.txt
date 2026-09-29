@@ -1,0 +1,85 @@
+Contexto, Generar del trabajo TD.docx el Diagrama de Secuencia de Roles correctamente. Actualmente tenemos este diagrama pero tiene un error lo que sucedio es que entendimos mal la consigna y fusionamos el PN1 con el PN2 en un unico diagrama cuando en realidad tendriamos que haber hecho un Diagrama de Secuencia de Roles para PN1 y otro para PN2.
+Es importante pensar que el Diagrama de Proceso PN1 y el proceso PN2 es estan relacionados con la Descripción Funcional de Proceso
+
+Por ejemplo, el PN1 tiene que tener 4 entradas todas las correspondientes a "Entradas" y luego en "Comportamientos" debe tener 5 por que justamente son 5 procesos, luego tenemos "Salidas" en total son 4 salidas. Lo mismo para el PN2
+
+
+Objetivo
+-> Generar en TD.EAP el "Diagrama de Secuencia de Roles PN1" y el "Diagrama de Secuencia de Roles PN2" siguiendo los pasos ya establecidos en nuestris PN1 en caso de que sea necesario.
+-> Generar en Draw.io el Diagrama de Proceso teniendo en cuenta la imagen que te pasamos donde solo hay dos calles Paciente y Nutricionista. Se debe generar el "Diagrama de Proceso PN1" y "Diagrama de Proceso PN2".
+
+
+
+
+
+Estos son dos procesos de negocio
+
+PN1: Turnero Nutricional
+
+Este requisito funcional permite el registro de turnos en la agenda. El proceso permite al profesional administrar la agenda médica durante la reserva y reprogramación de bloques horarios registrando el estado final de la consulta (Asistió,Ausente,Cancelado)
+
+Operaciones Concretas involucradas en el PN1:
+● Registro de la solicitud de turno en la agenda local.
+● Registro del Paciente/Tutor 
+● Reprogramación de turnos superpuestos.
+● Selección de turno disponible en la agenda médica.
+● Actualización del estado de disponibilidad de la agenda.
+● Modificacion de turnos( liberación del bloque horario correspondiente)
+● Registro del estado final de la consulta (Asistió, Ausente, Cancelado).
+
+Descomposición en pasos lógicos secuenciales por el analista funcional:
+
+1. El Paciente/Tutor enviará sus datos para registrar un turno al Nutricionista y este carga sus datos al sistema (Nombre, Apellido, DNI Tutor, DNI Niño, Teléfono, Email, Obra Social, Fecha Solicitada, Horario Solicitado, Motivo de Consulta).
+2. Si el Paciente/Tutor no está registrado en la base de datos, el Nutricionista  lo registrará  (Nombre, Apellido, DNI Tutor, DNI Niño, Teléfono, Email, Obra Social)
+3. Si existe superposición con un turno, el Nutricionista reprogramara  el turno(horarios libres/Alternativos).
+4. El Nutricionista seleccionara un turno en la agenda médica (Fecha, Horario, Motivo de Consulta).
+5. Se  actualiza automáticamente la agenda de el Nutricionista marcando el bloque horario como (Estado: Ocupado).
+6. Si el paciente/Tutor solicita cambios en un turno, el Nutricionista Modificara el turno (Código de Turno, Fecha/Hora o Motivo de Cancelación).
+7. Si es cancelación, se actualizará el horario en la agenda del Nutricionista marcándolo como (Estado: Disponible).
+8. Finalizada la atención, el Nutricionista registrará el estado del turno en el sistema local (Estado: Asistió / Ausente / Cancelado).
+
+PN2: Seguimiento nutricional
+
+Este requisito funcional permite sistematizar la evaluación antropométrica del paciente. Permite seleccionar un paciente, ver las variables corporales (peso, talla, perímetro cefálico), Zcore e IMC según el modelo OMS/OPS y mostrar su representación gráfica en percentiles trazados en gráficas.
+
+● Seleccionar el paciente pediátrico en la base de datos local.
+● Registrar mediciones antropométricas periódicas (Peso, Talla, Perímetro Cefálico, Edad).
+● Calcular automatizado de IMC y Z-Scores oficializados por la OMS (LMS).
+● Generar curvas de percentiles OMS (P3, P15, P50, P85, P97).
+● Generar del diagnóstico nutricional según patrones OMS.
+● Emitir de alertas clínicas ante desviaciones o caídas abruptas de percentil.
+● Registrar anamnesis, antecedentes clínicos y recordatorio 24h.
+● Prescribir plan alimentario con objetivos terapéuticos.
+● Guardar la historia clínica del paciente.
+
+1. El Nutricionista seleccionará al paciente en el sistema local (DNI Niño, DNI Tutor, Nombre, Apellido) para desplegar su historia clínica.
+2. El Nutricionista registrará los datos antropométricos medidos al paciente (Fecha, Edad en Meses/Años, Peso en kg, Talla en cm, Perímetro Cefálico en cm).
+3. Se calculará el IMC y los Z-Scores oficializados por la OMS (Talla en cm, Peso en kg).
+4. Se generará el patrón de crecimiento OMS del paciente sobre el grafico trazando los percentiles (P3, P15, P50, P85, P97).
+5. Se generará el diagnóstico nutricional del paciente según la OMS utilizando (Talla, Peso, Circunferencia de Cintura, Frecuencia de Consumo).
+6. Si se detecta caída de percentil del paciente, el Nutricionista emitirá una Alerta Clínica Visual de Crecimiento
+7. El Nutricionista registrará los datos obtenidos del paciente  (Tipo de Lactancia, Alimentación Complementaria, Recordatorio 24h, Frecuencia de Alimentos, Alergias, Antecedentes Familiares).
+8. El Nutricionista prescribirá el plan alimentario a el paciente(Requerimiento Calórico, Distribución de Macronutrientes, Pautas para la Familia, Metas de Salud).
+9. Se guardara el registro del paciente en la historia clínica (Histórico de Consultas, Gráficos Recalculados, Diagnósticos e Indicaciones).
+
+
+
+
+
+
+
+Metodos que usamos en los diagramas dentro de PN1
+1_RegistrarTurno(DNINiño,Fecha,Horario,Motivo)
+2_RegistrarPaciente(Nombre,Apellido,DNINiño,Telefono,Email,ObraSocial)
+3_ReprogramarTurno(Horario)
+4_ModificarTurno(CodigoTurno,Motivo,Estado)
+5_CancelarTurno(CodigoTurno)
+
+Metodos que usamos en los diagramas dentro de PN2
+6_Seleccionar Paciente(DNINiño)
+7_RegistrarAntropometria(Fecha,Edad,Talla,Peso,PC)
+8_CalcularIMC(Talla,Peso)
+9_GraficarDiagnostico(Talla,Peso,CC,PC)
+10_EmitirAlerta()
+11_RegistrarDatos(TL,AC,24H,FA,Alergias,AF)
+12_PrescribirPlan(RC,DM,PautasF,MetasS)

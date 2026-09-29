@@ -1,0 +1,1938 @@
+{
+  "models": [],
+  "packages": [
+    {
+      "Package_ID": "1",
+      "Name": "Model",
+      "Parent_ID": "0",
+      "Notes": null
+    },
+    {
+      "Package_ID": "7",
+      "Name": "Class Model",
+      "Parent_ID": "1",
+      "Notes": null
+    },
+    {
+      "Package_ID": "5",
+      "Name": "Domain Model",
+      "Parent_ID": "1",
+      "Notes": null
+    },
+    {
+      "Package_ID": "2",
+      "Name": "Use Case Model",
+      "Parent_ID": "1",
+      "Notes": null
+    },
+    {
+      "Package_ID": "3",
+      "Name": "Actors",
+      "Parent_ID": "2",
+      "Notes": null
+    },
+    {
+      "Package_ID": "15",
+      "Name": "N01.1 Proceso #1: Turnero Nutricional",
+      "Parent_ID": "2",
+      "Notes": null
+    },
+    {
+      "Package_ID": "4",
+      "Name": "Primary Use Cases",
+      "Parent_ID": "2",
+      "Notes": null
+    },
+    {
+      "Package_ID": "6",
+      "Name": "Domain Objects",
+      "Parent_ID": "5",
+      "Notes": null
+    },
+    {
+      "Package_ID": "9",
+      "Name": "Frameworks",
+      "Parent_ID": "7",
+      "Notes": null
+    },
+    {
+      "Package_ID": "8",
+      "Name": "System",
+      "Parent_ID": "7",
+      "Notes": null
+    }
+  ],
+  "diagrams": [
+    {
+      "Diagram_ID": "27",
+      "Name": "CU01: Diagrama de Actividad",
+      "Diagram_Type": "Activity",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "32",
+      "Name": "CU02: Diagrama de Actividad",
+      "Diagram_Type": "Activity",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "28",
+      "Name": "N01.1: Diagrama de Proceso Macro (PN1)",
+      "Diagram_Type": "Activity",
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "7",
+      "Name": "Class Model",
+      "Diagram_Type": "Logical",
+      "Package_ID": "7",
+      "PackageName": "Class Model",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "26",
+      "Name": "CU01: DER (Modelo Relacional)",
+      "Diagram_Type": "Logical",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "25",
+      "Name": "CU01: Diagrama de Clases Afectadas",
+      "Diagram_Type": "Logical",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "31",
+      "Name": "CU02: DER (Modelo Relacional)",
+      "Diagram_Type": "Logical",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "30",
+      "Name": "CU02: Diagrama de Clases Afectadas",
+      "Diagram_Type": "Logical",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "5",
+      "Name": "Domain Model",
+      "Diagram_Type": "Logical",
+      "Package_ID": "5",
+      "PackageName": "Domain Model",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "6",
+      "Name": "Domain Objects",
+      "Diagram_Type": "Logical",
+      "Package_ID": "6",
+      "PackageName": "Domain Objects",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "9",
+      "Name": "Frameworks",
+      "Diagram_Type": "Logical",
+      "Package_ID": "9",
+      "PackageName": "Frameworks",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "8",
+      "Name": "System",
+      "Diagram_Type": "Logical",
+      "Package_ID": "8",
+      "PackageName": "System",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "12",
+      "Name": "CU01: Registrar",
+      "Diagram_Type": "Sequence",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "13",
+      "Name": "CU02: Reprogramar",
+      "Diagram_Type": "Sequence",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "33",
+      "Name": "Secuencia General",
+      "Diagram_Type": "Sequence",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "2",
+      "Name": "Actors",
+      "Diagram_Type": "Use Case",
+      "Package_ID": "3",
+      "PackageName": "Actors",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "3",
+      "Name": "Primary Use Cases",
+      "Diagram_Type": "Use Case",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Notes": null
+    },
+    {
+      "Diagram_ID": "1",
+      "Name": "Use Case Model",
+      "Diagram_Type": "Use Case",
+      "Package_ID": "2",
+      "PackageName": "Use Case Model",
+      "Notes": null
+    }
+  ],
+  "element_counts_by_type": {
+    "Action": 60,
+    "Class": 26,
+    "Object": 21,
+    "StateNode": 12,
+    "UseCase": 10,
+    "Package": 9,
+    "Note": 9,
+    "Decision": 9,
+    "Actor": 8,
+    "Text": 6,
+    "Synchronization": 4,
+    "Boundary": 4,
+    "InteractionFragment": 3,
+    "ActionPin": 2,
+    "Interface": 2,
+    "Association": 1,
+    "MessageEndpoint": 1,
+    "Interaction": 1
+  },
+  "elements_summary": [
+    {
+      "Object_ID": "615",
+      "Object_Type": "Action",
+      "Name": "Acceder a Gestion de Turnos y seleccionar turno de la grilla",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "438",
+      "Object_Type": "Action",
+      "Name": "Acceder al módulo de Gestión de Turnos",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "465",
+      "Object_Type": "Action",
+      "Name": "Acceder al sistema y consultar agenda médica",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "494",
+      "Object_Type": "Action",
+      "Name": "Action1",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "632",
+      "Object_Type": "Action",
+      "Name": "Actualizar Fecha, Hora e IdBloque en Turnos_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "445",
+      "Object_Type": "Action",
+      "Name": "Buscar niño y tutor en BD",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "483",
+      "Object_Type": "Action",
+      "Name": "Buscar turno por código e ingresar motivo de baja",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "478",
+      "Object_Type": "Action",
+      "Name": "Buscar turno por código y consultar nueva disponibilidad (CU07)",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "458",
+      "Object_Type": "Action",
+      "Name": "Calcular DVH e invocar DigitoVerificadorBLL.RecalcularYPersistir()",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "625",
+      "Object_Type": "Action",
+      "Name": "Cargar selector con nuevos bloques horarios disponibles",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "443",
+      "Object_Type": "Action",
+      "Name": "Cargar selector de bloques horarios disponibles",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "629",
+      "Object_Type": "Action",
+      "Name": "Delegar reprogramacion a State (TurnoBE_DNI101.Reprogramar)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "474",
+      "Object_Type": "Action",
+      "Name": "Ejecutar CU01: Registrar Turno (Crear Turno 'Solicitado', ocupar bloque, DV T08 y Bitácora T06)",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "480",
+      "Object_Type": "Action",
+      "Name": "Ejecutar CU02: Reprogramar Turno (Liberar bloque previo, ocupar nuevo bloque, DV T08 y Bitácora)",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "484",
+      "Object_Type": "Action",
+      "Name": "Ejecutar CU03: Cancelar Turno (Estado 'Cancelado', liberar bloque, DV T08 y Bitácora)",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "440",
+      "Object_Type": "Action",
+      "Name": "Ejecutar CU07: Consultar Disponibilidad",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "621",
+      "Object_Type": "Action",
+      "Name": "Ejecutar CU07: Consultar Disponibilidad",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "466",
+      "Object_Type": "Action",
+      "Name": "Ejecutar CU07: Consultar Disponibilidad (Listar bloques horarios libres)",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "456",
+      "Object_Type": "Action",
+      "Name": "Generar CodigoTurno_DNI101 e instanciar TurnoSolicitadoState_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "470",
+      "Object_Type": "Action",
+      "Name": "Ingresar datos del Niño (<19 años) y persistir en BD (CU08: Registrar Paciente y Tutor)",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "448",
+      "Object_Type": "Action",
+      "Name": "Ingresar datos del Niño, validar edad (<19 años) y persistir en Pacientes_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "447",
+      "Object_Type": "Action",
+      "Name": "Ingresar datos del Tutor y persistir en Tutores_DNI101 (CU08)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "467",
+      "Object_Type": "Action",
+      "Name": "Ingresar DNI del niño y buscar en el sistema",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "444",
+      "Object_Type": "Action",
+      "Name": "Ingresar DNI del niño y presionar 'Buscar Paciente'",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "489",
+      "Object_Type": "Action",
+      "Name": "Iniciar atención clínica del paciente (Deriva a PN2: Seguimiento Nutricional Pediátrico)",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "457",
+      "Object_Type": "Action",
+      "Name": "Insertar en Turnos_DNI101 y actualizar bloque a 'Ocupado'",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "631",
+      "Object_Type": "Action",
+      "Name": "Liberar bloque anterior (Disponible) y ocupar nuevo bloque (Ocupado)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "488",
+      "Object_Type": "Action",
+      "Name": "Marcar estado del turno como 'Asistió'",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "455",
+      "Object_Type": "Action",
+      "Name": "Mostrar alerta conflicto concurrencia y recargar grilla (Flujo Alt 9.2)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "628",
+      "Object_Type": "Action",
+      "Name": "Mostrar alerta: Conflicto de concurrencia en bloque y recargar grilla (Flujo Alt 9.2)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "442",
+      "Object_Type": "Action",
+      "Name": "Mostrar alerta: No hay horarios disponibles (Flujo Alt 4.1)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "623",
+      "Object_Type": "Action",
+      "Name": "Mostrar alerta: Sin disponibilidad en la fecha seleccionada (Flujo Alt 4.1)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "618",
+      "Object_Type": "Action",
+      "Name": "Mostrar alerta: Turno finalizado o cancelado no modificable (Flujo Alt 10.1)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "449",
+      "Object_Type": "Action",
+      "Name": "Mostrar datos del Niño y Tutor en pantalla",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "636",
+      "Object_Type": "Action",
+      "Name": "Mostrar mensaje de exito y refrescar grilla general de turnos",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "460",
+      "Object_Type": "Action",
+      "Name": "Mostrar mensaje de éxito y refrescar grilla general de turnos",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "485",
+      "Object_Type": "Action",
+      "Name": "Notificar cancelación del turno al tutor",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "487",
+      "Object_Type": "Action",
+      "Name": "Presentarse en el consultorio con el paciente pediátrico",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "451",
+      "Object_Type": "Action",
+      "Name": "Presionar botón 'Agendar Turno'",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "473",
+      "Object_Type": "Action",
+      "Name": "Presionar botón 'Agendar Turno'",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "634",
+      "Object_Type": "Action",
+      "Name": "Recalcular DVH y DVV persistiendo en tabla DV (T08)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "475",
+      "Object_Type": "Action",
+      "Name": "Recibir confirmación del turno agendado",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "481",
+      "Object_Type": "Action",
+      "Name": "Recibir nueva fecha y horario confirmado",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "616",
+      "Object_Type": "Action",
+      "Name": "Recuperar datos de Turno y verificar EstadoActual (IEstadoTurno)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "471",
+      "Object_Type": "Action",
+      "Name": "Recuperar y mostrar datos del Niño y Tutor",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "459",
+      "Object_Type": "Action",
+      "Name": "Registrar evento de agendamiento en Bitacora (T06)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "633",
+      "Object_Type": "Action",
+      "Name": "Registrar evento de reprogramacion en Bitacora (T06)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "453",
+      "Object_Type": "Action",
+      "Name": "Resaltar campos faltantes (Flujo Alt 9.1)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "450",
+      "Object_Type": "Action",
+      "Name": "Seleccionar bloque horario e ingresar motivo de consulta",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "472",
+      "Object_Type": "Action",
+      "Name": "Seleccionar bloque horario e ingresar motivo de consulta",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "439",
+      "Object_Type": "Action",
+      "Name": "Seleccionar fecha y profesional nutricionista",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "620",
+      "Object_Type": "Action",
+      "Name": "Seleccionar nueva fecha y profesional nutricionista",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "479",
+      "Object_Type": "Action",
+      "Name": "Seleccionar nuevo bloque horario disponible",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "626",
+      "Object_Type": "Action",
+      "Name": "Seleccionar nuevo bloque horario y presionar 'Reprogramar Turno'",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "477",
+      "Object_Type": "Action",
+      "Name": "Solicitar cambio de fecha u horario",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "482",
+      "Object_Type": "Action",
+      "Name": "Solicitar cancelación del turno programado",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "469",
+      "Object_Type": "Action",
+      "Name": "Solicitar e ingresar datos del Tutor (DNI, Nombre, Teléfono, Parentesco)",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "464",
+      "Object_Type": "Action",
+      "Name": "Solicitar turno nutricional brindando datos (DNI Niño, Tutor, Fecha y Horario preferido)",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "637",
+      "Object_Type": "Action",
+      "Name": "Visualizar confirmacion de reprogramacion y turno actualizado",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "497",
+      "Object_Type": "Action",
+      "Name": "Visualizar confirmacion de turno y codigo generado",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "491",
+      "Object_Type": "ActionPin",
+      "Name": "ActionPin1",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "492",
+      "Object_Type": "ActionPin",
+      "Name": "ActionPin2",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "644",
+      "Object_Type": "Actor",
+      "Name": "Nutricionista",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "219",
+      "Object_Type": "Actor",
+      "Name": "Nutricionista",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "10",
+      "Object_Type": "Actor",
+      "Name": "Nutricionista",
+      "Stereotype": null,
+      "Package_ID": "3",
+      "PackageName": "Actors",
+      "Note": null
+    },
+    {
+      "Object_ID": "41",
+      "Object_Type": "Actor",
+      "Name": "Nutricionista",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "266",
+      "Object_Type": "Actor",
+      "Name": "Nutricionista",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "639",
+      "Object_Type": "Actor",
+      "Name": "Nutricionista",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "643",
+      "Object_Type": "Actor",
+      "Name": "Paciente",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "640",
+      "Object_Type": "Actor",
+      "Name": "Paciente",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "493",
+      "Object_Type": "Association",
+      "Name": null,
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "40",
+      "Object_Type": "Boundary",
+      "Name": "Modulo : Seguimiento Nutricional Pediátrico ",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "15",
+      "Object_Type": "Boundary",
+      "Name": "Modulo : Turnero Nutricional",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "501",
+      "Object_Type": "Boundary",
+      "Name": "Nutricionista (Operador)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "502",
+      "Object_Type": "Boundary",
+      "Name": "Sistema (NutriEvolve)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "424",
+      "Object_Type": "Class",
+      "Name": "AgendaMedica_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "432",
+      "Object_Type": "Class",
+      "Name": "AgendasMedicas_DNI101",
+      "Stereotype": "table",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "436",
+      "Object_Type": "Class",
+      "Name": "Bitacora",
+      "Stereotype": "table",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": "Seguridad T06"
+    },
+    {
+      "Object_ID": "428",
+      "Object_Type": "Class",
+      "Name": "BitacoraAuditoria",
+      "Stereotype": "Seguridad T06",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "425",
+      "Object_Type": "Class",
+      "Name": "BloqueHorario_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "433",
+      "Object_Type": "Class",
+      "Name": "BloquesHorarios_DNI101",
+      "Stereotype": "table",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "32",
+      "Object_Type": "Class",
+      "Name": "Class1",
+      "Stereotype": null,
+      "Package_ID": "8",
+      "PackageName": "System",
+      "Note": null
+    },
+    {
+      "Object_ID": "22",
+      "Object_Type": "Class",
+      "Name": "Class1",
+      "Stereotype": null,
+      "Package_ID": "6",
+      "PackageName": "Domain Objects",
+      "Note": null
+    },
+    {
+      "Object_ID": "34",
+      "Object_Type": "Class",
+      "Name": "Class2",
+      "Stereotype": null,
+      "Package_ID": "8",
+      "PackageName": "System",
+      "Note": null
+    },
+    {
+      "Object_ID": "20",
+      "Object_Type": "Class",
+      "Name": "Class2",
+      "Stereotype": null,
+      "Package_ID": "6",
+      "PackageName": "Domain Objects",
+      "Note": null
+    },
+    {
+      "Object_ID": "33",
+      "Object_Type": "Class",
+      "Name": "Class3",
+      "Stereotype": null,
+      "Package_ID": "8",
+      "PackageName": "System",
+      "Note": null
+    },
+    {
+      "Object_ID": "21",
+      "Object_Type": "Class",
+      "Name": "Class3",
+      "Stereotype": null,
+      "Package_ID": "6",
+      "PackageName": "Domain Objects",
+      "Note": null
+    },
+    {
+      "Object_ID": "427",
+      "Object_Type": "Class",
+      "Name": "DigitoVerificador",
+      "Stereotype": "Seguridad T08",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "435",
+      "Object_Type": "Class",
+      "Name": "DV",
+      "Stereotype": "table",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": "Seguridad T08"
+    },
+    {
+      "Object_ID": "417",
+      "Object_Type": "Class",
+      "Name": "Paciente_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "430",
+      "Object_Type": "Class",
+      "Name": "Pacientes_DNI101",
+      "Stereotype": "table",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "418",
+      "Object_Type": "Class",
+      "Name": "Turno_DNI101",
+      "Stereotype": "Context",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "422",
+      "Object_Type": "Class",
+      "Name": "TurnoAsistioState_DNI101",
+      "Stereotype": "ConcreteState",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "423",
+      "Object_Type": "Class",
+      "Name": "TurnoCanceladoState_DNI101",
+      "Stereotype": "ConcreteState",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "421",
+      "Object_Type": "Class",
+      "Name": "TurnoConfirmadoState_DNI101",
+      "Stereotype": "ConcreteState",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "434",
+      "Object_Type": "Class",
+      "Name": "Turnos_DNI101",
+      "Stereotype": "table",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "420",
+      "Object_Type": "Class",
+      "Name": "TurnoSolicitadoState_DNI101",
+      "Stereotype": "ConcreteState",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "416",
+      "Object_Type": "Class",
+      "Name": "Tutor_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "429",
+      "Object_Type": "Class",
+      "Name": "Tutores_DNI101",
+      "Stereotype": "table",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "426",
+      "Object_Type": "Class",
+      "Name": "Usuario",
+      "Stereotype": "Base / Seguridad T02",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "431",
+      "Object_Type": "Class",
+      "Name": "Usuarios",
+      "Stereotype": "table",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": "Base / Seguridad T02"
+    },
+    {
+      "Object_ID": "454",
+      "Object_Type": "Decision",
+      "Name": "¿Bloque continúa 'Disponible'?",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "452",
+      "Object_Type": "Decision",
+      "Name": "¿Campos completos?",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "476",
+      "Object_Type": "Decision",
+      "Name": "¿Evolución / Solicitud posterior del Tutor?",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "441",
+      "Object_Type": "Decision",
+      "Name": "¿Existen bloques disponibles en la fecha?",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "468",
+      "Object_Type": "Decision",
+      "Name": "¿Paciente registrado en el padrón?",
+      "Stereotype": null,
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "446",
+      "Object_Type": "Decision",
+      "Name": "¿Paciente registrado?",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "617",
+      "Object_Type": "Decision",
+      "Name": "Estado permite reprogramar?",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "622",
+      "Object_Type": "Decision",
+      "Name": "Existen bloques disponibles en la nueva fecha?",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "627",
+      "Object_Type": "Decision",
+      "Name": "Nuevo bloque continua 'Disponible'?",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "642",
+      "Object_Type": "Interaction",
+      "Name": "Secuencia General",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "646",
+      "Object_Type": "InteractionFragment",
+      "Name": null,
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "232",
+      "Object_Type": "InteractionFragment",
+      "Name": "Paciente No Registrado (Punto de Extension)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": "[Paciente no registrado en el sistema]"
+    },
+    {
+      "Object_ID": "276",
+      "Object_Type": "InteractionFragment",
+      "Name": "Validacion Estado Turno (alt)",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": "[Estado Valido vs Estado Invalido (Asistio/Cancelado)]"
+    },
+    {
+      "Object_ID": "419",
+      "Object_Type": "Interface",
+      "Name": "IEstadoTurno_DNI101",
+      "Stereotype": "State",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "35",
+      "Object_Type": "Interface",
+      "Name": "Interface1",
+      "Stereotype": "interface",
+      "Package_ID": "8",
+      "PackageName": "System",
+      "Note": null
+    },
+    {
+      "Object_ID": "645",
+      "Object_Type": "MessageEndpoint",
+      "Name": null,
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "28",
+      "Object_Type": "Note",
+      "Name": null,
+      "Stereotype": null,
+      "Package_ID": "7",
+      "PackageName": "Class Model",
+      "Note": "Class libraries, API's and other re-usable components"
+    },
+    {
+      "Object_ID": "26",
+      "Object_Type": "Note",
+      "Name": null,
+      "Stereotype": null,
+      "Package_ID": "7",
+      "PackageName": "Class Model",
+      "Note": "Classes, interfaces and logical components for the new system"
+    },
+    {
+      "Object_ID": "2",
+      "Object_Type": "Note",
+      "Name": null,
+      "Stereotype": null,
+      "Package_ID": "2",
+      "PackageName": "Use Case Model",
+      "Note": "Actors are the users of the system being modeled. Each Actor will have a well-defined role, and in the context of that role have useful interactions with the system.\n\nA person may perform the role of more than one Actor, although they will only assume one role during one use case interaction.\n\nAn Actor role may be performed by a non-human system, such as another computer program."
+    },
+    {
+      "Object_ID": "5",
+      "Object_Type": "Note",
+      "Name": null,
+      "Stereotype": null,
+      "Package_ID": "2",
+      "PackageName": "Use Case Model",
+      "Note": "This package contains use cases which define how an Actor will interact with the proposed system. \n\nEach interaction may be specified using scenarios, sequence diagrams, communication diagrams and other dynamic diagrams or textual descriptions which together describe how the system, when viewed as a \"black-box\", interacts with a user."
+    },
+    {
+      "Object_ID": "17",
+      "Object_Type": "Note",
+      "Name": "Note",
+      "Stereotype": null,
+      "Package_ID": "5",
+      "PackageName": "Domain Model",
+      "Note": "The Domain Model is a view of all the objects that make up an area of interest, and their relationships. It  is used to capture the significant objects within a system, organization or any target domain.  "
+    },
+    {
+      "Object_ID": "36",
+      "Object_Type": "Note",
+      "Name": "Note",
+      "Stereotype": null,
+      "Package_ID": "9",
+      "PackageName": "Frameworks",
+      "Note": null
+    },
+    {
+      "Object_ID": "6",
+      "Object_Type": "Note",
+      "Name": "Note",
+      "Stereotype": null,
+      "Package_ID": "2",
+      "PackageName": "Use Case Model",
+      "Note": "The Use Case model is a catalogue of system functionality described using UML Use Cases. Each Use Case represents a single, repeatable interaction that a user or \"actor\" experiences when using the system. \n\nA Use Case typically includes one or more \"scenarios\" which describe the interactions that go on between the Actor and the System, and documents the results and exceptions that occur from the user's perspective.\n\nUse Cases may include other Use Cases as part of a larger pattern of interaction and may also be extended by other use cases to handle exceptional conditions"
+    },
+    {
+      "Object_ID": "27",
+      "Object_Type": "Note",
+      "Name": "Note",
+      "Stereotype": null,
+      "Package_ID": "7",
+      "PackageName": "Class Model",
+      "Note": "The Class Model is a logical model of the software system under construction. Classes generally have a direct relationship to source code or other software artifacts that can be grouped together into executable components. \n\nThe System package contains the classes and artifacts which are being built or designed as part of the current model. The Frameworks package generally contains classes and components that have been designed and built earlier and are being reused as part of the current project."
+    },
+    {
+      "Object_ID": "23",
+      "Object_Type": "Note",
+      "Name": "Note",
+      "Stereotype": null,
+      "Package_ID": "6",
+      "PackageName": "Domain Objects",
+      "Note": "The Domain class model captures essential information about objects in the domain. "
+    },
+    {
+      "Object_ID": "221",
+      "Object_Type": "Object",
+      "Name": "AgendaMedicaBLL_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "269",
+      "Object_Type": "Object",
+      "Name": "AgendaMedicaBLL_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "275",
+      "Object_Type": "Object",
+      "Name": "BASE ING",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "231",
+      "Object_Type": "Object",
+      "Name": "BASE ING",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "228",
+      "Object_Type": "Object",
+      "Name": "DAL",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "272",
+      "Object_Type": "Object",
+      "Name": "DAL",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "229",
+      "Object_Type": "Object",
+      "Name": "DigitoVerificadorBLL",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "273",
+      "Object_Type": "Object",
+      "Name": "DigitoVerificadorBLL",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "230",
+      "Object_Type": "Object",
+      "Name": "EventoBLL",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "274",
+      "Object_Type": "Object",
+      "Name": "EventoBLL",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "220",
+      "Object_Type": "Object",
+      "Name": "FormTurnero_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "267",
+      "Object_Type": "Object",
+      "Name": "FormTurnero_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "224",
+      "Object_Type": "Object",
+      "Name": "PacienteBE_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "222",
+      "Object_Type": "Object",
+      "Name": "PacienteBLL_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "226",
+      "Object_Type": "Object",
+      "Name": "TurnoBE_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "270",
+      "Object_Type": "Object",
+      "Name": "TurnoBE_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "268",
+      "Object_Type": "Object",
+      "Name": "TurnoBLL_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "225",
+      "Object_Type": "Object",
+      "Name": "TurnoBLL_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "271",
+      "Object_Type": "Object",
+      "Name": "TurnoConfirmadoState_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "227",
+      "Object_Type": "Object",
+      "Name": "TurnoSolicitadoState",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "223",
+      "Object_Type": "Object",
+      "Name": "TutorBE_DNI101",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "9",
+      "Object_Type": "Package",
+      "Name": "Actors",
+      "Stereotype": null,
+      "Package_ID": "2",
+      "PackageName": "Use Case Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "24",
+      "Object_Type": "Package",
+      "Name": "Class Model",
+      "Stereotype": null,
+      "Package_ID": "1",
+      "PackageName": "Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "16",
+      "Object_Type": "Package",
+      "Name": "Domain Model",
+      "Stereotype": null,
+      "Package_ID": "1",
+      "PackageName": "Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "19",
+      "Object_Type": "Package",
+      "Name": "Domain Objects",
+      "Stereotype": null,
+      "Package_ID": "5",
+      "PackageName": "Domain Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "30",
+      "Object_Type": "Package",
+      "Name": "Frameworks",
+      "Stereotype": null,
+      "Package_ID": "7",
+      "PackageName": "Class Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "462",
+      "Object_Type": "Package",
+      "Name": "N01.1 Proceso #1: Turnero Nutricional",
+      "Stereotype": null,
+      "Package_ID": "2",
+      "PackageName": "Use Case Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "8",
+      "Object_Type": "Package",
+      "Name": "Primary Use Cases",
+      "Stereotype": null,
+      "Package_ID": "2",
+      "PackageName": "Use Case Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "31",
+      "Object_Type": "Package",
+      "Name": "System",
+      "Stereotype": null,
+      "Package_ID": "7",
+      "PackageName": "Class Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "1",
+      "Object_Type": "Package",
+      "Name": "Use Case Model",
+      "Stereotype": null,
+      "Package_ID": "1",
+      "PackageName": "Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "614",
+      "Object_Type": "StateNode",
+      "Name": null,
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "461",
+      "Object_Type": "StateNode",
+      "Name": null,
+      "Stereotype": "ActivityFinal",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "486",
+      "Object_Type": "StateNode",
+      "Name": null,
+      "Stereotype": "ActivityFinal",
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "463",
+      "Object_Type": "StateNode",
+      "Name": null,
+      "Stereotype": "ActivityInitial",
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "490",
+      "Object_Type": "StateNode",
+      "Name": null,
+      "Stereotype": "ActivityFinal",
+      "Package_ID": "15",
+      "PackageName": "N01.1 Proceso #1: Turnero Nutricional",
+      "Note": null
+    },
+    {
+      "Object_ID": "437",
+      "Object_Type": "StateNode",
+      "Name": null,
+      "Stereotype": "ActivityInitial",
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "507",
+      "Object_Type": "StateNode",
+      "Name": "ActivityFinal",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "638",
+      "Object_Type": "StateNode",
+      "Name": "ActivityFinal",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "504",
+      "Object_Type": "StateNode",
+      "Name": "ActivityInitial",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "619",
+      "Object_Type": "StateNode",
+      "Name": "Fin_Alt10_1",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "498",
+      "Object_Type": "StateNode",
+      "Name": "Fin_Alt4_1",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "624",
+      "Object_Type": "StateNode",
+      "Name": "Fin_Alt4_1",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "630",
+      "Object_Type": "Synchronization",
+      "Name": null,
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "506",
+      "Object_Type": "Synchronization",
+      "Name": null,
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "505",
+      "Object_Type": "Synchronization",
+      "Name": null,
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "635",
+      "Object_Type": "Synchronization",
+      "Name": null,
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "4",
+      "Object_Type": "Text",
+      "Name": "$help://actor.htm",
+      "Stereotype": null,
+      "Package_ID": "2",
+      "PackageName": "Use Case Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "25",
+      "Object_Type": "Text",
+      "Name": "$help://class_model_pattern.htm",
+      "Stereotype": null,
+      "Package_ID": "7",
+      "PackageName": "Class Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "29",
+      "Object_Type": "Text",
+      "Name": "$help://classdiagram.htm",
+      "Stereotype": null,
+      "Package_ID": "7",
+      "PackageName": "Class Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "18",
+      "Object_Type": "Text",
+      "Name": "$help://domain_model_pattern.htm",
+      "Stereotype": null,
+      "Package_ID": "5",
+      "PackageName": "Domain Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "3",
+      "Object_Type": "Text",
+      "Name": "$help://use_case_model_pattern.htm",
+      "Stereotype": null,
+      "Package_ID": "2",
+      "PackageName": "Use Case Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "7",
+      "Object_Type": "Text",
+      "Name": "$help://usecasediagram.htm",
+      "Stereotype": null,
+      "Package_ID": "2",
+      "PackageName": "Use Case Model",
+      "Note": null
+    },
+    {
+      "Object_ID": "12",
+      "Object_Type": "UseCase",
+      "Name": "CU01: Registrar",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "13",
+      "Object_Type": "UseCase",
+      "Name": "CU02: Reprogramar",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "37",
+      "Object_Type": "UseCase",
+      "Name": "CU03: Cancelar Turno",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "42",
+      "Object_Type": "UseCase",
+      "Name": "CU04 : Registrar Medicion",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "43",
+      "Object_Type": "UseCase",
+      "Name": "CU05: Crear Diagnóstico y Curvas OMS",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "44",
+      "Object_Type": "UseCase",
+      "Name": "CU06 : Prescribir Plan Alimentario ",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "39",
+      "Object_Type": "UseCase",
+      "Name": "CU07: Consultar Disponibilidad",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "38",
+      "Object_Type": "UseCase",
+      "Name": "CU08: Agendar Parciente",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "45",
+      "Object_Type": "UseCase",
+      "Name": "CU09 : Buscar Historia Clinica",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    },
+    {
+      "Object_ID": "46",
+      "Object_Type": "UseCase",
+      "Name": "CU10 : Calcular Zcore",
+      "Stereotype": null,
+      "Package_ID": "4",
+      "PackageName": "Primary Use Cases",
+      "Note": null
+    }
+  ],
+  "connectors_summary": [],
+  "connector_counts": {
+    "ControlFlow": 146,
+    "Sequence": 84,
+    "Association": 43,
+    "Realisation": 13,
+    "UseCase": 7,
+    "Dependency": 6,
+    "Aggregation": 6,
+    "NoteLink": 4,
+    "Generalization": 2,
+    "ObjectFlow": 1
+  }
+}
