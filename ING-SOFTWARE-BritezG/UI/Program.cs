@@ -18,7 +18,7 @@ namespace UI
             DAL.DatabaseInitializer.InitializeDatabase();
 
             ApplicationConfiguration.Initialize();
-            Application.Run(new Login());
+            Application.Run(new frmTurnero_DNI101());
         }
     }
 }
