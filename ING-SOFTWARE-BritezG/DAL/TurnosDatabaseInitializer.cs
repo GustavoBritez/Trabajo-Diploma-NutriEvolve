@@ -20,21 +20,6 @@ namespace DAL
                 {
                     Conexion conexion = new Conexion();
                     string ddl = @"
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Tutores_DNI101' AND xtype='U')
-BEGIN
-    CREATE TABLE [dbo].[Tutores_DNI101](
-        [IdTutor_DNI101] INT IDENTITY(1,1) PRIMARY KEY,
-        [DniTutor_DNI101] VARCHAR(20) NOT NULL UNIQUE,
-        [Nombre_DNI101] VARCHAR(50) NOT NULL,
-        [Apellido_DNI101] VARCHAR(50) NOT NULL,
-        [Telefono_DNI101] VARCHAR(50) NULL,
-        [Email_DNI101] VARCHAR(100) NULL,
-        [Parentesco_DNI101] VARCHAR(50) NULL,
-        [FechaRegistro_DNI101] DATETIME2(7) NOT NULL DEFAULT GETDATE(),
-        [DV] VARCHAR(255) NULL
-    );
-END;
-
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Pacientes_DNI101' AND xtype='U')
 BEGIN
     CREATE TABLE [dbo].[Pacientes_DNI101](
@@ -47,7 +32,6 @@ BEGIN
         [FechaNacimiento_DNI101] DATETIME2(7) NOT NULL,
         [Sexo_DNI101] VARCHAR(10) NULL,
         [ObraSocial_DNI101] VARCHAR(100) NULL,
-        [IdTutor_DNI101] INT NULL,
         [DV] VARCHAR(255) NULL
     );
 END;

@@ -20,9 +20,79 @@ namespace UI
 
         private void frmTurnero_DNI101_Load(object sender, EventArgs e)
         {
+            this.AutoScroll = true;
             cmbFiltroEstado.SelectedIndex = 0; // "Todos"
             dtpFiltroFecha.Value = DateTime.Today;
+            this.Resize += (s, ev) => AjustarDisenoResponsivo();
             CargarTurnos();
+            AjustarDisenoResponsivo();
+        }
+
+        private void AjustarDisenoResponsivo()
+        {
+            try
+            {
+                this.SuspendLayout();
+
+                int containerWidth = this.ClientSize.Width;
+                int containerHeight = this.ClientSize.Height;
+
+                // 1. Panel de Botones de Acción
+                if (panelBotonesAccion != null)
+                {
+                    panelBotonesAccion.Location = new Point(15, 70);
+                    panelBotonesAccion.Size = new Size(Math.Max(320, containerWidth - 30), 70);
+
+                    // Ajustar posición de botones dentro del panel según ancho disponible
+                    var botones = new Control[] { btn_Registrar_Turno, btn_Registrar_Paciente, btn_Reprogramar_Turno, btn_Modificar_Turno, btn_Cancelar_Turno };
+                    int btnWidth = Math.Min(165, Math.Max(110, (panelBotonesAccion.ClientSize.Width - 60) / 5));
+                    int gap = Math.Max(5, (panelBotonesAccion.ClientSize.Width - 30 - (btnWidth * 5)) / 4);
+                    int startX = 15;
+
+                    for (int i = 0; i < botones.Length; i++)
+                    {
+                        if (botones[i] != null)
+                        {
+                            botones[i].Location = new Point(startX + i * (btnWidth + gap), 14);
+                            botones[i].Size = new Size(btnWidth, 42);
+                        }
+                    }
+                }
+
+                // 2. Panel de Filtros
+                if (panelFiltros != null)
+                {
+                    panelFiltros.Location = new Point(15, panelBotonesAccion != null ? panelBotonesAccion.Bottom + 10 : 150);
+                    panelFiltros.Size = new Size(Math.Max(320, containerWidth - 30), 60);
+
+                    if (btnActualizar != null)
+                    {
+                        btnActualizar.Location = new Point(Math.Max(300, panelFiltros.ClientSize.Width - btnActualizar.Width - 20), 12);
+                    }
+                }
+
+                // 3. Panel de la Grilla (DGV)
+                if (panelGrilla != null)
+                {
+                    int topPos = panelFiltros != null ? panelFiltros.Bottom + 10 : 220;
+                    panelGrilla.Location = new Point(15, topPos);
+                    panelGrilla.Size = new Size(Math.Max(320, containerWidth - 30), Math.Max(200, containerHeight - topPos - 25));
+
+                    if (dgvTurnos != null)
+                    {
+                        dgvTurnos.Dock = DockStyle.Fill;
+                        dgvTurnos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    }
+                }
+            }
+            catch
+            {
+                // Ignorar excepciones temporales durante renderizado
+            }
+            finally
+            {
+                this.ResumeLayout(true);
+            }
         }
 
         #region Métodos de Negocio PN1 (Diagramas de Secuencia)
@@ -133,6 +203,7 @@ namespace UI
             using (var frmPac = new RegistrarPaciente_DNI101())
             {
                 frmPac.ShowDialog(this);
+                CargarTurnos();
             }
         }
 
@@ -240,7 +311,10 @@ namespace UI
                 // Paso 6: Ejecución del método 5_CancelarTurno(CodigoTurno)
                 _turnoBLL.CancelarTurno(turnoSeleccionado.CodigoTurno_DNI101);
 
-                // Paso 12: Confirmación y refresco
+                // Paso 12: Refrescar la grilla para reflejar el estado 'Cancelado'
+                CargarTurnos();
+
+                // Confirmación
                 MessageBox.Show(
                     $"El turno '{turnoSeleccionado.CodigoTurno_DNI101}' ha sido cancelado con éxito.\n" +
                     $"El bloque horario asignado fue liberado y se registró el evento en la Bitácora de auditoría.",

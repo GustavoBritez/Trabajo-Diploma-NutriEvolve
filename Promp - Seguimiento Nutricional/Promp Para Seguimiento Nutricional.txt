@@ -283,8 +283,10 @@ Formulario interactivo y profesional para la consulta de nutrición:
 
 2. Pestaña 1 - Mediciones Antropométricas y Curvas OMS:
    - Inputs numéricos: numPeso, numTalla, numPerimetroCefalico, numCircunferenciaCintura.
+   - Selector de Gráfica (cmbTipoGrafico): Selección interactiva entre 'IMC vs Edad', 'Peso vs Edad', 'Talla vs Edad' y 'Perímetro Cefálico vs Edad'.
    - Botón 'btnCalcularZScore': Muestra al instante los labels calculados (lblIMC, lblZPeso, lblZTalla, lblZIMC, lblPercentiles).
-   - Componente gráfico (Panel / Chart / ZedGraph) donde se dibujan las curvas patrón OMS (P3, P15, P50, P85, P97) y se grafica el punto de evolución del paciente.
+   - Motor Gráfico de Curvas OMS (panelGraficoCurvas): Renderizado gráfico en alta resolución que dibuja las franjas de colores oficiales de la OMS (Naranja/Oro > P97 Obesidad, Amarillo P85-P97 Sobrepeso, Verde Menta P3-P85 Eutrófico/Normal, Rosa < P3 Bajo Peso) y las curvas percentilares (P3, P15, P50, P85, P97).
+   - Trazado de Trayectoria Histórica (Seguimiento Evolutivo): Recupera las consultas históricas del paciente desde la base de datos y dibuja la secuencia de puntos de control (Edad vs Valor) unidos mediante líneas de tendencia continua (Punto1 -> Punto2 -> Punto3), permitiendo visualizar el comportamiento de crecimiento en el tiempo e identificando caídas bruscas o desvíos estaturales.
 
 3. Pestaña 2 - Diagnóstico Nutricional y Alertas Clínicas:
    - Visualización de Clasificación OMS (lblClasificacionOMS).

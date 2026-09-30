@@ -134,6 +134,7 @@ namespace UI
             btnSeguimiento.Text = "🥗  Seguimiento Nutricional";
             btnSeguimiento.TextAlign = ContentAlignment.MiddleLeft;
             btnSeguimiento.UseVisualStyleBackColor = false;
+            btnSeguimiento.Click += btnSeguimiento_Click;
             // 
             // btnReportes
             // 

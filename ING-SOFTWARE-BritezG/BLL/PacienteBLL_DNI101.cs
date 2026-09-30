@@ -51,6 +51,12 @@ namespace BLL
 
                 try
                 {
+                    new DigitoVerificadorBLL().RecalcularYPersistir();
+                }
+                catch { }
+
+                try
+                {
                     int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                     _bitacoraBLL.RegistrarEvento(1, $"Registro de Paciente Pediátrico: {paciente.NombreCompleto} (DNI: {paciente.DNINiño_DNI101})", dniActual, "TurneroNutricional");
                 }
@@ -89,7 +95,16 @@ namespace BLL
         public bool ModificarPaciente(PacienteBE_DNI101 paciente)
         {
             if (paciente == null || paciente.IdPaciente_DNI101 <= 0) return false;
-            return _pacienteDAL.Modificar(paciente);
+            bool ok = _pacienteDAL.Modificar(paciente);
+            if (ok)
+            {
+                try
+                {
+                    new DigitoVerificadorBLL().RecalcularYPersistir();
+                }
+                catch { }
+            }
+            return ok;
         }
     }
 }

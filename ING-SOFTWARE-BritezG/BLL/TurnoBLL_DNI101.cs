@@ -435,5 +435,10 @@ namespace BLL
         {
             return _turnoDAL.ObtenerPorCodigo(codigoTurno);
         }
+
+        public bool MarcarAsistencia(int idTurno)
+        {
+            return _turnoDAL.ActualizarEstado(idTurno, "Asistio");
+        }
     }
 }

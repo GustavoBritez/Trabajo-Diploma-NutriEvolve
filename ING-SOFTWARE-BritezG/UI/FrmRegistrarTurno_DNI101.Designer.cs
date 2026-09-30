@@ -56,7 +56,7 @@ namespace UI
             lblTitulo.ForeColor = Color.White;
             lblTitulo.Location = new Point(20, 16);
             lblTitulo.Name = "lblTitulo";
-            lblTitulo.Size = new Size(400, 25);
+            lblTitulo.Size = new Size(421, 25);
             lblTitulo.TabIndex = 0;
             lblTitulo.Text = "📅 Registrar Turno Nutricional - CUN01 (PN1)";
             // 
@@ -93,9 +93,9 @@ namespace UI
             lblSubtitulo.ForeColor = Color.FromArgb(70, 95, 75);
             lblSubtitulo.Location = new Point(25, 12);
             lblSubtitulo.Name = "lblSubtitulo";
-            lblSubtitulo.Size = new Size(490, 15);
+            lblSubtitulo.Size = new Size(309, 15);
             lblSubtitulo.TabIndex = 0;
-            lblSubtitulo.Text = "Consulta la disponibilidad médica (CUN-07) y registra el turno del paciente pediátrico.";
+            lblSubtitulo.Text = "Consulta la disponibilidad y registra el turno del paciente.";
             // 
             // lblProfesional
             // 
@@ -104,7 +104,7 @@ namespace UI
             lblProfesional.ForeColor = Color.FromArgb(40, 70, 45);
             lblProfesional.Location = new Point(25, 38);
             lblProfesional.Name = "lblProfesional";
-            lblProfesional.Size = new Size(168, 17);
+            lblProfesional.Size = new Size(166, 17);
             lblProfesional.TabIndex = 1;
             lblProfesional.Text = "Profesional Nutricionista *";
             // 
@@ -126,7 +126,7 @@ namespace UI
             lblFecha.ForeColor = Color.FromArgb(40, 70, 45);
             lblFecha.Location = new Point(25, 93);
             lblFecha.Name = "lblFecha";
-            lblFecha.Size = new Size(123, 17);
+            lblFecha.Size = new Size(129, 17);
             lblFecha.TabIndex = 3;
             lblFecha.Text = "Fecha de Consulta *";
             // 
@@ -148,7 +148,7 @@ namespace UI
             lblHorario.ForeColor = Color.FromArgb(40, 70, 45);
             lblHorario.Location = new Point(285, 93);
             lblHorario.Name = "lblHorario";
-            lblHorario.Size = new Size(134, 17);
+            lblHorario.Size = new Size(131, 17);
             lblHorario.TabIndex = 5;
             lblHorario.Text = "Horario Disponible *";
             // 
@@ -169,7 +169,7 @@ namespace UI
             lblDisponibilidad.ForeColor = Color.FromArgb(60, 110, 70);
             lblDisponibilidad.Location = new Point(25, 142);
             lblDisponibilidad.Name = "lblDisponibilidad";
-            lblDisponibilidad.Size = new Size(260, 15);
+            lblDisponibilidad.Size = new Size(267, 15);
             lblDisponibilidad.TabIndex = 7;
             lblDisponibilidad.Text = "CUN-07: Bloques horarios cargados exitosamente.";
             // 
@@ -180,7 +180,7 @@ namespace UI
             lblDni.ForeColor = Color.FromArgb(40, 70, 45);
             lblDni.Location = new Point(25, 168);
             lblDni.Name = "lblDni";
-            lblDni.Size = new Size(92, 17);
+            lblDni.Size = new Size(86, 17);
             lblDni.TabIndex = 8;
             lblDni.Text = "DNI Niño/a *";
             // 
@@ -200,7 +200,7 @@ namespace UI
             lblPacienteInfo.ForeColor = Color.FromArgb(100, 125, 105);
             lblPacienteInfo.Location = new Point(25, 218);
             lblPacienteInfo.Name = "lblPacienteInfo";
-            lblPacienteInfo.Size = new Size(335, 15);
+            lblPacienteInfo.Size = new Size(358, 15);
             lblPacienteInfo.TabIndex = 10;
             lblPacienteInfo.Text = "Punto de Extensión CUN-02: Se abrirá registro si no está en padrón.";
             // 
@@ -211,7 +211,7 @@ namespace UI
             lblMotivo.ForeColor = Color.FromArgb(40, 70, 45);
             lblMotivo.Location = new Point(25, 245);
             lblMotivo.Name = "lblMotivo";
-            lblMotivo.Size = new Size(139, 17);
+            lblMotivo.Size = new Size(137, 17);
             lblMotivo.TabIndex = 11;
             lblMotivo.Text = "Motivo de Consulta *";
             // 
@@ -227,13 +227,18 @@ namespace UI
             // 
             // btnRegistrarTurno
             // 
+            btnRegistrarTurno.BackColor = Color.Transparent;
             btnRegistrarTurno.ColorGlow = Color.DarkSeaGreen;
             btnRegistrarTurno.ColorPrincipal = Color.FromArgb(76, 124, 89);
             btnRegistrarTurno.ColorSecundario = Color.FromArgb(50, 85, 60);
+            btnRegistrarTurno.EsBotonSecundario = false;
+            btnRegistrarTurno.EsMenuLateral = false;
+            btnRegistrarTurno.FlatStyle = FlatStyle.Flat;
             btnRegistrarTurno.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnRegistrarTurno.ForeColor = Color.White;
             btnRegistrarTurno.Location = new Point(305, 500);
             btnRegistrarTurno.Name = "btnRegistrarTurno";
+            btnRegistrarTurno.PaddingIzquierdo = 18;
             btnRegistrarTurno.RadioBorde = 30;
             btnRegistrarTurno.Size = new Size(220, 42);
             btnRegistrarTurno.TabIndex = 13;
@@ -243,14 +248,18 @@ namespace UI
             // 
             // btnCancelar
             // 
+            btnCancelar.BackColor = Color.Transparent;
             btnCancelar.ColorGlow = Color.FromArgb(180, 100, 100);
             btnCancelar.ColorPrincipal = Color.FromArgb(170, 80, 80);
             btnCancelar.ColorSecundario = Color.FromArgb(130, 50, 50);
             btnCancelar.EsBotonSecundario = true;
+            btnCancelar.EsMenuLateral = false;
+            btnCancelar.FlatStyle = FlatStyle.Flat;
             btnCancelar.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnCancelar.ForeColor = Color.White;
             btnCancelar.Location = new Point(25, 500);
             btnCancelar.Name = "btnCancelar";
+            btnCancelar.PaddingIzquierdo = 18;
             btnCancelar.RadioBorde = 30;
             btnCancelar.Size = new Size(160, 42);
             btnCancelar.TabIndex = 14;
@@ -273,8 +282,8 @@ namespace UI
             Name = "FrmRegistrarTurno_DNI101";
             StartPosition = FormStartPosition.CenterParent;
             Text = "CUN01 - Registrar Turno";
-            Load += FrmRegistrarTurno_DNI101_Load;
             FormClosing += FrmRegistrarTurno_DNI101_FormClosing;
+            Load += FrmRegistrarTurno_DNI101_Load;
             panelHeader.ResumeLayout(false);
             panelHeader.PerformLayout();
             panelCard.ResumeLayout(false);

@@ -13,8 +13,6 @@ namespace BE
         public DateTime FechaNacimiento_DNI101 { get; set; } = DateTime.Today;
         public string? Sexo_DNI101 { get; set; }
         public string? ObraSocial_DNI101 { get; set; }
-        public int? IdTutor_DNI101 { get; set; }
-        public TutorBE_DNI101? Tutor_DNI101 { get; set; }
         public string? DV { get; set; }
 
         public string NombreCompleto => $"{Apellido_DNI101}, {Nombre_DNI101}".Trim();

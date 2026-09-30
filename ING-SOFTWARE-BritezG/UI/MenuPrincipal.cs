@@ -21,8 +21,11 @@ namespace UI
             InitializeComponent();
             InicializarPanelDV();
 
-            //this.Load += (s, e) => Form1_Load();
-            //this.Shown += (s, e) => Form1_Shown();
+            if (panelContenedor != null)
+            {
+                panelContenedor.AutoScroll = true;
+            }
+
             this.VisibleChanged += (s, e) => Form1_VisibleChanged();
 
             cmbIdioma.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -549,10 +552,54 @@ namespace UI
             _frmTurneroContenido.TopLevel = false;
             _frmTurneroContenido.FormBorderStyle = FormBorderStyle.None;
             _frmTurneroContenido.Dock = DockStyle.Fill;
+            _frmTurneroContenido.AutoScroll = true;
             panelContenedor.Controls.Add(_frmTurneroContenido);
             _frmTurneroContenido.Show();
             _frmTurneroContenido.BringToFront();
             _frmTurneroContenido.CargarTurnos();
+        }
+
+        private FormSeguimientoNutricional_DNI101? _frmSeguimientoContenido;
+
+        private void btnSeguimiento_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UsuarioBE usuarioActivo = ServicesSessionManager.Instancia.ObtenerUsuarioActivo();
+                if (usuarioActivo == null)
+                {
+                    idiomaBLL.MostrarMensaje("msg_error_nosesion", "titulo_error_nosesion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                MostrarSeguimientoEnContenedor();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir el seguimiento nutricional: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void MostrarSeguimientoEnContenedor()
+        {
+            if (_frmSeguimientoContenido == null || _frmSeguimientoContenido.IsDisposed)
+            {
+                _frmSeguimientoContenido = new FormSeguimientoNutricional_DNI101();
+            }
+
+            if (ChangePassPanel != null)
+            {
+                ChangePassPanel.Visible = false;
+            }
+
+            panelContenedor.Controls.Clear();
+            _frmSeguimientoContenido.TopLevel = false;
+            _frmSeguimientoContenido.FormBorderStyle = FormBorderStyle.None;
+            _frmSeguimientoContenido.Dock = DockStyle.Fill;
+            _frmSeguimientoContenido.AutoScroll = true;
+            panelContenedor.Controls.Add(_frmSeguimientoContenido);
+            _frmSeguimientoContenido.Show();
+            _frmSeguimientoContenido.BringToFront();
         }
     }
 

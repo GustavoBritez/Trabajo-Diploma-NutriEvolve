@@ -76,10 +76,9 @@ Metodos que usamos en los diagramas dentro de PN1
 5_CancelarTurno(CodigoTurno)
 
 Metodos que usamos en los diagramas dentro de PN2
-6_Seleccionar Paciente(DNINiño)
-7_RegistrarAntropometria(Fecha,Edad,Talla,Peso,PC)
-8_CalcularIMC(Talla,Peso)
-9_GraficarDiagnostico(Talla,Peso,CC,PC)
-10_EmitirAlerta()
-11_RegistrarDatos(TL,AC,24H,FA,Alergias,AF)
-12_PrescribirPlan(RC,DM,PautasF,MetasS)
+CUN06_RegistrarAntropometria(Fecha,Edad,Talla,Peso,PC)
+CUN07_CalcularIMC(Talla,Peso)
+CUN08_GraficarDiagnostico(Talla,Peso,CC,PC)
+CUN09_EmitirAlerta()
+CUN10_CargarAnamnesis(TL,AC,24H,FA,Alergias,AF)
+CUN11_PrescribirPlan(RC,DM,PautasF,MetasS)

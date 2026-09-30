@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "vEk1Oa1Fmh4=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Navegador\\Desktop\\TD\\scratch\\TestPass\\TestPass.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Navegador\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

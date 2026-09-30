@@ -1,0 +1,99 @@
+================================================================================
+ESPECIFICACIONES DE CASOS DE USO DE PROCESO DE NEGOCIO 2: SEGUIMIENTO NUTRICIONAL
+================================================================================
+
+--------------------------------------------------------------------------------
+ID y Nombre:        CUN06 RegistrarAntropometriaYCalcularZScores
+Estado:             Aprobado
+Descripción:        El Nutricionista accede al módulo de Seguimiento Nutricional, ingresa las mediciones antropométricas del paciente (Peso, Talla, Perímetro Cefálico y Circunferencia de Cintura) y ejecuta el cálculo automático del IMC y Z-Scores OMS según edad y sexo.
+Actor principal:    Nutricionista
+Actor secundario:   Sistema (Patrón Strategy OMS)
+Precondiciones:     1. El Nutricionista debe haber iniciado sesión en el sistema.
+                    2. El Paciente Pediátrico debe estar registrado y seleccionado en el módulo.
+Escenario principal:
+1. El Nutricionista accede al módulo de Seguimiento Nutricional desde la navegación del Menú Principal o desde la lista de turnos.
+2. El Nutricionista ingresa el DNI del paciente pediátrico y presiona el botón "Buscar".
+3. El módulo recupera los datos demográficos del paciente pediátrico y despliega su información en el encabezado.
+4. El módulo calcula automáticamente la edad actual en meses del niño a partir de su fecha de nacimiento.
+5. El módulo consulta la Historia Clínica previa cargando las consultas anteriores en el historial del paciente.
+6. El Nutricionista se ubica en la pestaña "Antropometría y Curvas OMS" e ingresa el Peso en kilogramos, Talla en centímetros, Perímetro Cefálico en centímetros y opcionalmente la Circunferencia de Cintura.
+7. El Nutricionista presiona el botón "Calcular Z-Scores e IMC".
+8. El módulo valida en tiempo real que el Peso, Talla y Perímetro Cefálico sean strictly mayores a cero y ejecuta el cálculo del Índice de Masa Corporal: IMC = Peso / (Talla / 100)^2.
+9. El módulo invoca los servicios de evaluación nutricional calculando los Z-Scores correspondientes según la edad y sexo del paciente.
+10. El sistema aplica dinámicamente el patrón Strategy seleccionando la tabla OMS para lactantes (<= 24 meses) o para preescolares y escolares (> 24 meses).
+11. La estrategia seleccionada aplica los parámetros LMS oficiales de la OMS calculando Z-Scores (Z-Peso, Z-Talla, Z-IMC, Z-Perímetro Cefálico) y Percentiles.
+12. El módulo actualiza los indicadores visuales en pantalla, informa el éxito con un mensaje y actualiza la superficie del gráfico.
+Flujos alternativos:
+2.1.1 Paciente no encontrado: Si el DNI ingresado no existe en la base de datos, el módulo alerta "Paciente no encontrado" y sugiere su registro.
+8.1.1 Valores <= 0 o vacíos: Si Peso, Talla o Perímetro Cefálico es menor o igual a cero, el módulo notifica "Por favor, ingrese valores mayores a cero para Peso, Talla y Perímetro Cefálico" y bloquea la evaluación.
+10.1.1 Paciente excede edad límite OMS: Si la edad supera los 228 meses (19 años), el sistema advierte que el paciente excede la cobertura pediátrica OMS.
+Postcondiciones:    Las mediciones antropométricas y Z-Scores quedan calculados y validados en memoria, habilitando la graficación en curvas OMS y la evaluación diagnóstica.
+
+--------------------------------------------------------------------------------
+ID y Nombre:        CUN07 GraficarDiagnostico
+Estado:             Aprobado
+Descripción:        El sistema evalúa el estado nutricional del paciente, emite la clasificación diagnóstica oficial de la OMS, renderiza en vivo la gráfica evolutiva trazando las franjas de colores percentilares (P3, P15, P50, P85, P97), la línea de tendencia de controles anteriores y detecta alertas clínicas.
+Actor principal:    Nutricionista
+Actor secundario:   Sistema (Motor Gráfico OMS / Evaluador Crecimiento)
+Precondiciones:     1. Las mediciones antropométricas y el cálculo de Z-Scores OMS (CUN06) deben haber sido completados en la sesión activa.
+Escenario principal:
+1. El módulo determina la clasificación del diagnóstico del paciente según desviaciones estándar OMS.
+2. El módulo asigna la categoría diagnóstica correspondiente (Eutrófico, Sobrepeso, Obesidad, Desnutrición o Baja Talla) y genera las observaciones clínicas.
+3. El módulo despliega la clasificación diagnóstica y los detalles clínicos en las etiquetas de la Pestaña "Diagnóstico y Alertas Clínicas".
+4. El motor gráfico calcula la escala de coordenadas según la edad en meses y dibuja el marco oficial del gráfico OMS.
+5. El motor gráfico rellena las 4 franjas de colores percentilares OMS: Naranja (> P97), Amarillo (P85-P97), Verde Menta (P3-P85) y Rosa (< P3).
+6. El motor gráfico traza las líneas continuas de las curvas percentilares de la OMS (P3, P15, P50 mediana en negro, P85, P97) etiquetando cada nivel en el margen derecho.
+7. El motor gráfico recupera las consultas anteriores del paciente y las ordena cronológicamente por edad.
+8. El motor gráfico mapea la edad y el valor antropométrico de cada control histórico a las coordenadas de la pantalla.
+9. El motor gráfico traza la línea continua de tendencia evolutiva uniendo los puntos de controles anteriores.
+10. El motor gráfico posiciona el punto del control actual en color rojo con resplandor visual y etiqueta flotante de valor.
+11. El módulo evalúa las variaciones respecto a controles anteriores, notificando una alerta clínica visual si detecta un descenso brusco de percentiles (>= 2 canales) o desviación severa.
+Flujos alternativos:
+7.1.1 Primera consulta del paciente (sin historial): Al no existir registros previos en la base de datos, la gráfica renderiza únicamente las franjas OMS y el punto del control actual sin trazar línea de tendencia histórica.
+10.1.1 Cambio de variable visualizada: Al seleccionar otra opción en el selector de gráficos, el módulo recalcula instantáneamente los ejes y curvas para Peso, Talla o Perímetro Cefálico.
+11.1.1 Sin variación crítica: Si el crecimiento se encuentra dentro de canales normales, el sistema no emite alerta clínica visual.
+Postcondiciones:    La clasificación diagnóstica OMS queda reflejada en la interfaz, las alertas clínicas notificadas y la gráfica evolutiva proyecta la trayectoria histórica del paciente pediátrico.
+
+--------------------------------------------------------------------------------
+ID y Nombre:        CUN08 CargarAnamnesis
+Estado:             Aprobado
+Descripción:        El Nutricionista registra la anamnesis alimentaria, antecedentes clínicos, tipo de lactancia, alimentación complementaria, alergias y el recordatorio de ingestas de 24 horas del paciente pediátrico.
+Actor principal:    Nutricionista
+Actor secundario:   Paciente Pediátrico / Tutor
+Precondiciones:     1. Paciente pediátrico seleccionado en la consulta actual.
+Escenario principal:
+1. El Nutricionista accede a la pestaña "Anamnesis y Recordatorio 24h".
+2. El Nutricionista selecciona el Tipo de Lactancia (Materna Exclusiva, Fórmula, Mixta o Destete).
+3. El Nutricionista detalla en el campo correspondiente la introducción de Alimentos Complementarios.
+4. El Nutricionista registra las Alergias e Intolerancias Alimentarias y los Antecedentes Familiares patológicos o nutricionales.
+5. El Nutricionista completa el Recordatorio de Ingesta de 24 Horas detallando las comidas principales (Desayuno, Almuerzo, Merienda y Cena).
+6. El Nutricionista registra las Colaciones habituales y la Frecuencia de Consumo de Alimentos del paciente.
+7. El módulo encapsula la información cualitativa recopilada vinculándola al registro de la consulta nutricional actual para su posterior persistencia.
+Flujos alternativos:
+4.1.1 Campos cualitativos opcionales vacíos: Si el profesional omite llenar campos no obligatorios, el sistema asigna valores por defecto (cadenas vacías) y permite continuar sin bloquear el proceso.
+Postcondiciones:    La anamnesis, antecedentes y recordatorio de 24 horas quedan estructurados e incorporados a la consulta médica actual.
+
+--------------------------------------------------------------------------------
+ID y Nombre:        CUN09 PrescribirPlan
+Estado:             Aprobado
+Descripción:        El Nutricionista prescribe el plan alimentario especificando el Requerimiento Calórico Total, Distribución de Macronutrientes, Pautas Familiares y Metas de Salud.
+Actor principal:    Nutricionista
+Actor secundario:   Paciente Pediátrico / Tutor
+Precondiciones:     1. Evaluación antropométrica y Z-Scores (CUN06), diagnóstico nutricional (CUN07) y anamnesis (CUN08) completados en la sesión activa.
+Escenario principal:
+1. El Nutricionista accede a la pestaña "Plan Alimentario y Guardar".
+2. El Nutricionista ingresa el Requerimiento Calórico Total estimado en Kcal/día para el paciente.
+3. El Nutricionista establece la Distribución de Macronutrientes ingresando el porcentaje de Carbohidratos, porcentaje de Proteínas y porcentaje de Grasas.
+4. El módulo evalúa en tiempo real que la suma de Carbohidratos, Proteínas y Grasas sea exactamente igual al 100.00%, mostrando la validación visual en color verde.
+5. El Nutricionista detalla las Pautas Alimentarias para la Familia y establece las Metas de Salud terapéuticas del tratamiento.
+6. El Nutricionista presiona el botón "Guardar Consulta Nutricional".
+7. El módulo integra en una única entidad de consulta la evaluación antropométrica y Z-Scores (CUN06), el diagnóstico nutricional y alertas clínicas (CUN07), la anamnesis y recordatorio de 24 horas (CUN08) junto con el plan alimentario prescripto.
+8. El módulo ejecuta la transacción atómica de guardado de todos los bloques consolidados (CUN06, CUN07, CUN08 y CUN09) en la base de datos.
+9. Si la consulta médica se inició a partir de un turno agendado, el sistema actualiza automáticamente el estado del turno a "Asistio".
+10. El módulo recalcula el Dígito Verificador (DV) de la base de datos garantizando la integridad del sistema.
+11. El módulo registra la operación en la bitácora de auditoría del sistema, informa el guardado exitoso mediante un mensaje en pantalla y actualiza el historial del expediente clínico.
+Flujos alternativos:
+4.1.1 Distribución inválida de macronutrientes: Si la suma de Carbohidratos, Proteínas y Grasas difiere del 100.00%, el módulo detiene el guardado y notifica "La suma de los macronutrientes debe ser exactamente igual a 100%".
+8.1.1 Error de transacción en base de datos: En caso de fallo en el almacenamiento de datos, el sistema cancela la operación (Rollback), notifica el error y mantiene la integridad de la base de datos sin modificar el Dígito Verificador ni la bitácora.
+Postcondiciones:    La Consulta Nutricional Pediátrica completa con sus cuatro bloques (CUN06, CUN07, CUN08 y CUN09) queda registrada permanentemente en la historia clínica del paciente, el turno pasa a 'Asistio', la integridad por DV queda garantizada y la auditoría registrada.
+================================================================================
