@@ -1,34 +1,56 @@
 using System;
-using System.Numerics;
-using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+using BLL;
+using DAL;
 
 class Program
 {
-    private static BigInteger ObtenerValorHexadecimal(object valor)
+    static void Main(string[] args)
     {
-        if (valor == null || valor == DBNull.Value) return BigInteger.Zero;
-        byte[] bytes = Encoding.UTF8.GetBytes(valor.ToString() ?? "");
-        BigInteger total = BigInteger.Zero;
-        foreach (byte b in bytes) total += b;
-        return total;
-    }
-
-    static void Main()
-    {
-        string passHash = "$2a$11$ZGr/gvxtcscqsxUd7hPvte0yVa5/iZlxQ8F13/EjHqor2a9XG0Qvy";
-        
-        // Columnas en Usuarios: DNI, NombreDeUsuario, Nombre, Apellido, Contraseña, Bloqueado, Estado, ID_Perfil, Idioma
-        // En script.sql: (11111111, N'admin', N'Gabriel', N'Avalos', N'passHash', 0, 1, 1, N'Español')
-        
-        object[] cols = { 11111111, "admin", "Gabriel", "Avalos", passHash, 0, 1, 1, "Español" };
-        
-        BigInteger total = BigInteger.Zero;
-        foreach (var c in cols)
+        try
         {
-            total += ObtenerValorHexadecimal(c);
-        }
+            var dvBll = new DigitoVerificadorBLL();
+            Console.WriteLine("--- Verificando Integridad de Base de Datos ---");
+            bool ok = dvBll.VerificarBaseDatos();
+            Console.WriteLine($"VerificarBaseDatos: {ok}");
 
-        string dv = total.ToString("X");
-        Console.WriteLine($"Calculated DV for admin with 123: {dv}");
+            var dvDal = new DigitoVerificadorDAL();
+            var persistidos = dvDal.ObtenerResumenPersistido().ToDictionary(p => p.Tabla, StringComparer.OrdinalIgnoreCase);
+
+            // Obtenemos tablas
+            var tablas = dvDal.ObtenerTablasPersistentes();
+            Console.WriteLine($"Tablas persistentes encontradas: {tablas.Count}");
+
+            foreach (var (schema, table) in tablas)
+            {
+                var dt = dvDal.ObtenerDatosTabla(schema, table);
+                if (persistidos.TryGetValue(table, out var pers))
+                {
+                    // Comparamos
+                    // Como los metodos de calculo son privados en BLL, veamos si en persistidos coincide
+                }
+                else
+                {
+                    Console.WriteLine($"[TABLA FALTANTE EN dbo.DV]: {table}");
+                }
+            }
+
+            var corruptos = dvBll.ObtenerUsuariosCorruptos();
+            Console.WriteLine($"Usuarios corruptos: {string.Join(", ", corruptos)}");
+
+            if (args.Length > 0 && args[0] == "--fix")
+            {
+                Console.WriteLine("Ejecutando ActualizarDVIndividualesUsuarios y RecalcularYPersistir...");
+                dvBll.ActualizarDVIndividualesUsuarios();
+                dvBll.RecalcularYPersistir();
+                Console.WriteLine("Recalculado con exito!");
+                Console.WriteLine($"Nueva verificacion: {dvBll.VerificarBaseDatos()}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"ERROR: {ex}");
+        }
     }
 }

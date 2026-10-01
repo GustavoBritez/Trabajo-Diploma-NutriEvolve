@@ -49,16 +49,7 @@ namespace UI
                 $"• Paciente: {nomPaciente} (DNI: {dniPaciente})\n" +
                 $"• Turno Asignado: {_turno.FechaTurno_DNI101:dd/MM/yyyy} a las {_turno.HoraTurno_DNI101:hh\\:mm}";
 
-            CargarProfesionales();
-
-            dtpNuevaFecha.MinDate = DateTime.Today;
-            dtpNuevaFecha.Value = _turno.FechaTurno_DNI101 >= DateTime.Today ? _turno.FechaTurno_DNI101.AddDays(1) : DateTime.Today.AddDays(1);
-
-            CargarBloquesDisponibles();
-        }
-
-        private void CargarProfesionales()
-        {
+            // Cargar lista de profesionales
             try
             {
                 cmbProfesional.Items.Clear();
@@ -101,6 +92,11 @@ namespace UI
                     cmbProfesional.SelectedIndex = 0;
                 }
             }
+
+            dtpNuevaFecha.MinDate = DateTime.Today;
+            dtpNuevaFecha.Value = _turno.FechaTurno_DNI101 >= DateTime.Today ? _turno.FechaTurno_DNI101.AddDays(1) : DateTime.Today.AddDays(1);
+
+            CargarBloquesDisponibles();
         }
 
         private void cmbProfesional_SelectedIndexChanged(object sender, EventArgs e)

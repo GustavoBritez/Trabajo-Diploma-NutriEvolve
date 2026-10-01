@@ -216,7 +216,7 @@ namespace UI
             if (turnoSeleccionado == null)
             {
                 // Flujo alternativo 2.1.1 / 2.1.2: Turno no seleccionado
-                MessageBox.Show("Por favor, seleccione un turno de la grilla para cancelar.", "Selección Requerida (CUN05)", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Por favor, seleccione un turno de la grilla para cancelar.", "Selección Requerida", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 

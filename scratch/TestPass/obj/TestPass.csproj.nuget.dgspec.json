@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Navegador\\Desktop\\TD\\scratch\\TestPass\\TestPass.csproj": {}
+    "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\TestPass\\TestPass.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Navegador\\Desktop\\TD\\scratch\\TestPass\\TestPass.csproj": {
+    "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Navegador\\Desktop\\TD\\scratch\\TestPass\\TestPass.csproj",
-        "projectName": "TestPass",
-        "projectPath": "C:\\Users\\Navegador\\Desktop\\TD\\scratch\\TestPass\\TestPass.csproj",
-        "packagesPath": "C:\\Users\\Navegador\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Navegador\\Desktop\\TD\\scratch\\TestPass\\obj\\",
+        "projectUniqueName": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj",
+        "projectName": "BE",
+        "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj",
+        "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Navegador\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Danie\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,14 +26,325 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "C:\\Users\\Navegador\\SQLClient": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj",
+        "projectName": "BLL",
+        "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj",
+        "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Danie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0-windows7.0": {
+            "targetAlias": "net9.0-windows",
+            "projectReferences": {
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj"
+              },
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj"
+              },
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0-windows7.0": {
+          "targetAlias": "net9.0-windows",
+          "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.2.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WindowsForms": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj",
+        "projectName": "DAL",
+        "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj",
+        "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Danie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj"
+              },
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[10.0.10, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj",
+        "projectName": "Services",
+        "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj",
+        "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Danie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.2.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\TestPass\\TestPass.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\TestPass\\TestPass.csproj",
+        "projectName": "TestPass",
+        "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\TestPass\\TestPass.csproj",
+        "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\TestPass\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Danie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj"
+              },
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -73,7 +384,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
