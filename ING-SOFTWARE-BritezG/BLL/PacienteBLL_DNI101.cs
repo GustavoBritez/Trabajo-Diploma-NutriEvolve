@@ -11,13 +11,20 @@ namespace BLL
         private readonly PacienteDAL_DNI101 _pacienteDAL = new();
         private readonly EventoBLL _bitacoraBLL = new();
 
-        public int RegistrarPaciente(string nombre, string apellido, string dniNiño, string telefono, string email, string obraSocial)
+        /// <summary>
+        /// Método unificado de RegistrarPaciente (CUN02 - Registrar Paciente Pediátrico).
+        /// Recibe los datos del paciente, valida la información, verifica duplicados por DNI,
+        /// construye la entidad PacienteBE_DNI101, guarda el registro, audita en bitácora y actualiza DV.
+        /// </summary>
+        public int RegistrarPaciente(string nombre, string apellido, string dniNiño, string? telefono = null, string? email = null, string? obraSocial = null)
         {
             if (string.IsNullOrWhiteSpace(nombre)) throw new ArgumentException("El nombre del paciente es obligatorio.");
             if (string.IsNullOrWhiteSpace(apellido)) throw new ArgumentException("El apellido del paciente es obligatorio.");
             if (string.IsNullOrWhiteSpace(dniNiño)) throw new ArgumentException("El DNI del niño es obligatorio.");
 
             dniNiño = dniNiño.Trim();
+
+            // Validar si ya existe un paciente registrado con el mismo DNI
             var pacienteExistente = _pacienteDAL.ObtenerPacientePorDNI(dniNiño);
             if (pacienteExistente != null)
             {
@@ -35,30 +42,20 @@ namespace BLL
                 FechaNacimiento_DNI101 = DateTime.Today
             };
 
-            return RegistrarPaciente(nuevoPaciente);
-        }
-
-        public int RegistrarPaciente(PacienteBE_DNI101 paciente)
-        {
-            if (paciente == null) throw new ArgumentNullException(nameof(paciente));
-            if (string.IsNullOrWhiteSpace(paciente.Nombre_DNI101)) throw new ArgumentException("El nombre del paciente es obligatorio.");
-            if (string.IsNullOrWhiteSpace(paciente.Apellido_DNI101)) throw new ArgumentException("El apellido del paciente es obligatorio.");
-            if (string.IsNullOrWhiteSpace(paciente.DNINiño_DNI101)) throw new ArgumentException("El DNI del niño es obligatorio.");
-
             try
             {
-                int idGenerado = _pacienteDAL.Guardar(paciente);
+                int idGenerado = _pacienteDAL.Guardar(nuevoPaciente);
 
                 try
                 {
-                    new DigitoVerificadorBLL().RecalcularYPersistir();
+                    int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                    _bitacoraBLL.RegistrarEvento(1, $"Registro de Paciente Pediátrico: {nuevoPaciente.NombreCompleto} (DNI: {nuevoPaciente.DNINiño_DNI101})", dniActual, "TurneroNutricional");
                 }
                 catch { }
 
                 try
                 {
-                    int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                    _bitacoraBLL.RegistrarEvento(1, $"Registro de Paciente Pediátrico: {paciente.NombreCompleto} (DNI: {paciente.DNINiño_DNI101})", dniActual, "TurneroNutricional");
+                    new DigitoVerificadorBLL().RecalcularYPersistir();
                 }
                 catch { }
 

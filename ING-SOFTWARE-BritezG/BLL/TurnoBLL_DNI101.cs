@@ -53,6 +53,12 @@ namespace BLL
                 catch { }
             }
 
+            // Validar que no exista ya un turno activo para el profesional en la misma fecha y hora
+            if (_turnoDAL.ExisteTurnoParaProfesional(dniNutricionista, fecha, horaSpan))
+            {
+                throw new InvalidOperationException($"El profesional seleccionado (DNI: {dniNutricionista}) ya cuenta con un turno asignado para la fecha {fecha:dd/MM/yyyy} a las {horaSpan:hh\\:mm}. No se permiten superposiciones de turnos.");
+            }
+
             // 10. Generar código único y crear Turno en estado 'Solicitado'
             var turno = new TurnoBE_DNI101
             {
@@ -85,18 +91,18 @@ namespace BLL
                 catch { }
             }
 
-            // 13. Recalcular y persistir Dígitos Verificadores globales
-            try
-            {
-                new DigitoVerificadorBLL().RecalcularYPersistir();
-            }
-            catch { }
-
-            // 14. Registrar el evento de agendamiento en la bitácora de auditoría
+            // 13. Registrar el evento de agendamiento en la bitácora de auditoría
             try
             {
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 _bitacoraBLL.RegistrarEvento(1, $"Turno registrado con éxito ({turno.CodigoTurno_DNI101}) para paciente DNI {dniNiño} el {fecha:dd/MM/yyyy} a las {horaSpan:hh\\:mm}", dniActual, "TurneroNutricional");
+            }
+            catch { }
+
+            // 14. Recalcular y persistir Dígitos Verificadores globales (tras completar todos los INSERTs)
+            try
+            {
+                new DigitoVerificadorBLL().RecalcularYPersistir();
             }
             catch { }
 
@@ -110,27 +116,24 @@ namespace BLL
             return id > 0;
         }
 
-        // Métodos de diagrama de secuencia PN1 - CUN03 Reprogramar Turno
-        public void ReprogramarTurno(string horario)
+        /// <summary>
+        /// Método unificado CUN03 - Reprogramar Turno.
+        /// Recupera el turno por código, valida su estado, verifica superposiciones
+        /// y persiste los nuevos datos de fecha, hora y profesional.
+        /// </summary>
+        public bool ReprogramarTurno(string codigoTurno, DateTime nuevaFecha, TimeSpan nuevaHora, int? nuevoIdBloque = null, int? nuevoDniNutricionista = null)
         {
-            try
-            {
-                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                _bitacoraBLL.RegistrarEvento(2, $"Solicitud de reprogramación de turno al horario {horario}", dniActual, "TurneroNutricional");
-            }
-            catch { }
-        }
+            if (string.IsNullOrWhiteSpace(codigoTurno))
+                throw new ArgumentException("El código de turno es requerido.", nameof(codigoTurno));
 
-        public bool ReprogramarTurno(int idTurno, DateTime nuevaFecha, TimeSpan nuevaHora, int? nuevoIdBloque = null, int? nuevoDniNutricionista = null)
-        {
-            // Paso 3: El módulo recupera Turno con su Estado desde la base de datos
-            var turno = _turnoDAL.ObtenerPorId(idTurno);
+            codigoTurno = codigoTurno.Trim();
+
+            // Paso 3: Recupera el turno con su estado desde la base de datos
+            var turno = _turnoDAL.ObtenerPorCodigo(codigoTurno);
             if (turno == null)
-            {
-                throw new InvalidOperationException("El turno no fue encontrado en la base de datos.");
-            }
+                throw new InvalidOperationException($"No se encontró ningún turno registrado con el código '{codigoTurno}'.");
 
-            // Flujo 10.1: Estado no permite modificación (Asistió/Cancelado)
+            // Flujo 10.1: Estado no permite reprogramación
             if (string.Equals(turno.EstadoTurno_DNI101, "Asistió", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(turno.EstadoTurno_DNI101, "Asistio", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(turno.EstadoTurno_DNI101, "Cancelado", StringComparison.OrdinalIgnoreCase))
@@ -138,93 +141,59 @@ namespace BLL
                 throw new InvalidOperationException($"El turno se encuentra en estado '{turno.EstadoTurno_DNI101}' y no permite reprogramación (Flujo 10.1).");
             }
 
+            int dniNutriAValidar = (nuevoDniNutricionista.HasValue && nuevoDniNutricionista.Value > 0)
+                ? nuevoDniNutricionista.Value
+                : turno.DniNutricionista_DNI101;
+
+            if (_turnoDAL.ExisteTurnoParaProfesional(dniNutriAValidar, nuevaFecha, nuevaHora, idTurnoExcluir: turno.IdTurno_DNI101))
+                throw new InvalidOperationException($"El profesional (DNI: {dniNutriAValidar}) ya cuenta con un turno para el {nuevaFecha:dd/MM/yyyy} a las {nuevaHora:hh\\:mm}. No se permiten superposiciones.");
+
             int? idBloqueAnterior = turno.IdBloque_DNI101 != nuevoIdBloque ? turno.IdBloque_DNI101 : null;
 
-            // Paso 7: El módulo delega la lógica de cambio de estado y validación a la clase concreta del estado actual (Patrón State)
+            // Paso 7: Delegación al Patrón State (transición a 'Confirmado')
             turno.Reprogramar(nuevaFecha, nuevaHora, nuevoIdBloque);
 
             if (nuevoDniNutricionista.HasValue && nuevoDniNutricionista.Value > 0)
-            {
                 turno.DniNutricionista_DNI101 = nuevoDniNutricionista.Value;
-            }
 
-            // Paso 9: Recalcula Dígitos Verificadores
+            // Recalcular DV individual
             string cadenaDV = $"{turno.CodigoTurno_DNI101};{turno.FechaTurno_DNI101:yyyy-MM-dd};{turno.HoraTurno_DNI101};{turno.IdPaciente_DNI101};{turno.DniNutricionista_DNI101};{turno.EstadoTurno_DNI101}";
             turno.DV = ServicioBcrypt.CalcularDV(cadenaDV);
 
-            // Paso 8: Persiste la actualización
-            bool ok = _turnoDAL.ReprogramarTurno(idTurno, nuevaFecha, nuevaHora, nuevoIdBloque, turno.DniNutricionista_DNI101, turno.DV);
+            // Paso 8: Persistir actualización
+            bool ok = _turnoDAL.ReprogramarTurno(turno.IdTurno_DNI101, nuevaFecha, nuevaHora, nuevoIdBloque, turno.DniNutricionista_DNI101, turno.DV);
             if (!ok)
-            {
-                // Flujo alternativo 9.1: Conflicto de concurrencia
                 throw new InvalidOperationException("No se pudo completar la reprogramación. Se detectó un conflicto de concurrencia en la base de datos.");
-            }
 
-            // Paso 8 (continuación): Actualiza el estado del bloque horario anterior a 'Disponible'
+            // Liberar bloque anterior y ocupar el nuevo
             if (idBloqueAnterior.HasValue)
             {
-                try
-                {
-                    new AgendaMedicaDAL_DNI101().ActualizarEstadoBloque(idBloqueAnterior.Value, "Disponible");
-                }
-                catch { }
+                try { new AgendaMedicaDAL_DNI101().ActualizarEstadoBloque(idBloqueAnterior.Value, "Disponible"); } catch { }
             }
-
-            // Actualiza el nuevo bloque a 'Ocupado'
             if (nuevoIdBloque.HasValue)
             {
-                try
-                {
-                    new AgendaMedicaDAL_DNI101().ActualizarEstadoBloque(nuevoIdBloque.Value, "Ocupado");
-                }
-                catch { }
+                try { new AgendaMedicaDAL_DNI101().ActualizarEstadoBloque(nuevoIdBloque.Value, "Ocupado"); } catch { }
             }
 
-            // Recalcula y persiste DV globales
-            try
-            {
-                new DigitoVerificadorBLL().RecalcularYPersistir();
-            }
-            catch { }
-
-            // Paso 9: Registra el evento de reprogramación en la bitácora de auditoría
+            // Registrar en bitácora
             try
             {
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                _bitacoraBLL.RegistrarEvento(2, $"Turno {turno.CodigoTurno_DNI101} reprogramado para {nuevaFecha:dd/MM/yyyy} a las {nuevaHora:hh\\:mm} (Estado: {turno.EstadoTurno_DNI101})", dniActual, "TurneroNutricional");
+                _bitacoraBLL.RegistrarEvento(2, $"Turno {codigoTurno} reprogramado para {nuevaFecha:dd/MM/yyyy} a las {nuevaHora:hh\\:mm} (Estado: {turno.EstadoTurno_DNI101})", dniActual, "TurneroNutricional");
             }
             catch { }
+
+            // Recalcular DV globales
+            try { new DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
 
             return true;
         }
 
-        public void ModificarTurno(string codigoTurno, DateTime fecha, string hora, string motivo)
-        {
-            var turno = _turnoDAL.ObtenerPorCodigo(codigoTurno);
-            if (turno != null)
-            {
-                TimeSpan.TryParse(hora, out TimeSpan horaSpan);
-                ModificarTurno(turno.IdTurno_DNI101, fecha, horaSpan, motivo);
-            }
-        }
-
-        public bool ModificarTurno(int idTurno, DateTime fecha, TimeSpan hora, string motivo)
-        {
-            bool ok = _turnoDAL.ModificarTurno(idTurno, fecha, hora, motivo);
-            if (ok)
-            {
-                try
-                {
-                    int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                    _bitacoraBLL.RegistrarEvento(2, $"Turno ID {idTurno} modificado ({motivo})", dniActual, "TurneroNutricional");
-                }
-                catch { }
-            }
-            return ok;
-        }
-
-        // Método de diagrama de secuencia PN1 - CUN04 Modificar Turno (Estado y Motivo)
-        public bool ModificarTurno(string codigoTurno, string motivo, string estado)
+        /// <summary>
+        /// Método unificado de ModificarTurno (CUN04).
+        /// Permite modificar motivo, estado y opcionalmente fecha y hora del turno en un solo flujo seguro.
+        /// </summary>
+        public bool ModificarTurno(string codigoTurno, string motivo, string? estado = null, DateTime? fecha = null, TimeSpan? hora = null)
         {
             if (string.IsNullOrWhiteSpace(codigoTurno))
                 throw new ArgumentException("El código de turno es requerido.", nameof(codigoTurno));
@@ -232,27 +201,22 @@ namespace BLL
             if (string.IsNullOrWhiteSpace(motivo))
                 throw new ArgumentException("El motivo de consulta no puede estar vacío.", nameof(motivo));
 
-            if (string.IsNullOrWhiteSpace(estado))
-                throw new ArgumentException("El estado del turno es requerido.", nameof(estado));
-
             codigoTurno = codigoTurno.Trim();
             motivo = motivo.Trim();
-            estado = estado.Trim();
 
             // Paso 3 y 4: Recupera Turno con su Estado desde la base de datos
             var turno = _turnoDAL.ObtenerPorCodigo(codigoTurno);
             if (turno == null)
-            {
                 throw new InvalidOperationException($"No se encontró ningún turno registrado con el código '{codigoTurno}'.");
-            }
 
             string estadoAnterior = turno.EstadoTurno_DNI101;
 
-            // Flujo alternativo 7.1: Estado no permite modificación
+            // Flujo alternativo 7.1: Validar si el estado anterior permite modificación
             if (string.Equals(estadoAnterior, "Asistió", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(estadoAnterior, "Asistio", StringComparison.OrdinalIgnoreCase))
             {
-                if (!string.Equals(estado, "Asistió", StringComparison.OrdinalIgnoreCase) &&
+                if (!string.IsNullOrEmpty(estado) &&
+                    !string.Equals(estado, "Asistió", StringComparison.OrdinalIgnoreCase) &&
                     !string.Equals(estado, "Asistio", StringComparison.OrdinalIgnoreCase))
                 {
                     throw new InvalidOperationException("El turno ya figura como 'Asistió' y no permite cambiar a otro estado.");
@@ -260,73 +224,80 @@ namespace BLL
             }
             else if (string.Equals(estadoAnterior, "Cancelado", StringComparison.OrdinalIgnoreCase))
             {
-                if (!string.Equals(estado, "Cancelado", StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrEmpty(estado) &&
+                    !string.Equals(estado, "Cancelado", StringComparison.OrdinalIgnoreCase))
                 {
                     throw new InvalidOperationException("El turno se encuentra en estado 'Cancelado' y no puede reactivarse.");
                 }
             }
 
-            bool liberarBloque = string.Equals(estado, "Cancelado", StringComparison.OrdinalIgnoreCase) &&
+            // Validar superposición de turnos si se modifica la fecha u hora
+            DateTime fechaFinal = fecha?.Date ?? turno.FechaTurno_DNI101.Date;
+            TimeSpan horaFinal = hora ?? turno.HoraTurno_DNI101;
+
+            if (fecha.HasValue || hora.HasValue)
+            {
+                if (_turnoDAL.ExisteTurnoParaProfesional(turno.DniNutricionista_DNI101, fechaFinal, horaFinal, idTurnoExcluir: turno.IdTurno_DNI101))
+                    throw new InvalidOperationException($"El profesional ya cuenta con un turno para el {fechaFinal:dd/MM/yyyy} a las {horaFinal:hh\\:mm}. No se permiten superposiciones.");
+
+                turno.FechaTurno_DNI101 = fechaFinal;
+                turno.HoraTurno_DNI101 = horaFinal;
+            }
+
+            // Aplicar cambios de estado mediante Patrón State (CUN04)
+            string estadoFinal = !string.IsNullOrWhiteSpace(estado) ? estado.Trim() : estadoAnterior;
+            bool liberarBloque = string.Equals(estadoFinal, "Cancelado", StringComparison.OrdinalIgnoreCase) &&
                                  !string.Equals(estadoAnterior, "Cancelado", StringComparison.OrdinalIgnoreCase) &&
                                  turno.IdBloque_DNI101.HasValue;
 
-            // Paso 7: Delegación al patrón State y configuración de la entidad
-            if (string.Equals(estado, "Asistió", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(estado, "Asistio", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(estadoFinal, "Asistió", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(estadoFinal, "Asistio", StringComparison.OrdinalIgnoreCase))
             {
                 turno.Atender();
             }
-            else if (string.Equals(estado, "Cancelado", StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(estadoFinal, "Cancelado", StringComparison.OrdinalIgnoreCase))
             {
                 turno.Cancelar(motivo);
             }
-            else
+            else if (!string.IsNullOrWhiteSpace(estado))
             {
-                turno.ConfigurarEstadoPorNombre(estado);
+                turno.ConfigurarEstadoPorNombre(estadoFinal);
             }
 
             turno.MotivoConsulta_DNI101 = motivo;
 
-            // Paso 9: Recalcular Dígito Verificador (DV) individual del Turno
+            // Recalcular DV individual
             string cadenaDV = $"{turno.CodigoTurno_DNI101};{turno.FechaTurno_DNI101:yyyy-MM-dd};{turno.HoraTurno_DNI101};{turno.IdPaciente_DNI101};{turno.DniNutricionista_DNI101};{turno.EstadoTurno_DNI101}";
             turno.DV = ServicioBcrypt.CalcularDV(cadenaDV);
 
-            // Persistir cambios en la base de datos
-            bool ok = _turnoDAL.ModificarTurnoEstadoYMotivo(turno.IdTurno_DNI101, motivo, turno.EstadoTurno_DNI101, turno.DV);
+            // Persistir cambios de forma unificada
+            bool ok = _turnoDAL.ModificarTurno(turno.IdTurno_DNI101, turno.FechaTurno_DNI101, turno.HoraTurno_DNI101, motivo, turno.EstadoTurno_DNI101, turno.DV);
             if (!ok)
-            {
                 throw new InvalidOperationException("No se pudo completar la modificación del turno en la base de datos.");
-            }
 
-            // Paso 8: Si el nuevo estado es Cancelado, liberar bloque horario
             if (liberarBloque)
             {
-                try
-                {
-                    new AgendaMedicaDAL_DNI101().ActualizarEstadoBloque(turno.IdBloque_DNI101!.Value, "Disponible");
-                }
-                catch { }
+                try { new AgendaMedicaDAL_DNI101().ActualizarEstadoBloque(turno.IdBloque_DNI101!.Value, "Disponible"); } catch { }
             }
 
-            // Recalcular y persistir Dígitos Verificadores globales
-            try
-            {
-                new DigitoVerificadorBLL().RecalcularYPersistir();
-            }
-            catch { }
-
-            // Paso 10: Registrar evento en Bitácora de auditoría
+            // Registrar en bitácora
             try
             {
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                _bitacoraBLL.RegistrarEvento(2, $"Turno {codigoTurno} modificado con éxito (CUN04). Estado: '{turno.EstadoTurno_DNI101}', Motivo: '{motivo}'", dniActual, "TurneroNutricional");
+                _bitacoraBLL.RegistrarEvento(2, $"Turno {codigoTurno} modificado (CUN04). Estado: '{turno.EstadoTurno_DNI101}', Motivo: '{motivo}'", dniActual, "TurneroNutricional");
             }
             catch { }
+
+            // Recalcular DV globales
+            try { new DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
 
             return true;
         }
 
-        // Método de diagrama de secuencia PN1 - CUN05 Cancelar Turno
+        /// <summary>
+        /// Método unificado CUN05 - Cancelar Turno.
+        /// Valida el estado, aplica la transición 'Cancelado' y libera el bloque horario.
+        /// </summary>
         public bool CancelarTurno(string codigoTurno, string motivo = "Cancelado por el profesional/paciente")
         {
             if (string.IsNullOrWhiteSpace(codigoTurno))
@@ -334,18 +305,14 @@ namespace BLL
 
             codigoTurno = codigoTurno.Trim();
 
-            // Paso 6: El módulo recupera el turno desde la base de datos por su Código
+            // Paso 6: Recupera el turno por su código
             var turno = _turnoDAL.ObtenerPorCodigo(codigoTurno);
             if (turno == null)
-            {
                 throw new InvalidOperationException($"No se encontró ningún turno registrado con el código '{codigoTurno}'.");
-            }
 
-            // Flujo alternativo 6.1.1: Estado no permite cancelación
+            // Flujo 6.1.1: Estado no permite cancelación
             if (string.Equals(turno.EstadoTurno_DNI101, "Cancelado", StringComparison.OrdinalIgnoreCase))
-            {
                 throw new InvalidOperationException("El turno ya se encuentra cancelado (Flujo 6.1.1).");
-            }
 
             if (string.Equals(turno.EstadoTurno_DNI101, "Asistió", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(turno.EstadoTurno_DNI101, "Asistio", StringComparison.OrdinalIgnoreCase))
@@ -353,58 +320,39 @@ namespace BLL
                 throw new InvalidOperationException("No se puede cancelar un turno que ya fue atendido (Flujo 6.1.1).");
             }
 
-            // Paso 6 y 7: Delegación a la entidad y al patrón State
+            // Paso 6 y 7: Delegación al Patrón State
             turno.Cancelar(motivo);
 
-            // Paso 9: Recalcular Dígito Verificador (DV) individual del Turno
+            // Recalcular DV individual
             string cadenaDV = $"{turno.CodigoTurno_DNI101};{turno.FechaTurno_DNI101:yyyy-MM-dd};{turno.HoraTurno_DNI101};{turno.IdPaciente_DNI101};{turno.DniNutricionista_DNI101};{turno.EstadoTurno_DNI101}";
             turno.DV = ServicioBcrypt.CalcularDV(cadenaDV);
 
-            // Persistir cambios en la base de datos
+            // Persistir cancelación
             bool ok = _turnoDAL.CancelarTurno(turno.IdTurno_DNI101, motivo, turno.DV);
             if (!ok)
-            {
                 throw new InvalidOperationException("No se pudo completar la cancelación del turno en la base de datos.");
-            }
 
-            // Paso 8: Liberar el bloque horario asignado en la agenda médica
+            // Paso 8: Liberar bloque horario
             if (turno.IdBloque_DNI101.HasValue)
             {
-                try
-                {
-                    new AgendaMedicaDAL_DNI101().ActualizarEstadoBloque(turno.IdBloque_DNI101.Value, "Disponible");
-                }
-                catch { }
+                try { new AgendaMedicaDAL_DNI101().ActualizarEstadoBloque(turno.IdBloque_DNI101.Value, "Disponible"); } catch { }
             }
 
-            // Paso 10: Recalcular y persistir Dígitos Verificadores globales
-            try
-            {
-                new DigitoVerificadorBLL().RecalcularYPersistir();
-            }
-            catch { }
-
-            // Paso 11: Registrar evento en la bitácora de auditoría
+            // Registrar en bitácora
             try
             {
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                _bitacoraBLL.RegistrarEvento(2, $"Turno {turno.CodigoTurno_DNI101} cancelado con éxito (CUN05). Motivo: {motivo}", dniActual, "TurneroNutricional");
+                _bitacoraBLL.RegistrarEvento(2, $"Turno {codigoTurno} cancelado (CUN05). Motivo: {motivo}", dniActual, "TurneroNutricional");
             }
             catch { }
+
+            // Recalcular DV globales
+            try { new DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
 
             return true;
         }
 
-        // Sobrecarga de conveniencia por si se requiere invocar mediante Id
-        public bool CancelarTurno(int idTurno, string motivo = "Cancelado por el profesional/paciente")
-        {
-            var turno = _turnoDAL.ObtenerPorId(idTurno);
-            if (turno == null)
-            {
-                throw new InvalidOperationException($"No se encontró ningún turno registrado con el ID {idTurno}.");
-            }
-            return CancelarTurno(turno.CodigoTurno_DNI101, motivo);
-        }
+
 
         public List<TurnoBE_DNI101> ListarTurnos(DateTime? fecha = null, string? estado = null)
         {

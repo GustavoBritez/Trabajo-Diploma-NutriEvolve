@@ -45,6 +45,14 @@ namespace BLL
             {
                 EventoBE evento = new EventoBE(criticidad, descripcion, dni, DateTime.Now, modulo);
                 _EventoDAL.GuardarBitacora(evento);
+
+                // Recalcular DV globales automáticamente para incluir el nuevo registro de bitácora
+                try
+                {
+                    new DigitoVerificadorBLL().RecalcularYPersistir();
+                }
+                catch { }
+
                 return true;
             }
             catch (Exception ex)

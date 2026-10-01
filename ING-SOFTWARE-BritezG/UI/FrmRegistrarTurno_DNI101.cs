@@ -45,14 +45,7 @@ namespace UI
             dtpFecha.MinDate = DateTime.Today;
             dtpFecha.Value = DateTime.Today;
 
-            CargarProfesionales();
-            ConsultarDisponibilidadCUN07();
-        }
-
-        #region Escenario Principal - Pasos 2, 3 y 4 (CUN-07 Consultar Disponibilidad)
-
-        private void CargarProfesionales()
-        {
+            // Cargar lista de profesionales
             try
             {
                 cmbProfesional.Items.Clear();
@@ -97,22 +90,26 @@ namespace UI
                     cmbProfesional.SelectedIndex = 0;
                 }
             }
+
+            ConsultarDisponibilidad();
         }
+
+        #region Escenario Principal - Pasos 2, 3 y 4 (CUN-07 Consultar Disponibilidad)
 
         private void cmbProfesional_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ConsultarDisponibilidadCUN07();
+            ConsultarDisponibilidad();
         }
 
         private void dtpFecha_ValueChanged(object sender, EventArgs e)
         {
-            ConsultarDisponibilidadCUN07();
+            ConsultarDisponibilidad();
         }
 
         /// <summary>
-        /// Punto de Inclusión CUN-07: Consultar Disponibilidad
+        /// Consultar Disponibilidad de horarios para la fecha y profesional seleccionados
         /// </summary>
-        private void ConsultarDisponibilidadCUN07()
+        private void ConsultarDisponibilidad()
         {
             try
             {
@@ -323,6 +320,7 @@ namespace UI
             catch (Exception ex)
             {
                 MessageBox.Show($"Ocurrió un error al registrar el turno:\n{ex.Message}", "Error CUN01", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ConsultarDisponibilidad();
             }
             finally
             {

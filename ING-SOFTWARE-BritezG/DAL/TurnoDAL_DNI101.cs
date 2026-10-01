@@ -106,7 +106,7 @@ WHERE IdTurno_DNI101 = @idTurno;";
             }
         }
 
-        public bool ModificarTurno(int idTurno, DateTime nuevaFecha, TimeSpan nuevaHora, string nuevoMotivo)
+        public bool ModificarTurno(int idTurno, DateTime fecha, TimeSpan hora, string motivo, string estado, string? dv = null)
         {
             try
             {
@@ -114,38 +114,16 @@ WHERE IdTurno_DNI101 = @idTurno;";
 UPDATE Turnos_DNI101
 SET FechaTurno_DNI101 = @fecha,
     HoraTurno_DNI101 = @hora,
-    MotivoConsulta_DNI101 = @motivo
-WHERE IdTurno_DNI101 = @idTurno;";
-
-                _conexion.ExecuteNonQuery(query,
-                    new SqlParameter("@fecha", nuevaFecha),
-                    new SqlParameter("@hora", nuevaHora),
-                    new SqlParameter("@motivo", nuevoMotivo),
-                    new SqlParameter("@idTurno", idTurno)
-                );
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al modificar turno: {ex.Message}");
-                return false;
-            }
-        }
-
-        public bool ModificarTurnoEstadoYMotivo(int idTurno, string nuevoMotivo, string nuevoEstado, string? dv = null)
-        {
-            try
-            {
-                string query = @"
-UPDATE Turnos_DNI101
-SET MotivoConsulta_DNI101 = @motivo,
+    MotivoConsulta_DNI101 = @motivo,
     EstadoTurno_DNI101 = @estado,
     DV = ISNULL(@dv, DV)
 WHERE IdTurno_DNI101 = @idTurno;";
 
                 _conexion.ExecuteNonQuery(query,
-                    new SqlParameter("@motivo", nuevoMotivo),
-                    new SqlParameter("@estado", nuevoEstado),
+                    new SqlParameter("@fecha", fecha),
+                    new SqlParameter("@hora", hora),
+                    new SqlParameter("@motivo", motivo),
+                    new SqlParameter("@estado", estado),
                     new SqlParameter("@dv", (object?)dv ?? DBNull.Value),
                     new SqlParameter("@idTurno", idTurno)
                 );
@@ -153,7 +131,7 @@ WHERE IdTurno_DNI101 = @idTurno;";
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al modificar estado y motivo de turno: {ex.Message}");
+                Console.WriteLine($"Error al modificar turno: {ex.Message}");
                 return false;
             }
         }
@@ -303,6 +281,71 @@ ORDER BY t.FechaTurno_DNI101 DESC;";
                 Console.WriteLine($"Error al listar turnos por paciente: {ex.Message}");
             }
             return lista;
+        }
+
+        public bool ExisteTurnoParaProfesional(int dniNutricionista, DateTime fecha, TimeSpan hora, int? idTurnoExcluir = null)
+        {
+            try
+            {
+                string query = @"
+SELECT COUNT(*)
+FROM Turnos_DNI101
+WHERE DniNutricionista_DNI101 = @dni
+  AND CAST(FechaTurno_DNI101 AS DATE) = CAST(@fecha AS DATE)
+  AND HoraTurno_DNI101 = @hora
+  AND EstadoTurno_DNI101 <> 'Cancelado'
+  AND (@idTurnoExcluir IS NULL OR IdTurno_DNI101 <> @idTurnoExcluir);";
+
+                DataTable dt = _conexion.ExecuteReader(query,
+                    new SqlParameter("@dni", dniNutricionista),
+                    new SqlParameter("@fecha", fecha.Date),
+                    new SqlParameter("@hora", hora),
+                    new SqlParameter("@idTurnoExcluir", (object?)idTurnoExcluir ?? DBNull.Value)
+                );
+
+                if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
+                {
+                    return Convert.ToInt32(dt.Rows[0][0]) > 0;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al verificar existencia de turno: {ex.Message}");
+                return false;
+            }
+        }
+
+        public List<TimeSpan> ObtenerHorariosOcupadosPorProfesional(int dniNutricionista, DateTime fecha)
+        {
+            var horarios = new List<TimeSpan>();
+            try
+            {
+                string query = @"
+SELECT HoraTurno_DNI101
+FROM Turnos_DNI101
+WHERE DniNutricionista_DNI101 = @dni
+  AND CAST(FechaTurno_DNI101 AS DATE) = CAST(@fecha AS DATE)
+  AND EstadoTurno_DNI101 <> 'Cancelado';";
+
+                DataTable dt = _conexion.ExecuteReader(query,
+                    new SqlParameter("@dni", dniNutricionista),
+                    new SqlParameter("@fecha", fecha.Date)
+                );
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row["HoraTurno_DNI101"] != DBNull.Value)
+                    {
+                        horarios.Add((TimeSpan)row["HoraTurno_DNI101"]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener horarios ocupados: {ex.Message}");
+            }
+            return horarios;
         }
 
         private TurnoBE_DNI101 MapearTurno(DataRow row)

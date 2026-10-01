@@ -128,60 +128,8 @@ namespace UI
             }
         }
 
-        /// <summary>
-        /// 3_ReprogramarTurno(Horario)
-        /// </summary>
-        public void ReprogramarTurno(string horario)
-        {
-            try
-            {
-                _turnoBLL.ReprogramarTurno(horario);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al reprogramar turno: {ex.Message}", "Error PN1", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        /// <summary>
-        /// 4_ModificarTurno(CodigoTurno,Fecha,Hora,Motivo)
-        /// </summary>
-        public void ModificarTurno(string codigoTurno, DateTime fecha, string hora, string motivo)
-        {
-            try
-            {
-                _turnoBLL.ModificarTurno(codigoTurno, fecha, hora, motivo);
-                CargarTurnos();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al modificar turno: {ex.Message}", "Error PN1", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        /// <summary>
-        /// 4_ModificarTurno(CodigoTurno,Motivo,Estado) - CUN04
-        /// </summary>
-        public bool ModificarTurno(string codigoTurno, string motivo, string estado)
-        {
-            try
-            {
-                bool ok = _turnoBLL.ModificarTurno(codigoTurno, motivo, estado);
-                if (ok)
-                {
-                    CargarTurnos();
-                }
-                return ok;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al modificar turno: {ex.Message}", "Error al Modificar (CUN04)", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-        }
-
-
         #endregion
+
 
         #region Eventos de Botones de Proceso de Negocio
 
@@ -203,7 +151,6 @@ namespace UI
             using (var frmPac = new RegistrarPaciente_DNI101())
             {
                 frmPac.ShowDialog(this);
-                CargarTurnos();
             }
         }
 

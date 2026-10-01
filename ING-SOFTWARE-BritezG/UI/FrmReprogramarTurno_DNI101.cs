@@ -198,7 +198,7 @@ namespace UI
                 // - Libera el bloque anterior ('Disponible') y ocupa el nuevo bloque ('Ocupado')
                 // - Recalcula Dígitos Verificadores (DV)
                 // - Registra en bitácora de auditoría
-                _turnoBLL.ReprogramarTurno(_turno.IdTurno_DNI101, nuevaFecha, nuevaHora, nuevoIdBloque, dniNutri);
+                _turnoBLL.ReprogramarTurno(_turno.CodigoTurno_DNI101, nuevaFecha, nuevaHora, nuevoIdBloque, dniNutri);
 
                 Cursor = Cursors.Default;
 
@@ -220,6 +220,7 @@ namespace UI
             catch (Exception ex)
             {
                 MessageBox.Show($"Ocurrió un error al reprogramar el turno:\n{ex.Message}", "Error al Reprogramar (CUN03)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CargarBloquesDisponibles();
             }
             finally
             {
