@@ -34,7 +34,6 @@ namespace UI
             btnGestionarPerfiles = new UI.Controles.BotonFuturista();
             btnUsuarios = new UI.Controles.BotonFuturista();
             btnReportes = new UI.Controles.BotonFuturista();
-            btnSeguimiento = new UI.Controles.BotonFuturista();
             btnTurnos = new UI.Controles.BotonFuturista();
             lblModulo = new Label();
             btnCambiarContrasena = new UI.Controles.BotonFuturista();
@@ -71,7 +70,6 @@ namespace UI
             panelMenu.Controls.Add(btnGestionarPerfiles);
             panelMenu.Controls.Add(btnUsuarios);
             panelMenu.Controls.Add(btnReportes);
-            panelMenu.Controls.Add(btnSeguimiento);
             panelMenu.Controls.Add(btnTurnos);
             panelMenu.Controls.Add(lblModulo);
             panelMenu.Controls.Add(btnCambiarContrasena);
@@ -114,28 +112,7 @@ namespace UI
             btnTurnos.TextAlign = ContentAlignment.MiddleLeft;
             btnTurnos.UseVisualStyleBackColor = false;
             btnTurnos.Click += btnTurnos_Click;
-            // 
-            // btnSeguimiento
-            // 
-            btnSeguimiento.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            btnSeguimiento.BackColor = Color.Transparent;
-            btnSeguimiento.Cursor = Cursors.Hand;
-            btnSeguimiento.EsMenuLateral = true;
-            btnSeguimiento.FlatAppearance.BorderSize = 0;
-            btnSeguimiento.FlatStyle = FlatStyle.Flat;
-            btnSeguimiento.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
-            btnSeguimiento.ForeColor = Color.White;
-            btnSeguimiento.Location = new Point(12, 106);
-            btnSeguimiento.Name = "btnSeguimiento";
-            btnSeguimiento.PaddingIzquierdo = 18;
-            btnSeguimiento.RadioBorde = 24;
-            btnSeguimiento.Size = new Size(236, 44);
-            btnSeguimiento.TabIndex = 2;
-            btnSeguimiento.Text = "🥗  Seguimiento Nutricional";
-            btnSeguimiento.TextAlign = ContentAlignment.MiddleLeft;
-            btnSeguimiento.UseVisualStyleBackColor = false;
-            btnSeguimiento.Click += btnSeguimiento_Click;
-            // 
+
             // btnReportes
             // 
             btnReportes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -546,7 +523,6 @@ namespace UI
         private System.Windows.Forms.Label lblTitulo;
 
         private UI.Controles.BotonFuturista btnTurnos;
-        private UI.Controles.BotonFuturista btnSeguimiento;
         private UI.Controles.BotonFuturista btnReportes;
         private UI.Controles.BotonFuturista btnUsuarios;
         private UI.Controles.BotonFuturista btnAyuda;

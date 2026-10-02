@@ -14,17 +14,6 @@ namespace UI
         private static Perfiles _perfiles;
         private static Respaldo _respaldo;
         private static frmTurnero_DNI101 _frmTurnero;
-        private static FormSeguimientoNutricional_DNI101 _formSeguimientoNutricional;
-
-        public static FormSeguimientoNutricional_DNI101 ObtenerFormSeguimientoNutricional()
-        {
-            if (_formSeguimientoNutricional == null || _formSeguimientoNutricional.IsDisposed)
-            {
-                _formSeguimientoNutricional = new FormSeguimientoNutricional_DNI101();
-            }
-            AplicarSeguridad(_formSeguimientoNutricional);
-            return _formSeguimientoNutricional;
-        }
 
 
         public static Login ObtenerLogin()
