@@ -1,4 +1,4 @@
-﻿using BE;
+using BE;
 using BLL;
 using BLL.Perfiles;
 using Microsoft.VisualBasic;
@@ -30,8 +30,8 @@ namespace UI
         {
             InitializeComponent();
 
-            cmbIdioma.DropDownStyle = ComboBoxStyle.DropDownList;
-            ServicesSessionManager.Instancia.Suscribir(this);
+            TraductorUI.SuscribirFormulario(this, this);
+            TraductorUI.ConfigurarComboIdiomas(cmbIdioma, idiomaBLL);
             ActualizarIdioma();
 
             this.VisibleChanged += (s, e) =>
@@ -403,37 +403,37 @@ namespace UI
 
             if (dgvUsuarios.Columns.Contains("_Dni"))
             {
-                dgvUsuarios.Columns["_Dni"].HeaderText = "DNI";
+                dgvUsuarios.Columns["_Dni"].HeaderText = idiomaBLL.Traducir("_Dni");
             }
 
             if (dgvUsuarios.Columns.Contains("_Nombre"))
             {
-                dgvUsuarios.Columns["_Nombre"].HeaderText = "Nombre";
+                dgvUsuarios.Columns["_Nombre"].HeaderText = idiomaBLL.Traducir("_Nombre");
             }
 
             if (dgvUsuarios.Columns.Contains("_Apellido"))
             {
-                dgvUsuarios.Columns["_Apellido"].HeaderText = "Apellido";
+                dgvUsuarios.Columns["_Apellido"].HeaderText = idiomaBLL.Traducir("_Apellido");
             }
 
             if (dgvUsuarios.Columns.Contains("_NombreDeUsuario"))
             {
-                dgvUsuarios.Columns["_NombreDeUsuario"].HeaderText = "Nombre de Usuario";
+                dgvUsuarios.Columns["_NombreDeUsuario"].HeaderText = idiomaBLL.Traducir("_NombreDeUsuario");
             }
 
             if (dgvUsuarios.Columns.Contains("_IdPerfil"))
             {
-                dgvUsuarios.Columns["_IdPerfil"].HeaderText = "Perfil"; // Podés ponerle "Rol" si preferís
+                dgvUsuarios.Columns["_IdPerfil"].HeaderText = idiomaBLL.Traducir("_IdPerfil");
             }
 
             if (dgvUsuarios.Columns.Contains("_Bloqueado"))
             {
-                dgvUsuarios.Columns["_Bloqueado"].HeaderText = "Bloqueado";
+                dgvUsuarios.Columns["_Bloqueado"].HeaderText = idiomaBLL.Traducir("_Bloqueado");
             }
 
             if (dgvUsuarios.Columns.Contains("_Estado"))
             {
-                dgvUsuarios.Columns["_Estado"].HeaderText = "Estado";
+                dgvUsuarios.Columns["_Estado"].HeaderText = idiomaBLL.Traducir("_Estado");
             }
         }
 
@@ -682,34 +682,17 @@ namespace UI
 
         #endregion
 
-        #region
+        #region Idioma
         public void ActualizarIdioma()
         {
             if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
             {
-                Traducir(this.Controls);
-            }
-        }
-
-        private void Traducir(Control.ControlCollection controles)
-        {
-            foreach (Control control in controles)
-            {
-                if (!string.IsNullOrEmpty(control.Name))
-                {
-                    string traduccion = idiomaBLL.Traducir(control.Name);
-
-                    if (traduccion != control.Name) // evita reemplazar si no existe la clave
-                        control.Text = traduccion;
-                }
-
-                if (control.HasChildren)
-                    Traducir(control.Controls);
+                TraductorUI.TraducirFormulario(this, idiomaBLL);
+                ConfigurarColumnasDataGridView();
+                TraductorUI.SincronizarComboIdioma(cmbIdioma);
             }
         }
         #endregion
-
-
 
         private void dgvUsuarios_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -730,41 +713,12 @@ namespace UI
 
         private void cmbIdioma_SelectedIndexChanged(object sender, EventArgs e)
         {
-            List<Idioma> idiomas = idiomaBLL.ObtenerIdiomas();
-
-            if (cmbIdioma.SelectedItem.ToString() == "Español")
-            {
-                Idioma español = idiomas.First(i => i.Codigo == "es");
-                ServicesSessionManager.Instancia.CambiarIdioma(español);
-            }
-            else if (cmbIdioma.SelectedItem.ToString() == "English")
-            {
-                Idioma ingles = idiomas.First(i => i.Codigo == "en");
-                ServicesSessionManager.Instancia.CambiarIdioma(ingles);
-            }
-            else if (cmbIdioma.SelectedItem.ToString() == "Portugues")
-            {
-                Idioma portugues = idiomas.First(i => i.Codigo == "po");
-                ServicesSessionManager.Instancia.CambiarIdioma(portugues);
-            }
+            // El cambio de idioma es gestionado automáticamente por TraductorUI
         }
 
         private void ApuntarComboBox()
         {
-            string idioma = ServicesSessionManager.Instancia.ObtenerIdioma().Nombre;
-
-            if (idioma == "Español")
-            {
-                cmbIdioma.SelectedIndex = 0;
-            }
-            else if (idioma == "English")
-            {
-                cmbIdioma.SelectedIndex = 1;
-            }
-            else if (idioma == "Portugues")
-            {
-                cmbIdioma.SelectedIndex = 2;
-            }
+            TraductorUI.SincronizarComboIdioma(cmbIdioma);
         }
     }
 }

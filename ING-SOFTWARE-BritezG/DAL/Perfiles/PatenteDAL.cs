@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Services.Perfiles;
 using System;
 using System.Collections.Generic;
@@ -263,23 +263,16 @@ namespace DAL.Perfiles
 
         public void EliminarPermisoDefinitivo(int idPermiso)
         {
-            string queryBoton = "DELETE FROM Permiso_Boton WHERE NombrePatente = (SELECT Nombre FROM Permiso WHERE ID_Permiso = @id)";
-            SqlParameter[] paramBoton = { new SqlParameter("@id", idPermiso) };
-            _conexion.ExecuteNonQuery(queryBoton, paramBoton);
+            const string query = @"
+                DELETE FROM Permiso_Boton WHERE NombrePatente = (SELECT Nombre FROM Permiso WHERE ID_Permiso = @id);
+                DELETE FROM Perfil_Permiso WHERE ID_Permiso = @id;
+                DELETE FROM Permiso_Familia WHERE ID_Permiso = @id;
+                DELETE FROM Permiso WHERE ID_Permiso = @id;";
 
-            string queryPerfil = "DELETE FROM Perfil_Permiso WHERE ID_Permiso = @id";
-            SqlParameter[] paramPerfil = { new SqlParameter("@id", idPermiso) };
-            _conexion.ExecuteNonQuery(queryPerfil, paramPerfil);
-
-            string queryFamilia = "DELETE FROM Permiso_Familia WHERE ID_Permiso = @id";
-            SqlParameter[] paramFamilia = { new SqlParameter("@id", idPermiso) };
-            _conexion.ExecuteNonQuery(queryFamilia, paramFamilia);
-
-            string queryPermiso = "DELETE FROM Permiso WHERE ID_Permiso = @id";
-            SqlParameter[] paramPermiso = { new SqlParameter("@id", idPermiso) };
-            _conexion.ExecuteNonQuery(queryPermiso, paramPermiso);
-
-            
+            _conexion.ExecuteTransaction(tran =>
+            {
+                _conexion.ExecuteNonQueryTran(query, tran, new SqlParameter("@id", idPermiso));
+            });
         }
     }
 }

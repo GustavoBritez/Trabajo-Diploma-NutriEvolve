@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Services.Perfiles;
 using System.Data;
 
@@ -7,7 +7,6 @@ namespace DAL.Perfiles
     public class PerfilDAL
     {
         private readonly Conexion _conexion;
-        private readonly string PERFIL_PERMISO = "Perfil_Permiso";
         private readonly string FAMILIA_PERFIL = "Familia_Perfil";
 
         public PerfilDAL()
@@ -134,15 +133,15 @@ namespace DAL.Perfiles
         
         public void EliminarPerfilDefinitivo(int idPerfil)
         {
+            const string query = @"
+                DELETE FROM Familia_Perfil WHERE ID_Perfil = @id;
+                DELETE FROM Perfil_Permiso WHERE ID_Perfil = @id;
+                DELETE FROM Perfil WHERE ID_Perfil = @id;";
 
-            string queryFamilia = "DELETE FROM Familia_Perfil WHERE ID_Perfil = @id";
-            _conexion.ExecuteNonQuery(queryFamilia, new SqlParameter[] { new SqlParameter("@id", idPerfil) });
-
-            string queryPermiso = "DELETE FROM Perfil_Permiso WHERE ID_Perfil = @id";
-            _conexion.ExecuteNonQuery(queryPermiso, new SqlParameter[] { new SqlParameter("@id", idPerfil) });
-
-            string queryPerfil = "DELETE FROM Perfil WHERE ID_Perfil = @id";
-            _conexion.ExecuteNonQuery(queryPerfil, new SqlParameter[] { new SqlParameter("@id", idPerfil) });
+            _conexion.ExecuteTransaction(tran =>
+            {
+                _conexion.ExecuteNonQueryTran(query, tran, new SqlParameter("@id", idPerfil));
+            });
         }
 
         public bool PerfilTieneUsuarios(int idPerfil)

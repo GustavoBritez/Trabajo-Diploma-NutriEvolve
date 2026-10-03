@@ -1,4 +1,4 @@
-﻿namespace UI
+namespace UI
 {
     partial class FrmSeleccionarFamilia
     {
@@ -165,7 +165,6 @@
         #endregion
 
         private Button btnCancelarF;
-        private Button btnAceptar;
         private ComboBox cmbOrigen;
         private ComboBox cmbDestino;
         private Label lblTituloFamiliaFamilia;

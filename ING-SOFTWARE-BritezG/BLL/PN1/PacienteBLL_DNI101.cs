@@ -92,16 +92,36 @@ namespace BLL
         public bool ModificarPaciente(PacienteBE_DNI101 paciente)
         {
             if (paciente == null || paciente.IdPaciente_DNI101 <= 0) return false;
-            bool ok = _pacienteDAL.Modificar(paciente);
-            if (ok)
+            try
+            {
+                bool ok = _pacienteDAL.Modificar(paciente);
+                if (ok)
+                {
+                    try
+                    {
+                        int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                        _bitacoraBLL.RegistrarEvento(2, $"Modificación de datos del Paciente: {paciente.NombreCompleto} (DNI: {paciente.DNINiño_DNI101})", dniActual, "TurneroNutricional");
+                    }
+                    catch { }
+
+                    try
+                    {
+                        new DigitoVerificadorBLL().RecalcularYPersistir();
+                    }
+                    catch { }
+                }
+                return ok;
+            }
+            catch (Exception ex)
             {
                 try
                 {
-                    new DigitoVerificadorBLL().RecalcularYPersistir();
+                    int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                    _bitacoraBLL.RegistrarEvento(1, $"Error al modificar datos del Paciente (DNI: {paciente.DNINiño_DNI101}): {ex.Message}", dniActual, "TurneroNutricional");
                 }
                 catch { }
+                throw;
             }
-            return ok;
         }
     }
 }

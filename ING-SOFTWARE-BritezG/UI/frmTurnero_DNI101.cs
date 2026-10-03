@@ -1,5 +1,6 @@
 using BE;
 using BLL;
+using Services;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,22 +9,54 @@ using System.Windows.Forms;
 
 namespace UI
 {
-    public partial class frmTurnero_DNI101 : Form
+    public partial class frmTurnero_DNI101 : Form, IIdiomaObserver
     {
         private readonly TurnoBLL_DNI101 _turnoBLL = new();
         private readonly PacienteBLL_DNI101 _pacienteBLL = new();
+        private readonly IdiomaBLL _idiomaBLL = new();
 
         public frmTurnero_DNI101()
         {
             InitializeComponent();
+            TraductorUI.SuscribirFormulario(this, this);
+            ActualizarIdioma();
+        }
+
+        public void ActualizarIdioma()
+        {
+            if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
+            {
+                TraductorUI.TraducirFormulario(this, _idiomaBLL);
+
+                if (colId != null) colId.HeaderText = _idiomaBLL.Traducir("colId");
+                if (colCodigo != null) colCodigo.HeaderText = _idiomaBLL.Traducir("colCodigo");
+                if (colFecha != null) colFecha.HeaderText = _idiomaBLL.Traducir("colFecha");
+                if (colHora != null) colHora.HeaderText = _idiomaBLL.Traducir("colHora");
+                if (colDniNiño != null) colDniNiño.HeaderText = _idiomaBLL.Traducir("colDniNiño");
+                if (colPaciente != null) colPaciente.HeaderText = _idiomaBLL.Traducir("colPaciente");
+                if (colObraSocial != null) colObraSocial.HeaderText = _idiomaBLL.Traducir("colObraSocial");
+                if (colMotivo != null) colMotivo.HeaderText = _idiomaBLL.Traducir("colMotivo");
+                if (colEstado != null) colEstado.HeaderText = _idiomaBLL.Traducir("colEstado");
+
+                int prevIndex = cmbFiltroEstado.SelectedIndex;
+                cmbFiltroEstado.SelectedIndexChanged -= cmbFiltroEstado_SelectedIndexChanged;
+                cmbFiltroEstado.Items.Clear();
+                cmbFiltroEstado.Items.Add(_idiomaBLL.Traducir("estado_todos"));
+                cmbFiltroEstado.Items.Add(_idiomaBLL.Traducir("estado_solicitado"));
+                cmbFiltroEstado.Items.Add(_idiomaBLL.Traducir("estado_confirmado"));
+                cmbFiltroEstado.Items.Add(_idiomaBLL.Traducir("estado_asistio"));
+                cmbFiltroEstado.Items.Add(_idiomaBLL.Traducir("estado_cancelado"));
+                cmbFiltroEstado.SelectedIndex = (prevIndex >= 0 && prevIndex < cmbFiltroEstado.Items.Count) ? prevIndex : 0;
+                cmbFiltroEstado.SelectedIndexChanged += cmbFiltroEstado_SelectedIndexChanged;
+            }
         }
 
         private void frmTurnero_DNI101_Load(object sender, EventArgs e)
         {
             this.AutoScroll = true;
-            cmbFiltroEstado.SelectedIndex = 0; // "Todos"
             dtpFiltroFecha.Value = DateTime.Today;
             this.Resize += (s, ev) => AjustarDisenoResponsivo();
+            ActualizarIdioma();
             CargarTurnos();
             AjustarDisenoResponsivo();
         }
@@ -160,7 +193,7 @@ namespace UI
             var turnoSeleccionado = ObtenerTurnoSeleccionado();
             if (turnoSeleccionado == null)
             {
-                MessageBox.Show("Por favor, seleccione un turno de la grilla para reprogramar (Flujo 3.1).", "Turno No Seleccionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _idiomaBLL.MostrarMensaje("msg_sel_turno_reprogramar", "titulo_sel_turno_reprogramar", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -177,7 +210,7 @@ namespace UI
                 string.Equals(turnoCompleto.EstadoTurno_DNI101, "Asistio", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(turnoCompleto.EstadoTurno_DNI101, "Cancelado", StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show($"El turno se encuentra en estado '{turnoCompleto.EstadoTurno_DNI101}' y no permite reprogramación (Flujo 10.1).\nSolo se permite modificar turnos en estado 'Solicitado' o 'Confirmado'.", "Operación no permitida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_estado_no_permite_reprogramar", "titulo_operacion_no_permitida", MessageBoxButtons.OK, MessageBoxIcon.Warning, turnoCompleto.EstadoTurno_DNI101);
                 return;
             }
 
@@ -215,22 +248,21 @@ namespace UI
             var turnoSeleccionado = ObtenerTurnoSeleccionado();
             if (turnoSeleccionado == null)
             {
-                // Flujo alternativo 2.1.1 / 2.1.2: Turno no seleccionado
-                MessageBox.Show("Por favor, seleccione un turno de la grilla para cancelar.", "Selección Requerida", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _idiomaBLL.MostrarMensaje("msg_sel_turno_cancelar", "titulo_sel_turno_cancelar", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             // Flujo alternativo 6.1.1: Estado no permite cancelación
             if (string.Equals(turnoSeleccionado.EstadoTurno_DNI101, "Cancelado", StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show("El turno seleccionado ya se encuentra cancelado.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _idiomaBLL.MostrarMensaje("msg_turno_ya_cancelado", "titulo_sel_turno_cancelar", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             if (string.Equals(turnoSeleccionado.EstadoTurno_DNI101, "Asistió", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(turnoSeleccionado.EstadoTurno_DNI101, "Asistio", StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show("No se puede cancelar un turno que ya fue atendido.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_turno_ya_atendido", "titulo_operacion_no_permitida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -238,15 +270,13 @@ namespace UI
             string dniPaciente = turnoSeleccionado.Paciente_DNI101?.DNINiño_DNI101 ?? "-";
 
             // Paso 4: Diálogo de confirmación
-            DialogResult confirm = MessageBox.Show(
-                $"¿Está seguro de que desea cancelar el siguiente turno?\n\n" +
-                $"• Código: {turnoSeleccionado.CodigoTurno_DNI101}\n" +
-                $"• Paciente: {nomPaciente} (DNI: {dniPaciente})\n" +
-                $"• Turno: {turnoSeleccionado.FechaTurno_DNI101:dd/MM/yyyy} a las {turnoSeleccionado.HoraTurno_DNI101:hh\\:mm}\n\n" +
-                $"Esta acción liberará el horario en la agenda médica y recalculará los Dígitos Verificadores del sistema.",
-                "Confirmación de Cancelación - CUN05",
+            DialogResult confirm = _idiomaBLL.MostrarMensaje(
+                "msg_confirmar_cancelar_turno",
+                "titulo_confirmar_cancelar_turno",
                 MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
+                MessageBoxIcon.Warning,
+                turnoSeleccionado.CodigoTurno_DNI101,
+                nomPaciente);
 
             // Flujo alternativo 5.1.1: Cancelación no confirmada
             if (confirm != DialogResult.Yes) return;
@@ -262,12 +292,12 @@ namespace UI
                 CargarTurnos();
 
                 // Confirmación
-                MessageBox.Show(
-                    $"El turno '{turnoSeleccionado.CodigoTurno_DNI101}' ha sido cancelado con éxito.\n" +
-                    $"El bloque horario asignado fue liberado y se registró el evento en la Bitácora de auditoría.",
-                    "CUN05 - Turno Cancelado",
+                _idiomaBLL.MostrarMensaje(
+                    "msg_turno_cancelado_ok",
+                    "titulo_turno_cancelado_ok",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Information,
+                    turnoSeleccionado.CodigoTurno_DNI101);
             }
             catch (Exception ex)
             {
@@ -315,7 +345,17 @@ namespace UI
                 Cursor = Cursors.WaitCursor;
 
                 DateTime? fechaFiltro = chkFiltrarFecha.Checked ? dtpFiltroFecha.Value.Date : null;
-                string? estadoFiltro = cmbFiltroEstado.SelectedItem?.ToString();
+                string? estadoFiltro = null;
+                if (cmbFiltroEstado.SelectedIndex > 0)
+                {
+                    switch (cmbFiltroEstado.SelectedIndex)
+                    {
+                        case 1: estadoFiltro = "Solicitado"; break;
+                        case 2: estadoFiltro = "Confirmado"; break;
+                        case 3: estadoFiltro = "Asistió"; break;
+                        case 4: estadoFiltro = "Cancelado"; break;
+                    }
+                }
 
                 var listaTurnos = _turnoBLL.ListarTurnos(fechaFiltro, estadoFiltro);
 

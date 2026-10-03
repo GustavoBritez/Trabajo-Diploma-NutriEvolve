@@ -28,9 +28,8 @@ namespace UI
 
             this.VisibleChanged += (s, e) => Form1_VisibleChanged();
 
-            cmbIdioma.DropDownStyle = ComboBoxStyle.DropDownList;
-
-            ServicesSessionManager.Instancia.Suscribir(this);
+            TraductorUI.SuscribirFormulario(this, this);
+            TraductorUI.ConfigurarComboIdiomas(cmbIdioma, idiomaBLL);
             ActualizarIdioma();
             ActualizarPanelDV();
         }
@@ -171,9 +170,9 @@ namespace UI
                 Cursor = Cursors.WaitCursor;
                 DigitoVerificadorBLL digitoVerificadorBLL = new DigitoVerificadorBLL();
 
-                bool consistente = digitoVerificadorBLL.VerificarBaseDatos();
+                var alteradas = digitoVerificadorBLL.ObtenerTablasAlteradas();
 
-                if (consistente)
+                if (alteradas.Count == 0)
                 {
                     MessageBox.Show(
                         "Los DV de la base de datos son consistentes. El sistema se encuentra íntegro.",
@@ -183,13 +182,8 @@ namespace UI
                 }
                 else
                 {
-                    List<string> corruptos = digitoVerificadorBLL.ObtenerUsuariosCorruptos();
-                    string detalleCorruptos = corruptos.Count > 0
-                        ? $"\n\nRegistros alterados detectados en la tabla Usuarios:\n- {string.Join("\n- ", corruptos)}"
-                        : "\n\nSe detectaron alteraciones en otras tablas del sistema.";
-
                     MessageBox.Show(
-                        $"Se detectaron inconsistencias en la base de datos.{detalleCorruptos}\n\nPor favor, utilice la opción 'Recalcular DV' para restaurar el sistema.",
+                        $"Hubo Cambios en la Tabla {string.Join(", ", alteradas)}\n\nPor favor, utilice la opción 'Recalcular DV' para restaurar el sistema.",
                         "Alerta de Seguridad",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
@@ -223,7 +217,6 @@ namespace UI
                 Cursor = Cursors.WaitCursor;
                 DigitoVerificadorBLL digitoVerificadorBLL = new DigitoVerificadorBLL();
 
-                digitoVerificadorBLL.ActualizarDVIndividualesUsuarios();
                 digitoVerificadorBLL.RecalcularYPersistir();
 
                 ServicesSessionManager.Instancia.RegistrarEstadoIntegridad(false);
@@ -249,41 +242,26 @@ namespace UI
  
         private void ApuntarComboBox()
         {
-            string idioma = "Español";
-
-            if (idioma == "Español")
-            {
-                cmbIdioma.SelectedIndex = 0;
-            }
-            else if (idioma == "English")
-            {
-                cmbIdioma.SelectedIndex = 1;
-            }
-            else if (idioma == "Portugues")
-            {
-                cmbIdioma.SelectedIndex = 2;
-            }
+            TraductorUI.SincronizarComboIdioma(cmbIdioma);
         }
 
         private void ActualizarUsuario()
         {
-            // Guardamos el usuario en una variable para no llamar a la Instancia tantas veces
             var usuarioActivo = ServicesSessionManager.Instancia.ObtenerUsuarioActivo();
 
             if (usuarioActivo != null)
             {
-                // Traducimos el ID numérico a un texto legible para la interfaz
                 string nombrePerfil = "";
                 switch (usuarioActivo._IdPerfil)
                 {
                     case 1:
-                        nombrePerfil = "Administrador";
+                        nombrePerfil = idiomaBLL.Traducir("rol_admin");
                         break;
                     case 2:
-                        nombrePerfil = "Usuario";
+                        nombrePerfil = idiomaBLL.Traducir("rol_user");
                         break;
                     case 3:
-                        nombrePerfil = "Médico";
+                        nombrePerfil = idiomaBLL.Traducir("rol_medico");
                         break;
                     default:
                         nombrePerfil = $"Perfil {usuarioActivo._IdPerfil}";
@@ -294,7 +272,7 @@ namespace UI
             }
             else
             {
-                this.label6.Text = ""; // O string.Empty
+                this.label6.Text = "";
             }
         }
 
@@ -455,49 +433,28 @@ namespace UI
             ChangePassPanel.Visible = false;
         }
 
-        #region Idioma No tocar
+        #region Idioma
         public void ActualizarIdioma()
         {
             if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
             {
-                Traducir(this.Controls);
-            }
+                TraductorUI.TraducirFormulario(this, idiomaBLL);
 
-        }
-        private void Traducir(Control.ControlCollection controles)
-        {
-            foreach (Control control in controles)
-            {
-                if (!string.IsNullOrEmpty(control.Name))
+                if (gbDV != null)
                 {
-                    string traduccion = idiomaBLL.Traducir(control.Name);
-
-                    if (traduccion != control.Name) // evita reemplazar si no existe la clave
-                        control.Text = traduccion;
+                    if (idiomaBLL.ExisteTraduccion("gbDV")) gbDV.Text = idiomaBLL.Traducir("gbDV");
+                    if (lblDVEtiquetaMenu != null && idiomaBLL.ExisteTraduccion("lblDVEtiquetaMenu")) lblDVEtiquetaMenu.Text = idiomaBLL.Traducir("lblDVEtiquetaMenu");
+                    if (btnVerificarDVMenu != null && idiomaBLL.ExisteTraduccion("btnVerificarDVMenu")) btnVerificarDVMenu.Text = idiomaBLL.Traducir("btnVerificarDVMenu");
+                    if (btnRecalcularDVMenu != null && idiomaBLL.ExisteTraduccion("btnRecalcularDVMenu")) btnRecalcularDVMenu.Text = idiomaBLL.Traducir("btnRecalcularDVMenu");
                 }
 
-                if (control.HasChildren)
-                    Traducir(control.Controls);
-            }
-        }
-        private void cmdIdioma_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            List<Idioma> idiomas = idiomaBLL.ObtenerIdiomas();
+                ActualizarUsuario();
+                TraductorUI.SincronizarComboIdioma(cmbIdioma);
 
-            if (cmbIdioma.SelectedItem.ToString() == "Español")
-            {
-                Idioma español = idiomas.First(i => i.Codigo == "es");
-                ServicesSessionManager.Instancia.CambiarIdioma(español);
-            }
-            else if (cmbIdioma.SelectedItem.ToString() == "English")
-            {
-                Idioma ingles = idiomas.First(i => i.Codigo == "en");
-                ServicesSessionManager.Instancia.CambiarIdioma(ingles);
-            }
-            else if (cmbIdioma.SelectedItem.ToString() == "Portugues")
-            {
-                Idioma portugues = idiomas.First(i => i.Codigo == "po");
-                ServicesSessionManager.Instancia.CambiarIdioma(portugues);
+                if (_frmTurneroContenido != null && !_frmTurneroContenido.IsDisposed && _frmTurneroContenido is IIdiomaObserver obsTurnero)
+                {
+                    obsTurnero.ActualizarIdioma();
+                }
             }
         }
         #endregion

@@ -24,7 +24,7 @@ namespace UI // Cambiá esto por el namespace de tu proyecto
         {
             InitializeComponent();
             _familiaBLL = new FamiliaBLL();
-            ServicesSessionManager.Instancia.Suscribir(this);
+            TraductorUI.SuscribirFormulario(this, this);
             ActualizarIdioma();
         }
 
@@ -116,28 +116,14 @@ namespace UI // Cambiá esto por el namespace de tu proyecto
             this.Close();
         }
 
+        #region Idioma
         public void ActualizarIdioma()
         {
             if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
             {
-                Traducir(this.Controls);
+                TraductorUI.TraducirFormulario(this, idiomaBLL);
             }
         }
-        private void Traducir(Control.ControlCollection controles)
-        {
-            foreach (Control control in controles)
-            {
-                if (!string.IsNullOrEmpty(control.Name))
-                {
-                    string traduccion = idiomaBLL.Traducir(control.Name);
-
-                    if (traduccion != control.Name)
-                        control.Text = traduccion;
-                }
-
-                if (control.HasChildren)
-                    Traducir(control.Controls);
-            }
-        }
+        #endregion
     }
 }

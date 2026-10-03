@@ -57,7 +57,17 @@ namespace BLL
 
         public bool ActualizarEstadoBloque(int idBloque, string nuevoEstado)
         {
-            return _agendaDAL.ActualizarEstadoBloque(idBloque, nuevoEstado);
+            bool ok = _agendaDAL.ActualizarEstadoBloque(idBloque, nuevoEstado);
+            if (ok)
+            {
+                try
+                {
+                    int dniActual = Services.ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                    new EventoBLL().RegistrarEvento(3, $"Bloque horario ID {idBloque} actualizado a estado '{nuevoEstado}'", dniActual, "AgendaMedica");
+                }
+                catch { }
+            }
+            return ok;
         }
     }
 }

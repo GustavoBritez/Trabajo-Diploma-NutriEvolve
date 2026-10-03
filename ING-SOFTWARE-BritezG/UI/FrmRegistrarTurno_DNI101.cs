@@ -9,12 +9,13 @@ using System.Windows.Forms;
 
 namespace UI
 {
-    public partial class FrmRegistrarTurno_DNI101 : Form
+    public partial class FrmRegistrarTurno_DNI101 : Form, IIdiomaObserver
     {
         private readonly TurnoBLL_DNI101 _turnoBLL = new();
         private readonly PacienteBLL_DNI101 _pacienteBLL = new();
         private readonly AgendaMedicaBLL_DNI101 _agendaBLL = new();
         private readonly UsuarioBLL _usuarioBLL = new();
+        private readonly IdiomaBLL _idiomaBLL = new();
         private bool _permiteCerrar = false;
 
         private class ItemProfesional
@@ -38,6 +39,16 @@ namespace UI
         public FrmRegistrarTurno_DNI101()
         {
             InitializeComponent();
+            TraductorUI.SuscribirFormulario(this, this);
+            ActualizarIdioma();
+        }
+
+        public void ActualizarIdioma()
+        {
+            if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
+            {
+                TraductorUI.TraducirFormulario(this, _idiomaBLL);
+            }
         }
 
         private void FrmRegistrarTurno_DNI101_Load(object sender, EventArgs e)
@@ -219,7 +230,7 @@ namespace UI
             if (string.IsNullOrWhiteSpace(dniNiño))
             {
                 txtDniNiño.BackColor = Color.FromArgb(255, 235, 235);
-                MessageBox.Show("El campo DNI Niño/a es obligatorio.", "Validación CUN01", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_dni_obligatorio", "titulo_validacion_turno", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtDniNiño.Focus();
                 return;
             }
@@ -227,14 +238,14 @@ namespace UI
 
             if (cmbProfesional.SelectedItem == null)
             {
-                MessageBox.Show("Debe seleccionar un profesional.", "Validación CUN01", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_profesional_obligatorio", "titulo_validacion_turno", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cmbProfesional.Focus();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(horario))
             {
-                MessageBox.Show("Debe seleccionar un bloque horario disponible (CUN-07).", "Validación CUN01", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_horario_obligatorio", "titulo_validacion_turno", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cmbHorario.Focus();
                 return;
             }
@@ -242,7 +253,7 @@ namespace UI
             if (string.IsNullOrWhiteSpace(motivo))
             {
                 txtMotivo.BackColor = Color.FromArgb(255, 235, 235);
-                MessageBox.Show("El motivo de la consulta es obligatorio.", "Validación CUN01", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_motivo_obligatorio", "titulo_validacion_turno", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtMotivo.Focus();
                 return;
             }
@@ -260,11 +271,12 @@ namespace UI
                 {
                     Cursor = Cursors.Default;
                     // 6.1.1 El modulo informa que el DNI no se encuentra en el padrón
-                    MessageBox.Show(
-                        $"El DNI {dniNiño} no se encuentra en el padrón de pacientes.\n\nA continuación, se abrirá la ventana para ingresar los datos personales del Paciente (CUN-02).",
-                        "Punto de Extensión CUN-02",
+                    _idiomaBLL.MostrarMensaje(
+                        "msg_dni_no_encontrado_padron",
+                        "titulo_ext_cun02",
                         MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                        MessageBoxIcon.Information,
+                        dniNiño);
 
                     // 6.1.2 y 6.1.3 El Nutricionista ingresa los datos y el módulo valida y registra al nuevo Paciente
                     using (var frmRegistrarPaciente = new RegistrarPaciente_DNI101(dniNiño))
@@ -272,7 +284,7 @@ namespace UI
                         var resPac = frmRegistrarPaciente.ShowDialog(this);
                         if (resPac != DialogResult.OK)
                         {
-                            MessageBox.Show("No se completó el registro del paciente. El turno no puede darse de alta.", "CUN01 Interrumpido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            _idiomaBLL.MostrarMensaje("msg_registro_paciente_interrumpido", "titulo_cun01_interrumpido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
                     }
@@ -281,7 +293,7 @@ namespace UI
                     paciente = _pacienteBLL.ObtenerPacientePorDNI(dniNiño);
                     if (paciente == null)
                     {
-                        MessageBox.Show("Error al recuperar el paciente registrado.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        _idiomaBLL.MostrarMensaje("msg_error_recuperar_paciente", "titulo_error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                 }
@@ -299,19 +311,12 @@ namespace UI
                 Cursor = Cursors.Default;
 
                 // Paso 15: Muestra mensaje de éxito e informa el código de turno generado
-                MessageBox.Show(
-                    $"¡Turno registrado exitosamente!\n\n" +
-                    $"• Código Único de Turno: {nuevoTurno.CodigoTurno_DNI101}\n" +
-                    $"• Estado: {nuevoTurno.EstadoTurno_DNI101}\n" +
-                    $"• Paciente: {paciente.NombreCompleto} (DNI: {dniNiño})\n" +
-                    $"• Obra Social: {paciente.ObraSocial_DNI101}\n" +
-                    $"• Profesional: {cmbProfesional.SelectedItem}\n" +
-                    $"• Fecha: {fecha:dd/MM/yyyy}\n" +
-                    $"• Horario: {horario} (Bloque: Ocupado)\n" +
-                    $"• Motivo: {motivo}",
-                    "CUN01 - Turno Registrado",
+                _idiomaBLL.MostrarMensaje(
+                    "msg_turno_registrado_ok",
+                    "titulo_turno_registrado_ok",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Information,
+                    nuevoTurno.CodigoTurno_DNI101);
 
                 _permiteCerrar = true;
                 this.DialogResult = DialogResult.OK;
@@ -319,7 +324,7 @@ namespace UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error al registrar el turno:\n{ex.Message}", "Error CUN01", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _idiomaBLL.MostrarMensaje("msg_error_registrar_turno", "titulo_error_cun01", MessageBoxButtons.OK, MessageBoxIcon.Error, ex.Message);
                 ConsultarDisponibilidad();
             }
             finally
@@ -340,9 +345,9 @@ namespace UI
             if (!_permiteCerrar && e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
-                MessageBox.Show(
-                    "Esta pantalla no puede cerrarse directamente.\nDebe completar el registro del turno o presionar el botón 'Cancelar'.",
-                    "Acción Requerida",
+                _idiomaBLL.MostrarMensaje(
+                    "msg_pantalla_no_cerrar_directo",
+                    "titulo_accion_requerida",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }

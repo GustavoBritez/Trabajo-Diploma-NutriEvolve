@@ -30,8 +30,7 @@ namespace UI
 
             _modoActual = modo; // Guardamos el modo
 
-            // 1. PRIMERO traducimos los textos base de la pantalla
-            ServicesSessionManager.Instancia.Suscribir(this);
+            TraductorUI.SuscribirFormulario(this, this);
             ActualizarIdioma();
 
             // 2. DESPUÉS adaptamos los títulos para que el idioma no los pise
@@ -165,30 +164,15 @@ namespace UI
             this.Close();
         }
 
+        #region Idioma
         public void ActualizarIdioma()
         {
             if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
             {
-                Traducir(this.Controls);
+                TraductorUI.TraducirFormulario(this, idiomaBLL);
                 ConfigurarVisualmente();
             }
         }
-
-        private void Traducir(Control.ControlCollection controles)
-        {
-            foreach (Control control in controles)
-            {
-                if (!string.IsNullOrEmpty(control.Name))
-                {
-                    string traduccion = idiomaBLL.Traducir(control.Name);
-
-                    if (traduccion != control.Name)
-                        control.Text = traduccion;
-                }
-
-                if (control.HasChildren)
-                    Traducir(control.Controls);
-            }
-        }
+        #endregion
     }
 }

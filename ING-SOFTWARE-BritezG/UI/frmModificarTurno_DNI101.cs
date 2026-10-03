@@ -1,30 +1,61 @@
 using BE;
 using BLL;
+using Services;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace UI
 {
-    public partial class frmModificarTurno_DNI101 : Form
+    public partial class frmModificarTurno_DNI101 : Form, IIdiomaObserver
     {
         private TurnoBE_DNI101? _turnoActual;
         private readonly TurnoBLL_DNI101 _turnoBLL = new();
+        private readonly IdiomaBLL _idiomaBLL = new();
 
         public frmModificarTurno_DNI101(TurnoBE_DNI101? turno = null)
         {
             InitializeComponent();
             _turnoActual = turno;
+            TraductorUI.SuscribirFormulario(this, this);
+            ActualizarIdioma();
         }
 
         public frmModificarTurno_DNI101(string codigoTurno)
         {
             InitializeComponent();
             txtCodigoTurno.Text = codigoTurno ?? string.Empty;
+            TraductorUI.SuscribirFormulario(this, this);
+            ActualizarIdioma();
+        }
+
+        public void ActualizarIdioma()
+        {
+            if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
+            {
+                TraductorUI.TraducirFormulario(this, _idiomaBLL);
+                TraducirComboEstados();
+            }
+        }
+
+        private void TraducirComboEstados()
+        {
+            int indexPrevio = cmbEstado.SelectedIndex;
+            cmbEstado.Items.Clear();
+            cmbEstado.Items.Add(_idiomaBLL.Traducir("estado_solicitado"));
+            cmbEstado.Items.Add(_idiomaBLL.Traducir("estado_confirmado"));
+            cmbEstado.Items.Add(_idiomaBLL.Traducir("estado_asistio"));
+            cmbEstado.Items.Add(_idiomaBLL.Traducir("estado_cancelado"));
+            if (indexPrevio >= 0 && indexPrevio < cmbEstado.Items.Count)
+            {
+                cmbEstado.SelectedIndex = indexPrevio;
+            }
         }
 
         private void frmModificarTurno_DNI101_Load(object sender, EventArgs e)
         {
+            TraducirComboEstados();
+
             if (_turnoActual != null)
             {
                 txtCodigoTurno.Text = _turnoActual.CodigoTurno_DNI101;
@@ -45,7 +76,7 @@ namespace UI
             string codigo = txtCodigoTurno.Text.Trim();
             if (string.IsNullOrWhiteSpace(codigo))
             {
-                MessageBox.Show("Por favor, ingrese un código de turno para buscar.", "Búsqueda Requerida", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _idiomaBLL.MostrarMensaje("msg_ingrese_codigo_turno", "titulo_busqueda_requerida", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 txtCodigoTurno.Focus();
                 return;
             }
@@ -71,7 +102,7 @@ namespace UI
                 if (turno == null)
                 {
                     // Flujo alternativo 3.1: Turno no encontrado
-                    MessageBox.Show($"No se encontró ningún turno registrado con el código '{codigo}'.\nVerifique el código e intente nuevamente (Flujo 3.1).", "Turno no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    _idiomaBLL.MostrarMensaje("msg_turno_no_encontrado_cod", "titulo_turno_no_encontrado", MessageBoxButtons.OK, MessageBoxIcon.Warning, codigo);
                     _turnoActual = null;
                     DeshabilitarEdicion();
                     return;
@@ -82,7 +113,7 @@ namespace UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al consultar el turno: {ex.Message}", "Error de Consulta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _idiomaBLL.MostrarMensaje("msg_error_consultar_turno", "titulo_error_consulta", MessageBoxButtons.OK, MessageBoxIcon.Error, ex.Message);
             }
             finally
             {
@@ -101,16 +132,16 @@ namespace UI
                 $"• Paciente: {nomPaciente} (DNI: {dniPaciente}) | Obra Social: {obraSocial}\n" +
                 $"• Turno Asignado: {turno.FechaTurno_DNI101:dd/MM/yyyy} a las {turno.HoraTurno_DNI101:hh\\:mm} | Nutricionista DNI: {turno.DniNutricionista_DNI101}";
 
-            // Seleccionar estado en ComboBox
-            int index = cmbEstado.FindStringExact(turno.EstadoTurno_DNI101);
-            if (index >= 0)
-            {
-                cmbEstado.SelectedIndex = index;
-            }
-            else
-            {
-                cmbEstado.Text = turno.EstadoTurno_DNI101;
-            }
+            // Seleccionar estado en ComboBox por índice canónico
+            if (string.Equals(turno.EstadoTurno_DNI101, "Solicitado", StringComparison.OrdinalIgnoreCase))
+                cmbEstado.SelectedIndex = 0;
+            else if (string.Equals(turno.EstadoTurno_DNI101, "Confirmado", StringComparison.OrdinalIgnoreCase))
+                cmbEstado.SelectedIndex = 1;
+            else if (string.Equals(turno.EstadoTurno_DNI101, "Asistió", StringComparison.OrdinalIgnoreCase) ||
+                     string.Equals(turno.EstadoTurno_DNI101, "Asistio", StringComparison.OrdinalIgnoreCase))
+                cmbEstado.SelectedIndex = 2;
+            else if (string.Equals(turno.EstadoTurno_DNI101, "Cancelado", StringComparison.OrdinalIgnoreCase))
+                cmbEstado.SelectedIndex = 3;
 
             txtMotivo.Text = turno.MotivoConsulta_DNI101;
 
@@ -145,36 +176,47 @@ namespace UI
         {
             if (_turnoActual == null)
             {
-                MessageBox.Show("Por favor busque y seleccione un turno antes de intentar modificarlo.", "Turno Requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_sel_turno_antes_modificar", "titulo_turno_requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             string codigoTurno = _turnoActual.CodigoTurno_DNI101;
             string nuevoMotivo = txtMotivo.Text.Trim();
-            string? nuevoEstado = cmbEstado.SelectedItem?.ToString();
+
+            // Mapear estado canónico para persistencia en base de datos
+            string nuevoEstado = cmbEstado.SelectedIndex switch
+            {
+                0 => "Solicitado",
+                1 => "Confirmado",
+                2 => "Asistió",
+                3 => "Cancelado",
+                _ => cmbEstado.SelectedItem?.ToString() ?? "Solicitado"
+            };
 
             // Flujo alternativo 5.1: Motivo de consulta vacío
             if (string.IsNullOrWhiteSpace(nuevoMotivo))
             {
-                MessageBox.Show("El motivo de consulta no puede estar vacío (Flujo 5.1).", "Validación Requerida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_motivo_vacio", "titulo_validacion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtMotivo.Focus();
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(nuevoEstado))
+            if (cmbEstado.SelectedIndex < 0)
             {
-                MessageBox.Show("Debe seleccionar un estado válido para el turno.", "Validación Requerida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_sel_estado_valido", "titulo_validacion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cmbEstado.Focus();
                 return;
             }
 
-            DialogResult confirm = MessageBox.Show(
-                $"¿Está seguro de que desea guardar las modificaciones del turno '{codigoTurno}'?\n\n" +
-                $"• Estado previo: {_turnoActual.EstadoTurno_DNI101} ➔ Nuevo Estado: {nuevoEstado}\n" +
-                $"• Nuevo Motivo: {nuevoMotivo}",
-                "Confirmar Modificación (CUN04)",
+            DialogResult confirm = _idiomaBLL.MostrarMensaje(
+                "msg_confirmar_modificar_turno",
+                "titulo_confirmar_modificacion",
                 MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+                MessageBoxIcon.Question,
+                codigoTurno,
+                _turnoActual.EstadoTurno_DNI101,
+                nuevoEstado,
+                nuevoMotivo);
 
             if (confirm != DialogResult.Yes) return;
 
@@ -188,13 +230,13 @@ namespace UI
                 if (exito)
                 {
                     // Paso 12: Mensaje de confirmación
-                    MessageBox.Show(
-                        $"El turno '{codigoTurno}' fue modificado exitosamente.\n" +
-                        $"Estado: '{nuevoEstado}'\n" +
-                        $"Dígitos Verificadores recalculados y asentado en Bitácora.",
-                        "CUN04 - Modificación Exitosa",
+                    _idiomaBLL.MostrarMensaje(
+                        "msg_turno_modificado_ok_det",
+                        "titulo_turno_modificado_ok",
                         MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                        MessageBoxIcon.Information,
+                        codigoTurno,
+                        nuevoEstado);
 
                     DialogResult = DialogResult.OK;
                     Close();
@@ -203,7 +245,7 @@ namespace UI
             catch (Exception ex)
             {
                 // Flujo alternativo 7.1 o 9.1
-                MessageBox.Show($"Ocurrió un error al modificar el turno:\n{ex.Message}", "Error al Modificar (CUN04)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _idiomaBLL.MostrarMensaje("msg_error_modificar_turno", "titulo_error_modificar", MessageBoxButtons.OK, MessageBoxIcon.Error, ex.Message);
             }
             finally
             {

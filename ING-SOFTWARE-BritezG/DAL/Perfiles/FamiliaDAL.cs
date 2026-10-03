@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Services.Perfiles;
 using System.Data;
 
@@ -188,17 +188,16 @@ namespace DAL.Perfiles
 
         public void EliminarFamilia(int idFamilia)
         {
-            string queryPerfiles = "DELETE FROM Familia_Perfil WHERE ID_Familia = @id";
-            SqlParameter[] paramPerfiles = { new SqlParameter("@id", idFamilia) };
-            _conexion.ExecuteNonQuery(queryPerfiles, paramPerfiles);
+            const string query = @"
+                DELETE FROM Familia_Perfil WHERE ID_Familia = @id;
+                DELETE FROM Permiso_Familia WHERE ID_Familia = @id;
+                DELETE FROM Familia_Familia WHERE ID_FamiliaPadre = @id OR ID_FamiliaHija = @id;
+                DELETE FROM Familia WHERE ID_Familia = @id;";
 
-            string queryPermisos = "DELETE FROM Permiso_Familia WHERE ID_Familia = @id";
-            SqlParameter[] paramPermisos = { new SqlParameter("@id", idFamilia) };
-            _conexion.ExecuteNonQuery(queryPermisos, paramPermisos);
-
-            string queryFamilia = "DELETE FROM Familia WHERE ID_Familia = @id";
-            SqlParameter[] paramFamilia = { new SqlParameter("@id", idFamilia) };
-            _conexion.ExecuteNonQuery(queryFamilia, paramFamilia);
+            _conexion.ExecuteTransaction(tran =>
+            {
+                _conexion.ExecuteNonQueryTran(query, tran, new SqlParameter("@id", idFamilia));
+            });
         }
 
         public void EliminarFamiliaDeFamilia(int idFamiliaPadre, int idFamiliaHija)

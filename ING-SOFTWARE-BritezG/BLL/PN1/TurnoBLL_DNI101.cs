@@ -77,19 +77,9 @@ namespace BLL
             string cadenaDV = $"{turno.CodigoTurno_DNI101};{turno.FechaTurno_DNI101:yyyy-MM-dd};{turno.HoraTurno_DNI101};{turno.IdPaciente_DNI101};{turno.DniNutricionista_DNI101};{turno.EstadoTurno_DNI101}";
             turno.DV = ServicioBcrypt.CalcularDV(cadenaDV);
 
-            // 11. Persistir el nuevo turno en la base de datos
-            int idGenerado = _turnoDAL.Guardar(turno);
+            // Persistir turno y ocupar bloque horario en una única transacción atómica SQL
+            int idGenerado = _turnoDAL.RegistrarTurnoConBloque(turno, idBloque);
             turno.IdTurno_DNI101 = idGenerado;
-
-            // 12. Actualizar el estado del bloque horario asignado a 'Ocupado'
-            if (idBloque.HasValue)
-            {
-                try
-                {
-                    new AgendaMedicaDAL_DNI101().ActualizarEstadoBloque(idBloque.Value, "Ocupado");
-                }
-                catch { }
-            }
 
             // 13. Registrar el evento de agendamiento en la bitácora de auditoría
             try
@@ -113,6 +103,17 @@ namespace BLL
         {
             if (turno == null) throw new ArgumentNullException(nameof(turno));
             int id = _turnoDAL.Guardar(turno);
+            if (id > 0)
+            {
+                try
+                {
+                    int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                    _bitacoraBLL.RegistrarEvento(1, $"Turno agendado ({turno.CodigoTurno_DNI101}) para paciente ID {turno.IdPaciente_DNI101}", dniActual, "TurneroNutricional");
+                }
+                catch { }
+
+                try { new DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
+            }
             return id > 0;
         }
 
@@ -160,20 +161,10 @@ namespace BLL
             string cadenaDV = $"{turno.CodigoTurno_DNI101};{turno.FechaTurno_DNI101:yyyy-MM-dd};{turno.HoraTurno_DNI101};{turno.IdPaciente_DNI101};{turno.DniNutricionista_DNI101};{turno.EstadoTurno_DNI101}";
             turno.DV = ServicioBcrypt.CalcularDV(cadenaDV);
 
-            // Paso 8: Persistir actualización
-            bool ok = _turnoDAL.ReprogramarTurno(turno.IdTurno_DNI101, nuevaFecha, nuevaHora, nuevoIdBloque, turno.DniNutricionista_DNI101, turno.DV);
+            // Paso 8: Persistir actualización y liberar/ocupar bloques en una única transacción atómica SQL
+            bool ok = _turnoDAL.ReprogramarTurnoConBloques(turno.IdTurno_DNI101, nuevaFecha, nuevaHora, nuevoIdBloque, idBloqueAnterior, turno.DniNutricionista_DNI101, turno.DV);
             if (!ok)
                 throw new InvalidOperationException("No se pudo completar la reprogramación. Se detectó un conflicto de concurrencia en la base de datos.");
-
-            // Liberar bloque anterior y ocupar el nuevo
-            if (idBloqueAnterior.HasValue)
-            {
-                try { new AgendaMedicaDAL_DNI101().ActualizarEstadoBloque(idBloqueAnterior.Value, "Disponible"); } catch { }
-            }
-            if (nuevoIdBloque.HasValue)
-            {
-                try { new AgendaMedicaDAL_DNI101().ActualizarEstadoBloque(nuevoIdBloque.Value, "Ocupado"); } catch { }
-            }
 
             // Registrar en bitácora
             try
@@ -327,16 +318,10 @@ namespace BLL
             string cadenaDV = $"{turno.CodigoTurno_DNI101};{turno.FechaTurno_DNI101:yyyy-MM-dd};{turno.HoraTurno_DNI101};{turno.IdPaciente_DNI101};{turno.DniNutricionista_DNI101};{turno.EstadoTurno_DNI101}";
             turno.DV = ServicioBcrypt.CalcularDV(cadenaDV);
 
-            // Persistir cancelación
-            bool ok = _turnoDAL.CancelarTurno(turno.IdTurno_DNI101, motivo, turno.DV);
+            // Persistir cancelación y liberar bloque horario en una única transacción atómica SQL
+            bool ok = _turnoDAL.CancelarTurnoConBloque(turno.IdTurno_DNI101, motivo, turno.IdBloque_DNI101, turno.DV);
             if (!ok)
                 throw new InvalidOperationException("No se pudo completar la cancelación del turno en la base de datos.");
-
-            // Paso 8: Liberar bloque horario
-            if (turno.IdBloque_DNI101.HasValue)
-            {
-                try { new AgendaMedicaDAL_DNI101().ActualizarEstadoBloque(turno.IdBloque_DNI101.Value, "Disponible"); } catch { }
-            }
 
             // Registrar en bitácora
             try
@@ -386,7 +371,19 @@ namespace BLL
 
         public bool MarcarAsistencia(int idTurno)
         {
-            return _turnoDAL.ActualizarEstado(idTurno, "Asistio");
+            bool ok = _turnoDAL.ActualizarEstado(idTurno, "Asistio");
+            if (ok)
+            {
+                try
+                {
+                    int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                    _bitacoraBLL.RegistrarEvento(2, $"Asistencia confirmada para Turno ID {idTurno} (Estado actualizado a 'Asistio')", dniActual, "TurneroNutricional");
+                }
+                catch { }
+
+                try { new DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
+            }
+            return ok;
         }
     }
 }

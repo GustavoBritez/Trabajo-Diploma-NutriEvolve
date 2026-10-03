@@ -110,23 +110,51 @@ namespace Services
         }
         public void Suscribir(IIdiomaObserver observer)
         {
-            if (!observadores.Contains(observer))
-                observadores.Add(observer);
+            if (observer == null) return;
+            lock (_lock)
+            {
+                if (!observadores.Contains(observer))
+                    observadores.Add(observer);
+            }
         }
 
         public void Desuscribir(IIdiomaObserver observer)
         {
-            if (observadores.Contains(observer))
+            if (observer == null) return;
+            lock (_lock)
+            {
                 observadores.Remove(observer);
+            }
         }
 
         public void Notificar()
         {
-            foreach (var observer in observadores)
+            List<IIdiomaObserver> listaObservadores;
+            lock (_lock)
             {
-                observer.ActualizarIdioma();
+                observadores.RemoveAll(o => o == null);
+                listaObservadores = observadores.ToList();
+            }
+
+            foreach (var observer in listaObservadores)
+            {
+                try
+                {
+                    observer.ActualizarIdioma();
+                }
+                catch
+                {
+                    // Evita que una excepción en un observador detenga la notificación a los demás
+                }
             }
         }
-        public Idioma ObtenerIdioma() => this.idiomaActual;
+        public Idioma ObtenerIdioma()
+        {
+            if (this.idiomaActual == null)
+            {
+                this.idiomaActual = new Idioma { Nombre = "Español", Codigo = "es", ArchivoJson = "es.json" };
+            }
+            return this.idiomaActual;
+        }
     }
 }

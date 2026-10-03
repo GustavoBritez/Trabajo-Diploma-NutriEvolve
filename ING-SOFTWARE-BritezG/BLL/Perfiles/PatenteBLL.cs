@@ -1,4 +1,4 @@
-﻿using DAL.Perfiles;
+using DAL.Perfiles;
 using Services;
 using Services.Perfiles;
 using System;
@@ -16,6 +16,14 @@ namespace BLL.Perfiles
         public void AgregarPermisoAPerfil(int idPerfil, int idPermiso)
         {
             _patenteDAL.InsertarPermisoPerfil(idPerfil, idPermiso);
+            try
+            {
+                EventoBLL bitacoraBLL = new();
+                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                string descripcion = $"Asignación de Permiso ID {idPermiso} al Perfil ID {idPerfil}";
+                bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            }
+            catch { }
         }
         public List<PatenteServices> ObtenerPermisosDePerfil(int idPerfil)
         {
@@ -46,6 +54,14 @@ namespace BLL.Perfiles
         public void EliminarPermisoPerfil(int idPerfil, int idPermiso)
         {
             _patenteDAL.EliminarPermisoPerfil(idPerfil, idPermiso);
+            try
+            {
+                EventoBLL bitacoraBLL = new();
+                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                string descripcion = $"Desvinculación de Permiso ID {idPermiso} del Perfil ID {idPerfil}";
+                bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            }
+            catch { }
         }
 
         public void CrearNuevoPermiso(string nombrePermiso)

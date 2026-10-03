@@ -1,4 +1,4 @@
-﻿using Services;
+using Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +14,7 @@ namespace BLL
         private IdiomaDAL idiomaDAL= new IdiomaDAL();
         public List<Idioma> ObtenerIdiomas()=> idiomaDAL.ObtenerIdiomas();
         public string Traducir(string clave)=>idiomaDAL.Traducir(clave);
+        public bool ExisteTraduccion(string clave)=>idiomaDAL.ExisteTraduccion(clave);
 
 
 

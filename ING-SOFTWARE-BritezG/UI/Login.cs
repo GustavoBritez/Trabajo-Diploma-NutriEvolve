@@ -1,7 +1,6 @@
 using BE;
 using BLL;
 using BLL.Perfiles;
-using DAL;
 using Services;
 using Services.Perfiles;
 using System;
@@ -35,8 +34,8 @@ namespace UI
         public Login()
         {
             InitializeComponent();
-            cmbIdioma.DropDownStyle = ComboBoxStyle.DropDownList;
-            ServicesSessionManager.Instancia.Suscribir(this);
+            TraductorUI.SuscribirFormulario(this, this);
+            TraductorUI.ConfigurarComboIdiomas(cmbIdioma, idiomaBLL);
             ActualizarIdioma();
 
             // Habilitamos arrastre de ventana desde los paneles
@@ -111,7 +110,8 @@ namespace UI
 
                 // 3. ESCUDO DE INTEGRIDAD 
                 DigitoVerificadorBLL dvBLL = new DigitoVerificadorBLL();
-                bool baseDatosIntegra = dvBLL.VerificarBaseDatos();
+                List<string> tablasAlteradas = dvBLL.ObtenerTablasAlteradas();
+                bool baseDatosIntegra = tablasAlteradas.Count == 0;
 
                 if (!baseDatosIntegra)
                 {
@@ -121,11 +121,26 @@ namespace UI
                     if (usuario._IdPerfil == 1 && contraseñaCorrecta)
                     {
                         ServicesSessionManager.Instancia.RegistrarEstadoIntegridad(true);
-                        MessageBox.Show(
-                            "¡ALERTA! La base de datos está corrupta, pero tienes permisos de Administrador.\n\n" +
-                            "Se te permitirá el ingreso. Por favor, dirígete al panel de seguridad para verificar y recalcular los dígitos verificadores.",
-                            "Modo Rescate - Acceso Autorizado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        // Dejamos que el flujo continúe hacia el login.
+
+                        // Autenticar la sesión del administrador
+                        usuarioBLL.Login(nombre, contraseña);
+
+                        PatenteBLL patenteBLL = new PatenteBLL();
+                        List<PatenteServices> listaPatentes = patenteBLL.ObtenerPermisosDePerfil(usuario._IdPerfil);
+                        List<string> nombresPermisos = listaPatentes.Select(p => p.Nombre).ToList();
+                        ServicesSessionManager.Instancia.CargarPermisosDelUsuario(nombresPermisos);
+
+                        List<Idioma> idiomas = idiomaBLL.ObtenerIdiomas();
+                        Idioma idioma = idiomas.Find(i => i.Nombre == usuario._Idioma.ToString());
+                        if (idioma != null)
+                        {
+                            ServicesSessionManager.Instancia.CambiarIdioma(idioma);
+                        }
+
+                        // Redirigir al nuevo formulario fmrDigitoVerificador
+                        var formDV = new fmrDigitoVerificador(tablasAlteradas);
+                        FormManager.Navegar(this, formDV);
+                        return;
                     }
                     else
                     {
@@ -188,54 +203,20 @@ namespace UI
         {
             if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
             {
-                Traducir(this.Controls);
-            }
-        }
-
-        private void Traducir(Control.ControlCollection controles)
-        {
-            foreach (Control control in controles)
-            {
-                if (!string.IsNullOrEmpty(control.Name))
-                {
-                    string traduccion = idiomaBLL.Traducir(control.Name);
-
-                    if (traduccion != control.Name) // evita reemplazar si no existe la clave
-                        control.Text = traduccion;
-                }
-
-                if (control.HasChildren)
-                    Traducir(control.Controls);
+                TraductorUI.TraducirFormulario(this, idiomaBLL);
+                TraductorUI.SincronizarComboIdioma(cmbIdioma);
             }
         }
         #endregion
 
         private void Login_Load(object? sender, EventArgs e)
         {
-            cmbIdioma.SelectedIndex = 0;
+            TraductorUI.SincronizarComboIdioma(cmbIdioma);
         }
 
         private void cmbIdioma_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cmbIdioma.SelectedItem == null) return;
-
-            List<Idioma> idiomas = idiomaBLL.ObtenerIdiomas();
-
-            if (cmbIdioma.SelectedItem.ToString() == "Español")
-            {
-                Idioma español = idiomas.FirstOrDefault(i => i.Codigo == "es");
-                if (español != null) ServicesSessionManager.Instancia.CambiarIdioma(español);
-            }
-            else if (cmbIdioma.SelectedItem.ToString() == "English")
-            {
-                Idioma ingles = idiomas.FirstOrDefault(i => i.Codigo == "en");
-                if (ingles != null) ServicesSessionManager.Instancia.CambiarIdioma(ingles);
-            }
-            else if (cmbIdioma.SelectedItem.ToString() == "Portugues")
-            {
-                Idioma portugues = idiomas.FirstOrDefault(i => i.Codigo == "po");
-                if (portugues != null) ServicesSessionManager.Instancia.CambiarIdioma(portugues);
-            }
+            // El cambio de idioma es gestionado automáticamente por TraductorUI
         }
     }
 }

@@ -308,7 +308,6 @@ namespace UI
             cmbIdioma.Name = "cmbIdioma";
             cmbIdioma.Size = new Size(150, 27);
             cmbIdioma.TabIndex = 2;
-            cmbIdioma.SelectedIndexChanged += cmdIdioma_SelectedIndexChanged;
             // 
             // label6
             // 

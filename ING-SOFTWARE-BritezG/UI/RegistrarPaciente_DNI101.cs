@@ -1,13 +1,15 @@
 using BE;
 using BLL;
+using Services;
 using System;
 using System.Windows.Forms;
 
 namespace UI
 {
-    public partial class RegistrarPaciente_DNI101 : Form
+    public partial class RegistrarPaciente_DNI101 : Form, IIdiomaObserver
     {
         private readonly PacienteBLL_DNI101 _pacienteBLL = new();
+        private readonly IdiomaBLL _idiomaBLL = new();
 
         public string DniNiñoRegistrado => txtDniNiño.Text.Trim();
 
@@ -20,6 +22,17 @@ namespace UI
             {
                 txtDniNiño.Text = dniNiñoInicial.Trim();
                 txtNombre.Focus();
+            }
+
+            TraductorUI.SuscribirFormulario(this, this);
+            ActualizarIdioma();
+        }
+
+        public void ActualizarIdioma()
+        {
+            if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
+            {
+                TraductorUI.TraducirFormulario(this, _idiomaBLL);
             }
         }
 
@@ -34,28 +47,28 @@ namespace UI
 
             if (string.IsNullOrWhiteSpace(nombre))
             {
-                MessageBox.Show("Por favor, ingrese el nombre del paciente.", "Campo requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_ingrese_nombre_paciente", "titulo_campo_requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtNombre.Focus();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(apellido))
             {
-                MessageBox.Show("Por favor, ingrese el apellido del paciente.", "Campo requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_ingrese_apellido_paciente", "titulo_campo_requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtApellido.Focus();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(dniNiño))
             {
-                MessageBox.Show("Por favor, ingrese el DNI del niño/a.", "Campo requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_ingrese_dni_paciente", "titulo_campo_requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtDniNiño.Focus();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(obraSocial))
             {
-                MessageBox.Show("Por favor, seleccione una Obra Social (Medicus, OSPEP o SAO).", "Campo requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_seleccione_obra_social", "titulo_campo_requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cmbObraSocial.Focus();
                 return;
             }
@@ -67,23 +80,27 @@ namespace UI
 
                 if (idPaciente > 0)
                 {
-                    MessageBox.Show(
-                        $"El paciente '{apellido}, {nombre}' con DNI {dniNiño} y Obra Social {obraSocial} fue registrado exitosamente.",
-                        "Paciente Registrado",
+                    _idiomaBLL.MostrarMensaje(
+                        "msg_paciente_registrado_det",
+                        "titulo_paciente_registrado_ok",
                         MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                        MessageBoxIcon.Information,
+                        apellido,
+                        nombre,
+                        dniNiño,
+                        obraSocial ?? "");
 
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("No se pudo completar el registro del paciente.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _idiomaBLL.MostrarMensaje("msg_no_pudo_registrar_paciente", "titulo_error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error al registrar el paciente:\n{ex.Message}", "Error al Registrar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _idiomaBLL.MostrarMensaje("msg_error_registrar_paciente", "titulo_error_registrar_paciente", MessageBoxButtons.OK, MessageBoxIcon.Error, ex.Message);
             }
             finally
             {

@@ -1,4 +1,4 @@
-﻿using BE;
+using BE;
 using DAL;
 using Microsoft.Data.SqlClient;
 using Services;
@@ -12,7 +12,7 @@ namespace BLL
         private ServicioBcrypt Bcryp;
         private readonly DigitoVerificadorBLL digitoVerificadorBLL = new();
         // Diccionario estático para guardar intentos fallidos en memoria
-        public Dictionary<string, int> intentosFallidos = new Dictionary<string, int>();
+        public static readonly Dictionary<string, int> intentosFallidos = new Dictionary<string, int>();
 
         public UsuarioBLL()
         {
@@ -109,31 +109,13 @@ namespace BLL
                 digitoVerificadorBLL.RecalcularYPersistir();
 
 
-                int dniActual;
-                try
-                {
-                    int dniSesion = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                    dniActual = dniSesion <= 0 ? 12345678 : dniSesion;
-                }
-                catch
-                {
-                    dniActual = 12345678;
-                }
+                int dniActual = ObtenerDniOperadorActual();
                 string descripcion = $"Creacion de Usuario";
                 new EventoBLL().RegistrarEvento(1, descripcion, dniActual, "GestionUsuario");
             }
             catch (Exception ex)
             {
-                int dniActual;
-                try
-                {
-                    int dniSesion = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                    dniActual = dniSesion <= 0 ? 12345678 : dniSesion;
-                }
-                catch
-                {
-                    dniActual = 12345678;
-                }
+                int dniActual = ObtenerDniOperadorActual();
                 string descripcion = $"ERROR: Creación de Usuario";
                 new EventoBLL().RegistrarEvento(4, descripcion, dniActual, "GestionUsuario");
                 Console.WriteLine($"Error al CrearUsuario: {ex.Message}");
@@ -220,6 +202,16 @@ namespace BLL
 
                     Console.WriteLine($"Error: Contraseña incorrecta para usuario '{nombreDeUsuario}'. Intentos: {intentosActuales}/3");
 
+                    // Registrar en bitácora cada intento fallido de inicio de sesión
+                    try
+                    {
+                        EventoBLL bitacoraBLL = new();
+                        int dniActual = usuarioEnBD._Dni;
+                        string descripcion = $"Intento fallido de inicio de sesión para el usuario '{nombreDeUsuario}' (Intento {intentosActuales}/3)";
+                        bitacoraBLL.RegistrarEvento(2, descripcion, dniActual, "Login");
+                    }
+                    catch { }
+
                     if (intentosActuales >= 3)
                     {
                         usuarioEnBD._Bloqueado = true;
@@ -228,7 +220,7 @@ namespace BLL
                         Console.WriteLine($"Cuenta de usuario '{nombreDeUsuario}' bloqueada por 3 intentos fallidos.");
 
                         EventoBLL bitacoraBLL = new();
-                        int dniActual = this.BuscarUsuario(nombreDeUsuario)._Dni;
+                        int dniActual = usuarioEnBD._Dni;
                         string descripcion = $"Bloqueo de Cuenta";
                         bitacoraBLL.RegistrarEvento(1, descripcion, dniActual, "Login");
                     }
@@ -260,9 +252,12 @@ namespace BLL
                 if (usuario != null)
                 {
                     Console.WriteLine($"Usuario '{usuario._NombreDeUsuario}' (DNI: {usuario._Dni}) ha cerrado sesión.");
+                    string norm = (usuario._NombreDeUsuario ?? "").ToLower();
+                    if (intentosFallidos.ContainsKey(norm))
+                    {
+                        intentosFallidos.Remove(norm);
+                    }
                 }
-
-                intentosFallidos.Clear();
 
                 EventoBLL bitacoraBLL = new();
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
@@ -372,12 +367,20 @@ namespace BLL
 
         private string GenerarCadenaParaDV(UsuarioBE usuario)
         {
-
-
             return $"{usuario._Dni}{usuario._Nombre}{usuario._Apellido}{usuario._NombreDeUsuario}{usuario._Contraseña}{usuario._IdPerfil}{usuario._Bloqueado}{usuario._Estado}{usuario._Idioma}";
-
         }
 
-        
+        private int ObtenerDniOperadorActual()
+        {
+            try
+            {
+                int dniSesion = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                return dniSesion > 0 ? dniSesion : 12345678;
+            }
+            catch
+            {
+                return 12345678;
+            }
+        }
     }
 }

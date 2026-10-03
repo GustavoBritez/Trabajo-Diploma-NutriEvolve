@@ -1,0 +1,448 @@
+import json
+
+es_path = r"c:\Users\Navegador\Desktop\TD\ING-SOFTWARE-BritezG\UI\Idiomas\es.json"
+en_path = r"c:\Users\Navegador\Desktop\TD\ING-SOFTWARE-BritezG\UI\Idiomas\en.json"
+po_path = r"c:\Users\Navegador\Desktop\TD\ING-SOFTWARE-BritezG\UI\Idiomas\po.json"
+
+with open(es_path, "r", encoding="utf-8") as f:
+    es = json.load(f)
+with open(en_path, "r", encoding="utf-8") as f:
+    en = json.load(f)
+with open(po_path, "r", encoding="utf-8") as f:
+    po = json.load(f)
+
+es_add = {
+  # Form Titles
+  "MenuPrincipal": "NutriEvolve - Menú Principal",
+  "Login": "NutriEvolve - Inicio de Sesión",
+  "GestionUsuario": "Gestión de Usuarios",
+  "Perfiles": "Gestión de Perfiles y Familias",
+  "Bitacora": "Auditoría y Bitácora del Sistema",
+  "Respaldo": "Gestión de Respaldo y Restauración",
+  "FrmCrearPermiso": "Gestión de Permisos",
+  "FrmSeleccionarFamilia": "Relación Familia a Familia",
+  "frmTurnero_DNI101": "Turnero Nutricional Pediátrico",
+  "FrmRegistrarTurno_DNI101": "Registrar Turno Nutricional",
+  "FrmReprogramarTurno_DNI101": "Reprogramar Turno Nutricional",
+  "RegistrarPaciente_DNI101": "Registro de Paciente Pediátrico",
+  "frmModificarTurno_DNI101": "Modificar Turno Nutricional",
+
+  # MenuPrincipal
+  "gbDV": "Dígito Verificador (Integridad de Base de Datos)",
+  "lblDVEtiquetaMenu": "Verifique la consistencia o fuerce el recálculo de todos los DV.",
+  "btnVerificarDVMenu": "Verificar DV",
+  "btnRecalcularDVMenu": "Recalcular DV",
+  "rol_admin": "Administrador",
+  "rol_user": "Usuario",
+  "rol_medico": "Médico",
+
+  # Grid Columns
+  "_Login": "Usuario",
+  "_Fecha": "Fecha",
+  "_Hora": "Hora",
+  "_Modulo": "Módulo",
+  "_Evento": "Evento",
+  "_Criticidad": "Criticidad",
+  "filtro_todos": "Todos",
+  "_Dni": "DNI",
+  "_Nombre": "Nombre",
+  "_Apellido": "Apellido",
+  "_NombreDeUsuario": "Nombre de Usuario",
+  "_IdPerfil": "Perfil",
+  "_Bloqueado": "Bloqueado",
+  "_Estado": "Estado",
+  "colPerfil_Nombre": "Nombre del Perfil",
+  "colFamilia_Nombre": "Nombre de Familia",
+  "colPermiso_Nombre": "Acciones / Permisos",
+  "Id": "ID",
+  "Nombre": "Nombre",
+
+  # Respaldo Dialogs
+  "dialog_guardar_backup": "Guardar Backup",
+  "dialog_seleccionar_backup": "Seleccionar Backup",
+  "dialog_filtro_backup": "Backup (*.bak)|*.bak",
+
+  # Turnero DNI101
+  "lblTituloTurnero": "📅 PN1: Turnero Nutricional Pediátrico",
+  "btn_Registrar_Turno": "➕ Registrar Turno",
+  "btn_Registrar_Paciente": "👤 Registrar Paciente",
+  "btn_Reprogramar_Turno": "🔄 Reprogramar Turno",
+  "btn_Modificar_Turno": "✏️ Modificar Turno",
+  "btn_Cancelar_Turno": "❌ Cancelar Turno",
+  "chkFiltrarFecha": "Filtrar por Fecha:",
+  "lblEstado": "Estado:",
+  "btnActualizar": "🔄 Actualizar",
+  "colId": "ID",
+  "colCodigo": "Código",
+  "colFecha": "Fecha",
+  "colHora": "Hora",
+  "colDniNiño": "DNI Niño",
+  "colPaciente": "Paciente",
+  "colObraSocial": "Obra Social",
+  "colMotivo": "Motivo Consulta",
+  "colEstado": "Estado",
+  "estado_todos": "Todos",
+  "estado_solicitado": "Solicitado",
+  "estado_confirmado": "Confirmado",
+  "estado_asistio": "Asistió",
+  "estado_cancelado": "Cancelado",
+
+  # Registrar Turno
+  "lblTituloRegistrarTurno": "📅 Registrar Turno Nutricional - CUN01 (PN1)",
+  "lblSubtituloRegistrarTurno": "Consulta la disponibilidad y registra el turno del paciente.",
+  "lblProfesional": "Profesional:",
+  "lblFecha": "Fecha:",
+  "lblHorario": "Horario:",
+  "lblDisponibilidad": "Disponibilidad:",
+  "lblPacienteInfo": "Información del Paciente:",
+  "lblMotivo": "Motivo de Consulta:",
+  "btnRegistrarTurno": "➕ Registrar Turno",
+  "btnCancelar": "Cancelar",
+
+  # Reprogramar Turno
+  "lblTituloReprogramarTurno": "🔄 Reprogramar Turno Nutricional - CUN03 (PN1)",
+  "lblSubtituloReprogramarTurno": "Seleccione la nueva fecha y profesional deseado para reubicar el bloque horario del turno.",
+  "lblInfoTurno": "Información del Turno Actual",
+  "lblNuevaFecha": "Nueva Fecha:",
+  "lblNuevoHorario": "Nuevo Horario:",
+  "btnConfirmar": "Confirmar Reprogramación",
+
+  # Registrar Paciente
+  "lblTituloRegistrarPaciente": "👤 Registro de Paciente Pediátrico",
+  "lblSubtituloRegistrarPaciente": "Complete los datos del paciente para vincularlo al turno nutricional.",
+  "lblTelefono": "Teléfono:",
+  "lblEmail": "Email:",
+  "lblObraSocial": "Obra Social:",
+  "btnRegistrarPaciente": "Guardar Paciente",
+  "btnCancelarPaciente": "Cancelar",
+
+  # Modificar Turno
+  "lblTituloModificarTurno": "📝 Modificar Turno Nutricional - CUN04 (PN1)",
+  "lblSubtituloModificarTurno": "Busque un turno por su Código de Turno y actualice su Estado y Motivo de Consulta.",
+  "lblCodigoTurno": "Código de Turno:",
+  "btnBuscarCodigo": "🔍 Buscar",
+  "lblAvisoReprogramar": "* Para cambiar fecha, hora o médico utilice la opción Reprogramar Turno.",
+  "btnGuardar": "Guardar Modificaciones",
+
+  # Mensajes Turnero
+  "msg_sel_turno_reprogramar": "Por favor, seleccione un turno de la grilla para reprogramar.",
+  "titulo_sel_turno_reprogramar": "Turno No Seleccionado",
+  "msg_estado_no_permite_reprogramar": "El turno se encuentra en estado '{0}' y no permite reprogramación.\nSolo se permite modificar turnos en estado 'Solicitado' o 'Confirmado'.",
+  "titulo_operacion_no_permitida": "Operación no permitida",
+  "msg_sel_turno_cancelar": "Por favor, seleccione un turno de la grilla para cancelar.",
+  "titulo_sel_turno_cancelar": "Selección Requerida",
+  "msg_turno_ya_cancelado": "El turno seleccionado ya se encuentra cancelado.",
+  "msg_turno_ya_atendido": "No se puede cancelar un turno que ya fue atendido.",
+  "msg_confirmar_cancelar_turno": "¿Está seguro de que desea cancelar el turno '{0}' del paciente '{1}'?",
+  "titulo_confirmar_cancelar_turno": "Confirmar Cancelación",
+  "msg_turno_cancelado_ok": "El turno '{0}' ha sido cancelado con éxito.",
+  "titulo_turno_cancelado_ok": "Turno Cancelado",
+  "msg_dni_obligatorio": "El campo DNI Niño/a es obligatorio.",
+  "titulo_validacion_turno": "Validación de Turno",
+  "msg_profesional_obligatorio": "Debe seleccionar un profesional.",
+  "msg_horario_obligatorio": "Debe seleccionar un bloque horario disponible.",
+  "msg_motivo_obligatorio": "El motivo de la consulta es obligatorio.",
+  "msg_paciente_registrado_ok": "Paciente registrado correctamente.",
+  "titulo_paciente_registrado_ok": "Paciente Registrado",
+  "msg_turno_registrado_ok": "¡Turno nutricional registrado exitosamente! Código: {0}",
+  "titulo_turno_registrado_ok": "Turno Registrado",
+  "msg_turno_reprogramado_ok": "¡Turno reprogramado exitosamente!",
+  "titulo_turno_reprogramado_ok": "Turno Reprogramado",
+  "msg_turno_modificado_ok": "Modificaciones guardadas exitosamente.",
+  "titulo_turno_modificado_ok": "Modificación Exitosa"
+}
+
+en_add = {
+  # Form Titles
+  "MenuPrincipal": "NutriEvolve - Main Menu",
+  "Login": "NutriEvolve - Log In",
+  "GestionUsuario": "User Management",
+  "Perfiles": "Profiles & Permissions Management",
+  "Bitacora": "System Audit & Log",
+  "Respaldo": "Backup & Restore Management",
+  "FrmCrearPermiso": "Permission Management",
+  "FrmSeleccionarFamilia": "Family to Family Relationship",
+  "frmTurnero_DNI101": "Pediatric Nutritional Appointments",
+  "FrmRegistrarTurno_DNI101": "Register Nutritional Appointment",
+  "FrmReprogramarTurno_DNI101": "Reschedule Nutritional Appointment",
+  "RegistrarPaciente_DNI101": "Pediatric Patient Registration",
+  "frmModificarTurno_DNI101": "Modify Nutritional Appointment",
+
+  # MenuPrincipal
+  "gbDV": "Verification Digit (Database Integrity)",
+  "lblDVEtiquetaMenu": "Check consistency or force recalculation of all verification digits.",
+  "btnVerificarDVMenu": "Verify DV",
+  "btnRecalcularDVMenu": "Recalculate DV",
+  "rol_admin": "Administrator",
+  "rol_user": "User",
+  "rol_medico": "Doctor",
+
+  # Grid Columns
+  "_Login": "Username",
+  "_Fecha": "Date",
+  "_Hora": "Time",
+  "_Modulo": "Module",
+  "_Evento": "Event",
+  "_Criticidad": "Criticality",
+  "filtro_todos": "All",
+  "_Dni": "ID",
+  "_Nombre": "First Name",
+  "_Apellido": "Last Name",
+  "_NombreDeUsuario": "Username",
+  "_IdPerfil": "Profile",
+  "_Bloqueado": "Blocked",
+  "_Estado": "Status",
+  "colPerfil_Nombre": "Profile Name",
+  "colFamilia_Nombre": "Family Name",
+  "colPermiso_Nombre": "Actions / Permissions",
+  "Id": "ID",
+  "Nombre": "Name",
+
+  # Respaldo Dialogs
+  "dialog_guardar_backup": "Save Backup",
+  "dialog_seleccionar_backup": "Select Backup",
+  "dialog_filtro_backup": "Backup (*.bak)|*.bak",
+
+  # Turnero DNI101
+  "lblTituloTurnero": "📅 PN1: Pediatric Nutritional Appointments",
+  "btn_Registrar_Turno": "➕ Register Appointment",
+  "btn_Registrar_Paciente": "👤 Register Patient",
+  "btn_Reprogramar_Turno": "🔄 Reschedule Turn",
+  "btn_Modificar_Turno": "✏️ Modify Turn",
+  "btn_Cancelar_Turno": "❌ Cancel Turn",
+  "chkFiltrarFecha": "Filter by Date:",
+  "lblEstado": "Status:",
+  "btnActualizar": "🔄 Refresh",
+  "colId": "ID",
+  "colCodigo": "Code",
+  "colFecha": "Date",
+  "colHora": "Time",
+  "colDniNiño": "Child ID",
+  "colPaciente": "Patient",
+  "colObraSocial": "Health Insurance",
+  "colMotivo": "Reason for Visit",
+  "colEstado": "Status",
+  "estado_todos": "All",
+  "estado_solicitado": "Requested",
+  "estado_confirmado": "Confirmed",
+  "estado_asistio": "Attended",
+  "estado_cancelado": "Cancelled",
+
+  # Registrar Turno
+  "lblTituloRegistrarTurno": "📅 Register Nutritional Appointment - CUN01 (PN1)",
+  "lblSubtituloRegistrarTurno": "Check availability and register patient appointment.",
+  "lblProfesional": "Professional:",
+  "lblFecha": "Date:",
+  "lblHorario": "Time Slot:",
+  "lblDisponibilidad": "Availability:",
+  "lblPacienteInfo": "Patient Information:",
+  "lblMotivo": "Reason for Visit:",
+  "btnRegistrarTurno": "➕ Register Appointment",
+  "btnCancelar": "Cancel",
+
+  # Reprogramar Turno
+  "lblTituloReprogramarTurno": "🔄 Reschedule Nutritional Appointment - CUN03 (PN1)",
+  "lblSubtituloReprogramarTurno": "Select new date and professional to reschedule appointment.",
+  "lblInfoTurno": "Current Appointment Information",
+  "lblNuevaFecha": "New Date:",
+  "lblNuevoHorario": "New Time Slot:",
+  "btnConfirmar": "Confirm Reschedule",
+
+  # Registrar Paciente
+  "lblTituloRegistrarPaciente": "👤 Pediatric Patient Registration",
+  "lblSubtituloRegistrarPaciente": "Fill in patient information to link to nutritional appointment.",
+  "lblTelefono": "Phone:",
+  "lblEmail": "Email:",
+  "lblObraSocial": "Health Insurance:",
+  "btnRegistrarPaciente": "Save Patient",
+  "btnCancelarPaciente": "Cancel",
+
+  # Modificar Turno
+  "lblTituloModificarTurno": "📝 Modify Nutritional Appointment - CUN04 (PN1)",
+  "lblSubtituloModificarTurno": "Search appointment by Code and update Status and Reason.",
+  "lblCodigoTurno": "Appointment Code:",
+  "btnBuscarCodigo": "🔍 Search",
+  "lblAvisoReprogramar": "* To change date, time or doctor use Reschedule Appointment.",
+  "btnGuardar": "Save Changes",
+
+  # Mensajes Turnero
+  "msg_sel_turno_reprogramar": "Please select an appointment from the grid to reschedule.",
+  "titulo_sel_turno_reprogramar": "No Appointment Selected",
+  "msg_estado_no_permite_reprogramar": "Appointment is in state '{0}' and cannot be rescheduled.\nOnly 'Requested' or 'Confirmed' appointments can be modified.",
+  "titulo_operacion_no_permitida": "Operation Not Allowed",
+  "msg_sel_turno_cancelar": "Please select an appointment from the grid to cancel.",
+  "titulo_sel_turno_cancelar": "Selection Required",
+  "msg_turno_ya_cancelado": "The selected appointment is already cancelled.",
+  "msg_turno_ya_atendido": "Cannot cancel an appointment that has already been attended.",
+  "msg_confirmar_cancelar_turno": "Are you sure you want to cancel appointment '{0}' for patient '{1}'?",
+  "titulo_confirmar_cancelar_turno": "Confirm Cancellation",
+  "msg_turno_cancelado_ok": "Appointment '{0}' was successfully cancelled.",
+  "titulo_turno_cancelado_ok": "Appointment Cancelled",
+  "msg_dni_obligatorio": "The Child ID field is required.",
+  "titulo_validacion_turno": "Validation",
+  "msg_profesional_obligatorio": "You must select a professional.",
+  "msg_horario_obligatorio": "You must select an available time slot.",
+  "msg_motivo_obligatorio": "Reason for visit is required.",
+  "msg_paciente_registrado_ok": "Patient registered successfully.",
+  "titulo_paciente_registrado_ok": "Patient Registered",
+  "msg_turno_registrado_ok": "Nutritional appointment registered successfully! Code: {0}",
+  "titulo_turno_registrado_ok": "Appointment Registered",
+  "msg_turno_reprogramado_ok": "Appointment rescheduled successfully!",
+  "titulo_turno_reprogramado_ok": "Appointment Rescheduled",
+  "msg_turno_modificado_ok": "Changes saved successfully.",
+  "titulo_turno_modificado_ok": "Modification Successful"
+}
+
+po_add = {
+  # Form Titles
+  "MenuPrincipal": "NutriEvolve - Menu Principal",
+  "Login": "NutriEvolve - Início de Sessão",
+  "GestionUsuario": "Gestão de Usuários",
+  "Perfiles": "Gestão de Perfis e Permissões",
+  "Bitacora": "Auditoria e Registro do Sistema",
+  "Respaldo": "Gestão de Backup e Restauração",
+  "FrmCrearPermiso": "Gestão de Permissões",
+  "FrmSeleccionarFamilia": "Relação Família para Família",
+  "frmTurnero_DNI101": "Turnos Nutricionais Pediátricos",
+  "FrmRegistrarTurno_DNI101": "Registrar Consulta Nutricional",
+  "FrmReprogramarTurno_DNI101": "Remarcar Consulta Nutricional",
+  "RegistrarPaciente_DNI101": "Registro de Paciente Pediátrico",
+  "frmModificarTurno_DNI101": "Modificar Consulta Nutricional",
+
+  # MenuPrincipal
+  "gbDV": "Dígito Verificador (Integridade da Base de Dados)",
+  "lblDVEtiquetaMenu": "Verifique a consistência ou force o recálculo de todos os dígitos verificadores.",
+  "btnVerificarDVMenu": "Verificar DV",
+  "btnRecalcularDVMenu": "Recalcular DV",
+  "rol_admin": "Administrador",
+  "rol_user": "Usuário",
+  "rol_medico": "Médico",
+
+  # Grid Columns
+  "_Login": "Usuário",
+  "_Fecha": "Data",
+  "_Hora": "Hora",
+  "_Modulo": "Módulo",
+  "_Evento": "Evento",
+  "_Criticidad": "Criticidade",
+  "filtro_todos": "Todos",
+  "_Dni": "DNI",
+  "_Nombre": "Nome",
+  "_Apellido": "Sobrenome",
+  "_NombreDeUsuario": "Nome de Usuário",
+  "_IdPerfil": "Perfil",
+  "_Bloqueado": "Bloqueado",
+  "_Estado": "Estado",
+  "colPerfil_Nombre": "Nome do Perfil",
+  "colFamilia_Nombre": "Nome da Família",
+  "colPermiso_Nombre": "Ações / Permissões",
+  "Id": "ID",
+  "Nombre": "Nome",
+
+  # Respaldo Dialogs
+  "dialog_guardar_backup": "Salvar Backup",
+  "dialog_seleccionar_backup": "Selecionar Backup",
+  "dialog_filtro_backup": "Backup (*.bak)|*.bak",
+
+  # Turnero DNI101
+  "lblTituloTurnero": "📅 PN1: Turnos Nutricionais Pediátricos",
+  "btn_Registrar_Turno": "➕ Registrar Consulta",
+  "btn_Registrar_Paciente": "👤 Registrar Paciente",
+  "btn_Reprogramar_Turno": "🔄 Remarcar Consulta",
+  "btn_Modificar_Turno": "✏️ Modificar Consulta",
+  "btn_Cancelar_Turno": "❌ Cancelar Consulta",
+  "chkFiltrarFecha": "Filtrar por Data:",
+  "lblEstado": "Estado:",
+  "btnActualizar": "🔄 Atualizar",
+  "colId": "ID",
+  "colCodigo": "Código",
+  "colFecha": "Data",
+  "colHora": "Hora",
+  "colDniNiño": "DNI Criança",
+  "colPaciente": "Paciente",
+  "colObraSocial": "Convênio Médico",
+  "colMotivo": "Motivo da Consulta",
+  "colEstado": "Estado",
+  "estado_todos": "Todos",
+  "estado_solicitado": "Solicitado",
+  "estado_confirmado": "Confirmado",
+  "estado_asistio": "Compareceu",
+  "estado_cancelado": "Cancelado",
+
+  # Registrar Turno
+  "lblTituloRegistrarTurno": "📅 Registrar Consulta Nutricional - CUN01 (PN1)",
+  "lblSubtituloRegistrarTurno": "Consulte a disponibilidade e registre a consulta do paciente.",
+  "lblProfesional": "Profissional:",
+  "lblFecha": "Data:",
+  "lblHorario": "Horário:",
+  "lblDisponibilidad": "Disponibilidade:",
+  "lblPacienteInfo": "Informações do Paciente:",
+  "lblMotivo": "Motivo da Consulta:",
+  "btnRegistrarTurno": "➕ Registrar Consulta",
+  "btnCancelar": "Cancelar",
+
+  # Reprogramar Turno
+  "lblTituloReprogramarTurno": "🔄 Remarcar Consulta Nutricional - CUN03 (PN1)",
+  "lblSubtituloReprogramarTurno": "Selecione nova data e profissional para reagendar a consulta.",
+  "lblInfoTurno": "Informações da Consulta Atual",
+  "lblNuevaFecha": "Nova Data:",
+  "lblNuevoHorario": "Novo Horário:",
+  "btnConfirmar": "Confirmar Remarcação",
+
+  # Registrar Paciente
+  "lblTituloRegistrarPaciente": "👤 Registro de Paciente Pediátrico",
+  "lblSubtituloRegistrarPaciente": "Preencha os dados do paciente para vinculá-lo à consulta.",
+  "lblTelefono": "Telefone:",
+  "lblEmail": "E-mail:",
+  "lblObraSocial": "Convênio Médico:",
+  "btnRegistrarPaciente": "Salvar Paciente",
+  "btnCancelarPaciente": "Cancelar",
+
+  # Modificar Turno
+  "lblTituloModificarTurno": "📝 Modificar Consulta Nutricional - CUN04 (PN1)",
+  "lblSubtituloModificarTurno": "Busque a consulta pelo Código e atualize o Estado e Motivo.",
+  "lblCodigoTurno": "Código da Consulta:",
+  "btnBuscarCodigo": "🔍 Buscar",
+  "lblAvisoReprogramar": "* Para alterar data, horário ou médico use a opção Remarcar Consulta.",
+  "btnGuardar": "Salvar Alterações",
+
+  # Mensajes Turnero
+  "msg_sel_turno_reprogramar": "Por favor, selecione uma consulta na grade para remarcar.",
+  "titulo_sel_turno_reprogramar": "Consulta Não Selecionada",
+  "msg_estado_no_permite_reprogramar": "A consulta está no estado '{0}' e não pode ser remarcada.\nSomente consultas 'Solicitado' ou 'Confirmado' podem ser modificadas.",
+  "titulo_operacion_no_permitida": "Operação Não Permitida",
+  "msg_sel_turno_cancelar": "Por favor, selecione uma consulta na grade para cancelar.",
+  "titulo_sel_turno_cancelar": "Seleção Obrigatória",
+  "msg_turno_ya_cancelado": "A consulta selecionada já está cancelada.",
+  "msg_turno_ya_atendido": "Não é possível cancelar uma consulta que já foi atendida.",
+  "msg_confirmar_cancelar_turno": "Tem certeza de que deseja cancelar a consulta '{0}' do paciente '{1}'?",
+  "titulo_confirmar_cancelar_turno": "Confirmar Cancelamento",
+  "msg_turno_cancelado_ok": "A consulta '{0}' foi cancelada com sucesso.",
+  "titulo_turno_cancelado_ok": "Consulta Cancelada",
+  "msg_dni_obligatorio": "O campo DNI Criança é obrigatório.",
+  "titulo_validacion_turno": "Validação",
+  "msg_profesional_obligatorio": "Você deve selecionar um profissional.",
+  "msg_horario_obligatorio": "Você deve selecionar um horário disponível.",
+  "msg_motivo_obligatorio": "O motivo da consulta é obrigatório.",
+  "msg_paciente_registrado_ok": "Paciente registrado com sucesso.",
+  "titulo_paciente_registrado_ok": "Paciente Registrado",
+  "msg_turno_registrado_ok": "Consulta nutricional registrada com sucesso! Código: {0}",
+  "titulo_turno_registrado_ok": "Consulta Registrada",
+  "msg_turno_reprogramado_ok": "Consulta remarcada com sucesso!",
+  "titulo_turno_reprogramado_ok": "Consulta Remarcada",
+  "msg_turno_modificado_ok": "Alterações salvas com sucesso.",
+  "titulo_turno_modificado_ok": "Modificação Bem-sucedida"
+}
+
+es.update(es_add)
+en.update(en_add)
+po.update(po_add)
+
+with open(es_path, "w", encoding="utf-8") as f:
+    json.dump(es, f, indent=2, ensure_ascii=False)
+with open(en_path, "w", encoding="utf-8") as f:
+    json.dump(en, f, indent=2, ensure_ascii=False)
+with open(po_path, "w", encoding="utf-8") as f:
+    json.dump(po, f, indent=2, ensure_ascii=False)
+
+print("All i18n JSON files successfully updated.")

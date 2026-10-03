@@ -1,6 +1,9 @@
 using DAL;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 
@@ -11,71 +14,121 @@ namespace BLL
         private const string NombreTablaGlobal = "__BD__";
         private readonly DigitoVerificadorDAL digitoVerificadorDAL = new();
 
+        /// <summary>
+        /// Recalcula y persiste todos los DÃ­gitos Verificadores del sistema:
+        /// 1. DV individual por fila en todas las tablas que poseen columna 'DV'.
+        /// 2. DV horizontal (DVH) y vertical (DVV) de cada tabla.
+        /// 3. DV global (__BD__) de toda la base de datos.
+        /// Todo resuelto en una sola pasada y persistido en una Ãºnica transacciÃ³n en DAL.
+        /// </summary>
         public void RecalcularYPersistir()
         {
-            digitoVerificadorDAL.ReemplazarResumen(CalcularResumenActual());
+            var (resumen, filasDV) = CalcularIntegridadCompleta(calcularFilasIndividuales: true);
+            digitoVerificadorDAL.PersistirIntegridadCompleta(resumen, filasDV);
         }
 
-        public bool VerificarBaseDatos()
+        /// <summary>
+        /// Comprueba la integridad de toda la base de datos comparando con dbo.DV.
+        /// Devuelve la lista de nombres de las tablas alteradas.
+        /// Si la lista estÃ¡ vacÃ­a, no hay inconsistencias.
+        /// </summary>
+        public List<string> ObtenerTablasAlteradas()
         {
+            List<string> tablasAlteradas = new();
+
             if (!digitoVerificadorDAL.ExisteTablaDV())
             {
-                return false;
+                tablasAlteradas.Add("DV");
+                return tablasAlteradas;
             }
 
-            Dictionary<string, ResumenDigitoVerificador> calculados = CalcularResumenActual()
+            var (resumenCalculado, _) = CalcularIntegridadCompleta(calcularFilasIndividuales: false);
+            Dictionary<string, ResumenDigitoVerificador> calculados = resumenCalculado
                 .ToDictionary(item => item.Tabla, StringComparer.OrdinalIgnoreCase);
 
             List<ResumenDigitoVerificador> persistidos = digitoVerificadorDAL.ObtenerResumenPersistido();
 
-            if (persistidos.Count != calculados.Count)
-            {
-                return false;
-            }
-
+            // Comparar tablas persistidas contra las calculadas en tiempo real
             foreach (ResumenDigitoVerificador item in persistidos)
             {
+                if (string.Equals(item.Tabla, NombreTablaGlobal, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
                 if (!calculados.TryGetValue(item.Tabla, out ResumenDigitoVerificador? calculado))
                 {
-                    return false;
+                    tablasAlteradas.Add(item.Tabla);
                 }
-
-                if (!string.Equals(item.DVH, calculado.DVH, StringComparison.OrdinalIgnoreCase))
+                else if (!string.Equals(item.DVH, calculado.DVH, StringComparison.OrdinalIgnoreCase) ||
+                         !string.Equals(item.DVV, calculado.DVV, StringComparison.OrdinalIgnoreCase))
                 {
-                    return false;
-                }
-
-                if (!string.Equals(item.DVV, calculado.DVV, StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
+                    tablasAlteradas.Add(item.Tabla);
                 }
             }
 
-            return true;
+            // Detectar si aparecieron tablas nuevas no registradas en dbo.DV
+            foreach (ResumenDigitoVerificador calculado in resumenCalculado)
+            {
+                if (string.Equals(calculado.Tabla, NombreTablaGlobal, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (!persistidos.Any(p => string.Equals(p.Tabla, calculado.Tabla, StringComparison.OrdinalIgnoreCase)))
+                {
+                    if (!tablasAlteradas.Contains(calculado.Tabla))
+                    {
+                        tablasAlteradas.Add(calculado.Tabla);
+                    }
+                }
+            }
+
+            // Fallback: Si no se identificÃ³ tabla individual pero difiere el hash global de la BD
+            if (tablasAlteradas.Count == 0)
+            {
+                var globalPersistido = persistidos.FirstOrDefault(p => string.Equals(p.Tabla, NombreTablaGlobal, StringComparison.OrdinalIgnoreCase));
+                var globalCalculado = resumenCalculado.FirstOrDefault(p => string.Equals(p.Tabla, NombreTablaGlobal, StringComparison.OrdinalIgnoreCase));
+
+                if (globalPersistido != null && globalCalculado != null)
+                {
+                    if (!string.Equals(globalPersistido.DVH, globalCalculado.DVH, StringComparison.OrdinalIgnoreCase) ||
+                        !string.Equals(globalPersistido.DVV, globalCalculado.DVV, StringComparison.OrdinalIgnoreCase))
+                    {
+                        tablasAlteradas.Add("Base de Datos");
+                    }
+                }
+            }
+
+            return tablasAlteradas;
         }
+
+        public bool VerificarBaseDatos()
+        {
+            return ObtenerTablasAlteradas().Count == 0;
+        }
+
         public List<string> ObtenerUsuariosCorruptos()
         {
             List<string> usuariosCorruptos = new();
-
             DataTable dtUsuarios = digitoVerificadorDAL.ObtenerDatosTabla("dbo", "Usuarios");
 
             if (!dtUsuarios.Columns.Contains("DV"))
             {
                 return usuariosCorruptos;
             }
-            string columnaIdentificadora = dtUsuarios.Columns.Contains("Nombre") ? "Nombre" : dtUsuarios.Columns[0].ColumnName;
+
+            string columnaId = dtUsuarios.Columns.Contains("NombreDeUsuario") ? "NombreDeUsuario" : dtUsuarios.Columns[0].ColumnName;
 
             foreach (DataRow fila in dtUsuarios.Rows)
             {
                 BigInteger totalFila = BigInteger.Zero;
-
                 foreach (DataColumn columna in dtUsuarios.Columns)
                 {
                     if (string.Equals(columna.ColumnName, "DV", StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
                     }
-
                     totalFila += ObtenerValorHexadecimal(fila[columna]);
                 }
 
@@ -84,24 +137,76 @@ namespace BLL
 
                 if (!string.Equals(dvCalculado, dvGuardado, StringComparison.OrdinalIgnoreCase))
                 {
-                    string usuarioAfectado = fila[columnaIdentificadora]?.ToString() ?? "ID Desconocido";
+                    string usuarioAfectado = fila[columnaId]?.ToString() ?? "ID Desconocido";
                     usuariosCorruptos.Add(usuarioAfectado);
                 }
             }
 
             return usuariosCorruptos;
         }
-        private List<ResumenDigitoVerificador> CalcularResumenActual()
+
+        private (List<ResumenDigitoVerificador> Resumen, List<(string Schema, string Tabla, string ColumnaId, object ValorId, string DV)> FilasDV)
+            CalcularIntegridadCompleta(bool calcularFilasIndividuales)
         {
             List<ResumenDigitoVerificador> resumen = new();
+            List<(string Schema, string Tabla, string ColumnaId, object ValorId, string DV)> filasDV = new();
+
             BigInteger totalHorizontalBD = BigInteger.Zero;
             BigInteger totalVerticalBD = BigInteger.Zero;
 
             foreach ((string schema, string table) in digitoVerificadorDAL.ObtenerTablasPersistentes())
             {
                 DataTable datosTabla = digitoVerificadorDAL.ObtenerDatosTabla(schema, table);
-                string dvhTabla = CalcularDVHorizontalTabla(datosTabla);
-                string dvvTabla = CalcularDVVerticalTabla(datosTabla);
+                bool tieneColumnaDV = datosTabla.Columns.Contains("DV");
+                string? columnaId = (tieneColumnaDV && datosTabla.Columns.Count > 0) ? datosTabla.Columns[0].ColumnName : null;
+
+                BigInteger totalHorizontalTabla = BigInteger.Zero;
+
+                // 1. Recorrer filas de la tabla
+                foreach (DataRow fila in datosTabla.Rows)
+                {
+                    BigInteger totalFila = BigInteger.Zero;
+
+                    foreach (DataColumn columna in datosTabla.Columns)
+                    {
+                        if (string.Equals(columna.ColumnName, "DV", StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        totalFila += ObtenerValorHexadecimal(fila[columna]);
+                    }
+
+                    totalHorizontalTabla += totalFila;
+
+                    if (calcularFilasIndividuales && tieneColumnaDV && columnaId != null)
+                    {
+                        string dvCalculado = FormatearHexadecimal(totalFila);
+                        object valorId = fila[columnaId];
+                        filasDV.Add((schema, table, columnaId, valorId, dvCalculado));
+                    }
+                }
+
+                // 2. Calcular DV vertical de la tabla
+                BigInteger totalVerticalTabla = BigInteger.Zero;
+                foreach (DataColumn columna in datosTabla.Columns)
+                {
+                    if (string.Equals(columna.ColumnName, "DV", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    BigInteger totalColumna = BigInteger.Zero;
+                    foreach (DataRow fila in datosTabla.Rows)
+                    {
+                        totalColumna += ObtenerValorHexadecimal(fila[columna]);
+                    }
+
+                    totalVerticalTabla += totalColumna;
+                }
+
+                string dvhTabla = FormatearHexadecimal(totalHorizontalTabla);
+                string dvvTabla = FormatearHexadecimal(totalVerticalTabla);
 
                 resumen.Add(new ResumenDigitoVerificador(table, dvhTabla, dvvTabla));
 
@@ -110,55 +215,8 @@ namespace BLL
             }
 
             resumen.Add(new ResumenDigitoVerificador(NombreTablaGlobal, FormatearHexadecimal(totalHorizontalBD), FormatearHexadecimal(totalVerticalBD)));
-            return resumen;
-        }
 
-        private static string CalcularDVHorizontalTabla(DataTable datosTabla)
-        {
-            BigInteger totalHorizontal = BigInteger.Zero;
-
-            foreach (DataRow fila in datosTabla.Rows)
-            {
-                BigInteger totalFila = BigInteger.Zero;
-
-                foreach (DataColumn columna in datosTabla.Columns)
-                {
-                    if (string.Equals(columna.ColumnName, "DV", StringComparison.OrdinalIgnoreCase))
-                    {
-                        continue;
-                    }
-
-                    totalFila += ObtenerValorHexadecimal(fila[columna]);
-                }
-
-                totalHorizontal += totalFila;
-            }
-
-            return FormatearHexadecimal(totalHorizontal);
-        }
-
-        private static string CalcularDVVerticalTabla(DataTable datosTabla)
-        {
-            BigInteger totalVertical = BigInteger.Zero;
-
-            foreach (DataColumn columna in datosTabla.Columns)
-            {
-                if (string.Equals(columna.ColumnName, "DV", StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-
-                BigInteger totalColumna = BigInteger.Zero;
-
-                foreach (DataRow fila in datosTabla.Rows)
-                {
-                    totalColumna += ObtenerValorHexadecimal(fila[columna]);
-                }
-
-                totalVertical += totalColumna;
-            }
-
-            return FormatearHexadecimal(totalVertical);
+            return (resumen, filasDV);
         }
 
         private static BigInteger ObtenerValorHexadecimal(object? valor)
@@ -208,42 +266,7 @@ namespace BLL
 
         public void ActualizarDVIndividualesUsuarios()
         {
-            // 1. Traemos todos los usuarios actuales
-            DataTable dtUsuarios = digitoVerificadorDAL.ObtenerDatosTabla("dbo", "Usuarios");
-
-            // Si por algún motivo la tabla no tiene la columna DV, cancelamos para evitar errores
-            if (!dtUsuarios.Columns.Contains("DV"))
-            {
-                return;
-            }
-
-            // 2. Identificamos cuál es la columna clave (Primary Key). 
-            // Por lo general, en 'SELECT *', el ID suele ser la primera columna (índice 0).
-            string columnaId = dtUsuarios.Columns[0].ColumnName;
-
-            // 3. Recorremos fila por fila
-            foreach (DataRow fila in dtUsuarios.Rows)
-            {
-                BigInteger totalFila = BigInteger.Zero;
-
-                // Sumamos todas las columnas de este usuario
-                foreach (DataColumn columna in dtUsuarios.Columns)
-                {
-                    if (string.Equals(columna.ColumnName, "DV", StringComparison.OrdinalIgnoreCase))
-                    {
-                        continue; // No sumamos la columna DV para evitar que el hash se modifique a sí mismo
-                    }
-
-                    totalFila += ObtenerValorHexadecimal(fila[columna]);
-                }
-
-                // Formateamos el resultado final
-                string dvCalculado = FormatearHexadecimal(totalFila);
-                object valorId = fila[columnaId];
-
-                // 4. Mandamos a la base de datos a guardar el código en la fila de este usuario
-                digitoVerificadorDAL.ActualizarDVRegistro("dbo", "Usuarios", columnaId, valorId, dvCalculado);
-            }
+            RecalcularYPersistir();
         }
     }
 }

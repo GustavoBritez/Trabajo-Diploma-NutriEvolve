@@ -1,4 +1,4 @@
-﻿using DAL.Perfiles;
+using DAL.Perfiles;
 using Services;
 using Services.Perfiles;
 using System;
@@ -41,6 +41,14 @@ namespace BLL.Perfiles
         public void AgregarFamiliaAPerfil(int idPerfil, int idFamilia)
         {
             _patenteDAL.InsertarFamiliaPerfil(idPerfil, idFamilia);
+            try
+            {
+                EventoBLL bitacoraBLL = new();
+                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                string descripcion = $"Asignación de Familia ID {idFamilia} al Perfil ID {idPerfil}";
+                bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            }
+            catch { }
         }
 
         public void AgregarFamiliaAFamilia(int idFamiliaPadre, int idFamiliaHija, string nombrePadre, string nombreHija)

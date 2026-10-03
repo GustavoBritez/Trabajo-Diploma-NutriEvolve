@@ -174,6 +174,113 @@ WHERE IdTurno_DNI101 = @idTurno;";
             }
         }
 
+        public int RegistrarTurnoConBloque(TurnoBE_DNI101 turno, int? idBloque)
+        {
+            if (string.IsNullOrEmpty(turno.CodigoTurno_DNI101))
+            {
+                turno.CodigoTurno_DNI101 = $"TRN-{DateTime.Now:yyyyMMddHHmmss}-{new Random().Next(100, 999)}";
+            }
+
+            return _conexion.ExecuteTransaction(tran =>
+            {
+                string queryTurno = @"
+INSERT INTO Turnos_DNI101 (CodigoTurno_DNI101, FechaTurno_DNI101, HoraTurno_DNI101, MotivoConsulta_DNI101, EstadoTurno_DNI101, IdPaciente_DNI101, DniNutricionista_DNI101, IdBloque_DNI101, DV)
+VALUES (@codigo, @fecha, @hora, @motivo, @estado, @idPaciente, @dniNutri, @idBloque, @dv);
+SELECT CAST(SCOPE_IDENTITY() as int);";
+
+                DataTable dt = _conexion.ExecuteReaderTran(queryTurno, tran,
+                    new SqlParameter("@codigo", turno.CodigoTurno_DNI101),
+                    new SqlParameter("@fecha", turno.FechaTurno_DNI101),
+                    new SqlParameter("@hora", turno.HoraTurno_DNI101),
+                    new SqlParameter("@motivo", turno.MotivoConsulta_DNI101),
+                    new SqlParameter("@estado", turno.EstadoTurno_DNI101),
+                    new SqlParameter("@idPaciente", turno.IdPaciente_DNI101),
+                    new SqlParameter("@dniNutri", turno.DniNutricionista_DNI101),
+                    new SqlParameter("@idBloque", (object?)idBloque ?? DBNull.Value),
+                    new SqlParameter("@dv", (object?)turno.DV ?? DBNull.Value)
+                );
+
+                int idGenerado = 0;
+                if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
+                {
+                    idGenerado = Convert.ToInt32(dt.Rows[0][0]);
+                    turno.IdTurno_DNI101 = idGenerado;
+                }
+
+                if (idBloque.HasValue && idBloque.Value > 0)
+                {
+                    string queryBloque = "UPDATE BloquesHorarios_DNI101 SET EstadoBloque_DNI101 = 'Ocupado' WHERE IdBloque_DNI101 = @idBloque";
+                    _conexion.ExecuteNonQueryTran(queryBloque, tran, new SqlParameter("@idBloque", idBloque.Value));
+                }
+
+                return idGenerado;
+            });
+        }
+
+        public bool ReprogramarTurnoConBloques(int idTurno, DateTime nuevaFecha, TimeSpan nuevaHora, int? nuevoIdBloque, int? idBloqueAnterior, int? dniNutricionista = null, string? dv = null)
+        {
+            return _conexion.ExecuteTransaction(tran =>
+            {
+                string queryTurno = @"
+UPDATE Turnos_DNI101
+SET FechaTurno_DNI101 = @fecha,
+    HoraTurno_DNI101 = @hora,
+    IdBloque_DNI101 = @idBloque,
+    EstadoTurno_DNI101 = 'Confirmado',
+    DniNutricionista_DNI101 = ISNULL(@dniNutri, DniNutricionista_DNI101),
+    DV = ISNULL(@dv, DV)
+WHERE IdTurno_DNI101 = @idTurno;";
+
+                _conexion.ExecuteNonQueryTran(queryTurno, tran,
+                    new SqlParameter("@fecha", nuevaFecha),
+                    new SqlParameter("@hora", nuevaHora),
+                    new SqlParameter("@idBloque", (object?)nuevoIdBloque ?? DBNull.Value),
+                    new SqlParameter("@dniNutri", (object?)dniNutricionista ?? DBNull.Value),
+                    new SqlParameter("@dv", (object?)dv ?? DBNull.Value),
+                    new SqlParameter("@idTurno", idTurno)
+                );
+
+                if (idBloqueAnterior.HasValue && idBloqueAnterior.Value > 0)
+                {
+                    _conexion.ExecuteNonQueryTran("UPDATE BloquesHorarios_DNI101 SET EstadoBloque_DNI101 = 'Disponible' WHERE IdBloque_DNI101 = @id", tran, new SqlParameter("@id", idBloqueAnterior.Value));
+                }
+
+                if (nuevoIdBloque.HasValue && nuevoIdBloque.Value > 0)
+                {
+                    _conexion.ExecuteNonQueryTran("UPDATE BloquesHorarios_DNI101 SET EstadoBloque_DNI101 = 'Ocupado' WHERE IdBloque_DNI101 = @id", tran, new SqlParameter("@id", nuevoIdBloque.Value));
+                }
+
+                return true;
+            });
+        }
+
+        public bool CancelarTurnoConBloque(int idTurno, string motivo, int? idBloque, string? dv = null)
+        {
+            return _conexion.ExecuteTransaction(tran =>
+            {
+                string queryTurno = @"
+UPDATE Turnos_DNI101
+SET EstadoTurno_DNI101 = 'Cancelado',
+    MotivoConsulta_DNI101 = MotivoConsulta_DNI101 + ' | Cancelado: ' + @motivo,
+    DV = ISNULL(@dv, DV)
+WHERE IdTurno_DNI101 = @idTurno;";
+
+                _conexion.ExecuteNonQueryTran(queryTurno, tran,
+                    new SqlParameter("@motivo", motivo),
+                    new SqlParameter("@dv", (object?)dv ?? DBNull.Value),
+                    new SqlParameter("@idTurno", idTurno)
+                );
+
+                if (idBloque.HasValue && idBloque.Value > 0)
+                {
+                    string queryBloque = "UPDATE BloquesHorarios_DNI101 SET EstadoBloque_DNI101 = 'Disponible' WHERE IdBloque_DNI101 = @idBloque";
+                    _conexion.ExecuteNonQueryTran(queryBloque, tran, new SqlParameter("@idBloque", idBloque.Value));
+                }
+
+                return true;
+            });
+        }
+
         public TurnoBE_DNI101? ObtenerPorId(int idTurno)
         {
             try

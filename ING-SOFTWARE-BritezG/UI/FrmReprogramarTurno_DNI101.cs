@@ -8,12 +8,13 @@ using System.Windows.Forms;
 
 namespace UI
 {
-    public partial class FrmReprogramarTurno_DNI101 : Form
+    public partial class FrmReprogramarTurno_DNI101 : Form, IIdiomaObserver
     {
         private readonly TurnoBE_DNI101 _turno;
         private readonly TurnoBLL_DNI101 _turnoBLL = new();
         private readonly AgendaMedicaBLL_DNI101 _agendaBLL = new();
         private readonly UsuarioBLL _usuarioBLL = new();
+        private readonly IdiomaBLL _idiomaBLL = new();
 
         private class ItemProfesional
         {
@@ -36,6 +37,16 @@ namespace UI
         {
             InitializeComponent();
             _turno = turno ?? throw new ArgumentNullException(nameof(turno));
+            TraductorUI.SuscribirFormulario(this, this);
+            ActualizarIdioma();
+        }
+
+        public void ActualizarIdioma()
+        {
+            if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
+            {
+                TraductorUI.TraducirFormulario(this, _idiomaBLL);
+            }
         }
 
         private void FrmReprogramarTurno_DNI101_Load(object sender, EventArgs e)
@@ -169,7 +180,7 @@ namespace UI
             // Flujo 6.1: Validación de bloque horario seleccionado
             if (cmbNuevoHorario.SelectedItem is not ItemBloque bloqueSeleccionado)
             {
-                MessageBox.Show("No hay un bloque horario disponible seleccionado para la reprogramación (Flujo 6.1).", "Horario no seleccionado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _idiomaBLL.MostrarMensaje("msg_sin_bloque_reprogramar", "titulo_horario_no_seleccionado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cmbNuevoHorario.Focus();
                 return;
             }
@@ -199,23 +210,21 @@ namespace UI
                 Cursor = Cursors.Default;
 
                 // Paso 10: Mostrar mensaje de confirmación de operación exitosa
-                MessageBox.Show(
-                    $"¡El turno '{_turno.CodigoTurno_DNI101}' ha sido reprogramado exitosamente!\n\n" +
-                    $"• Nueva Fecha: {nuevaFecha:dd/MM/yyyy}\n" +
-                    $"• Nuevo Horario: {nuevaHora:hh\\:mm}\n" +
-                    $"• Profesional: {cmbProfesional.SelectedItem}\n" +
-                    $"• Nuevo Estado: Confirmado\n" +
-                    $"• Bloque Horario Anterior: Liberado (Disponible)",
-                    "CUN03 - Reprogramación Exitosa",
+                _idiomaBLL.MostrarMensaje(
+                    "msg_turno_reprogramado_ok_det",
+                    "titulo_reprogramacion_exitosa",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Information,
+                    _turno.CodigoTurno_DNI101,
+                    nuevaFecha.ToString("dd/MM/yyyy"),
+                    nuevaHora.ToString(@"hh\:mm"));
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error al reprogramar el turno:\n{ex.Message}", "Error al Reprogramar (CUN03)", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _idiomaBLL.MostrarMensaje("msg_error_reprogramar_turno", "titulo_error_reprogramar", MessageBoxButtons.OK, MessageBoxIcon.Error, ex.Message);
                 CargarBloquesDisponibles();
             }
             finally

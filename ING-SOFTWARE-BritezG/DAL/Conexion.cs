@@ -1,166 +1,209 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.SqlServer;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DAL
 {
-    internal class Conexion
+    public class Conexion
     {
         private readonly string _cadenaConexion;
-        private const int time = 30;
-        private SqlConnection conexion;
+        private const int TimeoutSegundos = 30;
 
         public Conexion()
         {
             _cadenaConexion = "Data Source =.; Initial Catalog = ING; Integrated Security = True; Trust Server Certificate = True";
-            //_cadenaConexion = ConfigurationManager.ConnectionStrings["MiConexionDB"].ConnectionString;
-            conexion = new SqlConnection(_cadenaConexion);
         }
 
-        public bool AbrirConexion()
+        public string CadenaConexion => _cadenaConexion;
+
+        /// <summary>
+        /// Crea una nueva conexión lista para abrirse y administrarse mediante el pool de ADO.NET.
+        /// </summary>
+        public SqlConnection CrearConexion()
         {
-            try
-            {
-                if (conexion.State == System.Data.ConnectionState.Closed)
-                {
-                    conexion.Open();
-                    Console.WriteLine("Conexion Abierta Exitosamente");
-                    return true;
-                }
-                return true;
-            }
-            catch ( SqlException ex)
-            {
-                throw new Exception($"Error al abrir la conexión: {ex.Message}");
-            }
+            return new SqlConnection(_cadenaConexion);
         }
 
-        public bool CerrarConexion()
+        /// <summary>
+        /// Ejecuta una acción dentro de una transacción SQL explícita con commit y rollback automáticos.
+        /// </summary>
+        public void ExecuteTransaction(Action<SqlTransaction> accion)
         {
-            try
-            {
-                if (conexion.State == System.Data.ConnectionState.Open)
-                {
-                    conexion.Close();
-                    Console.WriteLine("Conexion Cerrada Exitosamente");
-                    return true;
-                }
-                return true;
-            }
-            catch( SqlException ex )
-            {
-                Console.Write($"Error al cerrar la conexion {ex.Message}");
-                return false;
-            }
-        }
+            if (accion == null) throw new ArgumentNullException(nameof(accion));
 
-        public void ExecuteNonQuery(string stringQuery, params SqlParameter[] parametros)
-        {
-            try
+            using (SqlConnection cn = CrearConexion())
             {
-                AbrirConexion();
-                using (SqlCommand comando = new SqlCommand(stringQuery, conexion))
+                cn.Open();
+                using (SqlTransaction transaccion = cn.BeginTransaction())
                 {
-                    comando.CommandType = CommandType.Text;
-                    comando.CommandTimeout = time;
-                    
-                    if (parametros != null && parametros.Length > 0)
+                    try
                     {
-                        comando.Parameters.AddRange(parametros);
+                        accion(transaccion);
+                        transaccion.Commit();
                     }
-                    
-                    comando.ExecuteNonQuery();
-                    Console.WriteLine("Comando ejecutado exitosamente.");
-                }
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine($"Error al ejecutar el comando: {ex.Message}");
-            }
-            finally
-            {
-                CerrarConexion();
-            }
-        }
-
-        public DataTable ExecuteReader(string stringQuery, params SqlParameter[] parametros)
-        {
-            DataTable dtResultados = new DataTable();
-
-            try
-            {
-                AbrirConexion();
-                using (SqlCommand comando = new SqlCommand(stringQuery, conexion))
-                {
-                    comando.CommandType = CommandType.Text;
-                    comando.CommandTimeout = time;
-                    
-                    if (parametros != null && parametros.Length > 0)
+                    catch
                     {
-                        comando.Parameters.AddRange(parametros);
-                    }
-                    
-                    using (SqlDataAdapter adaptador = new SqlDataAdapter(comando))
-                    {
-                        adaptador.Fill(dtResultados);
+                        try { transaccion.Rollback(); } catch { }
+                        throw;
                     }
                 }
-                Console.WriteLine("Consulta ejecutada exitosamente.");
-                return dtResultados;
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine($"Error al ejecutar la consulta: {ex.Message}");
-                try
-                {
-                    System.IO.File.WriteAllText(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "error_db.txt"), $"Error crítico de base de datos:\n{ex.Message}");
-                }
-                catch { }
-                return dtResultados;
-            }
-            finally
-            {
-                CerrarConexion();
             }
         }
-        public void ExecuteNonQueryMaster(string stringQuery, params SqlParameter[] parametros)
+
+        /// <summary>
+        /// Ejecuta una función con retorno dentro de una transacción SQL explícita con commit y rollback automáticos.
+        /// </summary>
+        public T ExecuteTransaction<T>(Func<SqlTransaction, T> funcion)
         {
-            const string conexionMaster =
-                @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30";
+            if (funcion == null) throw new ArgumentNullException(nameof(funcion));
 
-            try
+            using (SqlConnection cn = CrearConexion())
             {
-                using (SqlConnection cn = new SqlConnection(conexionMaster))
+                cn.Open();
+                using (SqlTransaction transaccion = cn.BeginTransaction())
                 {
-                    cn.Open();
-
-                    using (SqlCommand comando = new SqlCommand(stringQuery, cn))
+                    try
                     {
-                        comando.CommandType = CommandType.Text;
-                        comando.CommandTimeout = time;
+                        T resultado = funcion(transaccion);
+                        transaccion.Commit();
+                        return resultado;
+                    }
+                    catch
+                    {
+                        try { transaccion.Rollback(); } catch { }
+                        throw;
+                    }
+                }
+            }
+        }
 
-                        if (parametros != null && parametros.Length > 0)
+        public int ExecuteNonQuery(string query, params SqlParameter[] parametros)
+        {
+            using (SqlConnection cn = CrearConexion())
+            {
+                cn.Open();
+                using (SqlCommand cmd = CrearComando(query, cn, null, parametros))
+                {
+                    return cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public int ExecuteNonQueryTran(string query, SqlTransaction transaccion, params SqlParameter[] parametros)
+        {
+            if (transaccion == null || transaccion.Connection == null)
+            {
+                return ExecuteNonQuery(query, parametros);
+            }
+
+            using (SqlCommand cmd = CrearComando(query, transaccion.Connection, transaccion, parametros))
+            {
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+        public DataTable ExecuteReader(string query, params SqlParameter[] parametros)
+        {
+            using (SqlConnection cn = CrearConexion())
+            {
+                cn.Open();
+                using (SqlCommand cmd = CrearComando(query, cn, null, parametros))
+                {
+                    DataTable dt = new DataTable();
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    {
+                        adapter.Fill(dt);
+                    }
+                    return dt;
+                }
+            }
+        }
+
+        public DataTable ExecuteReaderTran(string query, SqlTransaction transaccion, params SqlParameter[] parametros)
+        {
+            if (transaccion == null || transaccion.Connection == null)
+            {
+                return ExecuteReader(query, parametros);
+            }
+
+            using (SqlCommand cmd = CrearComando(query, transaccion.Connection, transaccion, parametros))
+            {
+                DataTable dt = new DataTable();
+                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                {
+                    adapter.Fill(dt);
+                }
+                return dt;
+            }
+        }
+
+        public object? ExecuteScalar(string query, params SqlParameter[] parametros)
+        {
+            using (SqlConnection cn = CrearConexion())
+            {
+                cn.Open();
+                using (SqlCommand cmd = CrearComando(query, cn, null, parametros))
+                {
+                    return cmd.ExecuteScalar();
+                }
+            }
+        }
+
+        public object? ExecuteScalarTran(string query, SqlTransaction transaccion, params SqlParameter[] parametros)
+        {
+            if (transaccion == null || transaccion.Connection == null)
+            {
+                return ExecuteScalar(query, parametros);
+            }
+
+            using (SqlCommand cmd = CrearComando(query, transaccion.Connection, transaccion, parametros))
+            {
+                return cmd.ExecuteScalar();
+            }
+        }
+
+        public void ExecuteNonQueryMaster(string query, params SqlParameter[] parametros)
+        {
+            var builder = new SqlConnectionStringBuilder(_cadenaConexion)
+            {
+                InitialCatalog = "master"
+            };
+
+            using (SqlConnection cn = new SqlConnection(builder.ConnectionString))
+            {
+                cn.Open();
+                using (SqlCommand cmd = CrearComando(query, cn, null, parametros))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private static SqlCommand CrearComando(string query, SqlConnection cn, SqlTransaction? tran, SqlParameter[]? parametros)
+        {
+            SqlCommand cmd = new SqlCommand(query, cn, tran)
+            {
+                CommandType = CommandType.Text,
+                CommandTimeout = TimeoutSegundos
+            };
+
+            if (parametros != null && parametros.Length > 0)
+            {
+                foreach (var p in parametros)
+                {
+                    if (p != null)
+                    {
+                        var clone = new SqlParameter(p.ParameterName, p.SqlDbType)
                         {
-                            comando.Parameters.AddRange(parametros);
-                        }
-
-                        comando.ExecuteNonQuery();
+                            Value = p.Value ?? DBNull.Value,
+                            Direction = p.Direction
+                        };
+                        cmd.Parameters.Add(clone);
                     }
                 }
             }
-            catch (SqlException ex)
-            {
-                Console.WriteLine($"Error al ejecutar el comando sobre master: {ex.Message}");
-                throw;
-            }
+
+            return cmd;
         }
     }
 }

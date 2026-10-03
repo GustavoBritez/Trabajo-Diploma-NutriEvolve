@@ -14,8 +14,17 @@ namespace UI
         private static Perfiles _perfiles;
         private static Respaldo _respaldo;
         private static frmTurnero_DNI101 _frmTurnero;
+        private static fmrDigitoVerificador? _digitoVerificador;
 
-
+        public static fmrDigitoVerificador ObtenerDigitoVerificador(List<string>? tablasAlteradas = null)
+        {
+            if (_digitoVerificador == null || _digitoVerificador.IsDisposed)
+            {
+                _digitoVerificador = new fmrDigitoVerificador(tablasAlteradas);
+            }
+            return _digitoVerificador;
+        }
+        
         public static Login ObtenerLogin()
         {
             if (_Login == null || _Login.IsDisposed)
@@ -109,27 +118,28 @@ namespace UI
 
         public static void LimpiarInstancias()
         {
-            if (_Login != null && !_Login.IsDisposed)
+            void DisposeForm(Form? f)
             {
-                _Login.Dispose();
+                if (f != null && !f.IsDisposed) f.Dispose();
             }
-            if (_MenuPrincipal != null && !_MenuPrincipal.IsDisposed)
-            {
-                _MenuPrincipal.Dispose();
-            }
-            if (_gestionUsuario != null && !_gestionUsuario.IsDisposed)
-            {
-                _gestionUsuario.Dispose();
-            }
-            if (_frmTurnero != null && !_frmTurnero.IsDisposed)
-            {
-                _frmTurnero.Dispose();
-            }
+
+            DisposeForm(_Login);
+            DisposeForm(_MenuPrincipal);
+            DisposeForm(_gestionUsuario);
+            DisposeForm(_frmTurnero);
+            DisposeForm(_digitoVerificador);
+            DisposeForm(_bitacora);
+            DisposeForm(_perfiles);
+            DisposeForm(_respaldo);
 
             _Login = null;
             _MenuPrincipal = null;
             _gestionUsuario = null;
             _frmTurnero = null;
+            _digitoVerificador = null;
+            _bitacora = null;
+            _perfiles = null;
+            _respaldo = null;
         }
 
         // 1. El m�todo principal que llama tu pantalla

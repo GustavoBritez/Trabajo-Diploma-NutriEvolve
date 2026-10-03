@@ -27,9 +27,8 @@ namespace UI
         public Bitacora()
         {
             InitializeComponent();
-            this.VisibleChanged += (s, e) => Bitacora_VisibleChanged();
-            cmbIdioma.DropDownStyle = ComboBoxStyle.DropDownList;
-            ServicesSessionManager.Instancia.Suscribir(this);
+            TraductorUI.SuscribirFormulario(this, this);
+            TraductorUI.ConfigurarComboIdiomas(cmbIdioma, idiomaBLL);
             ActualizarIdioma();
         }
 
@@ -226,32 +225,32 @@ namespace UI
         {
             if (dgvBitacora.Columns.Contains("_Login"))
             {
-                dgvBitacora.Columns["_Login"].HeaderText = "Login";
+                dgvBitacora.Columns["_Login"].HeaderText = idiomaBLL.Traducir("_Login");
             }
 
             if (dgvBitacora.Columns.Contains("_Fecha"))
             {
-                dgvBitacora.Columns["_Fecha"].HeaderText = "Fecha";
+                dgvBitacora.Columns["_Fecha"].HeaderText = idiomaBLL.Traducir("_Fecha");
             }
 
             if (dgvBitacora.Columns.Contains("_Hora"))
             {
-                dgvBitacora.Columns["_Hora"].HeaderText = "Hora";
+                dgvBitacora.Columns["_Hora"].HeaderText = idiomaBLL.Traducir("_Hora");
             }
 
             if (dgvBitacora.Columns.Contains("_Modulo"))
             {
-                dgvBitacora.Columns["_Modulo"].HeaderText = "Módulo";
+                dgvBitacora.Columns["_Modulo"].HeaderText = idiomaBLL.Traducir("_Modulo");
             }
 
             if (dgvBitacora.Columns.Contains("_Evento"))
             {
-                dgvBitacora.Columns["_Evento"].HeaderText = "Evento";
+                dgvBitacora.Columns["_Evento"].HeaderText = idiomaBLL.Traducir("_Evento");
             }
 
             if (dgvBitacora.Columns.Contains("_Criticidad"))
             {
-                dgvBitacora.Columns["_Criticidad"].HeaderText = "Criticidad";
+                dgvBitacora.Columns["_Criticidad"].HeaderText = idiomaBLL.Traducir("_Criticidad");
             }
 
         }
@@ -561,35 +560,21 @@ namespace UI
             CargarBitacora(bitacoraFiltrada);
         }
 
+        #region Idioma
         public void ActualizarIdioma()
         {
             if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
             {
-                Traducir(this.Controls);
+                TraductorUI.TraducirFormulario(this, idiomaBLL);
+                ConfigurarColumnasGrid();
+                TraductorUI.SincronizarComboIdioma(cmbIdioma);
             }
         }
-        private void Traducir(Control.ControlCollection controles)
-        {
-            foreach (Control control in controles)
-            {
-                if (!string.IsNullOrEmpty(control.Name))
-                {
-                    string traduccion = idiomaBLL.Traducir(control.Name);
-
-                    if (traduccion != control.Name)
-                        control.Text = traduccion;
-                }
-
-                if (control.HasChildren)
-                    Traducir(control.Controls);
-            }
-        }
+        #endregion
 
         private void dtpDesde_ValueChanged(object sender, EventArgs e)
         {
             List<EventoBE> listaE = _bitacoraBLL.BuscarEventos(dtpDesde.Value, dtpHasta.Value.AddDays(1));
-
-
             CargarBitacora(listaE);
         }
 
@@ -601,40 +586,12 @@ namespace UI
 
         private void cmbIdioma_SelectedIndexChanged(object sender, EventArgs e)
         {
-            List<Idioma> idiomas = idiomaBLL.ObtenerIdiomas();
-
-            if (cmbIdioma.SelectedItem.ToString() == "Español")
-            {
-                Idioma español = idiomas.First(i => i.Codigo == "es");
-                ServicesSessionManager.Instancia.CambiarIdioma(español);
-            }
-            else if (cmbIdioma.SelectedItem.ToString() == "English")
-            {
-                Idioma ingles = idiomas.First(i => i.Codigo == "en");
-                ServicesSessionManager.Instancia.CambiarIdioma(ingles);
-            }
-            else if (cmbIdioma.SelectedItem.ToString() == "Portugues")
-            {
-                Idioma portugues = idiomas.First(i => i.Codigo == "po");
-                ServicesSessionManager.Instancia.CambiarIdioma(portugues);
-            }
+            // El cambio de idioma es gestionado automáticamente por TraductorUI
         }
+
         private void ApuntarComboBox()
         {
-            string idioma = ServicesSessionManager.Instancia.ObtenerIdioma().Nombre;
-
-            if (idioma == "Español")
-            {
-                cmbIdioma.SelectedIndex = 0;
-            }
-            else if (idioma == "English")
-            {
-                cmbIdioma.SelectedIndex = 1;
-            }
-            else if (idioma == "Portugues")
-            {
-                cmbIdioma.SelectedIndex = 2;
-            }
+            TraductorUI.SincronizarComboIdioma(cmbIdioma);
         }
     }
 }

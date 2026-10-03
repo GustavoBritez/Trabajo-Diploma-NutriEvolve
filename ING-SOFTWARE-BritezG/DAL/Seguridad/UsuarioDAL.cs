@@ -1,13 +1,9 @@
 using BE;
-using Services;
 using Microsoft.Data.SqlClient;
-using System.Data;
-
+using Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using BE;
 
 namespace DAL
 {
@@ -15,7 +11,6 @@ namespace DAL
     {
         private readonly Conexion conexion = new();
         private const string TABLA_USUARIOS = "Usuarios";
-        private readonly string Modulo = "UsuarioDAL";
 
         public void CrearUsuario(UsuarioBE usuario)
         {
