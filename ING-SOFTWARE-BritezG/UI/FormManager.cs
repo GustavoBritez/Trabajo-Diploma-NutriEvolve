@@ -71,6 +71,7 @@ namespace UI
             {
                 _bitacora = new Bitacora();
             }
+            _bitacora.RecargarBitacora();
             AplicarSeguridad(_bitacora);
             return _bitacora;
         }

@@ -141,13 +141,17 @@ namespace UI
                 // Flujo alternativo 6.1: Sin bloques disponibles
                 if (bloques == null || bloques.Count == 0)
                 {
-                    lblDisponibilidad.Text = "⚠ Sin bloques disponibles para el profesional en la fecha seleccionada (Flujo 6.1).";
+                    lblDisponibilidad.Text = fecha == DateTime.Today
+                        ? _idiomaBLL.Traducir("msg_sin_horarios_hoy")
+                        : _idiomaBLL.Traducir("msg_sin_horarios_fecha");
                     lblDisponibilidad.ForeColor = Color.FromArgb(190, 60, 60);
                     cmbNuevoHorario.Enabled = false;
+                    btnConfirmar.Enabled = false;
                     return;
                 }
 
                 cmbNuevoHorario.Enabled = true;
+                btnConfirmar.Enabled = true;
                 foreach (var b in bloques)
                 {
                     cmbNuevoHorario.Items.Add(new ItemBloque
@@ -177,6 +181,13 @@ namespace UI
         /// </summary>
         private void btnConfirmar_Click(object sender, EventArgs e)
         {
+            if (dtpNuevaFecha.Value.Date < DateTime.Today)
+            {
+                _idiomaBLL.MostrarMensaje("msg_fecha_invalida_pasada", "titulo_horario_no_seleccionado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpNuevaFecha.Focus();
+                return;
+            }
+
             // Flujo 6.1: Validación de bloque horario seleccionado
             if (cmbNuevoHorario.SelectedItem is not ItemBloque bloqueSeleccionado)
             {

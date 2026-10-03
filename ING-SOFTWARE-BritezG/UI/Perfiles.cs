@@ -20,6 +20,7 @@ namespace UI
 
         public Perfiles()
         {
+            InitializeComponent();
             TraductorUI.SuscribirFormulario(this, this);
             ActualizarIdioma();
 

@@ -18,11 +18,11 @@ namespace UI
 {
     public partial class Bitacora : Form, IIdiomaObserver
     {
-        EventoBLL _bitacoraBLL = new EventoBLL();
-        UsuarioBLL _usuarioBLL = new UsuarioBLL();
+        private readonly EventoBLL _bitacoraBLL = new EventoBLL();
+        private readonly UsuarioBLL _usuarioBLL = new UsuarioBLL();
         private List<EventoBE>? _bitacoraCompleta;
-
-        private IdiomaBLL idiomaBLL = new IdiomaBLL();
+        private readonly IdiomaBLL idiomaBLL = new IdiomaBLL();
+        private bool _ignorarEventosFiltro = false;
 
         public Bitacora()
         {
@@ -32,55 +32,88 @@ namespace UI
             ActualizarIdioma();
         }
 
-        private void Bitacora_VisibleChanged()
+        protected override void OnVisibleChanged(EventArgs e)
         {
-            // Solo actualizamos si el formulario se volvió a poner visible
+            base.OnVisibleChanged(e);
             if (this.Visible)
             {
-                CargarBitacora(BitacoraInicial());
-                ApuntarComboBox();
+                RecargarBitacora();
             }
         }
 
-        private List<EventoBE> BitacoraInicial()
+        public void RecargarBitacora()
         {
-            List<EventoBE>? _bitacoraCompleta2 = _bitacoraBLL.VerEventos();
+            try
+            {
+                _ignorarEventosFiltro = true;
 
-            DateTime desde = DateTime.Today.AddDays(-3);
-            DateTime hasta = DateTime.Now;
+                _bitacoraCompleta = _bitacoraBLL.VerEventos();
 
-            var bitacoraFiltrada = _bitacoraCompleta2
-                .Where(b => b._Fecha >= desde && b._Fecha <= hasta)
-                .ToList();
-            return bitacoraFiltrada;
+                ActualizarItemsModulos();
+
+                DateTime hoy = DateTime.Today;
+                dtpHasta.Value = hoy;
+                if (_bitacoraCompleta != null && _bitacoraCompleta.Count > 0)
+                {
+                    DateTime minFecha = _bitacoraCompleta.Min(b => b._Fecha).Date;
+                    dtpDesde.Value = minFecha;
+                }
+                else
+                {
+                    dtpDesde.Value = hoy.AddDays(-30);
+                }
+
+                if (cmbModulo.Items.Count > 0) cmbModulo.SelectedIndex = 0;
+                if (cmbCriticidad.Items.Count > 0) cmbCriticidad.SelectedIndex = 0;
+                if (cmbEvento.Items.Count > 0) cmbEvento.SelectedIndex = 0;
+
+                CargarBitacora(_bitacoraCompleta ?? new List<EventoBE>());
+                ApuntarComboBox();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al recargar bitácora: {ex.Message}");
+            }
+            finally
+            {
+                _ignorarEventosFiltro = false;
+            }
         }
+
+        private void ActualizarItemsModulos()
+        {
+            if (_bitacoraCompleta == null) return;
+            var modulos = _bitacoraCompleta
+                .Select(b => b._Modulo)
+                .Where(m => !string.IsNullOrWhiteSpace(m))
+                .Distinct()
+                .OrderBy(m => m);
+
+            foreach (var m in modulos)
+            {
+                if (!cmbModulo.Items.Contains(m))
+                {
+                    cmbModulo.Items.Add(m);
+                }
+            }
+        }
+
         private void btnSalir_Click(object? sender, EventArgs e)
         {
-            LimpiarFiltros();
-
             FormManager.Navegar(this, FormManager.ObtenerMenuPrincipal());
-
         }
 
         private void Bitacora_Load(object? sender, EventArgs e)
         {
             GestionBitacora_Load(sender, e);
-            CargarBitacora(BitacoraInicial());
+            RecargarBitacora();
         }
 
         private void GestionBitacora_Load(object? sender, EventArgs e)
         {
-            _bitacoraCompleta = _bitacoraBLL.VerEventos();
-
-            InicializarDateTimePickers();
             InicializarComboBoxCriticidad();
             InicializarComboBoxC();
             InicializarComboBoxEvento();
-
-            CargarBitacora(BitacoraInicial());
-
-            dtpDesde.ValueChanged += DtpFecha_ValueChanged;
-            dtpHasta.ValueChanged += DtpFecha_ValueChanged;
 
             cmbModulo.SelectedIndexChanged += CmbCriticidad_SelectedIndexChanged;
 
@@ -90,15 +123,6 @@ namespace UI
             dgvBitacora.AllowUserToResizeRows = false;
 
             dgvBitacora.CellClick += DgvBitacora_CellClick;
-
-            //btnAplicarFiltro.Click += BtnAplicarFiltro_Click;
-
-        }
-
-        private void InicializarDateTimePickers()
-        {
-            DateTime hoy = DateTime.Today;
-            dtpHasta.Value = hoy;
         }
 
         private void InicializarComboBoxCriticidad()
@@ -108,8 +132,12 @@ namespace UI
             cmbModulo.Items.Add("Login");
             cmbModulo.Items.Add("GestionUsuario");
             cmbModulo.Items.Add("Permisos");
+            cmbModulo.Items.Add("Perfiles");
             cmbModulo.Items.Add("Respaldo");
-            cmbModulo.SelectedIndex = 0; // Seleccionar "Todas" por defecto
+            cmbModulo.Items.Add("Seguridad");
+            cmbModulo.Items.Add("TurneroNutricional");
+            cmbModulo.Items.Add("AgendaMedica");
+            cmbModulo.SelectedIndex = 0;
         }
         private void InicializarComboBoxC()
         {
@@ -152,36 +180,34 @@ namespace UI
         }
         private void DtpFecha_ValueChanged(object? sender, EventArgs e)
         {
+            if (_ignorarEventosFiltro) return;
+
             DateTime hoy = DateTime.Today;
 
-            if (dtpHasta.Value > hoy)
+            if (dtpHasta.Value.Date > hoy)
             {
                 idiomaBLL.MostrarMensaje("msg_fecha_futura", "titulo_fecha_futura", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _ignorarEventosFiltro = true;
                 dtpHasta.Value = hoy;
+                _ignorarEventosFiltro = false;
                 return;
             }
 
-            if (dtpDesde.Value > dtpHasta.Value)
+            if (dtpDesde.Value.Date > dtpHasta.Value.Date)
             {
                 idiomaBLL.MostrarMensaje("msg_fecha_invalida", "titulo_fecha_invalida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                dtpDesde.Value = hoy;
+                _ignorarEventosFiltro = true;
+                dtpDesde.Value = dtpHasta.Value.Date;
+                _ignorarEventosFiltro = false;
                 return;
             }
+
+            AplicarFiltrosCombinados();
         }
 
         private void CmbCriticidad_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            string modulo = cmbModulo.SelectedItem?.ToString() ?? "Todas";
-
-            var bitacoraFiltrada = _bitacoraCompleta;
-            if (modulo != "Todos")
-            {
-                bitacoraFiltrada = bitacoraFiltrada
-                    .Where(b => b._Modulo.ToString() == modulo)
-                    .ToList();
-            }
-
-            CargarBitacora(bitacoraFiltrada);
+            AplicarFiltrosCombinados();
         }
 
         private void BtnAplicarFiltro_Click(object? sender, EventArgs e)
@@ -191,20 +217,47 @@ namespace UI
 
         private void AplicarFiltrosCombinados()
         {
+            if (_ignorarEventosFiltro || _bitacoraCompleta == null) return;
+
             try
             {
-                if (_bitacoraCompleta == null) return;
-
                 DateTime fechaDesde = dtpDesde.Value.Date;
                 DateTime fechaHasta = dtpHasta.Value.Date;
-                string criticidadSeleccionada = cmbModulo.SelectedItem?.ToString() ?? "Todas";
+                string modulo = cmbModulo.SelectedItem?.ToString() ?? "Todos";
+                string criticidad = cmbCriticidad.SelectedItem?.ToString() ?? "Todas";
+                string evento = cmbEvento.SelectedItem?.ToString() ?? "Todos";
 
+                IEnumerable<EventoBE> filtrada = _bitacoraCompleta;
 
-                var bitacoraFiltrada = _bitacoraCompleta
-                    .Where(b => b._Fecha.Date >= fechaDesde && b._Fecha.Date <= fechaHasta)
-                    .ToList();
+                // Rango de fechas
+                filtrada = filtrada.Where(b => b._Fecha.Date >= fechaDesde && b._Fecha.Date <= fechaHasta);
 
-                CargarBitacora(bitacoraFiltrada);
+                // Módulo
+                if (!string.IsNullOrEmpty(modulo) && modulo != "Todos" && modulo != "Todas")
+                {
+                    filtrada = filtrada.Where(b => string.Equals(b._Modulo, modulo, StringComparison.OrdinalIgnoreCase));
+                }
+
+                // Criticidad
+                if (!string.IsNullOrEmpty(criticidad) && criticidad != "Todas" && criticidad != "Todos")
+                {
+                    filtrada = filtrada.Where(b => b._Criticidad.ToString() == criticidad);
+                }
+
+                // Evento / Descripción
+                if (!string.IsNullOrEmpty(evento) && evento != "Todos" && evento != "Todas")
+                {
+                    if (string.Equals(evento, "Error", StringComparison.OrdinalIgnoreCase))
+                    {
+                        filtrada = filtrada.Where(b => b._Descripcion != null && b._Descripcion.StartsWith("error", StringComparison.OrdinalIgnoreCase));
+                    }
+                    else
+                    {
+                        filtrada = filtrada.Where(b => b._Descripcion != null && b._Descripcion.Contains(evento, StringComparison.OrdinalIgnoreCase));
+                    }
+                }
+
+                CargarBitacora(filtrada.ToList());
             }
             catch (Exception ex)
             {
@@ -263,21 +316,7 @@ namespace UI
 
         private void LimpiarFiltros()
         {
-            try
-            {
-
-                DateTime hoy = DateTime.Today;
-                dtpHasta.Value = hoy;
-                dtpDesde.Value = hoy;
-
-                cmbModulo.SelectedIndex = 0;
-                _bitacoraCompleta = _bitacoraBLL.VerEventos();
-                CargarBitacora(_bitacoraCompleta);
-            }
-            catch (Exception ex)
-            {
-                idiomaBLL.MostrarMensaje("msg_error_limpiar", "titulo_error_limpiar", MessageBoxButtons.OK, MessageBoxIcon.Error, ex.Message);
-            }
+            RecargarBitacora();
         }
 
 
@@ -495,17 +534,7 @@ namespace UI
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string c = cmbCriticidad.SelectedItem?.ToString() ?? "Todas";
-
-            var bitacoraFiltrada = _bitacoraCompleta;
-            if (c != "Todas")
-            {
-                bitacoraFiltrada = bitacoraFiltrada
-                    .Where(b => b._Criticidad.ToString() == c)
-                    .ToList();
-            }
-
-            CargarBitacora(bitacoraFiltrada);
+            AplicarFiltrosCombinados();
         }
 
         private void lblHasta_Click(object sender, EventArgs e)
@@ -538,26 +567,7 @@ namespace UI
 
         private void cmbEvento_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string evento = cmbEvento.SelectedItem?.ToString() ?? "Todos";
-
-            var bitacoraFiltrada = _bitacoraCompleta;
-            if (evento != "Todos")
-            {
-                if (evento == "Error")
-                {
-                    bitacoraFiltrada = bitacoraFiltrada
-                        .Where(b => b._Descripcion != null && b._Descripcion.ToString().StartsWith("error", StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                }
-                else
-                {
-                    bitacoraFiltrada = bitacoraFiltrada
-                        .Where(b => b._Descripcion.ToString() == evento)
-                        .ToList();
-                }
-            }
-
-            CargarBitacora(bitacoraFiltrada);
+            AplicarFiltrosCombinados();
         }
 
         #region Idioma
@@ -574,14 +584,12 @@ namespace UI
 
         private void dtpDesde_ValueChanged(object sender, EventArgs e)
         {
-            List<EventoBE> listaE = _bitacoraBLL.BuscarEventos(dtpDesde.Value, dtpHasta.Value.AddDays(1));
-            CargarBitacora(listaE);
+            DtpFecha_ValueChanged(sender, e);
         }
 
         private void dtpHasta_ValueChanged(object sender, EventArgs e)
         {
-            List<EventoBE> listaE = _bitacoraBLL.BuscarEventos(dtpDesde.Value, dtpHasta.Value.AddDays(1));
-            CargarBitacora(listaE);
+            DtpFecha_ValueChanged(sender, e);
         }
 
         private void cmbIdioma_SelectedIndexChanged(object sender, EventArgs e)

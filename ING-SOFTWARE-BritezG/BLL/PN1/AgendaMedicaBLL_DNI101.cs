@@ -12,6 +12,11 @@ namespace BLL
 
         public List<BloqueHorarioBE_DNI101> ListarBloquesDisponibles(DateTime fecha, int dniNutricionista)
         {
+            if (fecha.Date < DateTime.Today)
+            {
+                return new List<BloqueHorarioBE_DNI101>();
+            }
+
             var bloquesBD = _agendaDAL.ListarBloquesDisponibles(fecha, dniNutricionista);
             var horariosOcupados = _turnoDAL.ObtenerHorariosOcupadosPorProfesional(dniNutricionista, fecha);
 
@@ -21,6 +26,11 @@ namespace BLL
             {
                 foreach (var b in bloquesBD)
                 {
+                    if (fecha.Date.Add(b.HoraInicio_DNI101) <= DateTime.Now)
+                    {
+                        continue;
+                    }
+
                     if (!horariosOcupados.Contains(b.HoraInicio_DNI101))
                     {
                         bloquesResultado.Add(b);
@@ -38,15 +48,18 @@ namespace BLL
                 while (inicio < fin)
                 {
                     TimeSpan bloqueFin = inicio.Add(intervalo);
-                    if (!horariosOcupados.Contains(inicio))
+                    if (fecha.Date.Add(inicio) > DateTime.Now)
                     {
-                        bloquesResultado.Add(new BloqueHorarioBE_DNI101
+                        if (!horariosOcupados.Contains(inicio))
                         {
-                            IdBloque_DNI101 = idMock++,
-                            HoraInicio_DNI101 = inicio,
-                            HoraFin_DNI101 = bloqueFin,
-                            EstadoBloque_DNI101 = "Disponible"
-                        });
+                            bloquesResultado.Add(new BloqueHorarioBE_DNI101
+                            {
+                                IdBloque_DNI101 = idMock++,
+                                HoraInicio_DNI101 = inicio,
+                                HoraFin_DNI101 = bloqueFin,
+                                EstadoBloque_DNI101 = "Disponible"
+                            });
+                        }
                     }
                     inicio = bloqueFin;
                 }

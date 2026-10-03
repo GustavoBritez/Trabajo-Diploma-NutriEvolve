@@ -138,13 +138,17 @@ namespace UI
                 // Flujo alternativo 4.1: No existen bloques disponibles
                 if (bloquesDisponibles == null || bloquesDisponibles.Count == 0)
                 {
-                    lblDisponibilidad.Text = "⚠ No hay horarios disponibles para el profesional en la fecha seleccionada.";
+                    lblDisponibilidad.Text = fecha == DateTime.Today
+                        ? _idiomaBLL.Traducir("msg_sin_horarios_hoy")
+                        : _idiomaBLL.Traducir("msg_sin_horarios_fecha");
                     lblDisponibilidad.ForeColor = Color.FromArgb(190, 60, 60);
                     cmbHorario.Enabled = false;
+                    btnRegistrarTurno.Enabled = false;
                     return;
                 }
 
                 cmbHorario.Enabled = true;
+                btnRegistrarTurno.Enabled = true;
                 foreach (var b in bloquesDisponibles)
                 {
                     cmbHorario.Items.Add(new ItemBloque
@@ -227,6 +231,13 @@ namespace UI
             }
 
             // Flujo Alternativo 9.1: Campos obligatorios incompletos
+            if (fecha < DateTime.Today)
+            {
+                _idiomaBLL.MostrarMensaje("msg_fecha_invalida_pasada", "titulo_validacion_turno", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpFecha.Focus();
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(dniNiño))
             {
                 txtDniNiño.BackColor = Color.FromArgb(255, 235, 235);

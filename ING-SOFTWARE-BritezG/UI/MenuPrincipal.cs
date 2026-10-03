@@ -466,7 +466,7 @@ namespace UI
 
         private void btnGestionarPerfiles_Click(object sender, EventArgs e)
         {
-            FormManager.Navegar(this, new Perfiles());
+            FormManager.Navegar(this, FormManager.ObtenerPerfiles());
         }
 
         private frmTurnero_DNI101? _frmTurneroContenido;

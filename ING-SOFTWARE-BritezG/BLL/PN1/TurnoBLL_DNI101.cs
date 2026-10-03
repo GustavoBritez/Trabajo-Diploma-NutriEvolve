@@ -39,6 +39,13 @@ namespace BLL
                 }
             }
 
+            // Validar que la fecha y hora no hayan transcurrido
+            DateTime fechaHoraTurno = fecha.Date.Add(horaSpan);
+            if (fechaHoraTurno <= DateTime.Now)
+            {
+                throw new InvalidOperationException("No es posible registrar un turno en una fecha u horario que ya ha transcurrido.");
+            }
+
             int dniNutricionista = dniNutricionistaParam ?? 0;
             if (dniNutricionista == 0)
             {
@@ -102,6 +109,10 @@ namespace BLL
         public bool AgendarTurno(TurnoBE_DNI101 turno)
         {
             if (turno == null) throw new ArgumentNullException(nameof(turno));
+            if (turno.FechaTurno_DNI101.Date.Add(turno.HoraTurno_DNI101) <= DateTime.Now)
+            {
+                throw new InvalidOperationException("No es posible agendar un turno para una fecha u horario que ya ha transcurrido.");
+            }
             int id = _turnoDAL.Guardar(turno);
             if (id > 0)
             {
@@ -128,6 +139,13 @@ namespace BLL
                 throw new ArgumentException("El código de turno es requerido.", nameof(codigoTurno));
 
             codigoTurno = codigoTurno.Trim();
+
+            // Validar que la nueva fecha y hora no hayan transcurrido
+            DateTime nuevaFechaHora = nuevaFecha.Date.Add(nuevaHora);
+            if (nuevaFechaHora <= DateTime.Now)
+            {
+                throw new InvalidOperationException("No es posible reprogramar un turno para una fecha u horario que ya ha transcurrido.");
+            }
 
             // Paso 3: Recupera el turno con su estado desde la base de datos
             var turno = _turnoDAL.ObtenerPorCodigo(codigoTurno);
@@ -228,6 +246,12 @@ namespace BLL
 
             if (fecha.HasValue || hora.HasValue)
             {
+                DateTime fechaHoraFinal = fechaFinal.Add(horaFinal);
+                if (fechaHoraFinal <= DateTime.Now)
+                {
+                    throw new InvalidOperationException("No es posible modificar un turno a una fecha u horario que ya ha transcurrido.");
+                }
+
                 if (_turnoDAL.ExisteTurnoParaProfesional(turno.DniNutricionista_DNI101, fechaFinal, horaFinal, idTurnoExcluir: turno.IdTurno_DNI101))
                     throw new InvalidOperationException($"El profesional ya cuenta con un turno para el {fechaFinal:dd/MM/yyyy} a las {horaFinal:hh\\:mm}. No se permiten superposiciones.");
 
