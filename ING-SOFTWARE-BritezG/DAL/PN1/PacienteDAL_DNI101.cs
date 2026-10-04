@@ -1,4 +1,3 @@
-using BE;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ namespace DAL
             TurnosDatabaseInitializer.AsegurarTablas();
         }
 
-        public int Guardar(PacienteBE_DNI101 paciente)
+        public int Guardar(string dniNiño, string nombre, string apellido, string? telefono, string? email, DateTime fechaNacimiento, string? sexo, string? obraSocial, string? dv)
         {
             try
             {
@@ -25,22 +24,20 @@ VALUES (@dni, @nombre, @apellido, @telefono, @email, @fechaNac, @sexo, @obraSoci
 SELECT CAST(SCOPE_IDENTITY() as int);";
 
                 DataTable dt = _conexion.ExecuteReader(query,
-                    new SqlParameter("@dni", paciente.DNINiño_DNI101),
-                    new SqlParameter("@nombre", paciente.Nombre_DNI101),
-                    new SqlParameter("@apellido", paciente.Apellido_DNI101),
-                    new SqlParameter("@telefono", (object?)paciente.Telefono_DNI101 ?? DBNull.Value),
-                    new SqlParameter("@email", (object?)paciente.Email_DNI101 ?? DBNull.Value),
-                    new SqlParameter("@fechaNac", paciente.FechaNacimiento_DNI101),
-                    new SqlParameter("@sexo", (object?)paciente.Sexo_DNI101 ?? DBNull.Value),
-                    new SqlParameter("@obraSocial", (object?)paciente.ObraSocial_DNI101 ?? DBNull.Value),
-                    new SqlParameter("@dv", (object?)paciente.DV ?? DBNull.Value)
+                    new SqlParameter("@dni", dniNiño),
+                    new SqlParameter("@nombre", nombre),
+                    new SqlParameter("@apellido", apellido),
+                    new SqlParameter("@telefono", (object?)telefono ?? DBNull.Value),
+                    new SqlParameter("@email", (object?)email ?? DBNull.Value),
+                    new SqlParameter("@fechaNac", fechaNacimiento),
+                    new SqlParameter("@sexo", (object?)sexo ?? DBNull.Value),
+                    new SqlParameter("@obraSocial", (object?)obraSocial ?? DBNull.Value),
+                    new SqlParameter("@dv", (object?)dv ?? DBNull.Value)
                 );
 
                 if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
                 {
-                    int idGenerado = Convert.ToInt32(dt.Rows[0][0]);
-                    paciente.IdPaciente_DNI101 = idGenerado;
-                    return idGenerado;
+                    return Convert.ToInt32(dt.Rows[0][0]);
                 }
 
                 return 0;
@@ -52,13 +49,14 @@ SELECT CAST(SCOPE_IDENTITY() as int);";
             }
         }
 
-        public bool Modificar(PacienteBE_DNI101 paciente)
+        public bool Modificar(int idPaciente, string dniNiño, string nombre, string apellido, string? telefono, string? email, DateTime fechaNacimiento, string? sexo, string? obraSocial, string? dv)
         {
             try
             {
                 string query = @"
 UPDATE Pacientes_DNI101
-SET Nombre_DNI101 = @nombre,
+SET DniNiño_DNI101 = @dni,
+    Nombre_DNI101 = @nombre,
     Apellido_DNI101 = @apellido,
     Telefono_DNI101 = @telefono,
     Email_DNI101 = @email,
@@ -69,15 +67,16 @@ SET Nombre_DNI101 = @nombre,
 WHERE IdPaciente_DNI101 = @idPaciente;";
 
                 _conexion.ExecuteNonQuery(query,
-                    new SqlParameter("@idPaciente", paciente.IdPaciente_DNI101),
-                    new SqlParameter("@nombre", paciente.Nombre_DNI101),
-                    new SqlParameter("@apellido", paciente.Apellido_DNI101),
-                    new SqlParameter("@telefono", (object?)paciente.Telefono_DNI101 ?? DBNull.Value),
-                    new SqlParameter("@email", (object?)paciente.Email_DNI101 ?? DBNull.Value),
-                    new SqlParameter("@fechaNac", paciente.FechaNacimiento_DNI101),
-                    new SqlParameter("@sexo", (object?)paciente.Sexo_DNI101 ?? DBNull.Value),
-                    new SqlParameter("@obraSocial", (object?)paciente.ObraSocial_DNI101 ?? DBNull.Value),
-                    new SqlParameter("@dv", (object?)paciente.DV ?? DBNull.Value)
+                    new SqlParameter("@idPaciente", idPaciente),
+                    new SqlParameter("@dni", dniNiño),
+                    new SqlParameter("@nombre", nombre),
+                    new SqlParameter("@apellido", apellido),
+                    new SqlParameter("@telefono", (object?)telefono ?? DBNull.Value),
+                    new SqlParameter("@email", (object?)email ?? DBNull.Value),
+                    new SqlParameter("@fechaNac", fechaNacimiento),
+                    new SqlParameter("@sexo", (object?)sexo ?? DBNull.Value),
+                    new SqlParameter("@obraSocial", (object?)obraSocial ?? DBNull.Value),
+                    new SqlParameter("@dv", (object?)dv ?? DBNull.Value)
                 );
 
                 return true;
@@ -89,7 +88,7 @@ WHERE IdPaciente_DNI101 = @idPaciente;";
             }
         }
 
-        public PacienteBE_DNI101? ObtenerPacientePorDNI(string dniNiño)
+        public DataTable ObtenerPacientePorDNI(string dniNiño)
         {
             try
             {
@@ -98,22 +97,16 @@ SELECT p.*
 FROM Pacientes_DNI101 p
 WHERE p.DniNiño_DNI101 = @dni;";
 
-                DataTable dt = _conexion.ExecuteReader(query, new SqlParameter("@dni", dniNiño.Trim()));
-                if (dt.Rows.Count > 0)
-                {
-                    return MapearPaciente(dt.Rows[0]);
-                }
-
-                return null;
+                return _conexion.ExecuteReader(query, new SqlParameter("@dni", dniNiño.Trim()));
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al obtener paciente por DNI: {ex.Message}");
-                return null;
+                return new DataTable();
             }
         }
 
-        public PacienteBE_DNI101? ObtenerPorId(int idPaciente)
+        public DataTable ObtenerPorId(int idPaciente)
         {
             try
             {
@@ -122,24 +115,17 @@ SELECT p.*
 FROM Pacientes_DNI101 p
 WHERE p.IdPaciente_DNI101 = @id;";
 
-                DataTable dt = _conexion.ExecuteReader(query, new SqlParameter("@id", idPaciente));
-                if (dt.Rows.Count > 0)
-                {
-                    return MapearPaciente(dt.Rows[0]);
-                }
-
-                return null;
+                return _conexion.ExecuteReader(query, new SqlParameter("@id", idPaciente));
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al obtener paciente por ID: {ex.Message}");
-                return null;
+                return new DataTable();
             }
         }
 
-        public List<PacienteBE_DNI101> ListarTodos()
+        public DataTable ListarTodos()
         {
-            var lista = new List<PacienteBE_DNI101>();
             try
             {
                 string query = @"
@@ -147,34 +133,13 @@ SELECT p.*
 FROM Pacientes_DNI101 p
 ORDER BY p.Apellido_DNI101, p.Nombre_DNI101;";
 
-                DataTable dt = _conexion.ExecuteReader(query);
-                foreach (DataRow row in dt.Rows)
-                {
-                    lista.Add(MapearPaciente(row));
-                }
+                return _conexion.ExecuteReader(query);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al listar pacientes: {ex.Message}");
+                return new DataTable();
             }
-            return lista;
-        }
-
-        private PacienteBE_DNI101 MapearPaciente(DataRow row)
-        {
-            return new PacienteBE_DNI101
-            {
-                IdPaciente_DNI101 = Convert.ToInt32(row["IdPaciente_DNI101"]),
-                DNINiño_DNI101 = row["DniNiño_DNI101"].ToString() ?? string.Empty,
-                Nombre_DNI101 = row["Nombre_DNI101"].ToString() ?? string.Empty,
-                Apellido_DNI101 = row["Apellido_DNI101"].ToString() ?? string.Empty,
-                Telefono_DNI101 = row["Telefono_DNI101"] != DBNull.Value ? row["Telefono_DNI101"].ToString() : null,
-                Email_DNI101 = row["Email_DNI101"] != DBNull.Value ? row["Email_DNI101"].ToString() : null,
-                FechaNacimiento_DNI101 = row["FechaNacimiento_DNI101"] != DBNull.Value ? Convert.ToDateTime(row["FechaNacimiento_DNI101"]) : DateTime.Today,
-                Sexo_DNI101 = row["Sexo_DNI101"] != DBNull.Value ? row["Sexo_DNI101"].ToString() : null,
-                ObraSocial_DNI101 = row["ObraSocial_DNI101"] != DBNull.Value ? row["ObraSocial_DNI101"].ToString() : null,
-                DV = row["DV"] != DBNull.Value ? row["DV"].ToString() : null
-            };
         }
     }
 }

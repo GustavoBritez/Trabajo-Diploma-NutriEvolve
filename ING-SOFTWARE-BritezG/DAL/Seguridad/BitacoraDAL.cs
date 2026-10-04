@@ -3,23 +3,22 @@ using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+
 namespace DAL
 {
-
-
-    public class EventoDAL
+    public class BitacoraDAL
     {
         private readonly Conexion conexion;
-        private const string TABLA_BITACORA = "Bitacora"; /// Nombre de la TABLA Bitacora en la BD - SQL Server 2019 NO PROBE EN 2020
+        private const string TABLA_BITACORA = "Bitacora";
 
-        public EventoDAL()
+        public BitacoraDAL()
         {
             conexion = new();
         }
 
-        public List<EventoBE> FiltrarBitacora(DateTime desde, DateTime hasta)
+        public List<BitacoraBE> FiltrarBitacora(DateTime desde, DateTime hasta)
         {
-            List<EventoBE> eventos = new List<EventoBE>();
+            List<BitacoraBE> bitacoras = new List<BitacoraBE>();
 
             try
             {
@@ -38,26 +37,26 @@ namespace DAL
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    eventos.Add(new EventoBE(
+                    bitacoras.Add(new BitacoraBE(
                         criticidad: (int)row["Criticidad"],
                         descripcion: row["Descripcion"].ToString(),
                         dni: (int)row["Dni"],
                         fecha: (DateTime)row["Fecha"],
                         modulo: row["Modulo"].ToString(),
-                        id_evento: (int)row["Id_Event"]
+                        id_bitacora: (int)row["Id_Event"]
                     ));
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al obtener eventos por fecha: {ex.Message}");
+                Console.WriteLine($"Error al obtener registros de bitacora por fecha: {ex.Message}");
                 throw;
             }
 
-            return eventos;
+            return bitacoras;
         }
 
-        public void GuardarBitacora(EventoBE newBitacora)
+        public void GuardarBitacora(BitacoraBE newBitacora)
         {
             try
             {
@@ -76,14 +75,14 @@ namespace DAL
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al insertar evento en bitacora: {ex.Message}");
+                Console.WriteLine($"Error al insertar en bitacora: {ex.Message}");
                 throw;
             }
         }
 
-        public List<EventoBE> ObtenerBitacora()
+        public List<BitacoraBE> ObtenerBitacora()
         {
-            List<EventoBE> eventos = new List<EventoBE>();
+            List<BitacoraBE> bitacoras = new List<BitacoraBE>();
 
             try
             {
@@ -95,23 +94,28 @@ namespace DAL
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    eventos.Add(new EventoBE(
+                    bitacoras.Add(new BitacoraBE(
                         criticidad: (int)row["Criticidad"],
                         descripcion: row["Descripcion"].ToString(),
                         dni: (int)row["Dni"],
                         fecha: (DateTime)row["Fecha"],
                         modulo: row["Modulo"].ToString(),
-                        id_evento: (int)row["Id_Event"]
+                        id_bitacora: (int)row["Id_Event"]
                     ));
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al obtener todos los eventos: {ex.Message}");
+                Console.WriteLine($"Error al obtener todos los registros de bitacora: {ex.Message}");
                 throw;
             }
 
-            return eventos;
+            return bitacoras;
         }
+    }
+
+    [Obsolete("Usar BitacoraDAL")]
+    public class EventoDAL : BitacoraDAL
+    {
     }
 }

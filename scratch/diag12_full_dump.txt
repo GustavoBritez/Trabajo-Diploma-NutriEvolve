@@ -1,0 +1,47 @@
+Seq  1: [         ] Nutricionista (219) -> GUI (754) : 'btn_Registrar_Turno' (Y=-151) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq  2: [         ] GUI (754) -> GUI (754) : 'ConsultarDisponibilidad' (Y=-161) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq  3: [         ] GUI (754) -> AgendaMedicaBLL_DNI101 (221) : 'ListarBloquesDisponibles' (Y=-205) | P1=Synchronous | P2=retval=void;params=;paramsDlg=fecha, dniNutri; | P3=Call
+Seq  4: [SynchCall] AgendaMedicaBLL_DNI101 (221) -> DAL (228) : 'ListarBloquesDisponibles(fecha, dniNutri)' (Y=-284) | P1= | P2= | P3=
+Seq  5: [Return   ] DAL (228) -> AgendaMedicaBLL_DNI101 (221) : '' (Y=-319) | P1=Synchronous | P2= | P3=Call
+Seq  6: [SynchCall] AgendaMedicaBLL_DNI101 (221) -> DAL (228) : 'ObtenerHorariosOcupadosPorProfesional(dniNutri, fecha)' (Y=-354) | P1= | P2= | P3=
+Seq  7: [         ] AgendaMedicaBLL_DNI101 (221) -> GUI (754) : '' (Y=-389) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq  8: [         ] GUI (754) -> Nutricionista (219) : '' (Y=-424) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq  9: [         ] Nutricionista (219) -> GUI (754) : 'ingresar' (Y=-459) | P1=Synchronous | P2=retval=void;params=;paramsDlg=dni; | P3=Call
+Seq 10: [         ] GUI (754) -> PacienteBLL_DNI101 (222) : 'ObtenerPacientePorDNI' (Y=-503) | P1=Synchronous | P2=retval=void;params=;paramsDlg=dniNiño; | P3=Call
+Seq 11: [SynchCall] PacienteBLL_DNI101 (222) -> DAL (228) : 'ObtenerPacientePorDNI(dniNiño)' (Y=-524) | P1= | P2= | P3=
+Seq 12: [         ] DAL (228) -> PacienteBLL_DNI101 (222) : '' (Y=-560) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 13: [         ] PacienteBLL_DNI101 (222) -> GUI (754) : '' (Y=-571) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 14: [         ] GUI (754) -> Nutricionista (219) : '' (Y=-585) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 15: [         ] Nutricionista (219) -> GUI (754) : 'btnRegistrarTurno' (Y=-629) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 16: [         ] GUI (754) -> PacienteBLL_DNI101 (222) : 'ObtenerPacientePorDNI' (Y=-645) | P1=Synchronous | P2=retval=void;params=;paramsDlg=dniNiño; | P3=Call
+Seq 17: [         ] PacienteBLL_DNI101 (222) -> DAL (228) : 'ObtenerPacientePorDNI' (Y=-664) | P1=Synchronous | P2=retval=void;params=;paramsDlg=dniNiño; | P3=Call
+Seq 18: [         ] DAL (228) -> PacienteBLL_DNI101 (222) : '' (Y=-699) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 19: [         ] PacienteBLL_DNI101 (222) -> GUI (754) : '' (Y=-734) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 20: [         ] GUI (754) -> Nutricionista (219) : '' (Y=-769) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 21: [         ] Nutricionista (219) -> GUI (754) : 'IngresarDatosPaciente' (Y=-804) | P1=Synchronous | P2=retval=void;params=;paramsDlg=apellido, dniNiño,telefono,obraSocial,email; | P3=Call
+Seq 22: [New      ] GUI (754) -> CUN02: Registrar Paciente (38) : 'RegistrarPaciente' (Y=-873) | P1=Synchronous | P2=retval=void;params=;paramsDlg=apellido, dniNiño,telefono,obraSocial,email; | P3=Call
+Seq 23: [         ] CUN02: Registrar Paciente (38) -> GUI (754) : '' (Y=-917) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 24: [         ] PacienteBLL_DNI101 (222) -> TurnoBLL_DNI101 (225) : 'RegistrarTurno' (Y=-977) | P1=Synchronous | P2=retval=void;params=;paramsDlg=apellido, dniNiño,telefono,obraSocial,email; | P3=Call
+Seq 25: [         ] TurnoBLL_DNI101 (225) -> DAL (228) : 'ObtenerPacientePorDNI' (Y=-1012) | P1=Synchronous | P2=retval=void;params=;paramsDlg=dniNiño; | P3=Call
+Seq 26: [         ] DAL (228) -> TurnoBLL_DNI101 (225) : '' (Y=-1047) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 27: [SynchCall] TurnoBLL_DNI101 (225) -> DAL (228) : 'ExisteTurnoParaProfesional(dniNutri, fecha, hora)' (Y=-1079) | P1=Synchronous | P2= | P3=Call
+Seq 28: [Return   ] DAL (228) -> TurnoBLL_DNI101 (225) : '' (Y=-1149) | P1=Synchronous | P2= | P3=Call
+Seq 29: [         ] TurnoBLL_DNI101 (225) -> PacienteBLL_DNI101 (222) : '' (Y=-1184) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 30: [         ] PacienteBLL_DNI101 (222) -> GUI (754) : '' (Y=-1219) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 31: [         ] GUI (754) -> Nutricionista (219) : '' (Y=-1254) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 32: [New      ] TurnoBLL_DNI101 (225) -> TurnoBE_DNI101 (226) : 'new TurnoBE_DNI101' (Y=-1289) | P1=Synchronous | P2=params=;paramsDlg=dniNiño, fecha, horario, motivo; | P3=Call
+Seq 33: [SynchCall] TurnoBLL_DNI101 (225) -> TurnoBE_DNI101 (226) : 'GenerarCodigoUnico()' (Y=-1362) | P1= | P2= | P3=
+Seq 34: [New      ] TurnoBLL_DNI101 (225) -> TurnoSolicitadoState_DNI101 (227) : 'new TurnoSolicitadoState_DNI101' (Y=-1428) | P1=Synchronous | P2= | P3=Call
+Seq 35: [SynchCall] TurnoBLL_DNI101 (225) -> TurnoBLL_DNI101 (225) : 'CalcularDV(cadenaDV)' (Y=-1458) | P1= | P2= | P3=
+Seq 36: [SynchCall] TurnoBLL_DNI101 (225) -> DAL (228) : 'Guardar(turnoBE)' (Y=-1493) | P1= | P2= | P3=
+Seq 37: [Return   ] DAL (228) -> TurnoBLL_DNI101 (225) : '' (Y=-1528) | P1=Synchronous | P2= | P3=Call
+Seq 38: [SynchCall] TurnoBLL_DNI101 (225) -> DAL (228) : 'ActualizarEstadoBloque(idBloque, 'Ocupado')' (Y=-1563) | P1= | P2= | P3=
+Seq 39: [Return   ] DAL (228) -> TurnoBLL_DNI101 (225) : '' (Y=-1598) | P1=Synchronous | P2= | P3=Call
+Seq 40: [SynchCall] TurnoBLL_DNI101 (225) -> EventoBLL (230) : 'RegistrarEvento(1, 'Turno registrado...', dniNutri, 'TurneroNutricional')' (Y=-1633) | P1= | P2= | P3=
+Seq 41: [SynchCall] EventoBLL (230) -> DAL (228) : 'GuardarBitacora(evento)' (Y=-1668) | P1= | P2= | P3=
+Seq 42: [SynchCall] TurnoBLL_DNI101 (225) -> DigitoVerificadorBLL (229) : 'RecalcularYPersistir()' (Y=-1703) | P1= | P2= | P3=
+Seq 43: [         ] TurnoBLL_DNI101 (225) -> GUI (754) : '' (Y=-1721) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 44: [         ] GUI (754) -> Nutricionista (219) : '' (Y=-1756) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 45: [SynchCall] DigitoVerificadorBLL (229) -> DAL (228) : 'ActualizarDV(firmas)' (Y=-1791) | P1= | P2= | P3=
+Seq 46: [         ] TurnoBLL_DNI101 (225) -> GUI (754) : '' (Y=-1846) | P1=Synchronous | P2=retval=void; | P3=Call
+Seq 47: [         ] GUI (754) -> Nutricionista (219) : '' (Y=-1881) | P1=Synchronous | P2=retval=void; | P3=Call

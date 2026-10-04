@@ -30,10 +30,10 @@ namespace BLL.Perfiles
 
             int idNuevaFamilia = _familiaDAL.InsertarFamiliaNueva(nombreFamilia);
 
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Creacion de Familia";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
 
             return idNuevaFamilia;
         }
@@ -43,10 +43,10 @@ namespace BLL.Perfiles
             _patenteDAL.InsertarFamiliaPerfil(idPerfil, idFamilia);
             try
             {
-                EventoBLL bitacoraBLL = new();
+                BitacoraBLL bitacoraBLL = new();
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 string descripcion = $"Asignación de Familia ID {idFamilia} al Perfil ID {idPerfil}";
-                bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+                bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
             }
             catch { }
         }
@@ -70,10 +70,10 @@ namespace BLL.Perfiles
 
             _familiaDAL.InsertarFamiliaAFamilia(idFamiliaPadre, idFamiliaHija);
 
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Familia '{nombreHija}' asignada como hija de Familia '{nombrePadre}'";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
         }
 
         public void EliminarPermisoFamilia(int idFamilia, int idPermiso, string nombreFamilia, string nombrePermiso)
@@ -88,10 +88,10 @@ namespace BLL.Perfiles
             _familiaDAL.EliminarPermisoFamilia(idFamilia, idPermiso);
 
             // 3. Bitácora
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Desvincular Permiso '{nombrePermiso}' de Familia '{nombreFamilia}'";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
         }
 
         public void EliminarFamiliaDeFamilia(int idFamiliaPadre, int idFamiliaHija, string nombrePadre, string nombreHija)
@@ -106,10 +106,10 @@ namespace BLL.Perfiles
             _familiaDAL.EliminarFamiliaDeFamilia(idFamiliaPadre, idFamiliaHija);
 
             // 3. Registramos la acción en la Bitácora
-            EventoBLL bitacoraBLL = new EventoBLL();
+            BitacoraBLL bitacoraBLL = new BitacoraBLL();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Desvincular Familia '{nombreHija}' de la Familia Padre '{nombrePadre}'";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
         }
 
         public void EliminarFamilia(int idFamilia, string nombreFamilia)
@@ -118,10 +118,10 @@ namespace BLL.Perfiles
             _familiaDAL.EliminarFamilia(idFamilia);
 
             // Dejamos registro en la bitácora
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Eliminacion de Familia";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
         }
 
         public void AgregarPermisoAFamilia(int idFamilia, int idPermiso, string nombrePermiso, string nombreFamilia)
@@ -133,10 +133,10 @@ namespace BLL.Perfiles
 
             _familiaDAL.InsertarPermisoFamilia(idFamilia, idPermiso);
 
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Asignar Permiso '{nombrePermiso}' a Familia '{nombreFamilia}'";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
         }
 
         public FamiliaServices ObtenerArbolFamiliar(int idFamiliaRaiz)

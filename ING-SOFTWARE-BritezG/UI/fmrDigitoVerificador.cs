@@ -69,7 +69,7 @@ namespace UI
                 {
                     int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                     if (dniActual == 0) dniActual = 12345678;
-                    new EventoBLL().RegistrarEvento(1, "Recálculo y restauración manual de Dígitos Verificadores (DV) en la Base de Datos", dniActual, "Seguridad");
+                    new BitacoraBLL().RegistrarBitacora(1, "Recálculo y restauración manual de Dígitos Verificadores (DV) en la Base de Datos", dniActual, "Seguridad");
                 }
                 catch { }
 
@@ -94,7 +94,7 @@ namespace UI
                 {
                     int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                     if (dniActual == 0) dniActual = 12345678;
-                    new EventoBLL().RegistrarEvento(1, $"Error al recalcular Dígitos Verificadores: {ex.Message}", dniActual, "Seguridad");
+                    new BitacoraBLL().RegistrarBitacora(1, $"Error al recalcular Dígitos Verificadores: {ex.Message}", dniActual, "Seguridad");
                 }
                 catch { }
 

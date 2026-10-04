@@ -2,6 +2,7 @@ using BE;
 using DAL;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace BLL
 {
@@ -17,15 +18,16 @@ namespace BLL
                 return new List<BloqueHorarioBE_DNI101>();
             }
 
-            var bloquesBD = _agendaDAL.ListarBloquesDisponibles(fecha, dniNutricionista);
+            DataTable dtBloques = _agendaDAL.ListarBloquesDisponibles(fecha, dniNutricionista);
             var horariosOcupados = _turnoDAL.ObtenerHorariosOcupadosPorProfesional(dniNutricionista, fecha);
 
             var bloquesResultado = new List<BloqueHorarioBE_DNI101>();
 
-            if (bloquesBD != null && bloquesBD.Count > 0)
+            if (dtBloques != null && dtBloques.Rows.Count > 0)
             {
-                foreach (var b in bloquesBD)
+                foreach (DataRow row in dtBloques.Rows)
                 {
+                    var b = MapearBloque(row);
                     if (fecha.Date.Add(b.HoraInicio_DNI101) <= DateTime.Now)
                     {
                         continue;
@@ -68,6 +70,18 @@ namespace BLL
             return bloquesResultado;
         }
 
+        public AgendaMedicaBE_DNI101 ObtenerAgendaMedica(DateTime fecha, int dniNutricionista)
+        {
+            var bloques = ListarBloquesDisponibles(fecha, dniNutricionista);
+            return new AgendaMedicaBE_DNI101
+            {
+                Fecha_DNI101 = fecha.Date,
+                DniNutricionista_DNI101 = dniNutricionista,
+                EstadoAgenda_DNI101 = "Abierta",
+                BloquesHorarios_DNI101 = bloques
+            };
+        }
+
         public bool ActualizarEstadoBloque(int idBloque, string nuevoEstado)
         {
             bool ok = _agendaDAL.ActualizarEstadoBloque(idBloque, nuevoEstado);
@@ -76,11 +90,24 @@ namespace BLL
                 try
                 {
                     int dniActual = Services.ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                    new EventoBLL().RegistrarEvento(3, $"Bloque horario ID {idBloque} actualizado a estado '{nuevoEstado}'", dniActual, "AgendaMedica");
+                    new BitacoraBLL().RegistrarBitacora(3, $"Bloque horario ID {idBloque} actualizado a estado '{nuevoEstado}'", dniActual, "AgendaMedica");
                 }
                 catch { }
             }
             return ok;
+        }
+
+        private BloqueHorarioBE_DNI101 MapearBloque(DataRow row)
+        {
+            return new BloqueHorarioBE_DNI101
+            {
+                IdBloque_DNI101 = Convert.ToInt32(row["IdBloque_DNI101"]),
+                IdAgenda_DNI101 = Convert.ToInt32(row["IdAgenda_DNI101"]),
+                HoraInicio_DNI101 = (TimeSpan)row["HoraInicio_DNI101"],
+                HoraFin_DNI101 = (TimeSpan)row["HoraFin_DNI101"],
+                EstadoBloque_DNI101 = row["EstadoBloque_DNI101"].ToString() ?? "Disponible",
+                DV = row["DV"] != DBNull.Value ? row["DV"].ToString() : null
+            };
         }
     }
 }

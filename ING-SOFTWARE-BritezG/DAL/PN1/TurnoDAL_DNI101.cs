@@ -1,4 +1,3 @@
-using BE;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -15,13 +14,13 @@ namespace DAL
             TurnosDatabaseInitializer.AsegurarTablas();
         }
 
-        public int Guardar(TurnoBE_DNI101 turno)
+        public int Guardar(string codigoTurno, DateTime fecha, TimeSpan hora, string motivo, string estado, int idPaciente, int dniNutricionista, int? idBloque, string? dv)
         {
             try
             {
-                if (string.IsNullOrEmpty(turno.CodigoTurno_DNI101))
+                if (string.IsNullOrEmpty(codigoTurno))
                 {
-                    turno.CodigoTurno_DNI101 = $"TRN-{DateTime.Now:yyyyMMddHHmmss}-{new Random().Next(100, 999)}";
+                    codigoTurno = $"TRN-{DateTime.Now:yyyyMMddHHmmss}-{new Random().Next(100, 999)}";
                 }
 
                 string query = @"
@@ -30,22 +29,20 @@ VALUES (@codigo, @fecha, @hora, @motivo, @estado, @idPaciente, @dniNutri, @idBlo
 SELECT CAST(SCOPE_IDENTITY() as int);";
 
                 DataTable dt = _conexion.ExecuteReader(query,
-                    new SqlParameter("@codigo", turno.CodigoTurno_DNI101),
-                    new SqlParameter("@fecha", turno.FechaTurno_DNI101),
-                    new SqlParameter("@hora", turno.HoraTurno_DNI101),
-                    new SqlParameter("@motivo", turno.MotivoConsulta_DNI101),
-                    new SqlParameter("@estado", turno.EstadoTurno_DNI101),
-                    new SqlParameter("@idPaciente", turno.IdPaciente_DNI101),
-                    new SqlParameter("@dniNutri", turno.DniNutricionista_DNI101),
-                    new SqlParameter("@idBloque", (object?)turno.IdBloque_DNI101 ?? DBNull.Value),
-                    new SqlParameter("@dv", (object?)turno.DV ?? DBNull.Value)
+                    new SqlParameter("@codigo", codigoTurno),
+                    new SqlParameter("@fecha", fecha),
+                    new SqlParameter("@hora", hora),
+                    new SqlParameter("@motivo", motivo),
+                    new SqlParameter("@estado", estado),
+                    new SqlParameter("@idPaciente", idPaciente),
+                    new SqlParameter("@dniNutri", dniNutricionista),
+                    new SqlParameter("@idBloque", (object?)idBloque ?? DBNull.Value),
+                    new SqlParameter("@dv", (object?)dv ?? DBNull.Value)
                 );
 
                 if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
                 {
-                    int idGenerado = Convert.ToInt32(dt.Rows[0][0]);
-                    turno.IdTurno_DNI101 = idGenerado;
-                    return idGenerado;
+                    return Convert.ToInt32(dt.Rows[0][0]);
                 }
 
                 return 0;
@@ -174,11 +171,11 @@ WHERE IdTurno_DNI101 = @idTurno;";
             }
         }
 
-        public int RegistrarTurnoConBloque(TurnoBE_DNI101 turno, int? idBloque)
+        public int RegistrarTurnoConBloque(string codigoTurno, DateTime fecha, TimeSpan hora, string motivo, string estado, int idPaciente, int dniNutricionista, int? idBloque, string? dv)
         {
-            if (string.IsNullOrEmpty(turno.CodigoTurno_DNI101))
+            if (string.IsNullOrEmpty(codigoTurno))
             {
-                turno.CodigoTurno_DNI101 = $"TRN-{DateTime.Now:yyyyMMddHHmmss}-{new Random().Next(100, 999)}";
+                codigoTurno = $"TRN-{DateTime.Now:yyyyMMddHHmmss}-{new Random().Next(100, 999)}";
             }
 
             return _conexion.ExecuteTransaction(tran =>
@@ -189,22 +186,21 @@ VALUES (@codigo, @fecha, @hora, @motivo, @estado, @idPaciente, @dniNutri, @idBlo
 SELECT CAST(SCOPE_IDENTITY() as int);";
 
                 DataTable dt = _conexion.ExecuteReaderTran(queryTurno, tran,
-                    new SqlParameter("@codigo", turno.CodigoTurno_DNI101),
-                    new SqlParameter("@fecha", turno.FechaTurno_DNI101),
-                    new SqlParameter("@hora", turno.HoraTurno_DNI101),
-                    new SqlParameter("@motivo", turno.MotivoConsulta_DNI101),
-                    new SqlParameter("@estado", turno.EstadoTurno_DNI101),
-                    new SqlParameter("@idPaciente", turno.IdPaciente_DNI101),
-                    new SqlParameter("@dniNutri", turno.DniNutricionista_DNI101),
+                    new SqlParameter("@codigo", codigoTurno),
+                    new SqlParameter("@fecha", fecha),
+                    new SqlParameter("@hora", hora),
+                    new SqlParameter("@motivo", motivo),
+                    new SqlParameter("@estado", estado),
+                    new SqlParameter("@idPaciente", idPaciente),
+                    new SqlParameter("@dniNutri", dniNutricionista),
                     new SqlParameter("@idBloque", (object?)idBloque ?? DBNull.Value),
-                    new SqlParameter("@dv", (object?)turno.DV ?? DBNull.Value)
+                    new SqlParameter("@dv", (object?)dv ?? DBNull.Value)
                 );
 
                 int idGenerado = 0;
                 if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
                 {
                     idGenerado = Convert.ToInt32(dt.Rows[0][0]);
-                    turno.IdTurno_DNI101 = idGenerado;
                 }
 
                 if (idBloque.HasValue && idBloque.Value > 0)
@@ -281,7 +277,7 @@ WHERE IdTurno_DNI101 = @idTurno;";
             });
         }
 
-        public TurnoBE_DNI101? ObtenerPorId(int idTurno)
+        public DataTable ObtenerPorId(int idTurno)
         {
             try
             {
@@ -291,21 +287,16 @@ FROM Turnos_DNI101 t
 INNER JOIN Pacientes_DNI101 p ON t.IdPaciente_DNI101 = p.IdPaciente_DNI101
 WHERE t.IdTurno_DNI101 = @id;";
 
-                DataTable dt = _conexion.ExecuteReader(query, new SqlParameter("@id", idTurno));
-                if (dt.Rows.Count > 0)
-                {
-                    return MapearTurno(dt.Rows[0]);
-                }
-                return null;
+                return _conexion.ExecuteReader(query, new SqlParameter("@id", idTurno));
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al obtener turno por ID: {ex.Message}");
-                return null;
+                return new DataTable();
             }
         }
 
-        public TurnoBE_DNI101? ObtenerPorCodigo(string codigoTurno)
+        public DataTable ObtenerPorCodigo(string codigoTurno)
         {
             try
             {
@@ -315,23 +306,17 @@ FROM Turnos_DNI101 t
 INNER JOIN Pacientes_DNI101 p ON t.IdPaciente_DNI101 = p.IdPaciente_DNI101
 WHERE t.CodigoTurno_DNI101 = @codigo;";
 
-                DataTable dt = _conexion.ExecuteReader(query, new SqlParameter("@codigo", codigoTurno));
-                if (dt.Rows.Count > 0)
-                {
-                    return MapearTurno(dt.Rows[0]);
-                }
-                return null;
+                return _conexion.ExecuteReader(query, new SqlParameter("@codigo", codigoTurno));
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al obtener turno por código: {ex.Message}");
-                return null;
+                return new DataTable();
             }
         }
 
-        public List<TurnoBE_DNI101> ListarTodos()
+        public DataTable ListarTodos()
         {
-            var lista = new List<TurnoBE_DNI101>();
             try
             {
                 string query = @"
@@ -340,22 +325,17 @@ FROM Turnos_DNI101 t
 INNER JOIN Pacientes_DNI101 p ON t.IdPaciente_DNI101 = p.IdPaciente_DNI101
 ORDER BY t.FechaTurno_DNI101 DESC, t.HoraTurno_DNI101 DESC;";
 
-                DataTable dt = _conexion.ExecuteReader(query);
-                foreach (DataRow row in dt.Rows)
-                {
-                    lista.Add(MapearTurno(row));
-                }
+                return _conexion.ExecuteReader(query);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al listar turnos: {ex.Message}");
+                return new DataTable();
             }
-            return lista;
         }
 
-        public List<TurnoBE_DNI101> ListarTurnosPorFecha(DateTime fecha)
+        public DataTable ListarTurnosPorFecha(DateTime fecha)
         {
-            var lista = new List<TurnoBE_DNI101>();
             try
             {
                 string query = @"
@@ -365,22 +345,17 @@ INNER JOIN Pacientes_DNI101 p ON t.IdPaciente_DNI101 = p.IdPaciente_DNI101
 WHERE CAST(t.FechaTurno_DNI101 AS DATE) = CAST(@fecha AS DATE)
 ORDER BY t.HoraTurno_DNI101 ASC;";
 
-                DataTable dt = _conexion.ExecuteReader(query, new SqlParameter("@fecha", fecha.Date));
-                foreach (DataRow row in dt.Rows)
-                {
-                    lista.Add(MapearTurno(row));
-                }
+                return _conexion.ExecuteReader(query, new SqlParameter("@fecha", fecha.Date));
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al listar turnos por fecha: {ex.Message}");
+                return new DataTable();
             }
-            return lista;
         }
 
-        public List<TurnoBE_DNI101> ListarTurnosPorPaciente(int idPaciente)
+        public DataTable ListarTurnosPorPaciente(int idPaciente)
         {
-            var lista = new List<TurnoBE_DNI101>();
             try
             {
                 string query = @"
@@ -390,17 +365,13 @@ INNER JOIN Pacientes_DNI101 p ON t.IdPaciente_DNI101 = p.IdPaciente_DNI101
 WHERE t.IdPaciente_DNI101 = @idPaciente
 ORDER BY t.FechaTurno_DNI101 DESC;";
 
-                DataTable dt = _conexion.ExecuteReader(query, new SqlParameter("@idPaciente", idPaciente));
-                foreach (DataRow row in dt.Rows)
-                {
-                    lista.Add(MapearTurno(row));
-                }
+                return _conexion.ExecuteReader(query, new SqlParameter("@idPaciente", idPaciente));
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al listar turnos por paciente: {ex.Message}");
+                return new DataTable();
             }
-            return lista;
         }
 
         public bool ExisteTurnoParaProfesional(int dniNutricionista, DateTime fecha, TimeSpan hora, int? idTurnoExcluir = null)
@@ -466,41 +437,6 @@ WHERE DniNutricionista_DNI101 = @dni
                 Console.WriteLine($"Error al obtener horarios ocupados: {ex.Message}");
             }
             return horarios;
-        }
-
-        private TurnoBE_DNI101 MapearTurno(DataRow row)
-        {
-            var turno = new TurnoBE_DNI101
-            {
-                IdTurno_DNI101 = Convert.ToInt32(row["IdTurno_DNI101"]),
-                CodigoTurno_DNI101 = row["CodigoTurno_DNI101"].ToString() ?? string.Empty,
-                FechaTurno_DNI101 = Convert.ToDateTime(row["FechaTurno_DNI101"]),
-                HoraTurno_DNI101 = (TimeSpan)row["HoraTurno_DNI101"],
-                MotivoConsulta_DNI101 = row["MotivoConsulta_DNI101"].ToString() ?? string.Empty,
-                EstadoTurno_DNI101 = row["EstadoTurno_DNI101"].ToString() ?? "Solicitado",
-                IdPaciente_DNI101 = Convert.ToInt32(row["IdPaciente_DNI101"]),
-                DniNutricionista_DNI101 = Convert.ToInt32(row["DniNutricionista_DNI101"]),
-                IdBloque_DNI101 = row["IdBloque_DNI101"] != DBNull.Value ? Convert.ToInt32(row["IdBloque_DNI101"]) : null,
-                DV = row["DV"] != DBNull.Value ? row["DV"].ToString() : null
-            };
-
-            turno.ConfigurarEstadoPorNombre(turno.EstadoTurno_DNI101);
-
-            if (row.Table.Columns.Contains("DniNiño_DNI101") && row["DniNiño_DNI101"] != DBNull.Value)
-            {
-                turno.Paciente_DNI101 = new PacienteBE_DNI101
-                {
-                    IdPaciente_DNI101 = turno.IdPaciente_DNI101,
-                    DNINiño_DNI101 = row["DniNiño_DNI101"].ToString() ?? string.Empty,
-                    Nombre_DNI101 = row["Nombre_DNI101"].ToString() ?? string.Empty,
-                    Apellido_DNI101 = row["Apellido_DNI101"].ToString() ?? string.Empty,
-                    Telefono_DNI101 = row["Telefono_DNI101"] != DBNull.Value ? row["Telefono_DNI101"].ToString() : null,
-                    Email_DNI101 = row["Email_DNI101"] != DBNull.Value ? row["Email_DNI101"].ToString() : null,
-                    ObraSocial_DNI101 = row["ObraSocial_DNI101"] != DBNull.Value ? row["ObraSocial_DNI101"].ToString() : null
-                };
-            }
-
-            return turno;
         }
     }
 }

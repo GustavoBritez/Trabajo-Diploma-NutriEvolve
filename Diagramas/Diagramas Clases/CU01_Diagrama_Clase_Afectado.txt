@@ -4,183 +4,140 @@ skinparam classAttributeIconSize 0
 skinparam shadowing false
 skinparam roundcorner 6
 
-' ============================================================
-' DIAGRAMA DE CLASES AFECTADAS - CU01: REGISTRAR TURNO
-' Modelo Unificado del Negocio / Dominio
-' ============================================================
+title Diagrama de Clases Afectadas - CUN01: Registrar Turno (Arquitectura 3 Capas: BLL / DAL / BE)
 
-class Tutor_DNI101 {
-    - IdTutor_DNI101 : int
-    - DniTutor_DNI101 : string
-    - Nombre_DNI101 : string
-    - Apellido_DNI101 : string
-    - Telefono_DNI101 : string
-    - Email_DNI101 : string
-    - Parentesco_DNI101 : string
-    - FechaRegistro_DNI101 : DateTime
-    - Pacientes_DNI101 : List<Paciente_DNI101>
-    - DV : string
-    + RegistrarTutor(tutor: Tutor_DNI101) : int
-    + ModificarTutor(tutor: Tutor_DNI101) : bool
-    + ObtenerTutorPorDNI(dniTutor: string) : Tutor_DNI101
-    + ListarTutores() : List<Tutor_DNI101>
+package "Capa BLL (Lógica de Negocio e Instanciación de BEs)" #E8F8F5 {
+    class PacienteBLL_DNI101 {
+        + ListarPacientes() : List<PacienteBE_DNI101>
+        + ModificarPaciente(paciente: PacienteBE_DNI101) : bool
+        + ObtenerOAsegurarPaciente(dniNiño: string, solicitarRegistroUI: Func<string, bool>) : PacienteBE_DNI101
+        + ObtenerPacientePorDNI(dniNiño: string) : PacienteBE_DNI101
+        + ObtenerPorId(idPaciente: int) : PacienteBE_DNI101
+        + RegistrarPaciente(nombre: string, apellido: string, dniNiño: string, telefono: string, email: string, obraSocial: string) : int
+    }
+
+    class AgendaMedicaBLL_DNI101 {
+        + ActualizarEstadoBloque(idBloque: int, nuevoEstado: string) : bool
+        + ListarBloquesDisponibles(fecha: DateTime, dniNutricionista: int) : List<BloqueHorarioBE_DNI101>
+        + ObtenerAgendaMedica(fecha: DateTime, dniNutricionista: int) : AgendaMedicaBE_DNI101
+    }
+
+    class TurnoBLL_DNI101 {
+        + AgendarTurno(turno: TurnoBE_DNI101) : bool
+        + CancelarTurno(codigoTurno: string, motivo: string) : bool
+        + ListarTurnos(fecha: DateTime?, estado: string?) : List<TurnoBE_DNI101>
+        + ListarTurnosPorPaciente(idPaciente: int) : List<TurnoBE_DNI101>
+        + MarcarAsistencia(idTurno: int) : bool
+        + ModificarTurno(codigoTurno: string, motivo: string, estado: string?, fecha: DateTime?, hora: TimeSpan?) : bool
+        + ObtenerPorCodigo(codigoTurno: string) : TurnoBE_DNI101
+        + ObtenerPorId(idTurno: int) : TurnoBE_DNI101
+        + RegistrarTurno(dniNiño: string, fecha: DateTime, horario: string, motivo: string, idBloque: int?, dniNutricionistaParam: int?) : TurnoBE_DNI101
+        + ReprogramarTurno(codigoTurno: string, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int?, nuevoDniNutricionista: int?) : bool
+    }
 }
 
-class Paciente_DNI101 {
-    - IdPaciente_DNI101 : int
-    - DniNiño_DNI101 : string
-    - Nombre_DNI101 : string
-    - Apellido_DNI101 : string
-    - FechaNacimiento_DNI101 : DateTime
-    - Sexo_DNI101 : string
-    - ObraSocial_DNI101 : string
-    - IdTutor_DNI101 : int
-    - Tutor_DNI101 : Tutor_DNI101
-    - DV : string
-    + ObtenerEdadMeses() : int
-    + RegistrarPaciente(paciente: Paciente_DNI101) : int
-    + ModificarPaciente(paciente: Paciente_DNI101) : bool
-    + ObtenerPacientePorDNI(dniNiño: string) : Paciente_DNI101
-    + ListarPacientes() : List<Paciente_DNI101>
-    + ListarPacientesPorTutor(idTutor: int) : List<Paciente_DNI101>
+package "Capa DAL (Table Data Gateway - Retorna DataTable Crudo)" #FDF2E9 {
+    class PacienteDAL_DNI101 {
+        + Guardar(dniNiño: string, nombre: string, apellido: string, tel: string?, email: string?, fechaNac: DateTime, sexo: string?, os: string?, dv: string?) : int
+        + ListarTodos() : DataTable
+        + Modificar(idPaciente: int, dniNiño: string, nombre: string, apellido: string, tel: string?, email: string?, fechaNac: DateTime, sexo: string?, os: string?, dv: string?) : bool
+        + ObtenerPacientePorDNI(dniNiño: string) : DataTable
+        + ObtenerPorId(idPaciente: int) : DataTable
+    }
+
+    class AgendaMedicaDAL_DNI101 {
+        + ActualizarEstadoBloque(idBloque: int, nuevoEstado: string) : bool
+        + ListarBloquesDisponibles(fecha: DateTime, dniNutricionista: int) : DataTable
+    }
+
+    class TurnoDAL_DNI101 {
+        + ActualizarEstado(idTurno: int, nuevoEstado: string) : bool
+        + ActualizarEstadoBloque(idBloque: int, nuevoEstado: string) : bool
+        + CancelarTurno(idTurno: int, motivo: string, dv: string?) : bool
+        + CancelarTurnoConBloque(idTurno: int, motivo: string, idBloque: int?, dv: string?) : bool
+        + ExisteTurnoParaProfesional(dniNutricionista: int, fecha: DateTime, hora: TimeSpan, idTurnoExcluir: int?) : bool
+        + Guardar(codigo: string, fecha: DateTime, hora: TimeSpan, motivo: string, estado: string, idPaciente: int, dniNutri: int, idBloque: int?, dv: string?) : int
+        + ListarTodos() : DataTable
+        + ListarTurnosPorFecha(fecha: DateTime) : DataTable
+        + ListarTurnosPorPaciente(idPaciente: int) : DataTable
+        + ModificarTurno(idTurno: int, fecha: DateTime, hora: TimeSpan, motivo: string, estado: string, dv: string?) : bool
+        + ObtenerHorariosOcupadosPorProfesional(dniNutricionista: int, fecha: DateTime) : List<TimeSpan>
+        + ObtenerPorCodigo(codigoTurno: string) : DataTable
+        + ObtenerPorId(idTurno: int) : DataTable
+        + RegistrarTurnoConBloque(codigo: string, fecha: DateTime, hora: TimeSpan, motivo: string, estado: string, idPaciente: int, dniNutri: int, idBloque: int?, dv: string?) : int
+        + ReprogramarTurno(idTurno: int, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int?, dniNutricionista: int?, dv: string?) : bool
+        + ReprogramarTurnoConBloques(idTurno: int, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int?, idBloqueAnterior: int?, dniNutricionista: int?, dv: string?) : bool
+    }
 }
 
-class Turno_DNI101 <<Context>> {
-    - IdTurno_DNI101 : int
-    - CodigoTurno_DNI101 : string
-    - FechaTurno_DNI101 : DateTime
-    - HoraTurno_DNI101 : TimeSpan
-    - MotivoConsulta_DNI101 : string
-    - EstadoTurno_DNI101 : string
-    - IdPaciente_DNI101 : int
-    - DniNutricionista_DNI101 : int
-    - IdBloque_DNI101 : int
-    - Paciente_DNI101 : Paciente_DNI101
-    - Nutricionista_DNI101 : Usuario
-    - BloqueHorario_DNI101 : BloqueHorario_DNI101
-    - EstadoActual_DNI101 : IEstadoTurno_DNI101
-    - DV : string
-    + CambiarEstado(nuevoEstado: IEstadoTurno_DNI101) : void
-    + Atender() : void
-    + Cancelar(motivo: string) : void
-    + Reprogramar(nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : void
-    + AgendarTurno(turno: Turno_DNI101) : bool
-    + ConfirmarTurno(idTurno: int) : bool
-    + ReprogramarTurno(idTurno: int, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : bool
-    + CancelarTurno(idTurno: int, motivo: string) : bool
-    + MarcarAsistencia(idTurno: int) : bool
-    + ListarTurnos(fecha: DateTime?, estado: string?) : List<Turno_DNI101>
-    + ObtenerPorId(idTurno: int) : Turno_DNI101
-    + ObtenerPorCodigo(codigoTurno: string) : Turno_DNI101
-    + ListarTurnosPorFecha(fecha: DateTime) : List<Turno_DNI101>
-    + ListarTurnosPorPaciente(idPaciente: int) : List<Turno_DNI101>
+package "Capa BE (Entidades de Negocio Puras - Atributos)" #FEF9E7 {
+    class PacienteBE_DNI101 {
+        - IdPaciente_DNI101 : int
+        - DNINiño_DNI101 : string
+        - Nombre_DNI101 : string
+        - Apellido_DNI101 : string
+        - Telefono_DNI101 : string?
+        - Email_DNI101 : string?
+        - FechaNacimiento_DNI101 : DateTime
+        - Sexo_DNI101 : string?
+        - ObraSocial_DNI101 : string?
+        - NombreCompleto : string
+        - DV : string?
+    }
+
+    class TurnoBE_DNI101 {
+        - IdTurno_DNI101 : int
+        - CodigoTurno_DNI101 : string
+        - FechaTurno_DNI101 : DateTime
+        - HoraTurno_DNI101 : TimeSpan
+        - MotivoConsulta_DNI101 : string
+        - EstadoTurno_DNI101 : string
+        - IdPaciente_DNI101 : int
+        - DniNutricionista_DNI101 : int
+        - IdBloque_DNI101 : int?
+        - Paciente_DNI101 : PacienteBE_DNI101
+        - DV : string?
+    }
+
+    class AgendaMedicaBE_DNI101 {
+        - IdAgenda_DNI101 : int
+        - Fecha_DNI101 : DateTime
+        - EstadoAgenda_DNI101 : string
+        - DniNutricionista_DNI101 : int
+        - BloquesHorarios_DNI101 : List<BloqueHorarioBE_DNI101>
+        - DV : string?
+    }
+
+    class BloqueHorarioBE_DNI101 {
+        - IdBloque_DNI101 : int
+        - IdAgenda_DNI101 : int
+        - HoraInicio_DNI101 : TimeSpan
+        - HoraFin_DNI101 : TimeSpan
+        - EstadoBloque_DNI101 : string
+        - DV : string?
+    }
 }
 
-interface IEstadoTurno_DNI101 <<State>> {
-    + Atender(turno: Turno_DNI101) : void
-    + Cancelar(turno: Turno_DNI101, motivo: string) : void
-    + Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : void
-}
+' Relaciones estructurales del Dominio (BE)
+PacienteBE_DNI101 "1" o-- "0..*" TurnoBE_DNI101 : +Turnos
+AgendaMedicaBE_DNI101 "1" *-- "1..*" BloqueHorarioBE_DNI101 : +BloquesHorarios_DNI101
+TurnoBE_DNI101 ..> BloqueHorarioBE_DNI101 : <<use>> +IdBloque_DNI101
 
-class TurnoSolicitadoState_DNI101 <<ConcreteState>> {
-    + Atender(turno: Turno_DNI101) : void
-    + Cancelar(turno: Turno_DNI101, motivo: string) : void
-    + Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : void
-}
+' Relaciones entre BLL
+TurnoBLL_DNI101 ..> PacienteBLL_DNI101 : <<use>>
+TurnoBLL_DNI101 ..> AgendaMedicaBLL_DNI101 : <<use>>
 
-class TurnoConfirmadoState_DNI101 <<ConcreteState>> {
-    + Atender(turno: Turno_DNI101) : void
-    + Cancelar(turno: Turno_DNI101, motivo: string) : void
-    + Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : void
-}
+' Relaciones BLL -> DAL
+TurnoBLL_DNI101 ..> TurnoDAL_DNI101 : <<use>>
+PacienteBLL_DNI101 ..> PacienteDAL_DNI101 : <<use>>
+AgendaMedicaBLL_DNI101 ..> AgendaMedicaDAL_DNI101 : <<use>>
 
-class TurnoAsistioState_DNI101 <<ConcreteState>> {
-    + Atender(turno: Turno_DNI101) : void
-    + Cancelar(turno: Turno_DNI101, motivo: string) : void
-    + Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : void
-}
+' Relaciones BLL -> BE (Instanciación y Mapeo)
+TurnoBLL_DNI101 ..> TurnoBE_DNI101 : <<use>>
+PacienteBLL_DNI101 ..> PacienteBE_DNI101 : <<use>>
+AgendaMedicaBLL_DNI101 ..> AgendaMedicaBE_DNI101 : <<use>>
+AgendaMedicaBLL_DNI101 ..> BloqueHorarioBE_DNI101 : <<use>>
 
-class TurnoCanceladoState_DNI101 <<ConcreteState>> {
-    + Atender(turno: Turno_DNI101) : void
-    + Cancelar(turno: Turno_DNI101, motivo: string) : void
-    + Reprogramar(turno: Turno_DNI101, nuevaFecha: DateTime, nuevaHora: TimeSpan, nuevoIdBloque: int) : void
-}
-
-class AgendaMedica_DNI101 {
-    - IdAgenda_DNI101 : int
-    - Fecha_DNI101 : DateTime
-    - EstadoAgenda_DNI101 : string
-    - DniNutricionista_DNI101 : int
-    - BloquesHorarios_DNI101 : List<BloqueHorario_DNI101>
-    - DV : string
-    + GuardarAgenda(agenda: AgendaMedica_DNI101) : int
-    + ObtenerAgendaPorFecha(fecha: DateTime, dniNutricionista: int) : AgendaMedica_DNI101
-    + ActualizarEstadoBloque(idBloque: int, nuevoEstado: string) : bool
-    + ListarBloquesDisponibles(fecha: DateTime, dniNutricionista: int) : List<BloqueHorario_DNI101>
-}
-
-class BloqueHorario_DNI101 {
-    - IdBloque_DNI101 : int
-    - IdAgenda_DNI101 : int
-    - HoraInicio_DNI101 : TimeSpan
-    - HoraFin_DNI101 : TimeSpan
-    - EstadoBloque_DNI101 : string
-    - DV : string
-}
-
-class Usuario <<Base / Seguridad T02>> {
-    - DNI : int
-    - Nombre : string
-    - Apellido : string
-    - NombreUsuario : string
-    - Contraseña : string
-    - Email : string
-    - Bloqueado : bool
-    - Intentos : int
-    - Rol : string
-    - Idioma : string
-    - DV : string
-    + ObtenerPorDNI(dni: int) : Usuario
-    + ListarActivos() : List<Usuario>
-}
-
-class DigitoVerificador <<Seguridad T08>> {
-    + ObtenerTurnosCorruptos() : List<string>
-    + ObtenerPacientesCorruptos() : List<string>
-    + ObtenerTutoresCorruptos() : List<string>
-    + RecalcularYPersistir() : void
-    + ActualizarDVIndividualesTurnos() : void
-    + ActualizarDVIndividualesPacientes() : void
-    + ActualizarDVIndividualesTutores() : void
-    + CalcularDVH(registro: object) : string
-}
-
-class BitacoraAuditoria <<Seguridad T06>> {
-    - Numero : int
-    - Fecha : DateTime
-    - DNI : string
-    - Modulo : string
-    - Descripcion : string
-    - Criticidad : string
-    + RegistrarEvento(modulo: string, descripcion: string, dni: string, criticidad: string) : bool
-}
-
-' --- RELACIONES Y CARDINALIDADES ---
-
-Tutor_DNI101 "1" -- "1..*" Paciente_DNI101 : tutor de >
-Paciente_DNI101 "1" -- "0..*" Turno_DNI101 : posee >
-Usuario "1" -- "0..*" AgendaMedica_DNI101 : posee agenda >
-Usuario "1" -- "0..*" Turno_DNI101 : atiende >
-AgendaMedica_DNI101 "1" *-- "1..*" BloqueHorario_DNI101 : contiene >
-BloqueHorario_DNI101 "1" -- "0..1" Turno_DNI101 : reservado por >
-
-Turno_DNI101 "1" o-- "1" IEstadoTurno_DNI101 : estadoActual >
-IEstadoTurno_DNI101 <|.. TurnoSolicitadoState_DNI101
-IEstadoTurno_DNI101 <|.. TurnoConfirmadoState_DNI101
-IEstadoTurno_DNI101 <|.. TurnoAsistioState_DNI101
-IEstadoTurno_DNI101 <|.. TurnoCanceladoState_DNI101
-
-Turno_DNI101 ..> DigitoVerificador : valida integridad >
-Turno_DNI101 ..> BitacoraAuditoria : audita evento >
+' ARQUITECTURA ESTRICTA: DAL NO TIENE RELACIONES HACIA BE (DAL desacoplada)
 
 @enduml

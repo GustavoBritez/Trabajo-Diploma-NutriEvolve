@@ -3,6 +3,7 @@ using DAL;
 using Services;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace BLL
@@ -10,8 +11,8 @@ namespace BLL
     public class TurnoBLL_DNI101
     {
         private readonly TurnoDAL_DNI101 _turnoDAL = new();
-        private readonly PacienteDAL_DNI101 _pacienteDAL = new();
-        private readonly EventoBLL _bitacoraBLL = new();
+        private readonly PacienteBLL_DNI101 _pacienteBLL = new();
+        private readonly BitacoraBLL _bitacoraBLL = new();
 
         public TurnoBE_DNI101 RegistrarTurno(string dniNiño, DateTime fecha, string horario, string motivo, int? idBloque = null, int? dniNutricionistaParam = null)
         {
@@ -20,7 +21,7 @@ namespace BLL
             if (string.IsNullOrWhiteSpace(motivo)) throw new ArgumentException("El motivo de consulta es requerido.", nameof(motivo));
 
             dniNiño = dniNiño.Trim();
-            var paciente = _pacienteDAL.ObtenerPacientePorDNI(dniNiño);
+            var paciente = _pacienteBLL.ObtenerPacientePorDNI(dniNiño);
             if (paciente == null)
             {
                 throw new InvalidOperationException($"El paciente con DNI {dniNiño} no se encuentra registrado en el sistema.");
@@ -85,14 +86,24 @@ namespace BLL
             turno.DV = ServicioBcrypt.CalcularDV(cadenaDV);
 
             // Persistir turno y ocupar bloque horario en una única transacción atómica SQL
-            int idGenerado = _turnoDAL.RegistrarTurnoConBloque(turno, idBloque);
+            int idGenerado = _turnoDAL.RegistrarTurnoConBloque(
+                turno.CodigoTurno_DNI101,
+                turno.FechaTurno_DNI101,
+                turno.HoraTurno_DNI101,
+                turno.MotivoConsulta_DNI101,
+                turno.EstadoTurno_DNI101,
+                turno.IdPaciente_DNI101,
+                turno.DniNutricionista_DNI101,
+                idBloque,
+                turno.DV
+            );
             turno.IdTurno_DNI101 = idGenerado;
 
-            // 13. Registrar el evento de agendamiento en la bitácora de auditoría
+            // 13. Registrar en la bitácora de auditoría
             try
             {
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                _bitacoraBLL.RegistrarEvento(1, $"Turno registrado con éxito ({turno.CodigoTurno_DNI101}) para paciente DNI {dniNiño} el {fecha:dd/MM/yyyy} a las {horaSpan:hh\\:mm}", dniActual, "TurneroNutricional");
+                _bitacoraBLL.RegistrarBitacora(1, $"Turno registrado con éxito ({turno.CodigoTurno_DNI101}) para paciente DNI {dniNiño} el {fecha:dd/MM/yyyy} a las {horaSpan:hh\\:mm}", dniActual, "TurneroNutricional");
             }
             catch { }
 
@@ -113,13 +124,24 @@ namespace BLL
             {
                 throw new InvalidOperationException("No es posible agendar un turno para una fecha u horario que ya ha transcurrido.");
             }
-            int id = _turnoDAL.Guardar(turno);
+            int id = _turnoDAL.Guardar(
+                turno.CodigoTurno_DNI101,
+                turno.FechaTurno_DNI101,
+                turno.HoraTurno_DNI101,
+                turno.MotivoConsulta_DNI101,
+                turno.EstadoTurno_DNI101,
+                turno.IdPaciente_DNI101,
+                turno.DniNutricionista_DNI101,
+                turno.IdBloque_DNI101,
+                turno.DV
+            );
+            turno.IdTurno_DNI101 = id;
             if (id > 0)
             {
                 try
                 {
                     int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                    _bitacoraBLL.RegistrarEvento(1, $"Turno agendado ({turno.CodigoTurno_DNI101}) para paciente ID {turno.IdPaciente_DNI101}", dniActual, "TurneroNutricional");
+                    _bitacoraBLL.RegistrarBitacora(1, $"Turno agendado ({turno.CodigoTurno_DNI101}) para paciente ID {turno.IdPaciente_DNI101}", dniActual, "TurneroNutricional");
                 }
                 catch { }
 
@@ -148,9 +170,11 @@ namespace BLL
             }
 
             // Paso 3: Recupera el turno con su estado desde la base de datos
-            var turno = _turnoDAL.ObtenerPorCodigo(codigoTurno);
-            if (turno == null)
+            var dtTurno = _turnoDAL.ObtenerPorCodigo(codigoTurno);
+            if (dtTurno == null || dtTurno.Rows.Count == 0)
                 throw new InvalidOperationException($"No se encontró ningún turno registrado con el código '{codigoTurno}'.");
+
+            var turno = MapearTurno(dtTurno.Rows[0]);
 
             // Flujo 10.1: Estado no permite reprogramación
             if (string.Equals(turno.EstadoTurno_DNI101, "Asistió", StringComparison.OrdinalIgnoreCase) ||
@@ -188,7 +212,7 @@ namespace BLL
             try
             {
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                _bitacoraBLL.RegistrarEvento(2, $"Turno {codigoTurno} reprogramado para {nuevaFecha:dd/MM/yyyy} a las {nuevaHora:hh\\:mm} (Estado: {turno.EstadoTurno_DNI101})", dniActual, "TurneroNutricional");
+                _bitacoraBLL.RegistrarBitacora(2, $"Turno {codigoTurno} reprogramado para {nuevaFecha:dd/MM/yyyy} a las {nuevaHora:hh\\:mm} (Estado: {turno.EstadoTurno_DNI101})", dniActual, "TurneroNutricional");
             }
             catch { }
 
@@ -214,9 +238,11 @@ namespace BLL
             motivo = motivo.Trim();
 
             // Paso 3 y 4: Recupera Turno con su Estado desde la base de datos
-            var turno = _turnoDAL.ObtenerPorCodigo(codigoTurno);
-            if (turno == null)
+            var dtTurno = _turnoDAL.ObtenerPorCodigo(codigoTurno);
+            if (dtTurno == null || dtTurno.Rows.Count == 0)
                 throw new InvalidOperationException($"No se encontró ningún turno registrado con el código '{codigoTurno}'.");
+
+            var turno = MapearTurno(dtTurno.Rows[0]);
 
             string estadoAnterior = turno.EstadoTurno_DNI101;
 
@@ -299,7 +325,7 @@ namespace BLL
             try
             {
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                _bitacoraBLL.RegistrarEvento(2, $"Turno {codigoTurno} modificado (CUN04). Estado: '{turno.EstadoTurno_DNI101}', Motivo: '{motivo}'", dniActual, "TurneroNutricional");
+                _bitacoraBLL.RegistrarBitacora(2, $"Turno {codigoTurno} modificado (CUN04). Estado: '{turno.EstadoTurno_DNI101}', Motivo: '{motivo}'", dniActual, "TurneroNutricional");
             }
             catch { }
 
@@ -321,9 +347,11 @@ namespace BLL
             codigoTurno = codigoTurno.Trim();
 
             // Paso 6: Recupera el turno por su código
-            var turno = _turnoDAL.ObtenerPorCodigo(codigoTurno);
-            if (turno == null)
+            var dtTurno = _turnoDAL.ObtenerPorCodigo(codigoTurno);
+            if (dtTurno == null || dtTurno.Rows.Count == 0)
                 throw new InvalidOperationException($"No se encontró ningún turno registrado con el código '{codigoTurno}'.");
+
+            var turno = MapearTurno(dtTurno.Rows[0]);
 
             // Flujo 6.1.1: Estado no permite cancelación
             if (string.Equals(turno.EstadoTurno_DNI101, "Cancelado", StringComparison.OrdinalIgnoreCase))
@@ -351,7 +379,7 @@ namespace BLL
             try
             {
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                _bitacoraBLL.RegistrarEvento(2, $"Turno {codigoTurno} cancelado (CUN05). Motivo: {motivo}", dniActual, "TurneroNutricional");
+                _bitacoraBLL.RegistrarBitacora(2, $"Turno {codigoTurno} cancelado (CUN05). Motivo: {motivo}", dniActual, "TurneroNutricional");
             }
             catch { }
 
@@ -365,14 +393,23 @@ namespace BLL
 
         public List<TurnoBE_DNI101> ListarTurnos(DateTime? fecha = null, string? estado = null)
         {
-            List<TurnoBE_DNI101> lista;
+            DataTable dt;
             if (fecha.HasValue)
             {
-                lista = _turnoDAL.ListarTurnosPorFecha(fecha.Value);
+                dt = _turnoDAL.ListarTurnosPorFecha(fecha.Value);
             }
             else
             {
-                lista = _turnoDAL.ListarTodos();
+                dt = _turnoDAL.ListarTodos();
+            }
+
+            var lista = new List<TurnoBE_DNI101>();
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    lista.Add(MapearTurno(row));
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(estado) && estado != "Todos")
@@ -385,12 +422,72 @@ namespace BLL
 
         public TurnoBE_DNI101? ObtenerPorId(int idTurno)
         {
-            return _turnoDAL.ObtenerPorId(idTurno);
+            DataTable dt = _turnoDAL.ObtenerPorId(idTurno);
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                return MapearTurno(dt.Rows[0]);
+            }
+            return null;
         }
 
         public TurnoBE_DNI101? ObtenerPorCodigo(string codigoTurno)
         {
-            return _turnoDAL.ObtenerPorCodigo(codigoTurno);
+            if (string.IsNullOrWhiteSpace(codigoTurno)) return null;
+            DataTable dt = _turnoDAL.ObtenerPorCodigo(codigoTurno.Trim());
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                return MapearTurno(dt.Rows[0]);
+            }
+            return null;
+        }
+
+        public List<TurnoBE_DNI101> ListarTurnosPorPaciente(int idPaciente)
+        {
+            DataTable dt = _turnoDAL.ListarTurnosPorPaciente(idPaciente);
+            var lista = new List<TurnoBE_DNI101>();
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    lista.Add(MapearTurno(row));
+                }
+            }
+            return lista;
+        }
+
+        private TurnoBE_DNI101 MapearTurno(DataRow row)
+        {
+            var turno = new TurnoBE_DNI101
+            {
+                IdTurno_DNI101 = Convert.ToInt32(row["IdTurno_DNI101"]),
+                CodigoTurno_DNI101 = row["CodigoTurno_DNI101"].ToString() ?? string.Empty,
+                FechaTurno_DNI101 = Convert.ToDateTime(row["FechaTurno_DNI101"]),
+                HoraTurno_DNI101 = (TimeSpan)row["HoraTurno_DNI101"],
+                MotivoConsulta_DNI101 = row["MotivoConsulta_DNI101"].ToString() ?? string.Empty,
+                EstadoTurno_DNI101 = row["EstadoTurno_DNI101"].ToString() ?? "Solicitado",
+                IdPaciente_DNI101 = Convert.ToInt32(row["IdPaciente_DNI101"]),
+                DniNutricionista_DNI101 = Convert.ToInt32(row["DniNutricionista_DNI101"]),
+                IdBloque_DNI101 = row["IdBloque_DNI101"] != DBNull.Value ? Convert.ToInt32(row["IdBloque_DNI101"]) : null,
+                DV = row["DV"] != DBNull.Value ? row["DV"].ToString() : null
+            };
+
+            turno.ConfigurarEstadoPorNombre(turno.EstadoTurno_DNI101);
+
+            if (row.Table.Columns.Contains("DniNiño_DNI101") && row["DniNiño_DNI101"] != DBNull.Value)
+            {
+                turno.Paciente_DNI101 = new PacienteBE_DNI101
+                {
+                    IdPaciente_DNI101 = turno.IdPaciente_DNI101,
+                    DNINiño_DNI101 = row["DniNiño_DNI101"].ToString() ?? string.Empty,
+                    Nombre_DNI101 = row["Nombre_DNI101"].ToString() ?? string.Empty,
+                    Apellido_DNI101 = row["Apellido_DNI101"].ToString() ?? string.Empty,
+                    Telefono_DNI101 = row["Telefono_DNI101"] != DBNull.Value ? row["Telefono_DNI101"].ToString() : null,
+                    Email_DNI101 = row["Email_DNI101"] != DBNull.Value ? row["Email_DNI101"].ToString() : null,
+                    ObraSocial_DNI101 = row["ObraSocial_DNI101"] != DBNull.Value ? row["ObraSocial_DNI101"].ToString() : null
+                };
+            }
+
+            return turno;
         }
 
         public bool MarcarAsistencia(int idTurno)
@@ -401,7 +498,7 @@ namespace BLL
                 try
                 {
                     int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                    _bitacoraBLL.RegistrarEvento(2, $"Asistencia confirmada para Turno ID {idTurno} (Estado actualizado a 'Asistio')", dniActual, "TurneroNutricional");
+                    _bitacoraBLL.RegistrarBitacora(2, $"Asistencia confirmada para Turno ID {idTurno} (Estado actualizado a 'Asistio')", dniActual, "TurneroNutricional");
                 }
                 catch { }
 

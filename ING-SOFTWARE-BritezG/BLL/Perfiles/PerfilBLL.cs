@@ -41,10 +41,10 @@ namespace BLL
             // CORRECCIÓN 3: Llamamos al método de guardar (te dejo el código de este método más abajo)
             _perfilDAL.AgregarFamiliaAlPerfil(idPerfil, idFamilia);
 
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Asignación exitosa de Familia: '{nombreFamilia}' al Perfil '{nombrePerfil}'";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Perfiles");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Perfiles");
         }
 
         public void AgregarPermisoAFamilia(int idPerfil, int idPermiso, string nombrePermiso)
@@ -56,10 +56,10 @@ namespace BLL
 
             _perfilDAL.InsertarPermisoAFamilia(idPerfil, idPermiso);
 
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Asignar Permiso a Perfil";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
         }
         #endregion 
 
@@ -76,10 +76,10 @@ namespace BLL
             _perfilDAL.EliminarPermisoAPerfil(idPerfil, idPermiso);
 
             // 3. Bitácora
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Eliminación de Permiso: '{nombrePermiso}' del Perfil '{nombrePerfil}'";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Perfiles");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Perfiles");
         }
         public void EliminarPerfil(int idPerfil, string nombrePerfil)
         {
@@ -91,10 +91,10 @@ namespace BLL
 
             _perfilDAL.EliminarPerfilDefinitivo(idPerfil);
 
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Eliminacion Perfil";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
         }
 
         public void EliminarFamiliaDePerfil(int idPerfil, int idFamilia, string nombrePerfil, string nombreFamilia)
@@ -106,10 +106,10 @@ namespace BLL
 
             _perfilDAL.EliminarFamiliaDePerfil(idPerfil, idFamilia);
 
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Desvincular Familia '{nombreFamilia}' del Perfil '{nombrePerfil}'";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
         }
         #endregion
 
@@ -148,10 +148,10 @@ namespace BLL
 
             _perfilDAL.InsertarPerfilNuevo(nombrePerfil);
 
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Creación de Perfil";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
         }
 
         public int ObtenerIdPerfilPorNombre(string nombreRol)
@@ -192,10 +192,10 @@ namespace BLL
             _perfilDAL.AgregarPermisoAPerfil(idPerfil, idPermiso);
 
             // 5. Dejamos el registro en la Bitácora
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Asignación de Permiso: '{nombrePermiso}' al Perfil '{nombrePerfil}'";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Perfiles");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Perfiles");
         }
     }
 }

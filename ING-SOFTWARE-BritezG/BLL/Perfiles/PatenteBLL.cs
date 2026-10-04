@@ -18,10 +18,10 @@ namespace BLL.Perfiles
             _patenteDAL.InsertarPermisoPerfil(idPerfil, idPermiso);
             try
             {
-                EventoBLL bitacoraBLL = new();
+                BitacoraBLL bitacoraBLL = new();
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 string descripcion = $"Asignación de Permiso ID {idPermiso} al Perfil ID {idPerfil}";
-                bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+                bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
             }
             catch { }
         }
@@ -46,20 +46,20 @@ namespace BLL.Perfiles
             _patenteDAL.VincularPermisoABoton(nombreFormulario, nombreBoton, nombrePermiso);
 
             // 2. Registramos en la bitácora siguiendo tu excelente patrón de diseño
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Se vinculó el Permiso '{nombrePermiso}' al control '{nombreBoton}' en la pantalla '{nombreFormulario}'";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
         }
         public void EliminarPermisoPerfil(int idPerfil, int idPermiso)
         {
             _patenteDAL.EliminarPermisoPerfil(idPerfil, idPermiso);
             try
             {
-                EventoBLL bitacoraBLL = new();
+                BitacoraBLL bitacoraBLL = new();
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 string descripcion = $"Desvinculación de Permiso ID {idPermiso} del Perfil ID {idPerfil}";
-                bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+                bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
             }
             catch { }
         }
@@ -78,10 +78,10 @@ namespace BLL.Perfiles
 
             _patenteDAL.InsertarPatenteNueva(nombrePermiso);
 
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Creacion de Patente";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
         }
 
         public List<Perfil> ObtenerComponentesTotales() => _patenteDAL.ObtenerComponentesTotales();
@@ -97,10 +97,10 @@ namespace BLL.Perfiles
         {
             _patenteDAL.EliminarPermisoDefinitivo(idPermiso);
 
-            EventoBLL bitacoraBLL = new();
+            BitacoraBLL bitacoraBLL = new();
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Eliminacion de Patente";
-            bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Permisos");
+            bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
         }
 
 

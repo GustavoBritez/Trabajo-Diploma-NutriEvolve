@@ -5,146 +5,136 @@ skinparam shadowing false
 skinparam roundcorner 6
 autonumber "<b>[00]</b>"
 
-actor "Operador" as Operador
+actor "Nutricionista" as Nutricionista
 
 box "Capa GUI" #EBF5FB
-    participant "FormTurnero_DNI101" as UI
+    participant "GUI\n(FrmRegistrarTurno_DNI101)" as UI
 end box
 
 box "Capa BLL (Lógica de Negocio)" #E8F8F5
     participant "AgendaMedicaBLL_DNI101" as AgendaBLL
     participant "PacienteBLL_DNI101" as PacienteBLL
+    participant "CUN02: Registrar Paciente" as CUN02
     participant "TurnoBLL_DNI101" as TurnoBLL
+    participant "BitacoraBLL" as BitacoraBLL
     participant "DigitoVerificadorBLL" as DVBLL
-    participant "EventoBLL" as BitacoraBLL
 end box
 
 box "Capa BE & Patrón State" #FEF9E7
-    participant "tutor: TutorBE_DNI101" as TutorBE
-    participant "paciente: PacienteBE_DNI101" as PacienteBE
-    participant "turno: TurnoBE_DNI101" as TurnoBE
-    participant "TurnoSolicitadoState" as State
+    participant "TurnoBE_DNI101" as TurnoBE
+    participant "TurnoSolicitadoState_DNI101" as State
 end box
 
-box "Capa DAL" #FDF2E9
+box "Capa DAL (Table Data Gateway)" #FDF2E9
     participant "DAL" as DAL
 end box
 
-database "BASE ING" as SQL
-
-title Diagrama de Secuencia de Realización - CU01: Registrar / Agendar Turno (Multicapa)
+title Diagrama de Secuencia de Realización - CUN01: Registrar Turno (Multicapa BLL/DAL/BE)
 
 == 1. Consulta de Bloques Horarios Disponibles ==
 
-Operador -> UI: SeleccionarFechaYProfesional()
+Nutricionista -> UI: btn_Registrar_Turno()
 activate UI
-UI -> AgendaBLL: ObtenerBloquesDisponibles(fecha, dni)
+UI -> UI: ConsultarDisponibilidad()
+UI -> AgendaBLL: ListarBloquesDisponibles(fecha, dniNutri)
 activate AgendaBLL
-AgendaBLL -> DAL: ListarBloquesDisponibles(fecha, dni)
+AgendaBLL -> DAL: ListarBloquesDisponibles(fecha, dniNutri)
 activate DAL
-DAL -> SQL: SELECT BloquesHorarios
-SQL --> DAL: DataTable (Bloques)
-DAL --> AgendaBLL: List(BloqueHorarioBE)
+DAL --> AgendaBLL
 deactivate DAL
-AgendaBLL --> UI: List(BloqueHorarioBE)
+
+AgendaBLL -> AgendaBLL: MapearBloque(DataRow)\n[new BloqueHorarioBE_DNI101]
+AgendaBLL -> DAL: ObtenerHorariosOcupadosPorProfesional(dniNutri, fecha)
+activate DAL
+DAL --> AgendaBLL
+deactivate DAL
+
+AgendaBLL --> UI
 deactivate AgendaBLL
-UI -> UI: CargarComboBloques()
+UI --> Nutricionista
+deactivate UI
 
-== 2. Búsqueda o Alta del Paciente Pediátrico ==
+== 2. Identificación del Paciente (txtDniNiño_Leave) y Punto de Extensión CUN-02 ==
 
-Operador -> UI: BuscarPaciente(dniNiño)
-UI -> PacienteBLL: ObtenerPacientePorDNI(dniNiño)
+Nutricionista -> UI: txtDniNiño_Leave(dniNiño)
+activate UI
+UI -> PacienteBLL: ObtenerOAsegurarPaciente(dniNiño, callback)
 activate PacienteBLL
-PacienteBLL -> DAL: ObtenerPorDNI(dniNiño)
+PacienteBLL -> DAL: ObtenerPacientePorDNI(dniNiño)
 activate DAL
-DAL -> SQL: SELECT Pacientes_DNI101
-SQL --> DAL: DataTable (Paciente)
-DAL --> PacienteBLL: PacienteBE (o null)
+DAL --> PacienteBLL
 deactivate DAL
-PacienteBLL --> UI: PacienteBE (o null)
-deactivate PacienteBLL
 
-alt Paciente No Registrado (Punto de Extensión: Registrar Paciente y Tutor)
-    Operador -> UI: IngresarDatosTutorYNiño()
-    UI -> TutorBE **: new TutorBE_DNI101()
-    UI -> PacienteBLL: RegistrarTutor(tutorBE)
-    activate PacienteBLL
-    PacienteBLL -> DAL: GuardarTutor(tutorBE)
+alt Paciente No Registrado [Punto de Extensión CUN-02 disparado por BLL]
+    PacienteBLL -> CUN02: RegistrarPaciente(dniNiño)
+    activate CUN02
+    Nutricionista -> CUN02: IngresarDatosPaciente(nombre, apellido, dni, tel, email, obraSocial)
+    CUN02 -> DAL: Guardar(nombre, apellido, dni, tel, email, obraSocial)
     activate DAL
-    DAL -> SQL: INSERT INTO Tutores_DNI101
-    SQL --> DAL: idTutorGenerado
-    DAL --> PacienteBLL: idTutorGenerado
+    DAL --> CUN02
     deactivate DAL
-    PacienteBLL --> UI: idTutor
-    deactivate PacienteBLL
-
-    UI -> PacienteBE **: new PacienteBE_DNI101()
-    UI -> PacienteBLL: RegistrarPaciente(pacienteBE)
-    activate PacienteBLL
-    PacienteBLL -> DAL: GuardarPaciente(pacienteBE)
-    activate DAL
-    DAL -> SQL: INSERT INTO Pacientes_DNI101
-    SQL --> DAL: idPacienteGenerado
-    DAL --> PacienteBLL: idPacienteGenerado
-    deactivate DAL
-    PacienteBLL --> UI: idPaciente
-    deactivate PacienteBLL
+    CUN02 --> PacienteBLL
+    deactivate CUN02
+else Paciente Registrado
+    PacienteBLL -> PacienteBLL: MapearPaciente(dt.Rows[0])\n[new PacienteBE_DNI101]
 end
 
-== 3. Agendamiento del Turno (Patrón State + Persistencia) ==
+PacienteBLL --> UI
+deactivate PacienteBLL
+UI --> Nutricionista
+deactivate UI
 
-Operador -> UI: Click btnAgendar
-UI -> TurnoBE **: new TurnoBE_DNI101()
-UI -> TurnoBLL: AgendarTurno(turnoBE)
+== 3. Confirmación, Validación y Registro de Turno (Patrón State + SqlTransaction) ==
+
+Nutricionista -> UI: btnRegistrarTurno_Click()
+activate UI
+UI -> UI: ValidarCamposObligatorios()
+UI -> TurnoBLL: RegistrarTurno(dniNiño, fecha, horario, motivo, idBloque, dniNutri)
 activate TurnoBLL
 
+TurnoBLL -> PacienteBLL: ObtenerPacientePorDNI(dniNiño)
+activate PacienteBLL
+PacienteBLL --> TurnoBLL
+deactivate PacienteBLL
+
+TurnoBLL -> DAL: ExisteTurnoParaProfesional(dniNutri, fecha, hora)
+activate DAL
+DAL --> TurnoBLL
+deactivate DAL
+
+TurnoBLL -> TurnoBE **: new TurnoBE_DNI101(dniNiño, fecha, horario, motivo)
 TurnoBLL -> TurnoBE: GenerarCodigoUnico()
-TurnoBLL -> State **: new TurnoSolicitadoState()
-TurnoBLL -> TurnoBE: CambiarEstado(state)
-TurnoBLL -> TurnoBLL: CalcularDVHorizontal(turno)
+TurnoBLL -> State **: new TurnoSolicitadoState_DNI101()
+TurnoBLL -> TurnoBE: ConfigurarEstado(state)
+TurnoBLL -> TurnoBLL: CalcularDV(cadenaDV)
 
-TurnoBLL -> DAL: GuardarTurno(turno)
+TurnoBLL -> DAL: RegistrarTurnoConBloque(codigoTurno, fecha, hora, motivo, estado, idPaciente, dniNutri, idBloque, dv)\n[SqlTransaction atómica en SQL Server]
 activate DAL
-DAL -> SQL: INSERT INTO Turnos_DNI101
-SQL --> DAL: OK (idTurno)
-DAL --> TurnoBLL: idTurnoGenerado
+DAL --> TurnoBLL
 deactivate DAL
 
-TurnoBLL -> DAL: ActualizarEstadoBloque(id, 'Ocupado')
+TurnoBLL -> BitacoraBLL: RegistrarBitacora(1, Turno registrado..., dniNutri, TurneroNutricional)
+activate BitacoraBLL
+BitacoraBLL -> DAL: GuardarBitacora(bitacora)
 activate DAL
-DAL -> SQL: UPDATE BloquesHorarios
-SQL --> DAL: OK
-DAL --> TurnoBLL: true
+DAL --> BitacoraBLL
 deactivate DAL
-
-== 4. Integridad (Dígito Verificador) y Auditoría (Bitácora) ==
+BitacoraBLL --> TurnoBLL
+deactivate BitacoraBLL
 
 TurnoBLL -> DVBLL: RecalcularYPersistir()
 activate DVBLL
-DVBLL -> DAL: ActualizarDV(firmas)
+DVBLL -> DAL: PersistirIntegridadCompleta(resumen, filasDV)\n[Batch Transaction SQL]
 activate DAL
-DAL -> SQL: UPDATE dbo.DV
-SQL --> DAL: OK
-DAL --> DVBLL: true
+DAL --> DVBLL
 deactivate DAL
-DVBLL --> TurnoBLL: true
+DVBLL --> TurnoBLL
 deactivate DVBLL
 
-TurnoBLL -> BitacoraBLL: RegistrarEvento("Turnos", "Agendamiento de Turno", dni, "Medio")
-activate BitacoraBLL
-BitacoraBLL -> DAL: GuardarBitacora(evento)
-activate DAL
-DAL -> SQL: INSERT INTO Bitacora
-SQL --> DAL: OK
-DAL --> BitacoraBLL: true
-deactivate DAL
-BitacoraBLL --> TurnoBLL: true
-deactivate BitacoraBLL
-
-TurnoBLL --> UI: true (Exito)
+TurnoBLL --> UI
 deactivate TurnoBLL
 
-UI -> Operador: MostrarMensajeExito()
+UI --> Nutricionista
 deactivate UI
 
 @enduml

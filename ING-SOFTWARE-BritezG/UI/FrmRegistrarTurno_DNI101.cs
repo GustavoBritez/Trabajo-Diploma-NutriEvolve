@@ -17,6 +17,7 @@ namespace UI
         private readonly UsuarioBLL _usuarioBLL = new();
         private readonly IdiomaBLL _idiomaBLL = new();
         private bool _permiteCerrar = false;
+        private PacienteBE_DNI101? _pacienteActual;
 
         private class ItemProfesional
         {
@@ -176,33 +177,64 @@ namespace UI
 
         #region Pasos 5 y 6 (Búsqueda o Detección de Paciente Pediátrico)
 
+        /// <summary>
+        /// Delega a PacienteBLL la orquestación del CUN-01 con Punto de Extensión CUN-02 (Registrar Paciente).
+        /// Si el paciente no se encuentra en el padrón, BLL invoca este callback para presentar la vista de alta.
+        /// </summary>
+        private PacienteBE_DNI101? AsegurarPacienteConCUN02(string dniNiño)
+        {
+            return _pacienteBLL.ObtenerOAsegurarPaciente(dniNiño, dniFaltante =>
+            {
+                // Flujo 6.1.1: Informa que el DNI no se encuentra en el padrón
+                _idiomaBLL.MostrarMensaje(
+                    "msg_dni_no_encontrado_padron",
+                    "titulo_ext_cun02",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    dniFaltante);
+
+                // Flujo 6.1.2 y 6.1.3: Abre el diálogo modal de registro
+                using (var frmRegistrarPaciente = new RegistrarPaciente_DNI101(dniFaltante))
+                {
+                    return frmRegistrarPaciente.ShowDialog(this) == DialogResult.OK;
+                }
+            });
+        }
+
         private void txtDniNiño_Leave(object sender, EventArgs e)
         {
             string dni = txtDniNiño.Text.Trim();
             if (string.IsNullOrWhiteSpace(dni))
             {
+                _pacienteActual = null;
                 lblPacienteInfo.Text = "Punto de Extensión CUN-02: Se abrirá registro si no está en padrón.";
                 lblPacienteInfo.ForeColor = Color.FromArgb(100, 125, 105);
+                txtDniNiño.BackColor = Color.White;
                 return;
             }
 
             try
             {
-                var paciente = _pacienteBLL.ObtenerPacientePorDNI(dni);
-                if (paciente != null)
+                // Orquestación delegada a la BLL: si no existe en el padrón, BLL dispara el Punto de Extensión CUN-02
+                _pacienteActual = AsegurarPacienteConCUN02(dni);
+
+                if (_pacienteActual != null)
                 {
-                    lblPacienteInfo.Text = $"✔ Paciente identificado: {paciente.NombreCompleto} | OS: {paciente.ObraSocial_DNI101}";
+                    txtDniNiño.BackColor = Color.White;
+                    lblPacienteInfo.Text = $"✔ Paciente identificado: {_pacienteActual.NombreCompleto} | OS: {_pacienteActual.ObraSocial_DNI101}";
                     lblPacienteInfo.ForeColor = Color.FromArgb(40, 120, 60);
                 }
                 else
                 {
-                    lblPacienteInfo.Text = "ℹ DNI no registrado. Se iniciará el CUN-02 (Registrar Paciente) al presionar 'Registrar Turno'.";
-                    lblPacienteInfo.ForeColor = Color.FromArgb(180, 110, 40);
+                    txtDniNiño.BackColor = Color.FromArgb(255, 235, 235);
+                    lblPacienteInfo.Text = "⚠ Registro interrumpido. El paciente debe estar en el padrón para agendar el turno.";
+                    lblPacienteInfo.ForeColor = Color.FromArgb(180, 50, 50);
+                    _idiomaBLL.MostrarMensaje("msg_registro_paciente_interrumpido", "titulo_cun01_interrumpido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Silencioso en validación al abandonar campo
+                MessageBox.Show($"Error al validar paciente: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -274,39 +306,18 @@ namespace UI
             {
                 Cursor = Cursors.WaitCursor;
 
-                // Paso 6: Buscar al niño en la base de datos
-                var paciente = _pacienteBLL.ObtenerPacientePorDNI(dniNiño);
-
-                // Flujo alternativo 6.1: Paciente no registrado (Punto de Extensión: CUN-02)
-                if (paciente == null)
+                // Paso 6: Asegurar que el paciente se encuentre identificado (delegado a BLL)
+                if (_pacienteActual == null || !string.Equals(_pacienteActual.DNINiño_DNI101, dniNiño, StringComparison.OrdinalIgnoreCase))
                 {
                     Cursor = Cursors.Default;
-                    // 6.1.1 El modulo informa que el DNI no se encuentra en el padrón
-                    _idiomaBLL.MostrarMensaje(
-                        "msg_dni_no_encontrado_padron",
-                        "titulo_ext_cun02",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information,
-                        dniNiño);
-
-                    // 6.1.2 y 6.1.3 El Nutricionista ingresa los datos y el módulo valida y registra al nuevo Paciente
-                    using (var frmRegistrarPaciente = new RegistrarPaciente_DNI101(dniNiño))
+                    _pacienteActual = AsegurarPacienteConCUN02(dniNiño);
+                    if (_pacienteActual == null)
                     {
-                        var resPac = frmRegistrarPaciente.ShowDialog(this);
-                        if (resPac != DialogResult.OK)
-                        {
-                            _idiomaBLL.MostrarMensaje("msg_registro_paciente_interrumpido", "titulo_cun01_interrumpido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
-                    }
-
-                    Cursor = Cursors.WaitCursor;
-                    paciente = _pacienteBLL.ObtenerPacientePorDNI(dniNiño);
-                    if (paciente == null)
-                    {
-                        _idiomaBLL.MostrarMensaje("msg_error_recuperar_paciente", "titulo_error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        _idiomaBLL.MostrarMensaje("msg_registro_paciente_interrumpido", "titulo_cun01_interrumpido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        txtDniNiño.Focus();
                         return;
                     }
+                    Cursor = Cursors.WaitCursor;
                 }
 
                 // Pasos 10, 11, 12, 13 y 14 ejecutados en TurnoBLL_DNI101:

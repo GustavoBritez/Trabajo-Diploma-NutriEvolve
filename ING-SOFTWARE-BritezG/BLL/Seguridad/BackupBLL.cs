@@ -20,17 +20,17 @@ namespace BLL
             try
             {
                 backupDAL.CrearBackup(ruta);
-                EventoBLL bitacoraBLL = new();
+                BitacoraBLL bitacoraBLL = new();
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 string descripcion = $"Copia de Seguridad (Backup) generada en: {ruta}";
-                bitacoraBLL.RegistrarEvento(3, descripcion, dniActual, "Respaldo");
+                bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Respaldo");
             }
             catch (Exception ex)
             {
                 try
                 {
                     int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                    new EventoBLL().RegistrarEvento(1, $"Error al generar Copia de Seguridad: {ex.Message}", dniActual, "Respaldo");
+                    new BitacoraBLL().RegistrarBitacora(1, $"Error al generar Copia de Seguridad: {ex.Message}", dniActual, "Respaldo");
                 }
                 catch { }
                 throw;
@@ -42,17 +42,17 @@ namespace BLL
             try
             {
                 backupDAL.RestaurarBackup(ruta);
-                EventoBLL bitacoraBLL = new();
+                BitacoraBLL bitacoraBLL = new();
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 string descripcion = $"Restauración de Base de Datos (Restore) ejecutada desde: {ruta}";
-                bitacoraBLL.RegistrarEvento(5, descripcion, dniActual, "Respaldo");
+                bitacoraBLL.RegistrarBitacora(5, descripcion, dniActual, "Respaldo");
             }
             catch (Exception ex)
             {
                 try
                 {
                     int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                    new EventoBLL().RegistrarEvento(1, $"Error al restaurar Base de Datos: {ex.Message}", dniActual, "Respaldo");
+                    new BitacoraBLL().RegistrarBitacora(1, $"Error al restaurar Base de Datos: {ex.Message}", dniActual, "Respaldo");
                 }
                 catch { }
                 throw;

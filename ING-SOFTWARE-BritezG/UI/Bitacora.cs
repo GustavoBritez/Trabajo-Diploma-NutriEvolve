@@ -18,9 +18,9 @@ namespace UI
 {
     public partial class Bitacora : Form, IIdiomaObserver
     {
-        private readonly EventoBLL _bitacoraBLL = new EventoBLL();
+        private readonly BitacoraBLL _bitacoraBLL = new BitacoraBLL();
         private readonly UsuarioBLL _usuarioBLL = new UsuarioBLL();
-        private List<EventoBE>? _bitacoraCompleta;
+        private List<BitacoraBE>? _bitacoraCompleta;
         private readonly IdiomaBLL idiomaBLL = new IdiomaBLL();
         private bool _ignorarEventosFiltro = false;
 
@@ -47,7 +47,7 @@ namespace UI
             {
                 _ignorarEventosFiltro = true;
 
-                _bitacoraCompleta = _bitacoraBLL.VerEventos();
+                _bitacoraCompleta = _bitacoraBLL.VerBitacora();
 
                 ActualizarItemsModulos();
 
@@ -67,7 +67,7 @@ namespace UI
                 if (cmbCriticidad.Items.Count > 0) cmbCriticidad.SelectedIndex = 0;
                 if (cmbEvento.Items.Count > 0) cmbEvento.SelectedIndex = 0;
 
-                CargarBitacora(_bitacoraCompleta ?? new List<EventoBE>());
+                CargarBitacora(_bitacoraCompleta ?? new List<BitacoraBE>());
                 ApuntarComboBox();
             }
             catch (Exception ex)
@@ -227,7 +227,7 @@ namespace UI
                 string criticidad = cmbCriticidad.SelectedItem?.ToString() ?? "Todas";
                 string evento = cmbEvento.SelectedItem?.ToString() ?? "Todos";
 
-                IEnumerable<EventoBE> filtrada = _bitacoraCompleta;
+                IEnumerable<BitacoraBE> filtrada = _bitacoraCompleta;
 
                 // Rango de fechas
                 filtrada = filtrada.Where(b => b._Fecha.Date >= fechaDesde && b._Fecha.Date <= fechaHasta);
@@ -265,7 +265,7 @@ namespace UI
             }
         }
 
-        private void CargarBitacora(List<EventoBE> bitacora)
+        private void CargarBitacora(List<BitacoraBE> bitacora)
         {
             dgvBitacora.DataSource = null;
             dgvBitacora.DataSource = bitacora;
@@ -382,7 +382,7 @@ namespace UI
 
                 double[] anchos = { 45, 105, 55, 50, 80, 200 };
                 double xPosColumna = margenIzq;
-                string[] encabezados = { "ID Evento", "Fecha y Hora", "DNI", "Criticidad", "Módulo", "Descripción" };
+                string[] encabezados = { "ID Bitácora", "Fecha y Hora", "DNI", "Criticidad", "Módulo", "Descripción" };
 
                 for (int i = 0; i < encabezados.Length; i++)
                 {
@@ -393,9 +393,9 @@ namespace UI
                 }
                 yPos += 20;
 
-                if (dgvBitacora.DataSource is List<EventoBE> bitacoraData)
+                if (dgvBitacora.DataSource is List<BitacoraBE> bitacoraData)
                 {
-                    foreach (EventoBE bitacora in bitacoraData)
+                    foreach (BitacoraBE bitacora in bitacoraData)
                     {
                         string descripcionCompleta = bitacora._Descripcion ?? "";
                         List<string> lineasDescripcion = new List<string>();
@@ -449,7 +449,7 @@ namespace UI
                             yPos += 20;
                         }
                         string[] datos = {
-                    bitacora._Id_Evento.ToString(),
+                    bitacora._Id_Bitacora.ToString(),
                     bitacora._Fecha.ToString("dd/MM/yyyy HH:mm"),
                     bitacora._Dni.ToString(),
                     bitacora._Criticidad.ToString(),
@@ -486,7 +486,7 @@ namespace UI
                 }
 
                 yPos = page.Height - margenInf - 10;
-                gfx.DrawString($"Exportado el: {DateTime.Now:dd/MM/yyyy HH:mm:ss} | Total de registros: {(dgvBitacora.DataSource is List<EventoBE> list ? list.Count : 0)}",
+                gfx.DrawString($"Exportado el: {DateTime.Now:dd/MM/yyyy HH:mm:ss} | Total de registros: {(dgvBitacora.DataSource is List<BitacoraBE> list ? list.Count : 0)}",
                     fontPie, XBrushes.Gray, new XRect(margenIzq, yPos, anchoUtil, 10), XStringFormats.BottomLeft);
 
                 // Guardar documento
@@ -507,7 +507,7 @@ namespace UI
 
             //try
             //{
-            //    EventoBE bitacora = (EventoBE)dgvBitacora.Rows[e.RowIndex].DataBoundItem;
+            //    BitacoraBE bitacora = (BitacoraBE)dgvBitacora.Rows[e.RowIndex].DataBoundItem;
 
             //    if (bitacora != null)
             //    {
