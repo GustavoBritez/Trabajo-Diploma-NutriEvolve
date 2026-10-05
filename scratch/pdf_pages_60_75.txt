@@ -1,0 +1,605 @@
+
+=================== PAGE 60 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ 
+T02.7  Activar/Desbloquear  Usuario  
+Descomposición  Funcional 
+1.  El  Administrador  consulta  los  usuarios  registrados  sobre  la  grilla  de  usuarios  del  sistema.  2.  El  Sistema  valida  la  selección  realizada  sobre  el  usuario  elegido  por  el  Administrador.  3.  El  Sistema  verifica  el  estado  actual  sobre  los  datos  del  usuario  seleccionado.  4.  El  Sistema  actualiza  el  estado  activo/inactivo  sobre  el  registro  del  usuario  seleccionado.  5.  El  Sistema  informa  el  resultado  de  la  operación  sobre  el  cambio  de  estado  realizado  al  usuario.  6.  El  Sistema  almacena  el  evento  realizado  sobre  la  modificación  de  estado  del  usuario  en  la  bitácora  del  
+sistema.
+ 
+Diagrama  de  Caso  de  Uso 
+ 
+Especificación  de  Caso  de  Uso  
+ 
+ID  y  Nombre                            CUS7-Act/Desact  Estado:   Pendiente  Descripción:   El  administrador  selecciona  un  Usuario  para  cambiar  su  Estado  Actor  principal:   Administrador  Actor  secundario:   -  Precondiciones:   El  Administrador  debe  estar  logueado  en  el  sistema.  
+Puntos  de  extensión:   -  Puntos  de  inclusión:   -  
+
+=================== PAGE 61 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ Escenario  principal:  1.  El  Administrador  ingresa  al  módulo  de  Usuarios  2.  El  sistema  muestra  la  lista  de  Usuarios  3.  El  administrador  elige  un  usuario  de  la  grilla.  4.  El  sistema  muestra  los  datos  de  ese  usuario.  5.  El  administrador  toca  el  botón  de  activar/desactivar.  6.  El  sistema  valida  que  se  haya  elegido  un  usuario.  7.  El  sistema  cambia  el  estado  actual  del  usuario  seleccionado.  8.  El  sistema  muestra  un  mensaje  de  que  la  cuenta  del  usuario  seleccionado  fue  cambiada  de  estado  exitosamente.  9.  El  sistema  guarda  el  evento  en  la  base  de  datos.  
+ Flujos  alternativos:   6.1  El  sistema  valida  que  no  se  seleccionó  un  Usuario  6.2  El  sistema  muestra  mensaje  de  seleccionar  Usuario  
+Postcondiciones:   El  Administrador  cambia  el  estado  de  un  Usuario.  
+
+=================== PAGE 62 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ Diagrama  de  Secuencia  
+ 
+Diagrama  de  Clases  
+ 
+
+=================== PAGE 63 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ 
+ 
+
+=================== PAGE 64 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ 
+DER  
+ 
+GUI  
+ 
+
+=================== PAGE 65 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ 
+T03.
+ 
+Gestión
+ 
+de
+ 
+Encriptado
+ 
+ 
+Irreversible  
+Bcrypt  es  un  algoritmo  de  hashing  diseñado  para  proteger  contraseñas  en  sistemas  de  autenticación.  Este  tipo  de  
+encriptación
+ 
+transforma
+ 
+el
+ 
+valor
+ 
+original
+ 
+en
+ 
+una
+ 
+cadena
+ 
+cifrada
+ 
+fija
+ 
+que
+ 
+no
+ 
+es
+ 
+posible
+ 
+recuperar
+ 
+el
+ 
+valor
+ 
+original.
+ 
+ Incluye  un  mecanismo  Salt,  que  añade  un  valor  aleatorio  a  cada  hash,  lo  que  garantiza  que  incluso  contraseñas  idénticas  
+generen
+ 
+hashes
+ 
+diferentes.
+ En  este  sistema  la  técnica  se  aplica  específicamente  al  campo  Contraseña  del  Usuario  en  el  momento  del  registro  o  
+modificación
+ 
+de
+ 
+un
+ 
+usuario.
+ 
+Al
+ 
+ingresar
+ 
+una
+ 
+contraseña
+ 
+en
+ 
+el
+ 
+login,
+ 
+se
+ 
+vuelve
+ 
+a
+ 
+calcular
+ 
+su
+ 
+hash
+ 
+utilizando
+ 
+el
+ 
+mismo
+ 
+algoritmo
+ 
+y
+ 
+se
+ 
+compara
+ 
+con
+ 
+el
+ 
+valor
+ 
+almacenado,
+ 
+sin
+ 
+necesidad
+ 
+de
+ 
+desencriptarla,
+ 
+esto
+ 
+garantiza
+ 
+que
+ 
+incluso
+ 
+si
+ 
+se
+ 
+accede
+ 
+a
+ 
+la
+ 
+base
+ 
+de
+ 
+datos,
+ 
+las
+ 
+contraseñas
+ 
+no
+ 
+puedan
+ 
+ser
+ 
+recuperadas.
+ 
+ 
+Reversible  
+ Para  garantizar  la  máxima  protección  de  la  información  clínica  y  cumplir  con  las  normativas  de  privacidad,  
+implementaremos
+ 
+cifrado
+ 
+reversible
+ 
+mediante
+ 
+el
+ 
+algoritmo
+ 
+AES-256
+ 
+(Advanced
+ 
+Encryption
+ 
+Standard).
+  
+Esta
+ 
+técnica
+ 
+se
+ 
+aplica
+ 
+cuando
+ 
+es
+ 
+necesario
+ 
+proteger
+ 
+datos
+ 
+sensibles
+ 
+sin
+ 
+perder
+ 
+la
+ 
+posibilidad
+ 
+de
+ 
+recuperarlos.
+ En  el  contexto  de  este  sistema,  sería  adecuado  utilizar  la  encriptación  reversible  para  campos  del  negocio  que  deban  
+mantenerse
+ 
+confidenciales
+ 
+pero
+ 
+requeridos
+ 
+para
+ 
+su
+ 
+lectura
+ 
+posterior,
+ 
+como
+ 
+información
+ 
+de
+ 
+contacto.
+ 
+ 
+
+=================== PAGE 66 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ 
+T06.  Gestión  de  Bitácora  y  Control  de  cambios   
+T06a.01  Explicación  de  la  bitácora  de  eventos.   
+El  registro  de  eventos  en  la  bitácora  se  realiza  de  forma  automática,  sin  intervención  del  usuario  ni  interacciones  a  través  
+de
+ 
+la
+ 
+interfaz
+ 
+gráfica.
+ 
+Este
+ 
+proceso
+ 
+sucede
+ 
+de
+ 
+forma
+ 
+interna
+ 
+en
+ 
+cada
+ 
+suceso
+ 
+que
+ 
+se
+ 
+considere
+ 
+relevante
+ 
+registrar,
+ 
+asignando
+ 
+un
+ 
+nivel
+ 
+de
+ 
+criticidad
+ 
+acorde
+ 
+con
+ 
+el
+ 
+evento
+ 
+para
+ 
+fines
+ 
+de
+ 
+auditoría.
+  Los  atributos  que  se  registraron  son:   
+●  ID_Evento:  es  el  atributo  autoincremental  que  diferencia  el  evento  de  otros.   
+●  Dni  del  Autor:  Este  atributo  contiene  el  DNI  del  usuario  que  ejecutó  la  tarea  que  se  generó  en  la  bitácora.De  
+esta
+ 
+forma
+ 
+se
+ 
+puede
+ 
+identificar
+ 
+quien
+ 
+interactúo
+ 
+en
+ 
+el
+ 
+sistema
+ 
+en
+ 
+el
+ 
+evento.
+ 
+ 
+●  Fecha  y  Hora:  La  fecha  en  que  se  registró  el  evento  y  el  momento  exacto  donde  se  ejecutó  la  tarea  que  se  
+visualiza
+ 
+en
+ 
+la
+ 
+bitácora.
+ 
+●  Módulo:    
+El
+ 
+módulo
+ 
+a
+ 
+donde
+ 
+pertenece
+ 
+la
+ 
+tarea
+ 
+que
+ 
+fue
+ 
+ejecutada,
+ 
+funciona
+ 
+para
+ 
+distinguir
+ 
+que
+ 
+  proceso  sucedió  
+●  Evento:    
+El
+ 
+nombre
+ 
+del
+ 
+evento,
+ 
+se
+ 
+guarda
+ 
+exactamente
+ 
+qué
+ 
+proceso
+ 
+fue
+ 
+registrado.
+ 
+●  Criticidad:    
+Este
+ 
+atributo
+ 
+indica
+ 
+el
+ 
+nivel
+ 
+de
+ 
+importancia
+ 
+que
+ 
+tiene
+ 
+el
+ 
+proceso.
+ las  clasificaciones  de  Criticidad  son:  1  Máxima :   Impacto  directo  y  severo  sobre  seguridad,  finanzas  o  continuidad  del  servicio.  Es  necesario  atención  inmediata.  2  Alta :  Implica  un  riesgo  operativo  relevante  o  potencial  incumplimiento  normativo.  Prioridad  alta  de  revisión.  3  Media :  Afecta  a  procesos  de  negocio  habituales  con  leve  impacto  en  el  sistema.  Seguimiento  controlado.  4  Baja :  Cambios  menores  con  alcance  limitado  y  fácil  revisión.  Revisión  eventual.    
+
+=================== PAGE 67 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ 
+Descripción   Criticidad  
+Inicio  de  sesión  4  
+Modificar  usuario  2  
+Error  al  modificar  usuario  2  
+Cuenta  Bloqueada  1  
+Crear  Usuario  4  
+Desactivar  usuario  4  
+Cierre  de  sesión  Exitoso  3  
+Cierre  de  sesión  Fallido  2  
+Cambiar  Estado  Exitoso  3  
+Error  en  Cambio  Estado  2  
+Contraseña  Cambiada  correctamente  4  
+Error  al  cambiar  la  Contraseña  4  
+Desbloquear  usuario  exitoso  3  
+Desbloquear  usuario  Fallido  1       T06a.02  Descomposición  funcional  1.  El  administrador  inicia  sesión  en  el  sistema   2.  El  administrador  toca  la  opción  auditar  bitácora  3.  El  sistema  abre  el  formulario  y  se  muestra  la  grilla  de  eventos  (sin  filtro  por  defecto)  4.  El  administrador  agrega  los  filtros  correspondientes  y  le  da  aplicar.  5.  El  sistema  actualiza  la  grilla  con  los  filtros  indicados  para  su  visualización.  T06a.03  Gestión  bitácora  Diagrama  de  caso  de  uso   
+
+=================== PAGE 68 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ 
+  T06a  4  especificación  diagrama  de  caso  de  uso   
+ 
+ID  y  Nombre                            CUS8  -  AuditarBitacora  Estado:   Pendiente  Descripción:   El  administrador  consulta  en  la  bitácora  de  eventos  y  aplica  criterios  de  filtrado  correspondientes  para  visualizar  los  registros  en  la  grilla.  Actor  principal:   Administrador  Actor  secundario:   -  Precondiciones:   El  Administrador  debe  estar  logueado  en  el  sistema.  
+Puntos  de  extensión:   -  Puntos  de  inclusión:   -  Escenario  principal:  1.  El  administrador  inicia  sesión  en  el  sistema  y  toca  el  botón  auditar  bitácora  2.  El  sistema  abre  el  formulario  y  muestra  la  grilla  de  eventos(sin  filtros).  3.  El  administrador  añade  filtros  que  vea  relevantes.  4.  El  sistema  busca  en  la  base  de  datos  los  registros  que  correspondan  con  el  filtro  aplicado.  5.  El  sistema  actualiza  la  grilla  en  base  a  la  consulta  para  su  visualización.   
+Flujos  alternativos:   -  
+Postcondiciones:   La  grilla  se  actualiza  y  se  muestra  con  los  filtros  correspondientes.  
+
+=================== PAGE 69 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+  
+ 
+T06a
+ 
+5
+ 
+Diagrama
+ 
+de
+ 
+secuencia
+ 
+  
+
+=================== PAGE 70 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ 
+T06a  6  Diagrama  de  Clases  
+ 
+ 
+ 
+T06a
+ 
+7
+ 
+Diagrama
+ 
+Entidad
+ 
+Relación
+ 
+
+=================== PAGE 71 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ 
+ 
+GUI  
+ 
+
+=================== PAGE 72 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ 
+T04-Perfiles  
+T04.1-  Asignación  a  Perfil  
+T04.1.1  Descomposición  funcional  
+1.  El  administrador  accede  al  menú  Gestion  Usuario  y  selecciona  la  opción  “Perfiles”  2.  El  sistema  muestra  el  formulario  con  un  listado  de  perfiles,  un  listado  de  permisos,  familias  y  una  barra  con  
+desplegables
+ 
+“Agregar”,
+ 
+“Eliminar”,
+ 
+“Relacionar
+ 
+Familia”.
+ 3.  El  Administrador  Selecciona  una  familia  y  un  permiso.  4.  El  administrador  Selecciona  “Agregar”.  5.  El  administrador  elige  “Agregar  Familia  a  Perfil”.  6.  El  sistema  valida  que  haya  un  seleccionado   Perfil   y  familia   a  asignar.  7.  El  sistema  valida  que  no  exista  ninguna  redundancia  de  permisos.  8.  El  sistema  registra  las  nuevas  asignaciones  en  la  base  de  datos.  9.  El  sistema  actualiza  la  vista  con  las  nuevas  asignaciones.  10.  El  sistema  muestra  un  mensaje  confirmando  que  la  operación  se  realizó  correctamente.  
+T04.1.2  Diagrama  de  Caso  de  Uso  
+ 
+T04.1.3  Especificación  de  diagrama  de  caso  de  Uso  
+ 
+ID  y  Nombre                            CU  S10  -  Asignar  a  Perfil  Estado:   Pendiente  Descripción:   El  administrador  asigna  familia  al  perfil  Actor  principal:   Administrador  Actor  secundario:   -  Precondiciones:   El  Administrador  debe  estar  logueado  en  el  sistema.  
+
+=================== PAGE 73 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ Puntos  de  extensión:   -  Puntos  de  inclusión:   -  Escenario  principal:  1.  El  Administrador  accede  al  menú  “Perfiles”  2.  El  sistema  muestra  un  listado  de  Familias,  Permisos  y  Perfiles.  3.  El  Administrador  selecciona  un  perfil.  4.  El  administrador  elige  una  familia  5.  El  administrador  Selecciona  “Agregar”  en  la  barra  superior.  6.  El  administrador  Selecciona  la  opción  “Agregar  Familia”   al  perfil  7.  El  sistema  valida  que  se  haya  seleccionado  una  Familia  junto  a  un  perfil.  8.  El  sistema  valida  que  no  haya  redundancia  en  algún  permiso  ya  asignado.  9.  El  sistema  guarda  la  asignación  en  la  base  de  datos.  10.  El  sistema  muestra  un  mensaje  de  confirmación.  11.  El  sistema  guarda  el  evento  en  la  bitácora.   Flujos  alternativos:   8.1  El  sistema  detecta  redundancia  de  permisos.  8.1.1  El  sistema  detecta  que  ya  existe  el  permiso  en  la  familia.  8.1.2  El  sistema  muestra  mensaje  de  permiso  existente.  
+Postcondiciones:   Se  actualiza  el  perfil  con  el  nuevo  permiso  asignado.  
+
+=================== PAGE 74 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ 
+ 
+T04.1.4  Diagrama  de  Secuencia  
+ 
+
+=================== PAGE 75 ===================
+ UNIVERSIDAD  ABIERTA  INTERAMERICANA   Facultad  de  Tecnología  Informática   
+ 
+Materia:  Ingeniería  de  Software  Docente:  Jorge  Agustin  Pereyra  Alumnos:  Britez  Gustavo,  Britez  Leandro  Ezequiel,  Palavecino  Fernando.  Legajos:  Localización:  Centro  Comisión:  3-A-M  Turno:  Mañana  Año:  3ro  Nombre  del  sistema:  Proyecto  Monitoreo  Nutricional  Etapa :  2da  Entrega  
+ 
+T04.1.5  Diagrama  de  Actividad  
+ 
