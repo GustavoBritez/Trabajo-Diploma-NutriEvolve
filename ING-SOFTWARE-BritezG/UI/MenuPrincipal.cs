@@ -512,6 +512,49 @@ namespace UI
             _frmTurneroContenido.BringToFront();
             _frmTurneroContenido.CargarTurnos();
         }
+
+        private UI.PN2.frmSeguimientoNutricional_DNI101? _frmSeguimientoContenido;
+
+        private void btnSeguimientoNutricional_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UsuarioBE usuarioActivo = ServicesSessionManager.Instancia.ObtenerUsuarioActivo();
+                if (usuarioActivo == null)
+                {
+                    idiomaBLL.MostrarMensaje("msg_error_nosesion", "titulo_error_nosesion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                MostrarSeguimientoEnContenedor();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir el seguimiento nutricional: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void MostrarSeguimientoEnContenedor()
+        {
+            if (_frmSeguimientoContenido == null || _frmSeguimientoContenido.IsDisposed)
+            {
+                _frmSeguimientoContenido = new UI.PN2.frmSeguimientoNutricional_DNI101();
+            }
+
+            if (ChangePassPanel != null)
+            {
+                ChangePassPanel.Visible = false;
+            }
+
+            panelContenedor.Controls.Clear();
+            _frmSeguimientoContenido.TopLevel = false;
+            _frmSeguimientoContenido.FormBorderStyle = FormBorderStyle.None;
+            _frmSeguimientoContenido.Dock = DockStyle.Fill;
+            panelContenedor.Controls.Add(_frmSeguimientoContenido);
+            _frmSeguimientoContenido.Show();
+            _frmSeguimientoContenido.BringToFront();
+            _frmSeguimientoContenido.CargarPacientes();
+        }
     }
 
 }

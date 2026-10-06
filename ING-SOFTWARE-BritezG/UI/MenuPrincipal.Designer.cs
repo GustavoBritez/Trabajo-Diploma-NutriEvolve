@@ -35,6 +35,7 @@ namespace UI
             btnUsuarios = new UI.Controles.BotonFuturista();
             btnReportes = new UI.Controles.BotonFuturista();
             btnTurnos = new UI.Controles.BotonFuturista();
+            btnSeguimientoNutricional = new UI.Controles.BotonFuturista();
             lblModulo = new Label();
             btnCambiarContrasena = new UI.Controles.BotonFuturista();
             btnLogin = new UI.Controles.BotonFuturista();
@@ -70,6 +71,7 @@ namespace UI
             panelMenu.Controls.Add(btnGestionarPerfiles);
             panelMenu.Controls.Add(btnUsuarios);
             panelMenu.Controls.Add(btnReportes);
+            panelMenu.Controls.Add(btnSeguimientoNutricional);
             panelMenu.Controls.Add(btnTurnos);
             panelMenu.Controls.Add(lblModulo);
             panelMenu.Controls.Add(btnCambiarContrasena);
@@ -112,7 +114,28 @@ namespace UI
             btnTurnos.TextAlign = ContentAlignment.MiddleLeft;
             btnTurnos.UseVisualStyleBackColor = false;
             btnTurnos.Click += btnTurnos_Click;
-
+            // 
+            // btnSeguimientoNutricional
+            // 
+            btnSeguimientoNutricional.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            btnSeguimientoNutricional.BackColor = Color.Transparent;
+            btnSeguimientoNutricional.Cursor = Cursors.Hand;
+            btnSeguimientoNutricional.EsMenuLateral = true;
+            btnSeguimientoNutricional.FlatAppearance.BorderSize = 0;
+            btnSeguimientoNutricional.FlatStyle = FlatStyle.Flat;
+            btnSeguimientoNutricional.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            btnSeguimientoNutricional.ForeColor = Color.White;
+            btnSeguimientoNutricional.Location = new Point(12, 106);
+            btnSeguimientoNutricional.Name = "btnSeguimientoNutricional";
+            btnSeguimientoNutricional.PaddingIzquierdo = 18;
+            btnSeguimientoNutricional.RadioBorde = 24;
+            btnSeguimientoNutricional.Size = new Size(236, 44);
+            btnSeguimientoNutricional.TabIndex = 2;
+            btnSeguimientoNutricional.Text = "🥗  Seguimiento Nutricional";
+            btnSeguimientoNutricional.TextAlign = ContentAlignment.MiddleLeft;
+            btnSeguimientoNutricional.UseVisualStyleBackColor = false;
+            btnSeguimientoNutricional.Click += btnSeguimientoNutricional_Click;
+            // 
             // btnReportes
             // 
             btnReportes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -544,5 +567,6 @@ namespace UI
         private ComboBox cmbIdioma;
         private UI.Controles.BotonFuturista btnRespaldo;
         private UI.Controles.BotonFuturista btnGestionarPerfiles;
+        private UI.Controles.BotonFuturista btnSeguimientoNutricional;
     }
 }
