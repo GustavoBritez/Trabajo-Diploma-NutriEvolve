@@ -14,11 +14,16 @@ namespace DAL
             string scriptFileName = "script.sql";
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             string scriptPath = Path.Combine(baseDir, scriptFileName);
+            if (!File.Exists(scriptPath))
+            {
+                string altPath = Path.Combine(baseDir, "..", "..", "..", scriptFileName);
+                if (File.Exists(altPath)) scriptPath = Path.GetFullPath(altPath);
+            }
             string errorLogPath = Path.Combine(baseDir, "error_db.txt");
 
-            // Connection strings
-            string masterConnString = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30";
-            string dbConnString = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=ING;Integrated Security=True;Connect Timeout=30";
+            // Connection strings dinámicas obtenidas desde DAL.Conexion
+            string masterConnString = Conexion.ObtenerCadenaMaster();
+            string dbConnString = Conexion.ObtenerCadenaConexion();
 
             try
             {

@@ -24,52 +24,48 @@ namespace BLL.PN2.Strategy
             }
 
             double val = (double)valorIMC;
-            double p3 = curva.P3[idx];
-            double p15 = curva.P15[idx];
-            double p50 = curva.P50[idx];
+            double p5 = curva.P5[idx];
             double p85 = curva.P85[idx];
-            double p97 = curva.P97[idx];
+            double p95 = curva.P95[idx];
 
             ResultadoEvaluacionOMS res = new ResultadoEvaluacionOMS();
 
-            if (val < p3)
+            // Reglas oficiales CDC / OMS por percentiles:
+            // 1. Bajo peso: Menor al percentil 5 (<5)
+            // 2. Peso saludable (normal): Del percentil 5 al menos del 85 (5 a <85)
+            // 3. Sobrepeso: Del percentil 85 al menos del 95 (85 a <95)
+            // 4. Obesidad: Percentil 95 o mayor (≥ 95)
+            if (val < p5)
             {
-                res.Clasificacion = "Desnutrición Aguda / Bajo Peso Severo";
-                res.Detalles = $"IMC ({valorIMC:N2}) por debajo del percentil 3 ({p3:N2}). Riesgo de desnutrición aguda.";
-                res.PercentilAproximado = 2m;
+                res.Clasificacion = "Bajo peso";
+                res.Detalles = $"IMC ({valorIMC:N2}) menor al percentil 5 (<P5: {p5:N2}). Diagnóstico: Bajo peso (<5).";
+                res.PercentilAproximado = 3m;
                 res.RequiereAlerta = true;
-                res.SeveridadAlerta = "CRÍTICA";
-                res.MensajeAlerta = $"🚨 ALERTA ROJA: IMC de {valorIMC:N2} por debajo de P3. Retardo ponderal crítico.";
+                res.SeveridadAlerta = "MODERADA";
+                res.MensajeAlerta = $"⚠️ ALERTA: IMC de {valorIMC:N2} inferior al percentil 5 (<P5: {p5:N2}). Condición de Bajo peso.";
             }
-            else if (val < p15)
+            else if (val < p85)
             {
-                res.Clasificacion = "Riesgo de Bajo Peso";
-                res.Detalles = $"IMC ({valorIMC:N2}) en franja P3-P15 ({p3:N2} - {p15:N2}). Monitoreo nutricional cercano.";
-                res.PercentilAproximado = 10m;
-                res.RequiereAlerta = false;
-            }
-            else if (val <= p85)
-            {
-                res.Clasificacion = "Eutrófico (Normal)";
-                res.Detalles = $"IMC ({valorIMC:N2}) en rango normopeso P15-P85 ({p15:N2} - {p85:N2}). Crecimiento saludable.";
+                res.Clasificacion = "Peso saludable (normal)";
+                res.Detalles = $"IMC ({valorIMC:N2}) del percentil 5 al menos del 85 (P5: {p5:N2} a <P85: {p85:N2}). Condición: Peso saludable (normal).";
                 res.PercentilAproximado = 50m;
                 res.RequiereAlerta = false;
             }
-            else if (val <= p97)
+            else if (val < p95)
             {
                 res.Clasificacion = "Sobrepeso";
-                res.Detalles = $"IMC ({valorIMC:N2}) en franja P85-P97 ({p85:N2} - {p97:N2}). Riesgo de progresión a obesidad.";
+                res.Detalles = $"IMC ({valorIMC:N2}) del percentil 85 al menos del 95 (P85: {p85:N2} a <P95: {p95:N2}). Condición: Sobrepeso.";
                 res.PercentilAproximado = 90m;
                 res.RequiereAlerta = false;
             }
             else
             {
-                res.Clasificacion = "Obesidad Pediátrica";
-                res.Detalles = $"IMC ({valorIMC:N2}) por encima del percentil 97 ({p97:N2}). Obesidad según estándar OMS.";
-                res.PercentilAproximado = 98m;
+                res.Clasificacion = "Obesidad";
+                res.Detalles = $"IMC ({valorIMC:N2}) en percentil 95 o mayor (≥P95: {p95:N2}). Condición: Obesidad (≥95).";
+                res.PercentilAproximado = 97m;
                 res.RequiereAlerta = true;
-                res.SeveridadAlerta = "MODERADA";
-                res.MensajeAlerta = $"⚠️ ALERTA AMARILLA: IMC de {valorIMC:N2} supera el percentil 97 (Obesidad). Requiere ajuste de pauta alimentaria.";
+                res.SeveridadAlerta = "CRÍTICA";
+                res.MensajeAlerta = $"🚨 ALERTA ROJA: IMC de {valorIMC:N2} en percentil 95 o mayor (≥P95: {p95:N2}). Diagnóstico: Obesidad.";
             }
 
             return res;

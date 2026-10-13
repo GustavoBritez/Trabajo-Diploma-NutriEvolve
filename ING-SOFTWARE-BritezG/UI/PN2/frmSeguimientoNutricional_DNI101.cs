@@ -5,144 +5,83 @@ using System.Linq;
 using System.Windows.Forms;
 using BE;
 using BLL;
+using Services;
 
 namespace UI.PN2
 {
-    public class frmSeguimientoNutricional_DNI101 : Form
+    public partial class frmSeguimientoNutricional_DNI101 : Form, IIdiomaObserver
     {
         private readonly PacienteBLL_DNI101 _pacienteBLL;
         private List<PacienteBE_DNI101> _listaPacientes = new List<PacienteBE_DNI101>();
 
-        private DataGridView _dgvPacientes = null!;
-        private TextBox _txtBuscar = null!;
-
         public frmSeguimientoNutricional_DNI101()
         {
             _pacienteBLL = new PacienteBLL_DNI101();
-            ConfigurarFormulario();
-            ConstruirComponentes();
+
+            InitializeComponent();
+
+            this.Resize += (s, e) => AjustarDisenoResponsivo();
+            this.Load += (s, e) => AjustarDisenoResponsivo();
+
+            AjustarDisenoResponsivo();
             CargarPacientes();
         }
 
-        private void ConfigurarFormulario()
+        public void AjustarDisenoResponsivo()
         {
-            Text = "Seguimiento Nutricional Pediátrico";
-            BackColor = Color.FromArgb(245, 248, 245);
-            Dock = DockStyle.Fill;
-            FormBorderStyle = FormBorderStyle.None;
-        }
-
-        private void ConstruirComponentes()
-        {
-            // Panel Superior / Barra de Búsqueda
-            Panel pnlTop = new Panel
+            try
             {
-                Dock = DockStyle.Top,
-                Height = 110,
-                BackColor = Color.White,
-                Padding = new Padding(25, 15, 25, 10)
-            };
-            pnlTop.Paint += (s, e) =>
+                this.SuspendLayout();
+
+                int w = this.ClientSize.Width;
+                int h = this.ClientSize.Height;
+                if (w < 100 || h < 100) return;
+
+                int marginX = 15;
+                int contentW = Math.Max(320, w - (marginX * 2));
+
+                // 1. Header
+                if (_pnlHeader != null)
+                {
+                    _pnlHeader.Location = new Point(marginX, 10);
+                    _pnlHeader.Size = new Size(contentW, 55);
+                }
+
+                // 2. Filtros / Búsqueda
+                if (_pnlFiltros != null)
+                {
+                    int topFiltros = _pnlHeader != null ? _pnlHeader.Bottom + 5 : 70;
+                    _pnlFiltros.Location = new Point(marginX, topFiltros);
+                    _pnlFiltros.Size = new Size(contentW, 58);
+
+                    if (_txtBuscar != null && _btnRecargar != null && _lblLupa != null)
+                    {
+                        int btnW = _btnRecargar.Width;
+                        _btnRecargar.Location = new Point(Math.Max(300, _pnlFiltros.ClientSize.Width - btnW - 15), 11);
+
+                        int searchLeft = _lblLupa.Right + 12;
+                        int availableW = _btnRecargar.Left - searchLeft - 20;
+                        _txtBuscar.Location = new Point(searchLeft, 15);
+                        _txtBuscar.Size = new Size(Math.Min(450, Math.Max(180, availableW)), 26);
+                    }
+                }
+
+                // 3. Grilla de Pacientes
+                if (_pnlGrilla != null)
+                {
+                    int topGrilla = _pnlFiltros != null ? _pnlFiltros.Bottom + 12 : 140;
+                    _pnlGrilla.Location = new Point(marginX, topGrilla);
+                    _pnlGrilla.Size = new Size(contentW, Math.Max(200, h - topGrilla - 20));
+                }
+            }
+            catch
             {
-                using (var pen = new Pen(Color.FromArgb(220, 230, 222), 1))
-                    e.Graphics.DrawLine(pen, 0, pnlTop.Height - 1, pnlTop.Width, pnlTop.Height - 1);
-            };
-
-            Label lblTit = new Label
+                // Evitar excepciones transitorias durante renderizado
+            }
+            finally
             {
-                Text = "🥗 MÓDULO DE SEGUIMIENTO NUTRICIONAL PEDIÁTRICO (PN2)",
-                Font = new Font("Segoe UI", 13F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(46, 125, 50),
-                Location = new Point(25, 12),
-                AutoSize = true
-            };
-
-            Label lblSub = new Label
-            {
-                Text = "CUN06: Haga clic sobre un paciente en la grilla para acceder a Graficar Diagnóstico, Registrar Consulta o Prescribir Plan.",
-                Font = new Font("Segoe UI", 9.5F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(80, 95, 85),
-                Location = new Point(27, 40),
-                AutoSize = true
-            };
-
-            Label lblLupa = new Label
-            {
-                Text = "🔍 Buscar Paciente (DNI, Nombre o Apellido):",
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(60, 75, 65),
-                Location = new Point(27, 72),
-                AutoSize = true
-            };
-
-            _txtBuscar = new TextBox
-            {
-                Location = new Point(310, 68),
-                Size = new Size(320, 26),
-                Font = new Font("Segoe UI", 10F)
-            };
-            _txtBuscar.TextChanged += (s, e) => FiltrarPacientes();
-
-            Button btnRecargar = new Button
-            {
-                Text = "🔄 Actualizar",
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(60, 80, 70),
-                BackColor = Color.FromArgb(235, 242, 237),
-                FlatStyle = FlatStyle.Flat,
-                Size = new Size(110, 28),
-                Location = new Point(640, 67),
-                Cursor = Cursors.Hand
-            };
-            btnRecargar.FlatAppearance.BorderColor = Color.FromArgb(200, 215, 205);
-            btnRecargar.Click += (s, e) => CargarPacientes();
-
-            pnlTop.Controls.Add(lblTit);
-            pnlTop.Controls.Add(lblSub);
-            pnlTop.Controls.Add(lblLupa);
-            pnlTop.Controls.Add(_txtBuscar);
-            pnlTop.Controls.Add(btnRecargar);
-            Controls.Add(pnlTop);
-
-            // Grilla de Pacientes
-            Panel pnlGrilla = new Panel
-            {
-                Dock = DockStyle.Fill,
-                Padding = new Padding(25, 20, 25, 20)
-            };
-
-            _dgvPacientes = new DataGridView
-            {
-                Dock = DockStyle.Fill,
-                BackgroundColor = Color.White,
-                BorderStyle = BorderStyle.None,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                RowHeadersVisible = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                MultiSelect = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                RowTemplate = { Height = 42 },
-                Cursor = Cursors.Hand,
-                GridColor = Color.FromArgb(230, 238, 232)
-            };
-
-            _dgvPacientes.EnableHeadersVisualStyles = false;
-            _dgvPacientes.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(76, 124, 89);
-            _dgvPacientes.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            _dgvPacientes.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            _dgvPacientes.ColumnHeadersHeight = 38;
-
-            _dgvPacientes.DefaultCellStyle.Font = new Font("Segoe UI", 9.5F);
-            _dgvPacientes.DefaultCellStyle.SelectionBackColor = Color.FromArgb(200, 230, 208);
-            _dgvPacientes.DefaultCellStyle.SelectionForeColor = Color.FromArgb(20, 40, 25);
-            _dgvPacientes.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 252, 249);
-
-            _dgvPacientes.CellClick += DgvPacientes_CellClick;
-
-            pnlGrilla.Controls.Add(_dgvPacientes);
-            Controls.Add(pnlGrilla);
+                this.ResumeLayout(true);
+            }
         }
 
         public void CargarPacientes()
@@ -166,13 +105,57 @@ namespace UI.PN2
         private void PoblarGrilla(List<PacienteBE_DNI101> pacientes)
         {
             _dgvPacientes.Columns.Clear();
-            _dgvPacientes.Columns.Add("DNI", "DNI del Niño");
-            _dgvPacientes.Columns.Add("Nombre", "Nombre Completo");
-            _dgvPacientes.Columns.Add("Sexo", "Sexo");
-            _dgvPacientes.Columns.Add("Edad", "Edad Pediátrica");
-            _dgvPacientes.Columns.Add("Nacimiento", "Fecha de Nacimiento");
-            _dgvPacientes.Columns.Add("ObraSocial", "Cobertura Médica");
-            _dgvPacientes.Columns.Add("Telefono", "Teléfono de Contacto");
+
+            var colDni = new DataGridViewTextBoxColumn
+            {
+                Name = "DNI",
+                HeaderText = "DNI del Niño",
+                FillWeight = 85
+            };
+            var colNombre = new DataGridViewTextBoxColumn
+            {
+                Name = "Nombre",
+                HeaderText = "Nombre Completo",
+                FillWeight = 160
+            };
+            var colSexo = new DataGridViewTextBoxColumn
+            {
+                Name = "Sexo",
+                HeaderText = "Sexo",
+                FillWeight = 75
+            };
+            colSexo.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colSexo.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+            var colEdad = new DataGridViewTextBoxColumn
+            {
+                Name = "Edad",
+                HeaderText = "Edad Pediátrica",
+                FillWeight = 95
+            };
+            var colNac = new DataGridViewTextBoxColumn
+            {
+                Name = "Nacimiento",
+                HeaderText = "Fecha de Nacimiento",
+                FillWeight = 105
+            };
+            colNac.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colNac.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+            var colObra = new DataGridViewTextBoxColumn
+            {
+                Name = "ObraSocial",
+                HeaderText = "Cobertura Médica",
+                FillWeight = 115
+            };
+            var colTel = new DataGridViewTextBoxColumn
+            {
+                Name = "Telefono",
+                HeaderText = "Teléfono de Contacto",
+                FillWeight = 100
+            };
+
+            _dgvPacientes.Columns.AddRange(colDni, colNombre, colSexo, colEdad, colNac, colObra, colTel);
 
             foreach (var p in pacientes)
             {
@@ -190,6 +173,18 @@ namespace UI.PN2
                 );
                 _dgvPacientes.Rows[rowIdx].Tag = p;
             }
+
+            _dgvPacientes.ClearSelection();
+        }
+
+        private void _txtBuscar_TextChanged(object? sender, EventArgs e)
+        {
+            FiltrarPacientes();
+        }
+
+        private void _btnRecargar_Click(object? sender, EventArgs e)
+        {
+            CargarPacientes();
         }
 
         private void FiltrarPacientes()
@@ -217,7 +212,6 @@ namespace UI.PN2
             var fila = _dgvPacientes.Rows[e.RowIndex];
             if (fila.Tag is PacienteBE_DNI101 paciente)
             {
-                // Disparar el MessageBox totalmente personalizado con la estética del sistema
                 using (var customBox = new CustomMessageBoxPN2(paciente))
                 {
                     if (customBox.ShowDialog(this) == DialogResult.OK)
@@ -248,6 +242,11 @@ namespace UI.PN2
                     }
                 }
             }
+        }
+
+        public void ActualizarIdioma()
+        {
+            // Soporte para internacionalización
         }
     }
 }

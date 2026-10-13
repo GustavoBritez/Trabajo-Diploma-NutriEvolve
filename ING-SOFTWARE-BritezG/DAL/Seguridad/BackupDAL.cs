@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +34,8 @@ namespace DAL
         {
             try
             {
+                SqlConnection.ClearAllPools();
+
                 string query = $@" ALTER DATABASE [{NOMBRE_BD}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
                                     RESTORE DATABASE [{NOMBRE_BD}] FROM DISK = @ruta WITH REPLACE;
                                     ALTER DATABASE [{NOMBRE_BD}] SET MULTI_USER;";
@@ -44,6 +46,8 @@ namespace DAL
                 };
 
                 conexion.ExecuteNonQueryMaster(query, parametros);
+
+                SqlConnection.ClearAllPools();
             }
             catch (Exception)
             {

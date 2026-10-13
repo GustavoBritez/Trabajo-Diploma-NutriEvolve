@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "icTxpWNV70g=",
-  "success": false,
-  "projectFilePath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\TestPass\\TestPass.csproj",
+  "dgSpecHash": "R9m6LmlZm6k=",
+  "success": true,
+  "projectFilePath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\TestPass\\TestPass.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Danie\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
+    "C:\\Users\\Danie\\.nuget\\packages\\bcrypt.net-next\\4.2.0\\bcrypt.net-next.4.2.0.nupkg.sha512",
     "C:\\Users\\Danie\\.nuget\\packages\\microsoft.bcl.cryptography\\9.0.13\\microsoft.bcl.cryptography.9.0.13.nupkg.sha512",
     "C:\\Users\\Danie\\.nuget\\packages\\microsoft.data.sqlclient\\7.0.0\\microsoft.data.sqlclient.7.0.0.nupkg.sha512",
     "C:\\Users\\Danie\\.nuget\\packages\\microsoft.data.sqlclient.extensions.abstractions\\1.0.0\\microsoft.data.sqlclient.extensions.abstractions.1.0.0.nupkg.sha512",
@@ -29,28 +29,5 @@
     "C:\\Users\\Danie\\.nuget\\packages\\system.security.cryptography.pkcs\\9.0.13\\system.security.cryptography.pkcs.9.0.13.nupkg.sha512",
     "C:\\Users\\Danie\\.nuget\\packages\\system.security.cryptography.protecteddata\\10.0.10\\system.security.cryptography.protecteddata.10.0.10.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1605",
-      "level": "Error",
-      "message": "Advertencia como error: Degradación del paquete detectada: BCrypt.Net-Next de 4.2.0 a 4.0.3. Haga referencia al paquete directamente desde el proyecto para seleccionar una versión diferente. \r\n TestPass -> DAL -> Services -> BCrypt.Net-Next (>= 4.2.0) \r\n TestPass -> BCrypt.Net-Next (>= 4.0.3)",
-      "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\TestPass\\TestPass.csproj",
-      "filePath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\TestPass\\TestPass.csproj",
-      "libraryId": "BCrypt.Net-Next",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    },
-    {
-      "code": "NU1201",
-      "level": "Error",
-      "message": "El proyecto BLL no es compatible con net9.0 (.NETCoreApp,Version=v9.0). El proyecto BLL admite: net9.0-windows7.0 (.NETCoreApp,Version=v9.0)",
-      "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\TestPass\\TestPass.csproj",
-      "filePath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\TestPass\\TestPass.csproj",
-      "libraryId": "BLL",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    }
-  ]
+  "logs": []
 }

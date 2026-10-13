@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using BE;
 
@@ -14,199 +13,57 @@ namespace UI.PN2
         PrescribirPlan
     }
 
-    public class CustomMessageBoxPN2 : Form
+    public partial class CustomMessageBoxPN2 : Form
     {
         public AccionSeleccionadaPN2 AccionElegida { get; private set; } = AccionSeleccionadaPN2.Ninguna;
 
         public CustomMessageBoxPN2(PacienteBE_DNI101 paciente)
         {
-            ConfigurarFormulario();
-            ConstruirInterfaz(paciente);
+            InitializeComponent();
+            ConfigurarDatosPaciente(paciente);
+            ConfigurarBotonesAccion();
         }
 
-        private void ConfigurarFormulario()
+        private void ConfigurarDatosPaciente(PacienteBE_DNI101 paciente)
         {
-            Text = "Acciones Clínicas - Seguimiento Nutricional";
-            FormBorderStyle = FormBorderStyle.None;
-            StartPosition = FormStartPosition.CenterParent;
-            Size = new Size(540, 480);
-            BackColor = Color.FromArgb(245, 248, 245);
-            ShowInTaskbar = false;
-            DoubleBuffered = true;
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-            // Borde redondeado suave para el formulario
-            using (Pen p = new Pen(Color.FromArgb(76, 124, 89), 2))
-            {
-                e.Graphics.DrawRectangle(p, 1, 1, Width - 2, Height - 2);
-            }
-        }
-
-        private void ConstruirInterfaz(PacienteBE_DNI101 paciente)
-        {
-            // Panel de Encabezado Superior (Verde del sistema)
-            Panel pnlHeader = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 65,
-                BackColor = Color.FromArgb(76, 124, 89)
-            };
-
-            Label lblTitulo = new Label
-            {
-                Text = "🥗 SELECCIONAR ACCIÓN CLÍNICA",
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                ForeColor = Color.White,
-                Location = new Point(20, 20),
-                AutoSize = true
-            };
-
-            Button btnCerrarCruz = new Button
-            {
-                Text = "✕",
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                ForeColor = Color.White,
-                BackColor = Color.Transparent,
-                FlatStyle = FlatStyle.Flat,
-                Size = new Size(35, 35),
-                Location = new Point(Width - 45, 15),
-                Cursor = Cursors.Hand
-            };
-            btnCerrarCruz.FlatAppearance.BorderSize = 0;
-            btnCerrarCruz.Click += (s, e) => { AccionElegida = AccionSeleccionadaPN2.Ninguna; Close(); };
-
-            pnlHeader.Controls.Add(lblTitulo);
-            pnlHeader.Controls.Add(btnCerrarCruz);
-            Controls.Add(pnlHeader);
-
-            // Tarjeta de información del paciente
-            Panel pnlPaciente = new Panel
-            {
-                Location = new Point(20, 80),
-                Size = new Size(500, 75),
-                BackColor = Color.White
-            };
-            pnlPaciente.Paint += (s, e) =>
-            {
-                using (Pen pen = new Pen(Color.FromArgb(200, 220, 205), 1))
-                {
-                    e.Graphics.DrawRectangle(pen, 0, 0, pnlPaciente.Width - 1, pnlPaciente.Height - 1);
-                }
-            };
-
-            Label lblPacNombre = new Label
-            {
-                Text = $"👶 {paciente.NombreCompleto}",
-                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(30, 45, 35),
-                Location = new Point(12, 10),
-                AutoSize = true
-            };
+            lblPacNombre.Text = $"👶 {paciente.NombreCompleto}";
 
             int edadMeses = paciente.ObtenerEdadMeses();
             string strEdad = edadMeses < 24 ? $"{edadMeses} meses" : $"{edadMeses / 12} años ({edadMeses}m)";
-
-            Label lblPacDetalles = new Label
-            {
-                Text = $"DNI: {paciente.DNINiño_DNI101}  |  Sexo: {paciente.Sexo_DNI101 ?? "N/D"}  |  Edad: {strEdad}  |  Cobertura: {paciente.ObraSocial_DNI101 ?? "Particular"}",
-                Font = new Font("Segoe UI", 9F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(90, 105, 95),
-                Location = new Point(14, 40),
-                AutoSize = true
-            };
-
-            pnlPaciente.Controls.Add(lblPacNombre);
-            pnlPaciente.Controls.Add(lblPacDetalles);
-            Controls.Add(pnlPaciente);
-
-            // Subtítulo
-            Label lblSubtitulo = new Label
-            {
-                Text = "Seleccione la operación a realizar para este paciente:",
-                Font = new Font("Segoe UI", 9.5F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(70, 85, 75),
-                Location = new Point(22, 165),
-                AutoSize = true
-            };
-            Controls.Add(lblSubtitulo);
-
-            // Botón 1: Graficar Diagnóstico (CUN07)
-            Button btnGraficar = CrearBotonAccion(
-                "📈  Graficar Diagnóstico",
-                "Visualizar las curvas evolutivas de la OMS (Peso, Talla, IMC)",
-                Color.FromArgb(46, 125, 50),
-                new Point(20, 195)
-            );
-            btnGraficar.Click += (s, e) =>
-            {
-                AccionElegida = AccionSeleccionadaPN2.GraficarDiagnostico;
-                DialogResult = DialogResult.OK;
-                Close();
-            };
-            Controls.Add(btnGraficar);
-
-            // Botón 2: Registrar Consulta (CUN08)
-            Button btnRegistrar = CrearBotonAccion(
-                "📝  Registrar Consulta",
-                "Cargar mediciones antropométricas, diagnóstico clínico y alertas",
-                Color.FromArgb(21, 101, 192),
-                new Point(20, 275)
-            );
-            btnRegistrar.Click += (s, e) =>
-            {
-                AccionElegida = AccionSeleccionadaPN2.RegistrarConsulta;
-                DialogResult = DialogResult.OK;
-                Close();
-            };
-            Controls.Add(btnRegistrar);
-
-            // Botón 3: Prescribir Plan (CUN09)
-            Button btnPrescribir = CrearBotonAccion(
-                "📋  Prescribir Plan Alimentario",
-                "Definir metas calóricas, macronutrientes y pautas dietarias",
-                Color.FromArgb(123, 31, 162),
-                new Point(20, 355)
-            );
-            btnPrescribir.Click += (s, e) =>
-            {
-                AccionElegida = AccionSeleccionadaPN2.PrescribirPlan;
-                DialogResult = DialogResult.OK;
-                Close();
-            };
-            Controls.Add(btnPrescribir);
-
-            // Botón Cancelar al pie
-            Button btnCancelar = new Button
-            {
-                Text = "Cancelar",
-                Font = new Font("Segoe UI", 9.5F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(90, 100, 95),
-                BackColor = Color.FromArgb(235, 238, 235),
-                FlatStyle = FlatStyle.Flat,
-                Size = new Size(120, 32),
-                Location = new Point((Width - 120) / 2, 435),
-                Cursor = Cursors.Hand
-            };
-            btnCancelar.FlatAppearance.BorderColor = Color.FromArgb(200, 210, 200);
-            btnCancelar.Click += (s, e) => { AccionElegida = AccionSeleccionadaPN2.Ninguna; Close(); };
-            Controls.Add(btnCancelar);
+            lblPacDetalles.Text = $"DNI: {paciente.DNINiño_DNI101}  |  Sexo: {paciente.Sexo_DNI101 ?? "N/D"}  |  Edad: {strEdad}  |  Cobertura: {paciente.ObraSocial_DNI101 ?? "Particular"}";
         }
 
-        private Button CrearBotonAccion(string titulo, string subtitulo, Color colorAcento, Point posicion)
+        private void ConfigurarBotonesAccion()
         {
-            Button btn = new Button
-            {
-                Location = posicion,
-                Size = new Size(500, 68),
-                BackColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                TextAlign = ContentAlignment.TopLeft,
-                Padding = new Padding(15, 10, 10, 10)
-            };
+            EstilizarBotonAccion(
+                btnGraficar,
+                "📈  Graficar Diagnóstico",
+                "Visualizar las curvas evolutivas de la OMS (Peso, Talla, IMC)",
+                Color.FromArgb(46, 125, 50)
+            );
+
+            EstilizarBotonAccion(
+                btnRegistrar,
+                "📝  Registrar Consulta",
+                "Cargar mediciones antropométricas, diagnóstico clínico y alertas",
+                Color.FromArgb(21, 101, 192)
+            );
+
+            EstilizarBotonAccion(
+                btnPrescribir,
+                "📋  Prescribir Plan Alimentario",
+                "Definir metas calóricas, macronutrientes y pautas dietarias",
+                Color.FromArgb(76, 124, 89)
+            );
+        }
+
+        private void EstilizarBotonAccion(Button btn, string titulo, string subtitulo, Color colorAcento)
+        {
+            btn.BackColor = Color.White;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.Cursor = Cursors.Hand;
+            btn.TextAlign = ContentAlignment.TopLeft;
+            btn.Padding = new Padding(15, 10, 10, 10);
             btn.FlatAppearance.BorderColor = Color.FromArgb(215, 225, 218);
             btn.FlatAppearance.BorderSize = 1;
 
@@ -254,8 +111,50 @@ namespace UI.PN2
                 btn.BackColor = Color.White;
                 btn.FlatAppearance.BorderColor = Color.FromArgb(215, 225, 218);
             };
+        }
 
-            return btn;
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            using (Pen p = new Pen(Color.FromArgb(76, 124, 89), 2))
+            {
+                e.Graphics.DrawRectangle(p, 1, 1, Width - 2, Height - 2);
+            }
+        }
+
+        private void PnlPaciente_Paint(object? sender, PaintEventArgs e)
+        {
+            using (Pen pen = new Pen(Color.FromArgb(200, 220, 205), 1))
+            {
+                e.Graphics.DrawRectangle(pen, 0, 0, pnlPaciente.Width - 1, pnlPaciente.Height - 1);
+            }
+        }
+
+        private void BtnGraficar_Click(object? sender, EventArgs e)
+        {
+            AccionElegida = AccionSeleccionadaPN2.GraficarDiagnostico;
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void BtnRegistrar_Click(object? sender, EventArgs e)
+        {
+            AccionElegida = AccionSeleccionadaPN2.RegistrarConsulta;
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void BtnPrescribir_Click(object? sender, EventArgs e)
+        {
+            AccionElegida = AccionSeleccionadaPN2.PrescribirPlan;
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void BtnCerrar_Click(object? sender, EventArgs e)
+        {
+            AccionElegida = AccionSeleccionadaPN2.Ninguna;
+            Close();
         }
     }
 }

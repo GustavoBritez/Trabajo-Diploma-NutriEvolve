@@ -455,6 +455,11 @@ namespace UI
                 {
                     obsTurnero.ActualizarIdioma();
                 }
+
+                if (_frmSeguimientoContenido != null && !_frmSeguimientoContenido.IsDisposed && _frmSeguimientoContenido is IIdiomaObserver obsSeg)
+                {
+                    obsSeg.ActualizarIdioma();
+                }
             }
         }
         #endregion
@@ -550,6 +555,7 @@ namespace UI
             _frmSeguimientoContenido.TopLevel = false;
             _frmSeguimientoContenido.FormBorderStyle = FormBorderStyle.None;
             _frmSeguimientoContenido.Dock = DockStyle.Fill;
+            _frmSeguimientoContenido.AutoScroll = true;
             panelContenedor.Controls.Add(_frmSeguimientoContenido);
             _frmSeguimientoContenido.Show();
             _frmSeguimientoContenido.BringToFront();

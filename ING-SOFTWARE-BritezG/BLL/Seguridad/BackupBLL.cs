@@ -24,6 +24,7 @@ namespace BLL
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 string descripcion = $"Copia de Seguridad (Backup) generada en: {ruta}";
                 bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Respaldo");
+                new DigitoVerificadorBLL().RecalcularYPersistir();
             }
             catch (Exception ex)
             {
@@ -31,6 +32,7 @@ namespace BLL
                 {
                     int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                     new BitacoraBLL().RegistrarBitacora(1, $"Error al generar Copia de Seguridad: {ex.Message}", dniActual, "Respaldo");
+                    new DigitoVerificadorBLL().RecalcularYPersistir();
                 }
                 catch { }
                 throw;
@@ -46,6 +48,7 @@ namespace BLL
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 string descripcion = $"Restauración de Base de Datos (Restore) ejecutada desde: {ruta}";
                 bitacoraBLL.RegistrarBitacora(5, descripcion, dniActual, "Respaldo");
+                new DigitoVerificadorBLL().RecalcularYPersistir();
             }
             catch (Exception ex)
             {
@@ -53,6 +56,7 @@ namespace BLL
                 {
                     int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                     new BitacoraBLL().RegistrarBitacora(1, $"Error al restaurar Base de Datos: {ex.Message}", dniActual, "Respaldo");
+                    new DigitoVerificadorBLL().RecalcularYPersistir();
                 }
                 catch { }
                 throw;
