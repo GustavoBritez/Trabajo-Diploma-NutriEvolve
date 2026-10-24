@@ -29,6 +29,7 @@ namespace SetupApp
         private Label lblDescP2;
         private TextBox txtRutaDestino;
         private Button btnExaminar;
+        private Label lblAvisoInstalacionPreviaP2;
         private CheckBox chkAccesoDirecto;
 
         // Paso 3: SQL Server y BD
@@ -49,6 +50,10 @@ namespace SetupApp
         private TextBox txtNombreBD;
         private Button btnProbarConexion;
         private Label lblEstadoConexion;
+        private Label lblAvisoBDP3;
+        private GroupBox grpModoBDReinstalacion;
+        private RadioButton rdoConservarBD;
+        private RadioButton rdoRecrearBD;
         private CheckBox chkCrearBD;
         private CheckBox chkSellarDV;
 
@@ -76,8 +81,8 @@ namespace SetupApp
 
         private void InitializeComponent()
         {
-            Text = "Instalador de NutriEvolve - Sistema de Gestión Nutricional";
-            Size = new Size(720, 560);
+            Text = "Instalador / Reinstalador de NutriEvolve";
+            Size = new Size(730, 580);
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
@@ -144,8 +149,8 @@ namespace SetupApp
             btnSiguiente = new Button
             {
                 Text = "Siguiente >",
-                Size = new Size(110, 34),
-                Location = new Point(590, 16),
+                Size = new Size(125, 34),
+                Location = new Point(585, 16),
                 BackColor = Color.FromArgb(37, 99, 235),
                 ForeColor = Color.Black,
                 Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
@@ -227,7 +232,7 @@ namespace SetupApp
 
             lblDescP2 = new Label
             {
-                Text = "NutriEvolve se instalará en la siguiente carpeta. Si desea elegir otra ubicación, presione 'Examinar'.",
+                Text = "NutriEvolve se instalará o reinstalará en la siguiente carpeta. Si desea elegir otra ubicación, presione 'Examinar'.",
                 ForeColor = Color.FromArgb(71, 85, 105),
                 Location = new Point(10, 50),
                 AutoSize = true
@@ -237,22 +242,33 @@ namespace SetupApp
             txtRutaDestino = new TextBox
             {
                 Text = defaultPath,
-                Location = new Point(10, 95),
+                Location = new Point(10, 90),
                 Size = new Size(510, 28)
             };
+            txtRutaDestino.TextChanged += TxtRutaDestino_TextChanged;
 
             btnExaminar = new Button
             {
                 Text = "Examinar...",
-                Location = new Point(530, 93),
+                Location = new Point(530, 88),
                 Size = new Size(110, 32),
                 FlatStyle = FlatStyle.System
             };
             btnExaminar.Click += BtnExaminar_Click;
 
+            lblAvisoInstalacionPreviaP2 = new Label
+            {
+                Text = "ℹ️ Se detectó una instalación existente en esta carpeta. Se procederá con la REINSTALACIÓN.",
+                ForeColor = Color.FromArgb(2, 132, 199),
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                Location = new Point(10, 126),
+                Size = new Size(630, 22),
+                Visible = false
+            };
+
             chkAccesoDirecto = new CheckBox
             {
-                Text = "Crear un acceso directo en el Escritorio (Desktop)",
+                Text = "Crear o renovar acceso directo en el Escritorio (Desktop)",
                 Checked = true,
                 Location = new Point(10, 160),
                 AutoSize = true
@@ -262,6 +278,7 @@ namespace SetupApp
             pnlPaso2.Controls.Add(lblDescP2);
             pnlPaso2.Controls.Add(txtRutaDestino);
             pnlPaso2.Controls.Add(btnExaminar);
+            pnlPaso2.Controls.Add(lblAvisoInstalacionPreviaP2);
             pnlPaso2.Controls.Add(chkAccesoDirecto);
             pnlContenedor.Controls.Add(pnlPaso2);
         }
@@ -275,39 +292,41 @@ namespace SetupApp
                 Text = "Configuración del Servidor SQL Server y Base de Datos",
                 Font = new Font("Segoe UI", 12f, FontStyle.Bold),
                 ForeColor = Color.FromArgb(15, 23, 42),
-                Location = new Point(10, 10),
+                Location = new Point(10, 5),
                 AutoSize = true
             };
 
             lblDescP3 = new Label
             {
-                Text = "Indique la instancia de SQL Server instalada en esta computadora. El instalador creará e inicializará\nla base de datos y configurará la aplicación para que se comunique directamente con ella.",
+                Text = "Indique la instancia de SQL Server. El instalador detectará si la base de datos ya existe para\npermitirle conservar sus datos actuales o realizar una reinstalación limpia.",
                 ForeColor = Color.FromArgb(71, 85, 105),
-                Location = new Point(10, 38),
+                Location = new Point(10, 30),
                 AutoSize = true
             };
 
             lblServidorP3 = new Label
             {
                 Text = "Servidor / Instancia SQL Server (Data Source):",
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-                Location = new Point(10, 85),
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                Location = new Point(10, 75),
                 AutoSize = true
             };
 
             cmbServidorSql = new ComboBox
             {
-                Location = new Point(10, 108),
+                Location = new Point(10, 96),
                 Size = new Size(400, 28),
                 DropDownStyle = ComboBoxStyle.DropDown
             };
             cmbServidorSql.Items.AddRange(new object[] { ".", @".\SQLEXPRESS", @"localhost", @"(LocalDB)\MSSQLLocalDB" });
             cmbServidorSql.SelectedIndex = 0;
+            cmbServidorSql.SelectedIndexChanged += CmbServidorSql_SelectedIndexChanged;
+            cmbServidorSql.TextChanged += CmbServidorSql_TextChanged;
 
             btnBuscarInstancias = new Button
             {
                 Text = "🔍 Auto-detectar",
-                Location = new Point(420, 106),
+                Location = new Point(420, 94),
                 Size = new Size(130, 32),
                 FlatStyle = FlatStyle.System
             };
@@ -316,15 +335,15 @@ namespace SetupApp
             grpAuth = new GroupBox
             {
                 Text = "Tipo de Autenticación",
-                Location = new Point(10, 150),
-                Size = new Size(630, 95)
+                Location = new Point(10, 132),
+                Size = new Size(630, 85)
             };
 
             rdoAuthWindows = new RadioButton
             {
                 Text = "Autenticación de Windows (Integrated Security - Recomendado)",
                 Checked = true,
-                Location = new Point(15, 24),
+                Location = new Point(15, 22),
                 AutoSize = true
             };
             rdoAuthWindows.CheckedChanged += RdoAuthWindows_CheckedChanged;
@@ -332,16 +351,16 @@ namespace SetupApp
             rdoAuthSql = new RadioButton
             {
                 Text = "Autenticación de SQL Server (Usuario y Contraseña)",
-                Location = new Point(15, 54),
+                Location = new Point(15, 50),
                 AutoSize = true
             };
             rdoAuthSql.CheckedChanged += RdoAuthSql_CheckedChanged;
 
-            lblSqlUsuario = new Label { Text = "Usuario:", Location = new Point(350, 56), AutoSize = true, Visible = false };
-            txtSqlUsuario = new TextBox { Text = "sa", Location = new Point(410, 53), Size = new Size(80, 26), Visible = false };
+            lblSqlUsuario = new Label { Text = "Usuario:", Location = new Point(350, 52), AutoSize = true, Visible = false };
+            txtSqlUsuario = new TextBox { Text = "sa", Location = new Point(410, 49), Size = new Size(80, 26), Visible = false };
 
-            lblSqlPassword = new Label { Text = "Clave:", Location = new Point(500, 56), AutoSize = true, Visible = false };
-            txtSqlPassword = new TextBox { Text = "", PasswordChar = '•', Location = new Point(545, 53), Size = new Size(75, 26), Visible = false };
+            lblSqlPassword = new Label { Text = "Clave:", Location = new Point(500, 52), AutoSize = true, Visible = false };
+            txtSqlPassword = new TextBox { Text = "", PasswordChar = '•', Location = new Point(545, 49), Size = new Size(75, 26), Visible = false };
 
             grpAuth.Controls.Add(rdoAuthWindows);
             grpAuth.Controls.Add(rdoAuthSql);
@@ -350,13 +369,14 @@ namespace SetupApp
             grpAuth.Controls.Add(lblSqlPassword);
             grpAuth.Controls.Add(txtSqlPassword);
 
-            lblBDP3 = new Label { Text = "Nombre de Base de Datos:", Location = new Point(10, 258), AutoSize = true };
-            txtNombreBD = new TextBox { Text = "ING", Location = new Point(185, 255), Size = new Size(120, 26) };
+            lblBDP3 = new Label { Text = "Nombre de Base de Datos:", Location = new Point(10, 227), AutoSize = true };
+            txtNombreBD = new TextBox { Text = "ING", Location = new Point(185, 224), Size = new Size(120, 26) };
+            txtNombreBD.TextChanged += TxtNombreBD_TextChanged;
 
             btnProbarConexion = new Button
             {
                 Text = "⚡ Probar Conexión",
-                Location = new Point(320, 252),
+                Location = new Point(320, 221),
                 Size = new Size(150, 32),
                 FlatStyle = FlatStyle.System
             };
@@ -366,15 +386,55 @@ namespace SetupApp
             {
                 Text = "Haga clic en 'Probar Conexión' para validar el servidor.",
                 ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(10, 292),
-                Size = new Size(630, 22)
+                Location = new Point(10, 257),
+                Size = new Size(630, 20)
             };
 
+            lblAvisoBDP3 = new Label
+            {
+                Text = "",
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                Location = new Point(10, 278),
+                Size = new Size(630, 22),
+                Visible = false
+            };
+
+            // Opciones para REINSTALACIÓN de Base de Datos
+            grpModoBDReinstalacion = new GroupBox
+            {
+                Text = "Opciones de Reinstalación de Base de Datos",
+                Location = new Point(10, 302),
+                Size = new Size(630, 80),
+                Visible = false
+            };
+
+            rdoConservarBD = new RadioButton
+            {
+                Text = "🔄 Conservar datos existentes y reparar/sellar integridad (Recomendado)",
+                Checked = true,
+                Location = new Point(15, 22),
+                AutoSize = true,
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                ForeColor = Color.FromArgb(22, 101, 52)
+            };
+
+            rdoRecrearBD = new RadioButton
+            {
+                Text = "⚠️ Recrear base de datos desde cero (Sobrescribir completamente)",
+                Location = new Point(15, 48),
+                AutoSize = true,
+                ForeColor = Color.FromArgb(185, 28, 28)
+            };
+
+            grpModoBDReinstalacion.Controls.Add(rdoConservarBD);
+            grpModoBDReinstalacion.Controls.Add(rdoRecrearBD);
+
+            // Casilla para INSTALACIÓN POR PRIMERA VEZ
             chkCrearBD = new CheckBox
             {
                 Text = "Crear e inicializar la base de datos 'ING' ejecutando el script maestro con esquema y datos",
                 Checked = true,
-                Location = new Point(10, 320),
+                Location = new Point(10, 305),
                 AutoSize = true
             };
 
@@ -382,7 +442,7 @@ namespace SetupApp
             {
                 Text = "Calcular y sellar Dígitos Verificadores de integridad (DVH, DVV y global) al finalizar",
                 Checked = true,
-                Location = new Point(10, 345),
+                Location = new Point(10, 390),
                 AutoSize = true
             };
 
@@ -396,6 +456,8 @@ namespace SetupApp
             pnlPaso3.Controls.Add(txtNombreBD);
             pnlPaso3.Controls.Add(btnProbarConexion);
             pnlPaso3.Controls.Add(lblEstadoConexion);
+            pnlPaso3.Controls.Add(lblAvisoBDP3);
+            pnlPaso3.Controls.Add(grpModoBDReinstalacion);
             pnlPaso3.Controls.Add(chkCrearBD);
             pnlPaso3.Controls.Add(chkSellarDV);
             pnlContenedor.Controls.Add(pnlPaso3);
@@ -416,7 +478,7 @@ namespace SetupApp
 
             lblEstadoProgreso = new Label
             {
-                Text = "Iniciando instalación...",
+                Text = "Iniciando proceso...",
                 ForeColor = Color.FromArgb(71, 85, 105),
                 Location = new Point(10, 40),
                 Size = new Size(630, 24)
@@ -434,7 +496,7 @@ namespace SetupApp
             rtbLog = new RichTextBox
             {
                 Location = new Point(10, 105),
-                Size = new Size(630, 260),
+                Size = new Size(630, 280),
                 ReadOnly = true,
                 BackColor = Color.FromArgb(15, 23, 42),
                 ForeColor = Color.FromArgb(241, 245, 249),

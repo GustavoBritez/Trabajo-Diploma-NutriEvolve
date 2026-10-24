@@ -16,19 +16,113 @@ namespace SetupApp
     {
         private int _pasoActual = 1;
         private string _rutaInstaladaFinal = "";
+        private bool _esReinstalacion = false;
+        private bool _baseDatosExisteEnServidor = false;
 
         public FrmSetup()
         {
             InitializeComponent();
+            VerificarInstalacionExistente();
             MostrarPaso(1);
             _ = DetectarInstanciasSqlAsync();
         }
 
+        #region Detección de Instalación Previa (Reinstalador)
+
+        private void VerificarInstalacionExistente()
+        {
+            string destino = txtRutaDestino.Text.Trim();
+            bool appExiste = Directory.Exists(destino) && File.Exists(Path.Combine(destino, "UI.exe"));
+            _esReinstalacion = appExiste;
+            ActualizarVisibilidadAvisoP2();
+        }
+
+        private void ActualizarVisibilidadAvisoP2()
+        {
+            if (lblAvisoInstalacionPreviaP2 == null) return;
+            string destino = txtRutaDestino.Text.Trim();
+            bool appExiste = Directory.Exists(destino) && File.Exists(Path.Combine(destino, "UI.exe"));
+            lblAvisoInstalacionPreviaP2.Visible = appExiste;
+            if (appExiste)
+            {
+                _esReinstalacion = true;
+            }
+        }
+
+        private async Task ComprobarEstadoBDAsync()
+        {
+            string servidor = cmbServidorSql.Text.Trim();
+            string nombreBD = txtNombreBD.Text.Trim();
+            if (string.IsNullOrWhiteSpace(servidor) || string.IsNullOrWhiteSpace(nombreBD)) return;
+
+            try
+            {
+                string connMaster = ConstruirCadenaConexion(servidor, "master");
+                bool existe = false;
+                await Task.Run(() =>
+                {
+                    try
+                    {
+                        using var cn = new SqlConnection(connMaster);
+                        cn.Open();
+                        using var cmd = new SqlCommand($"SELECT database_id FROM sys.databases WHERE name = '{nombreBD}'", cn);
+                        existe = (cmd.ExecuteScalar() != null);
+                    }
+                    catch { }
+                });
+
+                _baseDatosExisteEnServidor = existe;
+                if (existe)
+                {
+                    _esReinstalacion = true;
+                    lblAvisoBDP3.Text = $"ℹ️ Se detectó la base de datos '{nombreBD}' existente en '{servidor}'.";
+                    lblAvisoBDP3.ForeColor = Color.FromArgb(2, 132, 199);
+                    lblAvisoBDP3.Visible = true;
+                    grpModoBDReinstalacion.Visible = true;
+                    chkCrearBD.Visible = false;
+                }
+                else
+                {
+                    lblAvisoBDP3.Text = $"✨ La base de datos '{nombreBD}' no existe aún en el servidor. Será creada nueva.";
+                    lblAvisoBDP3.ForeColor = Color.FromArgb(22, 101, 52);
+                    lblAvisoBDP3.Visible = true;
+                    grpModoBDReinstalacion.Visible = false;
+                    chkCrearBD.Visible = true;
+                }
+
+                btnSiguiente.Text = _esReinstalacion ? "Reinstalar Ahora" : "Instalar Ahora";
+            }
+            catch { }
+        }
+
+        #endregion
+
         #region Eventos de Controles
+
+        private void TxtRutaDestino_TextChanged(object? sender, EventArgs e)
+        {
+            ActualizarVisibilidadAvisoP2();
+        }
+
+        private async void CmbServidorSql_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            await ComprobarEstadoBDAsync();
+        }
+
+        private async void CmbServidorSql_TextChanged(object? sender, EventArgs e)
+        {
+            await ComprobarEstadoBDAsync();
+        }
+
+        private async void TxtNombreBD_TextChanged(object? sender, EventArgs e)
+        {
+            await ComprobarEstadoBDAsync();
+        }
 
         private void BtnCancelar_Click(object? sender, EventArgs e)
         {
-            if (MessageBox.Show("¿Desea cancelar la instalación?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            string accion = _esReinstalacion ? "reinstalación" : "instalación";
+            if (MessageBox.Show($"¿Desea cancelar la {accion}?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 Close();
             }
@@ -65,6 +159,20 @@ namespace SetupApp
                     return;
                 }
 
+                // Si la BD ya existe y eligió recrear desde cero, pedir confirmación
+                if (_baseDatosExisteEnServidor && rdoRecrearBD.Checked)
+                {
+                    var conf = MessageBox.Show(
+                        $"⚠️ ATENCIÓN:\n\nHa seleccionado recrear la base de datos '{txtNombreBD.Text.Trim()}' desde cero.\n" +
+                        "Todos los pacientes, consultas y datos existentes serán reemplazados por los datos iniciales de fábrica.\n\n" +
+                        "¿Está seguro de que desea continuar?",
+                        "Confirmar Sobreescritura",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning
+                    );
+                    if (conf != DialogResult.Yes) return;
+                }
+
                 MostrarPaso(4);
                 await IniciarProcesoInstalacionAsync();
             }
@@ -94,7 +202,7 @@ namespace SetupApp
         {
             using var fbd = new FolderBrowserDialog
             {
-                Description = "Seleccione la carpeta donde desea instalar NutriEvolve",
+                Description = "Seleccione la carpeta donde desea instalar o reinstalar NutriEvolve",
                 UseDescriptionForTitle = true,
                 SelectedPath = txtRutaDestino.Text
             };
@@ -107,6 +215,7 @@ namespace SetupApp
         private async void BtnBuscarInstancias_Click(object? sender, EventArgs e)
         {
             await DetectarInstanciasSqlAsync();
+            await ComprobarEstadoBDAsync();
         }
 
         private void RdoAuthWindows_CheckedChanged(object? sender, EventArgs e)
@@ -119,7 +228,7 @@ namespace SetupApp
             ActualizarVisibilidadAuth();
         }
 
-        private void BtnProbarConexion_Click(object? sender, EventArgs e)
+        private async void BtnProbarConexion_Click(object? sender, EventArgs e)
         {
             string servidor = cmbServidorSql.Text.Trim();
             if (string.IsNullOrWhiteSpace(servidor))
@@ -135,13 +244,16 @@ namespace SetupApp
             try
             {
                 string connStrMaster = ConstruirCadenaConexion(servidor, "master");
-                using (var cn = new SqlConnection(connStrMaster))
+                await Task.Run(() =>
                 {
+                    using var cn = new SqlConnection(connStrMaster);
                     cn.Open();
-                }
+                });
 
-                lblEstadoConexion.Text = $"✅ Conexión exitosa a '{servidor}'. El servidor está listo para instalar la base de datos.";
+                lblEstadoConexion.Text = $"✅ Conexión exitosa a '{servidor}'. El servidor está listo.";
                 lblEstadoConexion.ForeColor = Color.FromArgb(22, 101, 52);
+
+                await ComprobarEstadoBDAsync();
             }
             catch (Exception ex)
             {
@@ -173,32 +285,77 @@ namespace SetupApp
 
             if (paso == 1)
             {
-                lblTituloBanner.Text = "Instalación de NutriEvolve";
-                lblSubtituloBanner.Text = "Bienvenido al asistente de instalación";
+                if (_esReinstalacion)
+                {
+                    lblTituloBanner.Text = "Reinstalación de NutriEvolve";
+                    lblSubtituloBanner.Text = "Actualización, reparación y reinstalación del sistema";
+                    lblBienvenidaP1.Text = "Asistente de Reinstalación / Reparación de NutriEvolve";
+                    lblDescP1.Text = "Se ha detectado una instalación previa de NutriEvolve en este equipo.\n\n" +
+                                     "Este asistente le permitirá:\n\n" +
+                                     "  • Reinstalar y actualizar todos los binarios y dependencias a la última versión.\n" +
+                                     "  • Conservar sus datos clínicos y turnos existentes, reparando la base de datos.\n" +
+                                     "  • Opcionalmente recrear la base de datos desde cero si desea reiniciar de fábrica.\n" +
+                                     "  • Recalcular y sellar Dígitos Verificadores (DVH y DVV) para garantizar 100% de integridad.\n" +
+                                     "  • Reconfigurar o cambiar la instancia de SQL Server si es necesario.\n" +
+                                     "  • Reparar accesos directos en el sistema.\n\n" +
+                                     "Haga clic en 'Siguiente' para continuar con la reinstalación.";
+                }
+                else
+                {
+                    lblTituloBanner.Text = "Instalación de NutriEvolve";
+                    lblSubtituloBanner.Text = "Bienvenido al asistente de instalación";
+                    lblBienvenidaP1.Text = "Bienvenido al Asistente de Instalación de NutriEvolve";
+                    lblDescP1.Text = "Este instalador configurará en su computadora:\n\n" +
+                                     "  • La aplicación de escritorio NutriEvolve (Gestión Nutricional, Turnos y Seguimiento Clínico).\n" +
+                                     "  • La Base de Datos SQL Server ('ING') con estructura completa, tablas, vistas y procedimientos.\n" +
+                                     "  • Datos de prueba iniciales (evaluaciones pediátricas, curvas de percentiles OMS y usuarios).\n" +
+                                     "  • Dígitos Verificadores (DVH y DVV) para garantizar la integridad referencial del sistema.\n" +
+                                     "  • Configuración automática de la cadena de conexión personalizada para esta máquina.\n\n" +
+                                     "Requisitos previos requeridos:\n" +
+                                     "  ✓ Windows 10 / 11 (64-bit)\n" +
+                                     "  ✓ Microsoft SQL Server (Local, Express o LocalDB)\n" +
+                                     "  ✓ .NET Desktop Runtime 9.0 o superior\n\n" +
+                                     "Haga clic en 'Siguiente' para comenzar con la configuración.";
+                }
                 btnSiguiente.Text = "Siguiente >";
             }
             else if (paso == 2)
             {
-                lblTituloBanner.Text = "Ubicación de los Archivos";
-                lblSubtituloBanner.Text = "Paso 1 de 3: Directorio de instalación";
+                lblTituloBanner.Text = _esReinstalacion ? "Ubicación de Reinstalación" : "Ubicación de los Archivos";
+                lblSubtituloBanner.Text = "Paso 1 de 3: Directorio de la aplicación";
+                ActualizarVisibilidadAvisoP2();
                 btnSiguiente.Text = "Siguiente >";
             }
             else if (paso == 3)
             {
-                lblTituloBanner.Text = "Base de Datos y SQL Server";
+                lblTituloBanner.Text = _esReinstalacion ? "Base de Datos y Reinstalación" : "Base de Datos y SQL Server";
                 lblSubtituloBanner.Text = "Paso 2 de 3: Configuración de instancia y catálogo";
-                btnSiguiente.Text = "Instalar Ahora";
+                _ = ComprobarEstadoBDAsync();
+                btnSiguiente.Text = _esReinstalacion ? "Reinstalar Ahora" : "Instalar Ahora";
             }
             else if (paso == 4)
             {
-                lblTituloBanner.Text = "Instalando NutriEvolve";
+                lblTituloBanner.Text = _esReinstalacion ? "Reinstalando NutriEvolve" : "Instalando NutriEvolve";
                 lblSubtituloBanner.Text = "Paso 3 de 3: Ejecutando tareas de configuración";
                 btnSiguiente.Enabled = false;
             }
             else if (paso == 5)
             {
-                lblTituloBanner.Text = "Instalación Completada";
+                lblTituloBanner.Text = _esReinstalacion ? "¡Reinstalación Completada!" : "Instalación Completada";
                 lblSubtituloBanner.Text = "El sistema está listo para ser utilizado";
+                lblTituloP5.Text = _esReinstalacion ? "¡Reinstalación Finalizada con Éxito!" : "¡Instalación Finalizada con Éxito!";
+                lblDescP5.Text = (_esReinstalacion
+                    ? "NutriEvolve y la base de datos se han reinstalado, actualizado y verificado correctamente en su equipo.\n\n"
+                    : "NutriEvolve y la base de datos se han instalado y configurado correctamente en su equipo.\n\n") +
+                    "Información de Cuentas de Acceso Predefinidas:\n\n" +
+                    "  👑 Perfil Administrador:\n" +
+                    "      • Usuario: admin\n" +
+                    "      • Contraseña: admin123\n\n" +
+                    "  🥗 Perfil Nutricionista:\n" +
+                    "      • Usuario: nutri\n" +
+                    "      • Contraseña: nutri123\n\n" +
+                    "La cadena de conexión ha sido sellada y vinculada a la instancia de SQL Server configurada.";
+
                 btnSiguiente.Enabled = true;
                 btnSiguiente.Text = "Finalizar";
                 btnCancelar.Visible = false;
@@ -283,11 +440,13 @@ namespace SetupApp
                 lblEstadoConexion.Text = "No se detectó respuesta rápida automática. Puede escribir el nombre o IP de su servidor.";
                 lblEstadoConexion.ForeColor = Color.FromArgb(148, 64, 0);
             }
+
+            await ComprobarEstadoBDAsync();
         }
 
         #endregion
 
-        #region Proceso de Instalación
+        #region Proceso de Instalación / Reinstalación
 
         private void Log(string mensaje)
         {
@@ -319,7 +478,9 @@ namespace SetupApp
             _rutaInstaladaFinal = destino;
             string servidor = cmbServidorSql.Text.Trim();
             string nombreBD = txtNombreBD.Text.Trim();
-            bool crearBD = chkCrearBD.Checked;
+            bool bdYaExiste = _baseDatosExisteEnServidor;
+            bool recrearBD = bdYaExiste ? rdoRecrearBD.Checked : chkCrearBD.Checked;
+            bool conservarBD = bdYaExiste && rdoConservarBD.Checked;
             bool sellarDV = chkSellarDV.Checked;
             bool crearAcceso = chkAccesoDirecto.Checked;
 
@@ -342,15 +503,32 @@ namespace SetupApp
             {
                 await Task.Run(() =>
                 {
+                    // 0. Comprobar si UI.exe está en ejecución y cerrarlo para evitar bloqueo de archivos en reinstalación
+                    ActualizarProgreso(5, "Comprobando procesos activos de NutriEvolve...");
+                    var procesos = Process.GetProcessesByName("UI");
+                    if (procesos.Length > 0)
+                    {
+                        ActualizarProgreso(8, "Cerrando instancias abiertas de NutriEvolve para permitir la sobreescritura...");
+                        foreach (var p in procesos)
+                        {
+                            try
+                            {
+                                p.Kill();
+                                p.WaitForExit(3000);
+                            }
+                            catch { }
+                        }
+                    }
+
                     // 1. Preparar carpeta destino
-                    ActualizarProgreso(10, $"Creando directorio de destino en: {destino}...");
+                    ActualizarProgreso(15, $"Preparando directorio de destino en: {destino}...");
                     if (!Directory.Exists(destino))
                     {
                         Directory.CreateDirectory(destino);
                     }
 
-                    // 2. Copiar archivos de la aplicación
-                    ActualizarProgreso(20, "Copiando binarios y dependencias de NutriEvolve...");
+                    // 2. Copiar/Reemplazar archivos de la aplicación
+                    ActualizarProgreso(25, (_esReinstalacion ? "Reemplazando y actualizando" : "Copiando") + " binarios y dependencias de NutriEvolve...");
                     if (Directory.Exists(origenApp))
                     {
                         CopiarDirectorioRecursivo(origenApp, destino);
@@ -363,101 +541,85 @@ namespace SetupApp
                     // 3. Cadena de conexión final para el cliente
                     string cadenaConexionFinal = ConstruirCadenaConexion(servidor, nombreBD);
 
-                    // 4. Instalar Base de Datos
-                    if (crearBD)
+                    // 4. Base de Datos
+                    string connMaster = ConstruirCadenaConexion(servidor, "master");
+                    string scriptSqlPath = Path.Combine(origenDatos, "script.sql");
+                    if (!File.Exists(scriptSqlPath))
                     {
-                        ActualizarProgreso(40, $"Conectando a SQL Server ({servidor}) para inicializar base de datos '{nombreBD}'...");
-                        string connMaster = ConstruirCadenaConexion(servidor, "master");
+                        scriptSqlPath = Path.Combine(destino, "script.sql");
+                    }
 
+                    if (bdYaExiste && recrearBD)
+                    {
+                        ActualizarProgreso(45, $"Recreando base de datos [{nombreBD}] desde cero en '{servidor}'...");
                         using (var cnMaster = new SqlConnection(connMaster))
                         {
                             cnMaster.Open();
-
-                            string checkQuery = $"SELECT database_id FROM sys.databases WHERE name = '{nombreBD}'";
-                            using (var cmdCheck = new SqlCommand(checkQuery, cnMaster))
+                            // Forzar desconexión y eliminar BD
+                            try
                             {
-                                var res = cmdCheck.ExecuteScalar();
-                                if (res == null)
-                                {
-                                    ActualizarProgreso(50, $"Creando catálogo [{nombreBD}]...");
-                                    using var cmdCreate = new SqlCommand($"CREATE DATABASE [{nombreBD}]", cnMaster);
-                                    cmdCreate.ExecuteNonQuery();
-                                }
-                                else
-                                {
-                                    Log($"La base de datos [{nombreBD}] ya existe en el servidor. Se procederá a verificar y actualizar esquema.");
-                                }
+                                using var cmdDrop = new SqlCommand($@"ALTER DATABASE [{nombreBD}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{nombreBD}];", cnMaster);
+                                cmdDrop.ExecuteNonQuery();
                             }
+                            catch { }
+
+                            using var cmdCreate = new SqlCommand($"CREATE DATABASE [{nombreBD}]", cnMaster);
+                            cmdCreate.ExecuteNonQuery();
                         }
 
-                        // Ejecutar script.sql
-                        string scriptSqlPath = Path.Combine(origenDatos, "script.sql");
-                        if (!File.Exists(scriptSqlPath))
+                        // Ejecutar script completo
+                        if (File.Exists(scriptSqlPath))
                         {
-                            scriptSqlPath = Path.Combine(destino, "script.sql");
+                            ActualizarProgreso(60, "Ejecutando script maestro completo de tablas, perfiles y datos iniciales...");
+                            EjecutarLotesScript(scriptSqlPath, cadenaConexionFinal);
+                        }
+                    }
+                    else if (bdYaExiste && conservarBD)
+                    {
+                        ActualizarProgreso(45, $"Conservando datos clínicos existentes en [{nombreBD}]. Verificando esquema...");
+                        // Ejecutar lotes de script.sql de forma segura (las tablas usan IF NOT EXISTS)
+                        if (File.Exists(scriptSqlPath))
+                        {
+                            ActualizarProgreso(60, "Verificando y actualizando objetos de base de datos...");
+                            EjecutarLotesScript(scriptSqlPath, cadenaConexionFinal);
+                        }
+                    }
+                    else if (!bdYaExiste && (chkCrearBD.Checked || recrearBD))
+                    {
+                        ActualizarProgreso(45, $"Creando catálogo [{nombreBD}] en '{servidor}'...");
+                        using (var cnMaster = new SqlConnection(connMaster))
+                        {
+                            cnMaster.Open();
+                            using var cmdCreate = new SqlCommand($"CREATE DATABASE [{nombreBD}]", cnMaster);
+                            cmdCreate.ExecuteNonQuery();
                         }
 
                         if (File.Exists(scriptSqlPath))
                         {
-                            ActualizarProgreso(60, "Ejecutando script de tablas, vistas y datos iniciales de NutriEvolve...");
-                            string scriptContent = File.ReadAllText(scriptSqlPath);
-                            string[] lotes = Regex.Split(scriptContent, @"^\s*GO\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
-
-                            using (var cnDB = new SqlConnection(cadenaConexionFinal))
-                            {
-                                cnDB.Open();
-                                int loteNum = 0;
-                                foreach (var lote in lotes)
-                                {
-                                    string batch = lote.Trim();
-                                    if (string.IsNullOrWhiteSpace(batch)) continue;
-
-                                    if (Regex.IsMatch(batch, @"^\s*CREATE\s+DATABASE", RegexOptions.IgnoreCase) ||
-                                        Regex.IsMatch(batch, @"^\s*USE\s+\[?ING\]?", RegexOptions.IgnoreCase))
-                                    {
-                                        continue;
-                                    }
-
-                                    try
-                                    {
-                                        using var cmd = new SqlCommand(batch, cnDB);
-                                        cmd.CommandTimeout = 300;
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                    catch (Exception exBatch)
-                                    {
-                                        Log($"Aviso en lote {loteNum}: {exBatch.Message}");
-                                    }
-                                    loteNum++;
-                                }
-                            }
-                            Log($"Se ejecutaron {lotes.Length} bloques SQL satisfactoriamente.");
+                            ActualizarProgreso(60, "Ejecutando script de tablas, vistas y datos iniciales...");
+                            EjecutarLotesScript(scriptSqlPath, cadenaConexionFinal);
                         }
-                        else
-                        {
-                            Log("⚠️ Archivo 'script.sql' no encontrado en el paquete de datos.");
-                        }
+                    }
 
-                        // Sellar Dígitos Verificadores
-                        if (sellarDV)
+                    // Sellar Dígitos Verificadores
+                    if (sellarDV)
+                    {
+                        ActualizarProgreso(80, "Recalculando y sellando Dígitos Verificadores de integridad (DVH, DVV y global)...");
+                        try
                         {
-                            ActualizarProgreso(80, "Recalculando y sellando Dígitos Verificadores (DVH, DVV y global)...");
-                            try
-                            {
-                                Conexion.EstablecerCadenaConexion(cadenaConexionFinal);
-                                var dvBLL = new DigitoVerificadorBLL();
-                                dvBLL.RecalcularYPersistir();
-                                Log("✅ Integridad de base de datos verificada y sellada al 100%.");
-                            }
-                            catch (Exception exDV)
-                            {
-                                Log($"Aviso al recalcular DV: {exDV.Message}");
-                            }
+                            Conexion.EstablecerCadenaConexion(cadenaConexionFinal);
+                            var dvBLL = new DigitoVerificadorBLL();
+                            dvBLL.RecalcularYPersistir();
+                            Log("✅ Integridad de base de datos verificada y sellada al 100%.");
+                        }
+                        catch (Exception exDV)
+                        {
+                            Log($"Aviso al recalcular DV: {exDV.Message}");
                         }
                     }
 
                     // 5. Configurar archivos de conexión en la aplicación destino
-                    ActualizarProgreso(90, "Configurando cadena de conexión en UI.dll.config y db_connection.txt...");
+                    ActualizarProgreso(90, "Actualizando configuración de conexión en UI.dll.config y db_connection.txt...");
                     try
                     {
                         File.WriteAllText(Path.Combine(destino, "db_connection.txt"), cadenaConexionFinal);
@@ -482,11 +644,11 @@ namespace SetupApp
                     // 6. Acceso Directo
                     if (crearAcceso)
                     {
-                        ActualizarProgreso(95, "Creando acceso directo en el Escritorio...");
+                        ActualizarProgreso(95, "Creando / renovando acceso directo en el Escritorio...");
                         CrearAccesoDirectoEscritorio(Path.Combine(destino, "UI.exe"), destino);
                     }
 
-                    ActualizarProgreso(100, "¡Instalación completada exitosamente!");
+                    ActualizarProgreso(100, _esReinstalacion ? "¡Reinstalación completada exitosamente!" : "¡Instalación completada exitosamente!");
                 });
 
                 await Task.Delay(800);
@@ -494,11 +656,49 @@ namespace SetupApp
             }
             catch (Exception exGral)
             {
-                Log($"\n❌ ERROR CRÍTICO DURANTE LA INSTALACIÓN:\n{exGral.Message}\n{exGral.StackTrace}");
-                MessageBox.Show($"Ocurrió un error durante la instalación:\n\n{exGral.Message}", "Error de Instalación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log($"\n❌ ERROR CRÍTICO:\n{exGral.Message}\n{exGral.StackTrace}");
+                MessageBox.Show($"Ocurrió un error durante el proceso:\n\n{exGral.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnSiguiente.Enabled = true;
                 btnAtras.Enabled = true;
             }
+        }
+
+        private void EjecutarLotesScript(string scriptPath, string connStr)
+        {
+            string scriptContent = File.ReadAllText(scriptPath);
+            string[] lotes = Regex.Split(scriptContent, @"^\s*GO\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+
+            using var cnDB = new SqlConnection(connStr);
+            cnDB.Open();
+            int loteNum = 0;
+            foreach (var lote in lotes)
+            {
+                string batch = lote.Trim();
+                if (string.IsNullOrWhiteSpace(batch)) continue;
+
+                if (Regex.IsMatch(batch, @"^\s*CREATE\s+DATABASE", RegexOptions.IgnoreCase) ||
+                    Regex.IsMatch(batch, @"^\s*USE\s+\[?ING\]?", RegexOptions.IgnoreCase))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    using var cmd = new SqlCommand(batch, cnDB);
+                    cmd.CommandTimeout = 300;
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception exBatch)
+                {
+                    // Ignorar violaciones de clave única o duplicados durante reinstalación con conservación de datos
+                    if (!exBatch.Message.Contains("PRIMARY KEY") && !exBatch.Message.Contains("UNIQUE") && !exBatch.Message.Contains("ya existe"))
+                    {
+                        Log($"Aviso en lote {loteNum}: {exBatch.Message}");
+                    }
+                }
+                loteNum++;
+            }
+            Log($"Se procesaron {lotes.Length} bloques SQL satisfactoriamente.");
         }
 
         private static void CopiarDirectorioRecursivo(string origen, string destino)
@@ -539,7 +739,7 @@ namespace SetupApp
                 };
                 using var p = Process.Start(psi);
                 p?.WaitForExit(3000);
-                Log($"Acceso directo creado en: {shortcutPath}");
+                Log($"Acceso directo creado o actualizado en: {shortcutPath}");
             }
             catch (Exception ex)
             {

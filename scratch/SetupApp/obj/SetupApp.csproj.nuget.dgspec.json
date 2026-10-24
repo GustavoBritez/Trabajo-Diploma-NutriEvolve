@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\SetupApp\\SetupApp.csproj": {}
+    "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\SetupApp\\SetupApp.csproj": {}
   },
   "projects": {
-    "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
+    "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj",
+        "projectUniqueName": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj",
         "projectName": "BE",
-        "projectPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj",
+        "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj",
         "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\obj\\",
+        "outputPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -69,14 +69,14 @@
         }
       }
     },
-    "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj": {
+    "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj",
+        "projectUniqueName": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj",
         "projectName": "BLL",
-        "projectPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj",
+        "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj",
         "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\obj\\",
+        "outputPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -97,14 +97,14 @@
           "net9.0-windows7.0": {
             "targetAlias": "net9.0-windows",
             "projectReferences": {
-              "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
-                "projectPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj"
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj"
               },
-              "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj": {
-                "projectPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj"
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj"
               },
-              "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj": {
-                "projectPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj"
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj"
               }
             }
           }
@@ -153,14 +153,14 @@
         }
       }
     },
-    "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj": {
+    "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj",
+        "projectUniqueName": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj",
         "projectName": "DAL",
-        "projectPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj",
+        "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj",
         "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\obj\\",
+        "outputPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -181,11 +181,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
-                "projectPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj"
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj"
               },
-              "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj": {
-                "projectPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj"
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj"
               }
             }
           }
@@ -235,14 +235,14 @@
         }
       }
     },
-    "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj": {
+    "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj",
+        "projectUniqueName": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj",
         "projectName": "Services",
-        "projectPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj",
+        "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\Services.csproj",
         "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\obj\\",
+        "outputPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\Services\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -263,8 +263,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
-                "projectPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj"
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BE\\BE.csproj"
               }
             }
           }
@@ -310,14 +310,14 @@
         }
       }
     },
-    "c:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\SetupApp\\SetupApp.csproj": {
+    "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\SetupApp\\SetupApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\SetupApp\\SetupApp.csproj",
+        "projectUniqueName": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\SetupApp\\SetupApp.csproj",
         "projectName": "Setup",
-        "projectPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\SetupApp\\SetupApp.csproj",
+        "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\SetupApp\\SetupApp.csproj",
         "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\SetupApp\\obj\\",
+        "outputPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\scratch\\SetupApp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -338,11 +338,11 @@
           "net9.0-windows7.0": {
             "targetAlias": "net9.0-windows7.0",
             "projectReferences": {
-              "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj": {
-                "projectPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj"
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj"
               },
-              "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj": {
-                "projectPath": "c:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj"
+              "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj": {
+                "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj"
               }
             }
           }
