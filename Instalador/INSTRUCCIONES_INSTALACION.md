@@ -46,7 +46,7 @@ En entornos de desarrollo o en máquinas de usuarios finales, el nombre de la in
 
 ### Mecanismos de Detección y Configuración Implementados:
 1. **Detección Automática en Tiempo Real:** Al abrir `Setup.exe`, el asistente prueba conexiones ultrarrápidas contra las instancias habituales (`.`, `.\SQLEXPRESS`, `(LocalDB)\MSSQLLocalDB`, `localhost`) y selecciona automáticamente la primera que responda.
-2. **Botón "⚡ Probar Conexión":** Permite al usuario verificar antes de comenzar si el servidor indicado está accesible y listo para recibir comandos.
+2. **Botón "Probar Conexión":** Permite al usuario verificar antes de comenzar si el servidor indicado está accesible y listo para recibir comandos.
 3. **Soporte de Autenticación:** Permite tanto **Autenticación Integrada de Windows** como **Autenticación SQL Server** (usuario `sa` y contraseña).
 4. **Actualización Automática de Configuración:** Durante la instalación, se actualiza el archivo `UI.dll.config` y se genera `db_connection.txt` con la cadena de conexión exacta correspondiente a la máquina de destino.
 5. **Fallback Inteligente en la Aplicación:** Si por alguna razón la máquina cambia de configuración a futuro, la clase `Conexion` en `DAL` cuenta con un resolvedor inteligente que detecta y conmuta automáticamente a la instancia de SQL Server que esté activa.
@@ -66,8 +66,8 @@ El programa `Setup.exe` funciona automáticamente como **Instalador** y **Reinst
    - **Cierre Seguro de Procesos:** Si `NutriEvolve` se encuentra abierto, el asistente lo cierra ordenadamente en segundo plano para evitar bloqueos de archivos en disco (`file in use`).
    - **Actualización de Archivos:** Reemplaza todos los ejecutables, librerías e interfaces gráficas por las versiones más recientes.
    - **Opciones de Base de Datos para Reinstalación:**
-     - 🔄 **Conservar datos existentes y reparar/sellar integridad (Recomendado):** Mantiene todos los pacientes, turnos, historias clínicas y mediciones ya registrados, actualiza el esquema si faltase alguna tabla o columna, y recalibra y sella los Dígitos Verificadores (DVH y DVV) para reparar cualquier inconsistencia.
-     - ⚠️ **Recrear base de datos desde cero (Sobrescribir completamente):** Elimina y vuelve a crear la base de datos limpia con los datos de fábrica (solicita confirmación de seguridad).
+     - **Conservar datos existentes y reparar/sellar integridad (Recomendado):** Mantiene todos los pacientes, turnos, historias clínicas y mediciones ya registrados, actualiza el esquema si faltase alguna tabla o columna, y recalibra y sella los Dígitos Verificadores (DVH y DVV) para reparar cualquier inconsistencia.
+     - **Recrear base de datos desde cero (Sobrescribir completamente):** Elimina y vuelve a crear la base de datos limpia con los datos de fábrica (solicita confirmación de seguridad).
 
 ---
 
@@ -81,10 +81,10 @@ El programa `Setup.exe` funciona automáticamente como **Instalador** y **Reinst
    - Presione **Siguiente**.
 4. **Configuración de SQL Server y Base de Datos:**
    - Seleccione la instancia detectada o ingrese el nombre de su instancia.
-   - Presione **"⚡ Probar Conexión"** para validar el estado.
+   - Presione **"Probar Conexión"** para validar el estado.
    - Deje tildadas las casillas:
-     - ☑️ *Crear e inicializar la base de datos 'ING' con esquema y datos iniciales*.
-     - ☑️ *Calcular y sellar Dígitos Verificadores de integridad*.
+     - *Crear e inicializar la base de datos 'ING' con esquema y datos iniciales*.
+     - *Calcular y sellar Dígitos Verificadores de integridad*.
    - Presione **Instalar Ahora** (o **Reinstalar Ahora**).
 5. **Progreso de Instalación / Reinstalación:**
    - El instalador cerrará instancias previas si están abiertas, copiará los archivos actualizados, preparará o reparará el catálogo `ING`, ejecutará el script SQL según la modalidad elegida, sellará los dígitos verificadores y configurará la conexión.

@@ -75,7 +75,7 @@ namespace SetupApp
                 if (existe)
                 {
                     _esReinstalacion = true;
-                    lblAvisoBDP3.Text = $"ℹ️ Se detectó la base de datos '{nombreBD}' existente en '{servidor}'.";
+                    lblAvisoBDP3.Text = $"Se detectó la base de datos '{nombreBD}' existente en '{servidor}'.";
                     lblAvisoBDP3.ForeColor = Color.FromArgb(2, 132, 199);
                     lblAvisoBDP3.Visible = true;
                     grpModoBDReinstalacion.Visible = true;
@@ -163,7 +163,7 @@ namespace SetupApp
                 if (_baseDatosExisteEnServidor && rdoRecrearBD.Checked)
                 {
                     var conf = MessageBox.Show(
-                        $"⚠️ ATENCIÓN:\n\nHa seleccionado recrear la base de datos '{txtNombreBD.Text.Trim()}' desde cero.\n" +
+                        $"ATENCIÓN:\n\nHa seleccionado recrear la base de datos '{txtNombreBD.Text.Trim()}' desde cero.\n" +
                         "Todos los pacientes, consultas y datos existentes serán reemplazados por los datos iniciales de fábrica.\n\n" +
                         "¿Está seguro de que desea continuar?",
                         "Confirmar Sobreescritura",
@@ -535,7 +535,7 @@ namespace SetupApp
                     }
                     else
                     {
-                        Log("⚠️ Carpeta 'App' no encontrada en el origen. Verifique la estructura del instalador.");
+                        Log("[AVISO] Carpeta 'App' no encontrada en el origen. Verifique la estructura del instalador.");
                     }
 
                     // 3. Cadena de conexión final para el cliente

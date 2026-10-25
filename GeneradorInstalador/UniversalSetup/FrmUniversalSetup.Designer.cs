@@ -224,7 +224,7 @@ namespace UniversalSetup
 
             lblAvisoModoP1 = new Label
             {
-                Text = "✔ Modo de Instalación inicial listo para comenzar.",
+                Text = "Modo de Instalación inicial listo para comenzar.",
                 Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
                 ForeColor = Color.FromArgb(16, 185, 129),
                 Location = new Point(12, 95),
@@ -351,7 +351,7 @@ namespace UniversalSetup
 
             lblAvisoInstalacionPreviaP2 = new Label
             {
-                Text = "⚠ Se detectó una instalación existente en esta carpeta. Se procederá con la REINSTALACIÓN.",
+                Text = "Se detectó una instalación existente en esta carpeta. Se procederá con la REINSTALACIÓN.",
                 Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
                 ForeColor = Color.FromArgb(194, 65, 12),
                 BackColor = Color.FromArgb(254, 243, 199),
@@ -411,7 +411,7 @@ namespace UniversalSetup
 
             btnProbarConexion = new Button
             {
-                Text = "⚡ Probar Conexión",
+                Text = "Probar Conexión",
                 Size = new Size(160, 30),
                 Location = new Point(415, 99),
                 Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),

@@ -1,3 +1,4 @@
+#pragma warning disable CS8618
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -100,7 +101,7 @@ namespace UniversalSetup
             {
                 lblBadgeModo.Text = "REINSTALACIÓN";
                 lblBadgeModo.BackColor = Color.FromArgb(234, 88, 12);
-                lblAvisoModoP1.Text = "⚠ Se detectó una instalación previa. El asistente actuará en MODO REINSTALADOR / REPARADOR.";
+                lblAvisoModoP1.Text = "Se detectó una instalación previa. El asistente actuará en MODO REINSTALADOR / REPARADOR.";
                 lblAvisoModoP1.ForeColor = Color.FromArgb(194, 65, 12);
 
                 lblAvisoInstalacionPreviaP2.Visible = carpetaInstalada;
@@ -110,7 +111,7 @@ namespace UniversalSetup
             {
                 lblBadgeModo.Text = "NUEVA INSTALACIÓN";
                 lblBadgeModo.BackColor = Color.FromArgb(16, 185, 129);
-                lblAvisoModoP1.Text = "✔ Modo de Instalación inicial listo para comenzar.";
+                lblAvisoModoP1.Text = "Modo de Instalación inicial listo para comenzar.";
                 lblAvisoModoP1.ForeColor = Color.FromArgb(16, 185, 129);
 
                 lblAvisoInstalacionPreviaP2.Visible = false;
@@ -171,7 +172,7 @@ namespace UniversalSetup
                 Invoke(new Action(() =>
                 {
                     btnProbarConexion.Enabled = true;
-                    btnProbarConexion.Text = "⚡ Probar Conexión";
+                    btnProbarConexion.Text = "Probar Conexión";
 
                     if (exito)
                     {

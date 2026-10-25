@@ -258,7 +258,7 @@ namespace SetupApp
 
             lblAvisoInstalacionPreviaP2 = new Label
             {
-                Text = "ℹ️ Se detectó una instalación existente en esta carpeta. Se procederá con la REINSTALACIÓN.",
+                Text = "Se detectó una instalación existente en esta carpeta. Se procederá con la REINSTALACIÓN.",
                 ForeColor = Color.FromArgb(2, 132, 199),
                 Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
                 Location = new Point(10, 126),
@@ -375,7 +375,7 @@ namespace SetupApp
 
             btnProbarConexion = new Button
             {
-                Text = "⚡ Probar Conexión",
+                Text = "Probar Conexión",
                 Location = new Point(320, 221),
                 Size = new Size(150, 32),
                 FlatStyle = FlatStyle.System
@@ -410,7 +410,7 @@ namespace SetupApp
 
             rdoConservarBD = new RadioButton
             {
-                Text = "🔄 Conservar datos existentes y reparar/sellar integridad (Recomendado)",
+                Text = "Conservar datos existentes y reparar/sellar integridad (Recomendado)",
                 Checked = true,
                 Location = new Point(15, 22),
                 AutoSize = true,
@@ -420,7 +420,7 @@ namespace SetupApp
 
             rdoRecrearBD = new RadioButton
             {
-                Text = "⚠️ Recrear base de datos desde cero (Sobrescribir completamente)",
+                Text = "Recrear base de datos desde cero (Sobrescribir completamente)",
                 Location = new Point(15, 48),
                 AutoSize = true,
                 ForeColor = Color.FromArgb(185, 28, 28)
