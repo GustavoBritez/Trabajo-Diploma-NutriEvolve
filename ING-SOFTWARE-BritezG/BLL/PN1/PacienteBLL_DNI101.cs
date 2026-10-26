@@ -352,5 +352,24 @@ namespace BLL
             }
             catch { }
         }
+
+        public void ImportarClientesDesdeXml(List<(string dni, string apellidos, string nombres, string email, string celular, string direccion)> clientes)
+        {
+            if (clientes == null || clientes.Count == 0) return;
+            _pacienteDAL.ImportarClientesDesdeXml(clientes);
+
+            try
+            {
+                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                _bitacoraBLL.RegistrarBitacora(2, $"Des-serialización XML: sincronizados {clientes.Count} clientes en la base de datos", dniActual, "MaestroClientes");
+            }
+            catch { }
+
+            try
+            {
+                new DigitoVerificadorBLL().RecalcularYPersistir();
+            }
+            catch { }
+        }
     }
 }

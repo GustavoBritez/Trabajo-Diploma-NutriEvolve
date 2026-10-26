@@ -18,6 +18,8 @@ namespace UI.PN2
         public frmBitacoraCambiosConsultas()
         {
             InitializeComponent();
+            dtpFechaIni.MaxDate = DateTime.Today;
+            dtpFechaFin.MaxDate = DateTime.Today;
             dgvCambios.AutoGenerateColumns = false;
             TraductorUI.SuscribirFormulario(this, this);
             ActualizarIdioma();

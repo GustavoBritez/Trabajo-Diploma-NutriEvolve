@@ -31,6 +31,9 @@ namespace UI.PN2
             colNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colDni = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colEdad = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colPeso = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colTalla = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colClasif = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colAct = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colBtnActivar = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -139,6 +142,9 @@ namespace UI.PN2
                 colNombre,
                 colDni,
                 colEdad,
+                colPeso,
+                colTalla,
+                colClasif,
                 colDesc,
                 colAct,
                 colBtnActivar
@@ -210,6 +216,35 @@ namespace UI.PN2
             colEdad.Name = "colEdad";
             colEdad.ReadOnly = true;
             colEdad.Width = 75;
+
+            // 
+            // colPeso
+            // 
+            colPeso.DataPropertyName = "PesoStr";
+            colPeso.HeaderText = "Peso (kg)";
+            colPeso.Name = "colPeso";
+            colPeso.ReadOnly = true;
+            colPeso.Width = 75;
+            colPeso.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+
+            // 
+            // colTalla
+            // 
+            colTalla.DataPropertyName = "TallaStr";
+            colTalla.HeaderText = "Talla (cm)";
+            colTalla.Name = "colTalla";
+            colTalla.ReadOnly = true;
+            colTalla.Width = 75;
+            colTalla.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+
+            // 
+            // colClasif
+            // 
+            colClasif.DataPropertyName = "ClasificacionOMS";
+            colClasif.HeaderText = "Diagnóstico OMS";
+            colClasif.Name = "colClasif";
+            colClasif.ReadOnly = true;
+            colClasif.Width = 125;
 
             // 
             // colDesc
@@ -435,6 +470,9 @@ namespace UI.PN2
         private System.Windows.Forms.DataGridViewTextBoxColumn colNombre;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDni;
         private System.Windows.Forms.DataGridViewTextBoxColumn colEdad;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colPeso;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colTalla;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colClasif;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDesc;
         private System.Windows.Forms.DataGridViewTextBoxColumn colAct;
         private System.Windows.Forms.DataGridViewButtonColumn colBtnActivar;

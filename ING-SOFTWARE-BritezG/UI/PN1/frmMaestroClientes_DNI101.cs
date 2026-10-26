@@ -42,15 +42,109 @@ namespace UI.PN1
         private ModoOperacion _modoActual = ModoOperacion.Inicio;
         private readonly PacienteBLL_DNI101 _pacienteBLL = new();
         private int _idPacienteSeleccionado = 0;
+        private bool _procesandoAltaDialogo = false;
 
         public frmMaestroClientes_DNI101()
         {
             InitializeComponent();
+            ConfigurarEventosTextBoxesAlta();
             ConfigurarEstado(ModoOperacion.Inicio);
             CargarGrillaClientes();
             TraductorUI.SuscribirFormulario(this, this);
             ActualizarIdioma();
             AgregarMensaje("Sistema iniciado. Matriz de clientes lista.");
+        }
+
+        private void ConfigurarEventosTextBoxesAlta()
+        {
+            txtDni.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; txtApellidos.Focus(); } };
+            txtApellidos.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; txtNombres.Focus(); } };
+            txtNombres.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; txtEmail.Focus(); } };
+            txtEmail.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; txtCelular.Focus(); } };
+            txtCelular.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; txtDireccion.Focus(); } };
+            txtDireccion.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; EjecutarFlujoAltaCliente(); } };
+            txtDireccion.Leave += TxtDireccion_Leave;
+        }
+
+        private void TxtDireccion_Leave(object? sender, EventArgs e)
+        {
+            if (_modoActual != ModoOperacion.Alta || _procesandoAltaDialogo) return;
+
+            this.BeginInvoke(new Action(() =>
+            {
+                if (_modoActual != ModoOperacion.Alta || _procesandoAltaDialogo) return;
+                if (this.ActiveControl == btnCancelar) return;
+
+                if (!string.IsNullOrWhiteSpace(txtDni.Text) &&
+                    !string.IsNullOrWhiteSpace(txtApellidos.Text) &&
+                    !string.IsNullOrWhiteSpace(txtNombres.Text))
+                {
+                    EjecutarFlujoAltaCliente();
+                }
+            }));
+        }
+
+        private void EjecutarFlujoAltaCliente()
+        {
+            if (_modoActual != ModoOperacion.Alta || _procesandoAltaDialogo) return;
+
+            string dni = txtDni.Text.Trim();
+            string apellidos = txtApellidos.Text.Trim();
+            string nombres = txtNombres.Text.Trim();
+            string email = txtEmail.Text.Trim();
+            string celular = txtCelular.Text.Trim();
+            string direccion = txtDireccion.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(dni))
+            {
+                MessageBox.Show("El campo DNI es obligatorio.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtDni.Focus();
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(apellidos))
+            {
+                MessageBox.Show("El campo Apellidos es obligatorio.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtApellidos.Focus();
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(nombres))
+            {
+                MessageBox.Show("El campo Nombres es obligatorio.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtNombres.Focus();
+                return;
+            }
+
+            _procesandoAltaDialogo = true;
+            try
+            {
+                using var dlg = new frmConfirmarAltaCliente_DNI101(dni, apellidos, nombres, email, celular, direccion);
+                if (dlg.ShowDialog(this) == DialogResult.OK)
+                {
+                    // Continuar -> persistir cliente y sincronizar
+                    _pacienteBLL.GuardarMaestro(dni, apellidos, nombres, email, celular, direccion);
+                    AgregarMensaje($"Alta exitosa: Cliente DNI {dni} ({apellidos}, {nombres}) registrado.");
+                    MessageBox.Show("Cliente agregado exitosamente con sus tablas 1:N sincronizadas.", "Alta Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    ConfigurarEstado(ModoOperacion.Inicio);
+                    CargarGrillaClientes();
+                }
+                else
+                {
+                    // Cancelar -> restaurar controles
+                    ConfigurarEstado(ModoOperacion.Inicio);
+                    CargarCamposDesdeGrilla();
+                    AgregarMensaje("Operación de alta cancelada por el usuario. Controles liberados.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al agregar cliente: {ex.Message}", "Error en Alta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AgregarMensaje($"Error en alta: {ex.Message}");
+            }
+            finally
+            {
+                _procesandoAltaDialogo = false;
+            }
         }
 
         public void ActualizarIdioma()
@@ -123,19 +217,25 @@ namespace UI.PN1
 
                     btnActualizar.Enabled = true;
                     btnAnadir.Enabled = true;
-                    btnModificar.Enabled = dgvClientes.CurrentRow != null;
-                    btnEliminar.Enabled = dgvClientes.CurrentRow != null;
+                    bool hayFila = dgvClientes.CurrentRow != null && _idPacienteSeleccionado > 0;
+                    btnModificar.Enabled = hayFila;
+                    btnEliminar.Enabled = hayFila;
 
                     btnAplicar.Enabled = false;
                     btnCancelar.Enabled = false;
                     btnSalir.Enabled = true;
 
-                    btnGestionEmail1N.Enabled = dgvClientes.CurrentRow != null;
-                    btnGestionCelular1N.Enabled = dgvClientes.CurrentRow != null;
+                    btnGestionEmail1N.Enabled = hayFila;
+                    btnGestionCelular1N.Enabled = hayFila;
 
                     btnSerializar.Enabled = true;
                     btnDesSerializar.Enabled = true;
+                    btnExaminarSerializar.Enabled = true;
+                    btnExaminarDesSerializar.Enabled = true;
+                    txtRutaSerializar.Enabled = true;
+                    txtRutaDesSerializar.Enabled = true;
                     btnLimpiar.Enabled = true;
+                    btnAyudaContextual.Enabled = true;
                     break;
 
                 case ModoOperacion.Alta:
@@ -161,12 +261,22 @@ namespace UI.PN1
                     btnModificar.Enabled = false;
                     btnEliminar.Enabled = false;
 
-                    btnAplicar.Enabled = true;
+                    // El botón Aplicar debe estar deshabilitado en Alta
+                    btnAplicar.Enabled = false;
                     btnCancelar.Enabled = true;
                     btnSalir.Enabled = false;
+                    btnAyudaContextual.Enabled = false;
+                    btnLimpiar.Enabled = false;
 
                     btnGestionEmail1N.Enabled = false;
                     btnGestionCelular1N.Enabled = false;
+
+                    btnSerializar.Enabled = false;
+                    btnDesSerializar.Enabled = false;
+                    btnExaminarSerializar.Enabled = false;
+                    btnExaminarDesSerializar.Enabled = false;
+                    txtRutaSerializar.Enabled = false;
+                    txtRutaDesSerializar.Enabled = false;
 
                     txtDni.Focus();
                     AgregarMensaje("Modo AÑADIR activado. Ingrese los datos del nuevo cliente.");
@@ -194,12 +304,22 @@ namespace UI.PN1
                     btnModificar.Enabled = false;
                     btnEliminar.Enabled = false;
 
+                    // El botón Aplicar únicamente se habilita para Modificación
                     btnAplicar.Enabled = true;
                     btnCancelar.Enabled = true;
                     btnSalir.Enabled = false;
+                    btnAyudaContextual.Enabled = false;
+                    btnLimpiar.Enabled = false;
 
-                    btnGestionEmail1N.Enabled = true;
-                    btnGestionCelular1N.Enabled = true;
+                    btnGestionEmail1N.Enabled = false;
+                    btnGestionCelular1N.Enabled = false;
+
+                    btnSerializar.Enabled = false;
+                    btnDesSerializar.Enabled = false;
+                    btnExaminarSerializar.Enabled = false;
+                    btnExaminarDesSerializar.Enabled = false;
+                    txtRutaSerializar.Enabled = false;
+                    txtRutaDesSerializar.Enabled = false;
 
                     txtApellidos.Focus();
                     AgregarMensaje($"Modo MODIFICAR activado para cliente DNI {txtDni.Text}.");
@@ -225,7 +345,7 @@ namespace UI.PN1
             try
             {
                 var row = dgvClientes.CurrentRow;
-                if (row.Cells["IdPaciente_DNI101"] != null && row.Cells["IdPaciente_DNI101"].Value != null && int.TryParse(row.Cells["IdPaciente_DNI101"].Value.ToString(), out int id))
+                if (dgvClientes.Columns.Contains("IdPaciente_DNI101") && row.Cells["IdPaciente_DNI101"].Value != null && int.TryParse(row.Cells["IdPaciente_DNI101"].Value.ToString(), out int id))
                 {
                     _idPacienteSeleccionado = id;
                 }
@@ -234,21 +354,30 @@ namespace UI.PN1
                     _idPacienteSeleccionado = 0;
                 }
 
-                txtDni.Text = row.Cells["DNI"].Value?.ToString() ?? "";
-                txtApellidos.Text = row.Cells["APELLIDOS"].Value?.ToString() ?? "";
-                txtNombres.Text = row.Cells["NOMBRES"].Value?.ToString() ?? "";
-                txtEmail.Text = row.Cells["EMAIL"].Value?.ToString() ?? "";
-                txtCelular.Text = row.Cells["CELULAR"].Value?.ToString() ?? "";
-                txtDireccion.Text = row.Cells["DIRECCION"].Value?.ToString() ?? "";
+                txtDni.Text = ObtenerValorCelda(row, "colDni", "DNI");
+                txtApellidos.Text = ObtenerValorCelda(row, "colApellidos", "APELLIDOS");
+                txtNombres.Text = ObtenerValorCelda(row, "colNombres", "NOMBRES");
+                txtEmail.Text = ObtenerValorCelda(row, "colEmail", "EMAIL");
+                txtCelular.Text = ObtenerValorCelda(row, "colCelular", "CELULAR");
+                txtDireccion.Text = ObtenerValorCelda(row, "colDireccion", "DIRECCION");
             }
             catch { }
+        }
+
+        private string ObtenerValorCelda(DataGridViewRow row, string colName1, string colName2)
+        {
+            if (dgvClientes.Columns.Contains(colName1) && row.Cells[colName1].Value != null)
+                return row.Cells[colName1].Value.ToString() ?? "";
+            if (dgvClientes.Columns.Contains(colName2) && row.Cells[colName2].Value != null)
+                return row.Cells[colName2].Value.ToString() ?? "";
+            return "";
         }
 
         private void ActualizarBotonesSegunSeleccion()
         {
             if (_modoActual == ModoOperacion.Inicio)
             {
-                bool hayFila = dgvClientes.CurrentRow != null;
+                bool hayFila = dgvClientes.CurrentRow != null && _idPacienteSeleccionado > 0;
                 btnModificar.Enabled = hayFila;
                 btnEliminar.Enabled = hayFila;
                 btnGestionEmail1N.Enabled = hayFila;
@@ -332,6 +461,11 @@ namespace UI.PN1
 
         private void btnAplicar_Click(object? sender, EventArgs e)
         {
+            if (_modoActual != ModoOperacion.Modificacion)
+            {
+                return;
+            }
+
             string dni = txtDni.Text.Trim();
             string apellidos = txtApellidos.Text.Trim();
             string nombres = txtNombres.Text.Trim();
@@ -339,12 +473,12 @@ namespace UI.PN1
             string celular = txtCelular.Text.Trim();
             string direccion = txtDireccion.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(dni))
+            if (_idPacienteSeleccionado <= 0)
             {
-                MessageBox.Show("El campo DNI es obligatorio.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtDni.Focus();
+                MessageBox.Show("Por favor seleccione un cliente registrado en la base de datos para modificar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
             if (string.IsNullOrWhiteSpace(apellidos))
             {
                 MessageBox.Show("El campo Apellidos es obligatorio.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -360,18 +494,9 @@ namespace UI.PN1
 
             try
             {
-                if (_modoActual == ModoOperacion.Alta)
-                {
-                    _pacienteBLL.GuardarMaestro(dni, apellidos, nombres, email, celular, direccion);
-                    AgregarMensaje($"Alta exitosa: Cliente DNI {dni} ({apellidos}, {nombres}) registrado.");
-                    MessageBox.Show("Cliente agregado exitosamente con sus tablas 1:N sincronizadas.", "Alta Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if (_modoActual == ModoOperacion.Modificacion)
-                {
-                    _pacienteBLL.ModificarMaestro(_idPacienteSeleccionado, dni, apellidos, nombres, email, celular, direccion);
-                    AgregarMensaje($"Modificación exitosa: Cliente DNI {dni} actualizado.");
-                    MessageBox.Show("Cliente modificado exitosamente con repercusión en sus contactos 1:N.", "Modificación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                _pacienteBLL.ModificarMaestro(_idPacienteSeleccionado, dni, apellidos, nombres, email, celular, direccion);
+                AgregarMensaje($"Modificación exitosa: Cliente DNI {dni} actualizado.");
+                MessageBox.Show("Cliente modificado exitosamente con repercusión en sus contactos 1:N.", "Modificación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 ConfigurarEstado(ModoOperacion.Inicio);
                 CargarGrillaClientes();
@@ -472,12 +597,12 @@ namespace UI.PN1
 
                     container.Clientes.Add(new ClienteXmlItem
                     {
-                        DNI = row.Cells["colDni"].Value?.ToString() ?? "",
-                        APELLIDOS = row.Cells["colApellidos"].Value?.ToString() ?? "",
-                        NOMBRES = row.Cells["colNombres"].Value?.ToString() ?? "",
-                        EMAIL = row.Cells["colEmail"].Value?.ToString() ?? "",
-                        CELULAR = row.Cells["colCelular"].Value?.ToString() ?? "",
-                        DIRECCION = row.Cells["colDireccion"].Value?.ToString() ?? ""
+                        DNI = ObtenerValorCelda(row, "colDni", "DNI"),
+                        APELLIDOS = ObtenerValorCelda(row, "colApellidos", "APELLIDOS"),
+                        NOMBRES = ObtenerValorCelda(row, "colNombres", "NOMBRES"),
+                        EMAIL = ObtenerValorCelda(row, "colEmail", "EMAIL"),
+                        CELULAR = ObtenerValorCelda(row, "colCelular", "CELULAR"),
+                        DIRECCION = ObtenerValorCelda(row, "colDireccion", "DIRECCION")
                     });
                 }
 
@@ -546,38 +671,21 @@ namespace UI.PN1
                     return;
                 }
 
-                // Subir a la matriz de datos del Cliente presente en la pantalla
-                DataTable dt = new DataTable();
-                dt.Columns.Add("IdPaciente_DNI101", typeof(int));
-                dt.Columns.Add("DNI", typeof(string));
-                dt.Columns.Add("APELLIDOS", typeof(string));
-                dt.Columns.Add("NOMBRES", typeof(string));
-                dt.Columns.Add("EMAIL", typeof(string));
-                dt.Columns.Add("CELULAR", typeof(string));
-                dt.Columns.Add("DIRECCION", typeof(string));
-
+                // Sincronizar y persistir clientes en la base de datos
+                var lista = new List<(string dni, string apellidos, string nombres, string email, string celular, string direccion)>();
                 foreach (var item in container.Clientes)
                 {
-                    dt.Rows.Add(0, item.DNI, item.APELLIDOS, item.NOMBRES, item.EMAIL, item.CELULAR, item.DIRECCION);
+                    lista.Add((item.DNI, item.APELLIDOS, item.NOMBRES, item.EMAIL, item.CELULAR, item.DIRECCION));
                 }
 
-                dgvClientes.DataSource = dt;
-                if (dgvClientes.Columns["IdPaciente_DNI101"] != null)
-                {
-                    dgvClientes.Columns["IdPaciente_DNI101"].Visible = false;
-                }
+                _pacienteBLL.ImportarClientesDesdeXml(lista);
 
-                if (dgvClientes.Rows.Count > 0)
-                {
-                    dgvClientes.Rows[0].Selected = true;
-                    CargarCamposDesdeGrilla();
-                }
+                // Recargar grilla desde base de datos asegurando persistencia real y IDs válidos
+                CargarGrillaClientes();
 
-                ActualizarBotonesSegunSeleccion();
-
-                AgregarMensaje($"DES-SERIALIZACIÓN EXITOSA: {container.Clientes.Count} clientes cargados desde '{Path.GetFileName(ruta)}' a la matriz de datos.");
+                AgregarMensaje($"DES-SERIALIZACIÓN EXITOSA: {container.Clientes.Count} clientes cargados desde '{Path.GetFileName(ruta)}' y sincronizados en la base de datos.");
                 MessageBox.Show(
-                    $"El archivo XML se ha des-serializado correctamente.\nSe subieron {container.Clientes.Count} registros a la matriz de datos de la pantalla.",
+                    $"El archivo XML se ha des-serializado correctamente.\nSe sincronizaron {container.Clientes.Count} registros en la base de datos y la grilla.",
                     "Des-serialización XML Exitosa",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);

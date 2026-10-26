@@ -71,6 +71,12 @@ namespace UI.Controles
             ActualizarRegion();
         }
 
+        protected override void OnEnabledChanged(EventArgs e)
+        {
+            base.OnEnabledChanged(e);
+            Invalidate();
+        }
+
         private void ActualizarRegion()
         {
             if (this.Width > 0 && this.Height > 0)
@@ -130,6 +136,23 @@ namespace UI.Controles
             {
                 // Aseguramos el recorte de esquinas rectangulares
                 this.Region = new Region(path);
+
+                if (!this.Enabled)
+                {
+                    // --- MODO BLOQUEADO / DESHABILITADO: COLOR NARANJA ---
+                    Color colBloq1 = Color.FromArgb(235, 130, 35);
+                    Color colBloq2 = Color.FromArgb(195, 95, 20);
+                    using (LinearGradientBrush brush = new LinearGradientBrush(rect, colBloq1, colBloq2, LinearGradientMode.Vertical))
+                    {
+                        g.FillPath(brush, path);
+                    }
+                    using (Pen pen = new Pen(Color.FromArgb(160, 75, 15), 1.2f))
+                    {
+                        g.DrawPath(pen, path);
+                    }
+                    DibujarTexto(g, rect, Color.FromArgb(255, 245, 235));
+                    return;
+                }
 
                 if (EsMenuLateral)
                 {

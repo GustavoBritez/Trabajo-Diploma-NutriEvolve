@@ -38,6 +38,7 @@ namespace UI.PN2
       _dgvHistorial = new DataGridView();
       pnlBotones = new Panel();
       btnNuevaConsulta = new Button();
+      btnModificarConsulta = new Button();
       btnPlan = new Button();
       btnAyuda = new Button();
 
@@ -275,6 +276,7 @@ namespace UI.PN2
       // pnlBotones
       // 
       pnlBotones.Controls.Add(btnNuevaConsulta);
+      pnlBotones.Controls.Add(btnModificarConsulta);
       pnlBotones.Controls.Add(btnPlan);
       pnlBotones.Controls.Add(btnAyuda);
       pnlBotones.Dock = DockStyle.Bottom;
@@ -296,11 +298,28 @@ namespace UI.PN2
       btnNuevaConsulta.ForeColor = Color.White;
       btnNuevaConsulta.Location = new Point(0, 8);
       btnNuevaConsulta.Name = "btnNuevaConsulta";
-      btnNuevaConsulta.Size = new Size(130, 35);
+      btnNuevaConsulta.Size = new Size(118, 35);
       btnNuevaConsulta.TabIndex = 0;
-      btnNuevaConsulta.Text = " Nueva Consulta";
+      btnNuevaConsulta.Text = " Nueva";
       btnNuevaConsulta.UseVisualStyleBackColor = false;
       btnNuevaConsulta.Click += BtnNuevaConsulta_Click;
+
+      // 
+      // btnModificarConsulta
+      // 
+      btnModificarConsulta.BackColor = Color.FromArgb(41, 128, 185);
+      btnModificarConsulta.Cursor = Cursors.Hand;
+      btnModificarConsulta.FlatAppearance.BorderSize = 0;
+      btnModificarConsulta.FlatStyle = FlatStyle.Flat;
+      btnModificarConsulta.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+      btnModificarConsulta.ForeColor = Color.White;
+      btnModificarConsulta.Location = new Point(122, 8);
+      btnModificarConsulta.Name = "btnModificarConsulta";
+      btnModificarConsulta.Size = new Size(118, 35);
+      btnModificarConsulta.TabIndex = 1;
+      btnModificarConsulta.Text = "✎ Modificar";
+      btnModificarConsulta.UseVisualStyleBackColor = false;
+      btnModificarConsulta.Click += BtnModificarConsulta_Click;
 
       // 
       // btnPlan
@@ -311,11 +330,11 @@ namespace UI.PN2
       btnPlan.FlatStyle = FlatStyle.Flat;
       btnPlan.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
       btnPlan.ForeColor = Color.White;
-      btnPlan.Location = new Point(140, 8);
+      btnPlan.Location = new Point(244, 8);
       btnPlan.Name = "btnPlan";
-      btnPlan.Size = new Size(130, 35);
-      btnPlan.TabIndex = 1;
-      btnPlan.Text = " Prescribir Plan";
+      btnPlan.Size = new Size(100, 35);
+      btnPlan.TabIndex = 2;
+      btnPlan.Text = " Plan";
       btnPlan.UseVisualStyleBackColor = false;
       btnPlan.Click += BtnPlan_Click;
 
@@ -328,10 +347,10 @@ namespace UI.PN2
       btnAyuda.FlatStyle = FlatStyle.Flat;
       btnAyuda.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
       btnAyuda.ForeColor = Color.White;
-      btnAyuda.Location = new Point(280, 8);
+      btnAyuda.Location = new Point(348, 8);
       btnAyuda.Name = "btnAyuda";
-      btnAyuda.Size = new Size(100, 35);
-      btnAyuda.TabIndex = 2;
+      btnAyuda.Size = new Size(58, 35);
+      btnAyuda.TabIndex = 3;
       btnAyuda.Text = "? Ayuda";
       btnAyuda.UseVisualStyleBackColor = false;
       btnAyuda.Click += BtnAyuda_Click;
@@ -384,6 +403,7 @@ namespace UI.PN2
     private DataGridView _dgvHistorial;
     private Panel pnlBotones;
     private Button btnNuevaConsulta;
+    private Button btnModificarConsulta;
     private Button btnPlan;
     private Button btnAyuda;
   }

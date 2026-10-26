@@ -27,7 +27,8 @@ namespace DAL.PN2
                        ISNULL(c.Act, 1) AS Act,
                        ISNULL(p.Nombre_DNI101, '') AS Nombre,
                        ISNULL(p.Apellido_DNI101, '') AS Apellido,
-                       ISNULL(p.DniNiño_DNI101, '') AS DniNiño
+                       ISNULL(p.DniNiño_DNI101, '') AS DniNiño,
+                       c.PesoKg_DNI101, c.TallaCm_DNI101, c.PerimetroCefalicoCm_DNI101, c.IMC_DNI101, c.ClasificacionOMS_DNI101
                 FROM ConsultasNutricionales_Cambios_DNI101 c
                 LEFT JOIN Pacientes_DNI101 p ON c.IdPaciente_DNI101 = p.IdPaciente_DNI101
                 WHERE 1 = 1 ";
@@ -98,7 +99,12 @@ namespace DAL.PN2
                             TipoOperacion = dr.GetString(13),
                             Act = dr.GetBoolean(14),
                             NombrePaciente = nombreCompleto,
-                            DniPaciente = dr.GetString(17)
+                            DniPaciente = dr.GetString(17),
+                            PesoKg = dr.IsDBNull(18) ? null : dr.GetDecimal(18),
+                            TallaCm = dr.IsDBNull(19) ? null : dr.GetDecimal(19),
+                            PerimetroCefalico = dr.IsDBNull(20) ? null : dr.GetDecimal(20),
+                            IMC = dr.IsDBNull(21) ? null : dr.GetDecimal(21),
+                            ClasificacionOMS = dr.IsDBNull(22) ? null : dr.GetString(22)
                         });
                     }
                 }
@@ -114,7 +120,8 @@ namespace DAL.PN2
                 string sqlSel = @"
                     SELECT IdConsulta_DNI101, TipoLactancia_DNI101, AlimentacionComplementaria_DNI101,
                            Alergias_DNI101, AntecedentesFamiliares_DNI101, Observaciones_DNI101,
-                           EdadMeses_DNI101, FechaControl_DNI101
+                           EdadMeses_DNI101, FechaControl_DNI101,
+                           PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, IMC_DNI101, ClasificacionOMS_DNI101
                     FROM ConsultasNutricionales_Cambios_DNI101
                     WHERE IdCambio = @IdCambio";
 
@@ -126,6 +133,11 @@ namespace DAL.PN2
                 string? observaciones = null;
                 int edadMeses = 0;
                 DateTime fechaControl = DateTime.Now;
+                decimal? pesoKg = null;
+                decimal? tallaCm = null;
+                decimal? perimetroCefalico = null;
+                decimal? imc = null;
+                string? clasifOMS = null;
 
                 using (var cmdSel = new SqlCommand(sqlSel, tx.Connection, tx))
                 {
@@ -142,6 +154,11 @@ namespace DAL.PN2
                             observaciones = dr.IsDBNull(5) ? null : dr.GetString(5);
                             edadMeses = dr.GetInt32(6);
                             fechaControl = dr.GetDateTime(7);
+                            pesoKg = dr.IsDBNull(8) ? null : dr.GetDecimal(8);
+                            tallaCm = dr.IsDBNull(9) ? null : dr.GetDecimal(9);
+                            perimetroCefalico = dr.IsDBNull(10) ? null : dr.GetDecimal(10);
+                            imc = dr.IsDBNull(11) ? null : dr.GetDecimal(11);
+                            clasifOMS = dr.IsDBNull(12) ? null : dr.GetString(12);
                         }
                         else
                         {
@@ -176,7 +193,7 @@ namespace DAL.PN2
                     cmdCtx.ExecuteNonQuery();
                 }
 
-                // 4. Restaurar los valores en la tabla activa ConsultasNutricionales_DNI101
+                // 4. Restaurar los valores en ConsultasNutricionales_DNI101, MedicionesAntropometricas_DNI101 y DiagnosticosNutricionales_DNI101
                 string sqlUpd = @"
                     UPDATE ConsultasNutricionales_DNI101
                     SET TipoLactancia_DNI101 = @Lact,
@@ -186,7 +203,24 @@ namespace DAL.PN2
                         Observaciones_DNI101 = @Obs,
                         EdadMeses_DNI101 = @Edad,
                         FechaControl_DNI101 = @FechaControl
-                    WHERE IdConsulta_DNI101 = @IdConsulta;";
+                    WHERE IdConsulta_DNI101 = @IdConsulta;
+
+                    IF @Peso IS NOT NULL
+                    BEGIN
+                        UPDATE MedicionesAntropometricas_DNI101
+                        SET PesoKg_DNI101 = @Peso,
+                            TallaCm_DNI101 = @Talla,
+                            PerimetroCefalicoCm_DNI101 = @Perimetro,
+                            IMC_DNI101 = @IMC
+                        WHERE IdConsulta_DNI101 = @IdConsulta;
+                    END
+
+                    IF @Clasif IS NOT NULL
+                    BEGIN
+                        UPDATE DiagnosticosNutricionales_DNI101
+                        SET ClasificacionOMS_DNI101 = @Clasif
+                        WHERE IdConsulta_DNI101 = @IdConsulta;
+                    END;";
 
                 using (var cmdUpd = new SqlCommand(sqlUpd, tx.Connection, tx))
                 {
@@ -198,6 +232,11 @@ namespace DAL.PN2
                     cmdUpd.Parameters.AddWithValue("@Obs", (object?)observaciones ?? DBNull.Value);
                     cmdUpd.Parameters.AddWithValue("@Edad", edadMeses);
                     cmdUpd.Parameters.AddWithValue("@FechaControl", fechaControl);
+                    cmdUpd.Parameters.AddWithValue("@Peso", (object?)pesoKg ?? DBNull.Value);
+                    cmdUpd.Parameters.AddWithValue("@Talla", (object?)tallaCm ?? DBNull.Value);
+                    cmdUpd.Parameters.AddWithValue("@Perimetro", (object?)perimetroCefalico ?? DBNull.Value);
+                    cmdUpd.Parameters.AddWithValue("@IMC", (object?)imc ?? DBNull.Value);
+                    cmdUpd.Parameters.AddWithValue("@Clasif", (object?)clasifOMS ?? DBNull.Value);
                     cmdUpd.ExecuteNonQuery();
                 }
 

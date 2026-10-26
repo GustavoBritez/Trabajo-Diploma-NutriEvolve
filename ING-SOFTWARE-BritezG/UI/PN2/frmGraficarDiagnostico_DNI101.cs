@@ -19,6 +19,7 @@ namespace UI.PN2
     private readonly PacienteBE_DNI101 _paciente;
     private readonly ConsultaNutricionalBLL_DNI101 _consultaBLL;
     private List<ConsultaNutricionalBE_DNI101> _historialConsultas = new List<ConsultaNutricionalBE_DNI101>();
+    private bool _isLoaded = false;
 
     public frmGraficarDiagnostico_DNI101(PacienteBE_DNI101 paciente)
     {
@@ -26,12 +27,16 @@ namespace UI.PN2
       _consultaBLL = new ConsultaNutricionalBLL_DNI101();
 
       InitializeComponent();
+      _formsPlot.MouseDown += FormsPlot_MouseDown;
+      _dgvHistorial.CellDoubleClick += DgvHistorial_CellDoubleClick;
       ConfigurarTextosPaciente();
       CargarDatos();
       TraductorUI.SuscribirFormulario(this, this);
       pnlTop.Resize += (s, e) => AjustarPosicionComboIndicador();
       ActualizarIdioma();
       AjustarPosicionComboIndicador();
+      this.Activated += (s, e) => { if (_isLoaded) CargarDatos(); };
+      _isLoaded = true;
     }
 
     public void ActualizarIdioma()
@@ -96,6 +101,99 @@ namespace UI.PN2
       }
     }
 
+    private void BtnModificarConsulta_Click(object? sender, EventArgs e)
+    {
+      if (_dgvHistorial.CurrentRow == null || _dgvHistorial.CurrentRow.Tag is not ConsultaNutricionalBE_DNI101 consulta)
+      {
+        MessageBox.Show("Seleccione un control médico de la grilla para modificar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        return;
+      }
+
+      AbrirModificarConsulta(consulta);
+    }
+
+    private void DgvHistorial_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
+    {
+      if (e.RowIndex >= 0 && _dgvHistorial.Rows[e.RowIndex].Tag is ConsultaNutricionalBE_DNI101 consulta)
+      {
+        AbrirModificarConsulta(consulta);
+      }
+    }
+
+    private void FormsPlot_MouseDown(object? sender, MouseEventArgs e)
+    {
+      if (e.Button != MouseButtons.Left || _historialConsultas.Count == 0) return;
+
+      try
+      {
+        var pixel = new ScottPlot.Pixel(e.X, e.Y);
+        var coords = _formsPlot.Plot.GetCoordinates(pixel);
+
+        string tipoIndicador = "IMC";
+        if (_cmbIndicador.SelectedIndex == 1) tipoIndicador = "PESO";
+        else if (_cmbIndicador.SelectedIndex == 2) tipoIndicador = "TALLA";
+
+        var xRange = _formsPlot.Plot.Axes.Bottom.Range;
+        var yRange = _formsPlot.Plot.Axes.Left.Range;
+        if (xRange.Span <= 0 || yRange.Span <= 0) return;
+
+        ConsultaNutricionalBE_DNI101? puntoCercano = null;
+        double menorDistanciaNorm = double.MaxValue;
+
+        foreach (var c in _historialConsultas)
+        {
+          if (c.Medicion == null) continue;
+
+          double px = c.EdadMeses_DNI101;
+          double py = tipoIndicador == "PESO" ? (double)c.Medicion.PesoKg_DNI101
+                    : tipoIndicador == "TALLA" ? (double)c.Medicion.TallaCm_DNI101
+                    : (double)c.Medicion.IMC_DNI101;
+
+          double dxNorm = (coords.X - px) / xRange.Span;
+          double dyNorm = (coords.Y - py) / yRange.Span;
+          double distNorm = dxNorm * dxNorm + dyNorm * dyNorm;
+
+          // Tolerancia para detectar el clic sobre el punto azul
+          if (distNorm < 0.003 && distNorm < menorDistanciaNorm)
+          {
+            menorDistanciaNorm = distNorm;
+            puntoCercano = c;
+          }
+        }
+
+        if (puntoCercano != null)
+        {
+          var dr = MessageBox.Show(
+            $"Has seleccionado el control médico:\n\n" +
+            $"• Consulta #{puntoCercano.IdConsulta_DNI101}\n" +
+            $"• Fecha del control: {puntoCercano.FechaControl_DNI101:dd/MM/yyyy}\n" +
+            $"• Edad: {puntoCercano.EdadMeses_DNI101} meses\n" +
+            $"• Peso: {puntoCercano.Medicion?.PesoKg_DNI101:N2} kg | Talla: {puntoCercano.Medicion?.TallaCm_DNI101:N2} cm\n\n" +
+            $"¿Deseas modificar los datos clínicos de esta consulta?",
+            "Modificar Control Clínico",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+          if (dr == DialogResult.Yes)
+          {
+            AbrirModificarConsulta(puntoCercano);
+          }
+        }
+      }
+      catch { }
+    }
+
+    private void AbrirModificarConsulta(ConsultaNutricionalBE_DNI101 consulta)
+    {
+      using (var frm = new frmRegistrarConsulta_DNI101(_paciente, consulta))
+      {
+        if (frm.ShowDialog(this) == DialogResult.OK)
+        {
+          CargarDatos();
+        }
+      }
+    }
+
     private void BtnPlan_Click(object? sender, EventArgs e)
     {
       using (var frm = new frmPrescribirPlan_DNI101(_paciente))
@@ -140,7 +238,7 @@ namespace UI.PN2
 
         foreach (var c in _historialConsultas)
         {
-          _dgvHistorial.Rows.Add(
+          int rowIndex = _dgvHistorial.Rows.Add(
             c.FechaControl_DNI101.ToString("dd/MM/yyyy"),
             $"{c.EdadMeses_DNI101} m",
             c.Medicion?.PesoKg_DNI101.ToString("N2") ?? "-",
@@ -148,6 +246,7 @@ namespace UI.PN2
             c.Medicion?.IMC_DNI101.ToString("N2") ?? "-",
             c.Diagnostico?.ClasificacionOMS_DNI101 ?? "Eutrófico"
           );
+          _dgvHistorial.Rows[rowIndex].Tag = c;
         }
 
         ActualizarPanelDiagnostico();

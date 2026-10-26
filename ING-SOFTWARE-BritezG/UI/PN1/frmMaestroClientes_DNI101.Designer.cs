@@ -240,7 +240,6 @@ namespace UI.PN1
             // btnEliminar
             // 
             btnEliminar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
-            btnEliminar.EsBotonSecundario = true;
             btnEliminar.Location = new System.Drawing.Point(800, 160);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new System.Drawing.Size(130, 28);

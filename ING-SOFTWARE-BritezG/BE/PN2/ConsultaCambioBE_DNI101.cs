@@ -21,8 +21,16 @@ namespace BE.PN2
         public bool Act { get; set; } = true;
         public string NombrePaciente { get; set; } = string.Empty;
         public string DniPaciente { get; set; } = string.Empty;
+        public decimal? PesoKg { get; set; }
+        public decimal? TallaCm { get; set; }
+        public decimal? PerimetroCefalico { get; set; }
+        public decimal? IMC { get; set; }
+        public string? ClasificacionOMS { get; set; }
         public string FechaStr => FechaCambio.ToString("dd/MM/yy");
         public string HoraStr => FechaCambio.ToString("HH:mm");
+        public string PesoStr => PesoKg.HasValue ? PesoKg.Value.ToString("N2") : "-";
+        public string TallaStr => TallaCm.HasValue ? TallaCm.Value.ToString("N2") : "-";
+        public string IMCStr => IMC.HasValue ? IMC.Value.ToString("N2") : "-";
         public int ActivoInt => Act ? 1 : 0;
     }
 }

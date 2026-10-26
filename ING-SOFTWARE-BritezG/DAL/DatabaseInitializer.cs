@@ -112,7 +112,7 @@ namespace DAL
                 {
                     dbConn.Open();
 
-                    // 1. Asegurar tabla ConsultasNutricionales_Cambios_DNI101 y columna Act
+                    // 1. Asegurar tabla ConsultasNutricionales_Cambios_DNI101 y columnas antropométricas
                     string sqlTabla = @"
                         IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ConsultasNutricionales_Cambios_DNI101' AND xtype='U')
                         BEGIN
@@ -128,6 +128,11 @@ namespace DAL
                                 [Alergias_DNI101] VARCHAR(255) NULL,
                                 [AntecedentesFamiliares_DNI101] VARCHAR(255) NULL,
                                 [Observaciones_DNI101] VARCHAR(MAX) NULL,
+                                [PesoKg_DNI101] DECIMAL(5,2) NULL,
+                                [TallaCm_DNI101] DECIMAL(5,2) NULL,
+                                [PerimetroCefalicoCm_DNI101] DECIMAL(5,2) NULL,
+                                [IMC_DNI101] DECIMAL(5,2) NULL,
+                                [ClasificacionOMS_DNI101] VARCHAR(100) NULL,
                                 [FechaCambio] DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
                                 [UsuarioDni] INT NOT NULL DEFAULT 11111111,
                                 [TipoOperacion] VARCHAR(20) NOT NULL,
@@ -139,6 +144,26 @@ namespace DAL
                             IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[ConsultasNutricionales_Cambios_DNI101]') AND name = 'Act')
                             BEGIN
                                 ALTER TABLE [dbo].[ConsultasNutricionales_Cambios_DNI101] ADD [Act] BIT NOT NULL CONSTRAINT DF_ConsultasCambios_Act DEFAULT 1;
+                            END
+                            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[ConsultasNutricionales_Cambios_DNI101]') AND name = 'PesoKg_DNI101')
+                            BEGIN
+                                ALTER TABLE [dbo].[ConsultasNutricionales_Cambios_DNI101] ADD [PesoKg_DNI101] DECIMAL(5,2) NULL;
+                            END
+                            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[ConsultasNutricionales_Cambios_DNI101]') AND name = 'TallaCm_DNI101')
+                            BEGIN
+                                ALTER TABLE [dbo].[ConsultasNutricionales_Cambios_DNI101] ADD [TallaCm_DNI101] DECIMAL(5,2) NULL;
+                            END
+                            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[ConsultasNutricionales_Cambios_DNI101]') AND name = 'PerimetroCefalicoCm_DNI101')
+                            BEGIN
+                                ALTER TABLE [dbo].[ConsultasNutricionales_Cambios_DNI101] ADD [PerimetroCefalicoCm_DNI101] DECIMAL(5,2) NULL;
+                            END
+                            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[ConsultasNutricionales_Cambios_DNI101]') AND name = 'IMC_DNI101')
+                            BEGIN
+                                ALTER TABLE [dbo].[ConsultasNutricionales_Cambios_DNI101] ADD [IMC_DNI101] DECIMAL(5,2) NULL;
+                            END
+                            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[ConsultasNutricionales_Cambios_DNI101]') AND name = 'ClasificacionOMS_DNI101')
+                            BEGIN
+                                ALTER TABLE [dbo].[ConsultasNutricionales_Cambios_DNI101] ADD [ClasificacionOMS_DNI101] VARCHAR(100) NULL;
                             END
                         END";
 
@@ -168,6 +193,7 @@ namespace DAL
                                     [FechaControl_DNI101], [EdadMeses_DNI101], [TipoLactancia_DNI101],
                                     [AlimentacionComplementaria_DNI101], [Alergias_DNI101],
                                     [AntecedentesFamiliares_DNI101], [Observaciones_DNI101],
+                                    [PesoKg_DNI101], [TallaCm_DNI101], [PerimetroCefalicoCm_DNI101], [IMC_DNI101], [ClasificacionOMS_DNI101],
                                     [FechaCambio], [UsuarioDni], [TipoOperacion], [Act]
                                 )
                                 SELECT 
@@ -175,21 +201,49 @@ namespace DAL
                                     i.[FechaControl_DNI101], i.[EdadMeses_DNI101], i.[TipoLactancia_DNI101],
                                     i.[AlimentacionComplementaria_DNI101], i.[Alergias_DNI101],
                                     i.[AntecedentesFamiliares_DNI101], i.[Observaciones_DNI101],
+                                    m.[PesoKg_DNI101], m.[TallaCm_DNI101], m.[PerimetroCefalicoCm_DNI101], m.[IMC_DNI101], d.[ClasificacionOMS_DNI101],
                                     SYSDATETIME(), ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
                                     'INSERT', 1
-                                FROM inserted i;
+                                FROM inserted i
+                                LEFT JOIN [dbo].[MedicionesAntropometricas_DNI101] m ON i.IdConsulta_DNI101 = m.IdConsulta_DNI101
+                                LEFT JOIN [dbo].[DiagnosticosNutricionales_DNI101] d ON i.IdConsulta_DNI101 = d.IdConsulta_DNI101;
                             END
                             ELSE IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
                             BEGIN
-                                UPDATE [dbo].[ConsultasNutricionales_Cambios_DNI101]
-                                SET [Act] = 0
-                                WHERE [IdConsulta_DNI101] IN (SELECT [IdConsulta_DNI101] FROM inserted);
+                                -- Si la modificación fue por recálculo de Dígitos Verificadores (DV) y no es modificación clínica explícita, omitir
+                                IF CAST(SESSION_CONTEXT(N'EsModificacionClinica') AS INT) <> 1
+                                BEGIN
+                                    IF NOT EXISTS (
+                                        SELECT 1 
+                                        FROM inserted i 
+                                        JOIN deleted d ON i.IdConsulta_DNI101 = d.IdConsulta_DNI101
+                                        WHERE 
+                                            ISNULL(i.IdPaciente_DNI101, 0) <> ISNULL(d.IdPaciente_DNI101, 0)
+                                            OR ISNULL(i.DniNutricionista_DNI101, 0) <> ISNULL(d.DniNutricionista_DNI101, 0)
+                                            OR ISNULL(i.FechaControl_DNI101, '1900-01-01') <> ISNULL(d.FechaControl_DNI101, '1900-01-01')
+                                            OR ISNULL(i.EdadMeses_DNI101, -1) <> ISNULL(d.EdadMeses_DNI101, -1)
+                                            OR ISNULL(i.TipoLactancia_DNI101, '') <> ISNULL(d.TipoLactancia_DNI101, '')
+                                            OR ISNULL(i.AlimentacionComplementaria_DNI101, '') <> ISNULL(d.AlimentacionComplementaria_DNI101, '')
+                                            OR ISNULL(i.Alergias_DNI101, '') <> ISNULL(d.Alergias_DNI101, '')
+                                            OR ISNULL(i.AntecedentesFamiliares_DNI101, '') <> ISNULL(d.AntecedentesFamiliares_DNI101, '')
+                                            OR ISNULL(i.Observaciones_DNI101, '') <> ISNULL(d.Observaciones_DNI101, '')
+                                    )
+                                    BEGIN
+                                        RETURN;
+                                    END
+                                END
+
+                                UPDATE c
+                                SET c.[Act] = 0
+                                FROM [dbo].[ConsultasNutricionales_Cambios_DNI101] c
+                                INNER JOIN inserted i ON c.[IdConsulta_DNI101] = i.[IdConsulta_DNI101];
 
                                 INSERT INTO [dbo].[ConsultasNutricionales_Cambios_DNI101] (
                                     [IdConsulta_DNI101], [IdPaciente_DNI101], [DniNutricionista_DNI101],
                                     [FechaControl_DNI101], [EdadMeses_DNI101], [TipoLactancia_DNI101],
                                     [AlimentacionComplementaria_DNI101], [Alergias_DNI101],
                                     [AntecedentesFamiliares_DNI101], [Observaciones_DNI101],
+                                    [PesoKg_DNI101], [TallaCm_DNI101], [PerimetroCefalicoCm_DNI101], [IMC_DNI101], [ClasificacionOMS_DNI101],
                                     [FechaCambio], [UsuarioDni], [TipoOperacion], [Act]
                                 )
                                 SELECT 
@@ -197,9 +251,12 @@ namespace DAL
                                     i.[FechaControl_DNI101], i.[EdadMeses_DNI101], i.[TipoLactancia_DNI101],
                                     i.[AlimentacionComplementaria_DNI101], i.[Alergias_DNI101],
                                     i.[AntecedentesFamiliares_DNI101], i.[Observaciones_DNI101],
+                                    m.[PesoKg_DNI101], m.[TallaCm_DNI101], m.[PerimetroCefalicoCm_DNI101], m.[IMC_DNI101], d.[ClasificacionOMS_DNI101],
                                     SYSDATETIME(), ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
                                     'UPDATE', 1
-                                FROM inserted i;
+                                FROM inserted i
+                                LEFT JOIN [dbo].[MedicionesAntropometricas_DNI101] m ON i.IdConsulta_DNI101 = m.IdConsulta_DNI101
+                                LEFT JOIN [dbo].[DiagnosticosNutricionales_DNI101] d ON i.IdConsulta_DNI101 = d.IdConsulta_DNI101;
                             END
                             ELSE IF EXISTS (SELECT 1 FROM deleted)
                             BEGIN
@@ -212,6 +269,7 @@ namespace DAL
                                     [FechaControl_DNI101], [EdadMeses_DNI101], [TipoLactancia_DNI101],
                                     [AlimentacionComplementaria_DNI101], [Alergias_DNI101],
                                     [AntecedentesFamiliares_DNI101], [Observaciones_DNI101],
+                                    [PesoKg_DNI101], [TallaCm_DNI101], [PerimetroCefalicoCm_DNI101], [IMC_DNI101], [ClasificacionOMS_DNI101],
                                     [FechaCambio], [UsuarioDni], [TipoOperacion], [Act]
                                 )
                                 SELECT 
@@ -219,6 +277,7 @@ namespace DAL
                                     d.[FechaControl_DNI101], d.[EdadMeses_DNI101], d.[TipoLactancia_DNI101],
                                     d.[AlimentacionComplementaria_DNI101], d.[Alergias_DNI101],
                                     d.[AntecedentesFamiliares_DNI101], d.[Observaciones_DNI101],
+                                    NULL, NULL, NULL, NULL, NULL,
                                     SYSDATETIME(), ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
                                     'DELETE', 0
                                 FROM deleted d;

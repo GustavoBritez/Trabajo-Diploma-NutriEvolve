@@ -126,6 +126,27 @@ namespace DAL.PN2
                     }
                 }
 
+                // 5. Asegurar datos antropométricos y diagnóstico en el registro histórico de la bitácora
+                string sqlSnap = @"
+                    UPDATE ConsultasNutricionales_Cambios_DNI101
+                    SET PesoKg_DNI101 = @Peso,
+                        TallaCm_DNI101 = @Talla,
+                        PerimetroCefalicoCm_DNI101 = @Perimetro,
+                        IMC_DNI101 = @IMC,
+                        ClasificacionOMS_DNI101 = @Clasif
+                    WHERE IdConsulta_DNI101 = @IdConsulta AND Act = 1;";
+
+                using (SqlCommand cmdSnap = new SqlCommand(sqlSnap, tx.Connection, tx))
+                {
+                    cmdSnap.Parameters.AddWithValue("@IdConsulta", idConsulta);
+                    cmdSnap.Parameters.AddWithValue("@Peso", pesoKg);
+                    cmdSnap.Parameters.AddWithValue("@Talla", tallaCm);
+                    cmdSnap.Parameters.AddWithValue("@Perimetro", perimetroCefalico);
+                    cmdSnap.Parameters.AddWithValue("@IMC", imc);
+                    cmdSnap.Parameters.AddWithValue("@Clasif", clasificacionOMS);
+                    cmdSnap.ExecuteNonQuery();
+                }
+
                 return idConsulta;
             });
         }
@@ -215,6 +236,180 @@ namespace DAL.PN2
                 }
             }
             return dt;
+        }
+
+        public bool ModificarConsultaCompleta(
+            int idConsulta,
+            int dniNutricionista,
+            DateTime fechaControl,
+            int edadMeses,
+            string? tipoLactancia,
+            string? alimentacionComp,
+            string? alergias,
+            string? antFamiliares,
+            string? observaciones,
+            decimal pesoKg,
+            decimal tallaCm,
+            decimal perimetroCefalico,
+            decimal imc,
+            string clasificacionOMS,
+            string detallesClinicos,
+            bool requiereAlerta,
+            string? tipoAlerta,
+            string? severidadAlerta,
+            string? mensajeAlerta,
+            string? dv)
+        {
+            return _conexion.ExecuteTransaction(tx =>
+            {
+                // 1. Establecer Session Context con el DNI del usuario activo y marca de modificación clínica para auditoría
+                using (var cmdCtx = new SqlCommand(@"
+                    EXEC sp_set_session_context @key=N'UsuarioDni', @value=@val;
+                    EXEC sp_set_session_context @key=N'EsModificacionClinica', @value=1;", tx.Connection, tx))
+                {
+                    cmdCtx.Parameters.AddWithValue("@val", dniNutricionista);
+                    cmdCtx.ExecuteNonQuery();
+                }
+
+                // 2. Actualizar ConsultasNutricionales_DNI101 (dispara trigger de bitácora médica)
+                string sqlConsulta = @"
+                    UPDATE ConsultasNutricionales_DNI101
+                    SET DniNutricionista_DNI101 = @DniNutri,
+                        FechaControl_DNI101 = @Fecha,
+                        EdadMeses_DNI101 = @EdadMeses,
+                        TipoLactancia_DNI101 = @TipoLact,
+                        AlimentacionComplementaria_DNI101 = @AlimComp,
+                        Alergias_DNI101 = @Alergias,
+                        AntecedentesFamiliares_DNI101 = @AntFam,
+                        Observaciones_DNI101 = @Obs,
+                        DV = @DV
+                    WHERE IdConsulta_DNI101 = @IdConsulta;";
+
+                using (var cmdConsulta = new SqlCommand(sqlConsulta, tx.Connection, tx))
+                {
+                    cmdConsulta.Parameters.AddWithValue("@IdConsulta", idConsulta);
+                    cmdConsulta.Parameters.AddWithValue("@DniNutri", dniNutricionista);
+                    cmdConsulta.Parameters.AddWithValue("@Fecha", fechaControl);
+                    cmdConsulta.Parameters.AddWithValue("@EdadMeses", edadMeses);
+                    cmdConsulta.Parameters.AddWithValue("@TipoLact", (object?)tipoLactancia ?? DBNull.Value);
+                    cmdConsulta.Parameters.AddWithValue("@AlimComp", (object?)alimentacionComp ?? DBNull.Value);
+                    cmdConsulta.Parameters.AddWithValue("@Alergias", (object?)alergias ?? DBNull.Value);
+                    cmdConsulta.Parameters.AddWithValue("@AntFam", (object?)antFamiliares ?? DBNull.Value);
+                    cmdConsulta.Parameters.AddWithValue("@Obs", (object?)observaciones ?? DBNull.Value);
+                    cmdConsulta.Parameters.AddWithValue("@DV", (object?)dv ?? DBNull.Value);
+                    cmdConsulta.ExecuteNonQuery();
+                }
+
+                // 3. Actualizar MedicionesAntropometricas_DNI101
+                string sqlMedicion = @"
+                    UPDATE MedicionesAntropometricas_DNI101
+                    SET PesoKg_DNI101 = @Peso,
+                        TallaCm_DNI101 = @Talla,
+                        PerimetroCefalicoCm_DNI101 = @Perimetro,
+                        IMC_DNI101 = @IMC,
+                        DV = @DV
+                    WHERE IdConsulta_DNI101 = @IdConsulta;";
+
+                using (var cmdMedicion = new SqlCommand(sqlMedicion, tx.Connection, tx))
+                {
+                    cmdMedicion.Parameters.AddWithValue("@IdConsulta", idConsulta);
+                    cmdMedicion.Parameters.AddWithValue("@Peso", pesoKg);
+                    cmdMedicion.Parameters.AddWithValue("@Talla", tallaCm);
+                    cmdMedicion.Parameters.AddWithValue("@Perimetro", perimetroCefalico);
+                    cmdMedicion.Parameters.AddWithValue("@IMC", imc);
+                    cmdMedicion.Parameters.AddWithValue("@DV", (object?)dv ?? DBNull.Value);
+                    cmdMedicion.ExecuteNonQuery();
+                }
+
+                // 4. Actualizar DiagnosticosNutricionales_DNI101
+                string sqlDiag = @"
+                    UPDATE DiagnosticosNutricionales_DNI101
+                    SET ClasificacionOMS_DNI101 = @Clasif,
+                        DetallesClinicos_DNI101 = @Detalles,
+                        RequiereAlerta_DNI101 = @Alerta,
+                        DV = @DV
+                    WHERE IdConsulta_DNI101 = @IdConsulta;";
+
+                using (var cmdDiag = new SqlCommand(sqlDiag, tx.Connection, tx))
+                {
+                    cmdDiag.Parameters.AddWithValue("@IdConsulta", idConsulta);
+                    cmdDiag.Parameters.AddWithValue("@Clasif", clasificacionOMS);
+                    cmdDiag.Parameters.AddWithValue("@Detalles", detallesClinicos);
+                    cmdDiag.Parameters.AddWithValue("@Alerta", requiereAlerta ? 1 : 0);
+                    cmdDiag.Parameters.AddWithValue("@DV", (object?)dv ?? DBNull.Value);
+                    cmdDiag.ExecuteNonQuery();
+                }
+
+                // 5. Alertas Clínicas
+                if (requiereAlerta && !string.IsNullOrWhiteSpace(mensajeAlerta))
+                {
+                    string sqlAlerta = @"
+                        IF EXISTS (SELECT 1 FROM AlertasClinicas_DNI101 WHERE IdConsulta_DNI101 = @IdConsulta)
+                        BEGIN
+                            UPDATE AlertasClinicas_DNI101
+                            SET TipoAlerta_DNI101 = @Tipo,
+                                Severidad_DNI101 = @Sev,
+                                MensajeAlerta_DNI101 = @Msg,
+                                DV = @DV
+                            WHERE IdConsulta_DNI101 = @IdConsulta;
+                        END
+                        ELSE
+                        BEGIN
+                            INSERT INTO AlertasClinicas_DNI101
+                            (IdConsulta_DNI101, TipoAlerta_DNI101, Severidad_DNI101, MensajeAlerta_DNI101, FechaGeneracion_DNI101, DV)
+                            VALUES
+                            (@IdConsulta, @Tipo, @Sev, @Msg, GETDATE(), @DV);
+                        END";
+
+                    using (var cmdAlerta = new SqlCommand(sqlAlerta, tx.Connection, tx))
+                    {
+                        cmdAlerta.Parameters.AddWithValue("@IdConsulta", idConsulta);
+                        cmdAlerta.Parameters.AddWithValue("@Tipo", tipoAlerta ?? "Alerta Nutricional");
+                        cmdAlerta.Parameters.AddWithValue("@Sev", severidadAlerta ?? "MODERADA");
+                        cmdAlerta.Parameters.AddWithValue("@Msg", mensajeAlerta);
+                        cmdAlerta.Parameters.AddWithValue("@DV", (object?)dv ?? DBNull.Value);
+                        cmdAlerta.ExecuteNonQuery();
+                    }
+                }
+                else
+                {
+                    string sqlDelAlerta = "DELETE FROM AlertasClinicas_DNI101 WHERE IdConsulta_DNI101 = @IdConsulta;";
+                    using (var cmdDelAlerta = new SqlCommand(sqlDelAlerta, tx.Connection, tx))
+                    {
+                        cmdDelAlerta.Parameters.AddWithValue("@IdConsulta", idConsulta);
+                        cmdDelAlerta.ExecuteNonQuery();
+                    }
+                }
+
+                // 6. Actualizar mediciones antropométricas y diagnóstico en la versión activa de la bitácora
+                string sqlSnap = @"
+                    UPDATE ConsultasNutricionales_Cambios_DNI101
+                    SET PesoKg_DNI101 = @Peso,
+                        TallaCm_DNI101 = @Talla,
+                        PerimetroCefalicoCm_DNI101 = @Perimetro,
+                        IMC_DNI101 = @IMC,
+                        ClasificacionOMS_DNI101 = @Clasif
+                    WHERE IdConsulta_DNI101 = @IdConsulta AND Act = 1;";
+
+                using (var cmdSnap = new SqlCommand(sqlSnap, tx.Connection, tx))
+                {
+                    cmdSnap.Parameters.AddWithValue("@IdConsulta", idConsulta);
+                    cmdSnap.Parameters.AddWithValue("@Peso", pesoKg);
+                    cmdSnap.Parameters.AddWithValue("@Talla", tallaCm);
+                    cmdSnap.Parameters.AddWithValue("@Perimetro", perimetroCefalico);
+                    cmdSnap.Parameters.AddWithValue("@IMC", imc);
+                    cmdSnap.Parameters.AddWithValue("@Clasif", clasificacionOMS);
+                    cmdSnap.ExecuteNonQuery();
+                }
+
+                // 7. Restablecer contexto
+                using (var cmdClear = new SqlCommand("EXEC sp_set_session_context @key=N'EsModificacionClinica', @value=0;", tx.Connection, tx))
+                {
+                    cmdClear.ExecuteNonQuery();
+                }
+
+                return true;
+            });
         }
     }
 }

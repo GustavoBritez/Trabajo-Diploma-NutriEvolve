@@ -67,6 +67,8 @@ namespace BLL.PN2
         {
             if (idPaciente <= 0)
                 throw new ArgumentException("Debe seleccionar un paciente válido.");
+            if (fechaControl.Date > DateTime.Today)
+                throw new ArgumentException("No se pueden registrar consultas nutricionales con fechas futuras.");
             if (pesoKg <= 0 || pesoKg > 150)
                 throw new ArgumentException("El peso debe ser un valor biológico válido (mayor a 0 kg).");
             if (tallaCm <= 20 || tallaCm > 220)
@@ -113,6 +115,80 @@ namespace BLL.PN2
             catch { }
 
             return idConsulta;
+        }
+
+        /// <summary>
+        /// Modifica una consulta nutricional existente, actualizando mediciones y diagnóstico.
+        /// Dispara el trigger de versión histórica (CUN08) y recalcula la integridad DV.
+        /// </summary>
+        public bool ModificarConsulta(
+            int idConsulta,
+            int idPaciente,
+            int edadMeses,
+            string sexo,
+            decimal pesoKg,
+            decimal tallaCm,
+            decimal perimetroCefalico,
+            DateTime fechaControl,
+            string? tipoLactancia,
+            string? alimentacionComp,
+            string? alergias,
+            string? antFamiliares,
+            string? observaciones)
+        {
+            if (idConsulta <= 0)
+                throw new ArgumentException("Debe seleccionar una consulta válida.");
+            if (idPaciente <= 0)
+                throw new ArgumentException("Debe seleccionar un paciente válido.");
+            if (fechaControl.Date > DateTime.Today)
+                throw new ArgumentException("No se pueden registrar consultas nutricionales con fechas futuras.");
+            if (pesoKg <= 0 || pesoKg > 150)
+                throw new ArgumentException("El peso debe ser un valor biológico válido (mayor a 0 kg).");
+            if (tallaCm <= 20 || tallaCm > 220)
+                throw new ArgumentException("La talla/longitud debe ser un valor biológico válido (entre 20 y 220 cm).");
+
+            decimal imc = CalcularIMC(pesoKg, tallaCm);
+            ResultadoEvaluacionOMS eval = EvaluarEstadoNutricional(imc, edadMeses, sexo);
+
+            int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+            if (dniActual == 0) dniActual = 11111111;
+
+            string dvDummy = $"{idPaciente}-{pesoKg}-{tallaCm}-{fechaControl:yyyyMMdd}";
+
+            bool resultado = _dal.ModificarConsultaCompleta(
+                idConsulta: idConsulta,
+                dniNutricionista: dniActual,
+                fechaControl: fechaControl,
+                edadMeses: edadMeses,
+                tipoLactancia: tipoLactancia,
+                alimentacionComp: alimentacionComp,
+                alergias: alergias,
+                antFamiliares: antFamiliares,
+                observaciones: observaciones,
+                pesoKg: pesoKg,
+                tallaCm: tallaCm,
+                perimetroCefalico: perimetroCefalico,
+                imc: imc,
+                clasificacionOMS: eval.Clasificacion,
+                detallesClinicos: eval.Detalles,
+                requiereAlerta: eval.RequiereAlerta,
+                tipoAlerta: eval.RequiereAlerta ? "Alerta Nutricional" : null,
+                severidadAlerta: eval.SeveridadAlerta,
+                mensajeAlerta: eval.MensajeAlerta,
+                dv: dvDummy
+            );
+
+            if (resultado)
+            {
+                try
+                {
+                    _bitacoraBLL.RegistrarBitacora(2, $"CUN08: Modificación de control nutricional #{idConsulta} para paciente ID {idPaciente}. Diagnóstico: {eval.Clasificacion}", dniActual, "SeguimientoNutricional");
+                    _dvBLL.RecalcularYPersistir();
+                }
+                catch { }
+            }
+
+            return resultado;
         }
 
         public List<ConsultaNutricionalBE_DNI101> ObtenerHistorialPorPaciente(int idPaciente)
