@@ -110,8 +110,46 @@ namespace UI
         {
             ApuntarComboBox();
             ActualizarDisponibilidadBotones();
+            FormManager.AplicarSeguridad(this);
+            ReorganizarBotonesMenuLateral();
             ActualizarUsuario();
             ActualizarPanelDV();
+        }
+
+        private void ReorganizarBotonesMenuLateral()
+        {
+            try
+            {
+                var botones = new Control[]
+                {
+                    btnTurnos,
+                    btnMaestroClientes,
+                    btnSeguimientoNutricional,
+                    btnReportePredictivo,
+                    btnBitacoraCambios,
+                    btnReportes,
+                    btnUsuarios,
+                    btnGestionarPerfiles,
+                    btnRespaldo,
+                    btnAyuda
+                };
+
+                int currentY = 52;
+                const int spacing = 4;
+
+                foreach (var btn in botones)
+                {
+                    if (btn != null && btn.Visible)
+                    {
+                        btn.Location = new Point(12, currentY);
+                        currentY += btn.Height + spacing;
+                    }
+                }
+            }
+            catch
+            {
+                // Manejo silencioso en caso de inicialización previa
+            }
         }
 
         private void InicializarPanelDV()
@@ -668,6 +706,12 @@ namespace UI
                 if (usuarioActivo == null)
                 {
                     idiomaBLL.MostrarMensaje("msg_error_nosesion", "titulo_error_nosesion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                if (!ServicesSessionManager.Instancia.TienePermiso("Ver Bitacora Cambios") && !ServicesSessionManager.Instancia.EsAdministrador())
+                {
+                    MessageBox.Show("No posee los permisos necesarios para acceder a la Bitácora de Cambios.", "Acceso Denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 

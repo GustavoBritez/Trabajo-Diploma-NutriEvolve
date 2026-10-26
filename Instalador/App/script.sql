@@ -144,25 +144,75 @@ BEGIN
     SET IDENTITY_INSERT [dbo].[Perfil] ON;
     INSERT [dbo].[Perfil] ([ID_Perfil], [Nombre]) VALUES (1, N'Administrador');
     INSERT [dbo].[Perfil] ([ID_Perfil], [Nombre]) VALUES (2, N'Usuario');
-    INSERT [dbo].[Perfil] ([ID_Perfil], [Nombre]) VALUES (3, N'Médico Nutricionista');
+    INSERT [dbo].[Perfil] ([ID_Perfil], [Nombre]) VALUES (3, N'Nutricionista');
     SET IDENTITY_INSERT [dbo].[Perfil] OFF;
+END
+ELSE
+BEGIN
+    IF NOT EXISTS (SELECT * FROM [dbo].[Perfil] WHERE [ID_Perfil] = 3)
+    BEGIN
+        SET IDENTITY_INSERT [dbo].[Perfil] ON;
+        INSERT [dbo].[Perfil] ([ID_Perfil], [Nombre]) VALUES (3, N'Nutricionista');
+        SET IDENTITY_INSERT [dbo].[Perfil] OFF;
+    END
+    ELSE
+    BEGIN
+        UPDATE [dbo].[Perfil] SET [Nombre] = N'Nutricionista' WHERE [ID_Perfil] = 3;
+    END
 END
 GO
 
+-- USUARIO ADMINISTRADOR (admin / 1234)
 IF NOT EXISTS (SELECT * FROM [dbo].[Usuarios] WHERE [DNI] = 11111111)
 BEGIN
     INSERT [dbo].[Usuarios] ([DNI], [NombreDeUsuario], [Nombre], [Apellido], [Contraseña], [Bloqueado], [Estado], [ID_Perfil], [Idioma], [DV]) 
-    VALUES (11111111, N'admin', N'Gabriel', N'Avalos', N'$2a$11$ZGr/gvxtcscqsxUd7hPvte0yVa5/iZlxQ8F13/EjHqor2a9XG0Qvy', 0, 1, 1, N'Español', N'2100');
+    VALUES (11111111, N'admin', N'Administrador', N'General', N'$2a$11$xR8dUaYYFoG3.lY7WPJ.oeR.mlBDKCeUFyQ8zbHbtgAfGuUthDmba', 0, 1, 1, N'Español', NULL);
 END
 ELSE
 BEGIN
     UPDATE [dbo].[Usuarios]
     SET [NombreDeUsuario] = N'admin',
-        [Contraseña] = N'$2a$11$ZGr/gvxtcscqsxUd7hPvte0yVa5/iZlxQ8F13/EjHqor2a9XG0Qvy',
+        [Contraseña] = N'$2a$11$xR8dUaYYFoG3.lY7WPJ.oeR.mlBDKCeUFyQ8zbHbtgAfGuUthDmba',
         [Bloqueado] = 0,
         [Estado] = 1,
-        [DV] = N'2100'
+        [ID_Perfil] = 1
     WHERE [DNI] = 11111111;
+END
+GO
+
+-- USUARIO NUTRICIONISTA (nutricionista / 1234)
+IF NOT EXISTS (SELECT * FROM [dbo].[Usuarios] WHERE [DNI] = 22222222)
+BEGIN
+    INSERT [dbo].[Usuarios] ([DNI], [NombreDeUsuario], [Nombre], [Apellido], [Contraseña], [Bloqueado], [Estado], [ID_Perfil], [Idioma], [DV]) 
+    VALUES (22222222, N'nutricionista', N'Nutricionista', N'Clinico', N'$2a$11$xR8dUaYYFoG3.lY7WPJ.oeR.mlBDKCeUFyQ8zbHbtgAfGuUthDmba', 0, 1, 3, N'Español', NULL);
+END
+ELSE
+BEGIN
+    UPDATE [dbo].[Usuarios]
+    SET [NombreDeUsuario] = N'nutricionista',
+        [Contraseña] = N'$2a$11$xR8dUaYYFoG3.lY7WPJ.oeR.mlBDKCeUFyQ8zbHbtgAfGuUthDmba',
+        [Bloqueado] = 0,
+        [Estado] = 1,
+        [ID_Perfil] = 3
+    WHERE [DNI] = 22222222;
+END
+GO
+
+-- ALIAS USUARIO NUTRICIONISTA (nutri / 1234)
+IF NOT EXISTS (SELECT * FROM [dbo].[Usuarios] WHERE [DNI] = 33333333)
+BEGIN
+    INSERT [dbo].[Usuarios] ([DNI], [NombreDeUsuario], [Nombre], [Apellido], [Contraseña], [Bloqueado], [Estado], [ID_Perfil], [Idioma], [DV]) 
+    VALUES (33333333, N'nutri', N'Nutricionista', N'Staff', N'$2a$11$xR8dUaYYFoG3.lY7WPJ.oeR.mlBDKCeUFyQ8zbHbtgAfGuUthDmba', 0, 1, 3, N'Español', NULL);
+END
+ELSE
+BEGIN
+    UPDATE [dbo].[Usuarios]
+    SET [NombreDeUsuario] = N'nutri',
+        [Contraseña] = N'$2a$11$xR8dUaYYFoG3.lY7WPJ.oeR.mlBDKCeUFyQ8zbHbtgAfGuUthDmba',
+        [Bloqueado] = 0,
+        [Estado] = 1,
+        [ID_Perfil] = 3
+    WHERE [DNI] = 33333333;
 END
 GO
 
@@ -183,6 +233,20 @@ BEGIN
     INSERT [dbo].[Permiso] ([ID_Permiso], [Nombre]) VALUES (30, N'Exportar Bitacora');
     INSERT [dbo].[Permiso] ([ID_Permiso], [Nombre]) VALUES (31, N'Ver Seguimientos');
     INSERT [dbo].[Permiso] ([ID_Permiso], [Nombre]) VALUES (32, N'Respaldo BD');
+    INSERT [dbo].[Permiso] ([ID_Permiso], [Nombre]) VALUES (33, N'Ver Clientes');
+    INSERT [dbo].[Permiso] ([ID_Permiso], [Nombre]) VALUES (34, N'Ver Reporte Predictivo');
+    INSERT [dbo].[Permiso] ([ID_Permiso], [Nombre]) VALUES (35, N'Ver Bitacora Cambios');
+    SET IDENTITY_INSERT [dbo].[Permiso] OFF;
+END
+ELSE
+BEGIN
+    SET IDENTITY_INSERT [dbo].[Permiso] ON;
+    IF NOT EXISTS (SELECT * FROM [dbo].[Permiso] WHERE [ID_Permiso] = 33)
+        INSERT [dbo].[Permiso] ([ID_Permiso], [Nombre]) VALUES (33, N'Ver Clientes');
+    IF NOT EXISTS (SELECT * FROM [dbo].[Permiso] WHERE [ID_Permiso] = 34)
+        INSERT [dbo].[Permiso] ([ID_Permiso], [Nombre]) VALUES (34, N'Ver Reporte Predictivo');
+    IF NOT EXISTS (SELECT * FROM [dbo].[Permiso] WHERE [ID_Permiso] = 35)
+        INSERT [dbo].[Permiso] ([ID_Permiso], [Nombre]) VALUES (35, N'Ver Bitacora Cambios');
     SET IDENTITY_INSERT [dbo].[Permiso] OFF;
 END
 GO
@@ -204,27 +268,58 @@ BEGIN
     INSERT [dbo].[Permiso_Boton] ([ID_PermisoBoton], [NombreFormulario], [NombreControl], [NombrePatente]) VALUES (11, N'Bitacora', N'btnExportar', N'Exportar Bitacora');
     INSERT [dbo].[Permiso_Boton] ([ID_PermisoBoton], [NombreFormulario], [NombreControl], [NombrePatente]) VALUES (12, N'MenuPrincipal', N'btnSeguimiento', N'Ver Seguimientos');
     INSERT [dbo].[Permiso_Boton] ([ID_PermisoBoton], [NombreFormulario], [NombreControl], [NombrePatente]) VALUES (13, N'MenuPrincipal', N'btnRespaldo', N'Respaldo BD');
+    INSERT [dbo].[Permiso_Boton] ([ID_PermisoBoton], [NombreFormulario], [NombreControl], [NombrePatente]) VALUES (14, N'MenuPrincipal', N'btnMaestroClientes', N'Ver Clientes');
+    INSERT [dbo].[Permiso_Boton] ([ID_PermisoBoton], [NombreFormulario], [NombreControl], [NombrePatente]) VALUES (15, N'MenuPrincipal', N'btnSeguimientoNutricional', N'Ver Seguimientos');
+    INSERT [dbo].[Permiso_Boton] ([ID_PermisoBoton], [NombreFormulario], [NombreControl], [NombrePatente]) VALUES (16, N'MenuPrincipal', N'btnReportePredictivo', N'Ver Reporte Predictivo');
+    INSERT [dbo].[Permiso_Boton] ([ID_PermisoBoton], [NombreFormulario], [NombreControl], [NombrePatente]) VALUES (17, N'MenuPrincipal', N'btnBitacoraCambios', N'Ver Bitacora Cambios');
+    SET IDENTITY_INSERT [dbo].[Permiso_Boton] OFF;
+END
+ELSE
+BEGIN
+    SET IDENTITY_INSERT [dbo].[Permiso_Boton] ON;
+    IF NOT EXISTS (SELECT * FROM [dbo].[Permiso_Boton] WHERE [ID_PermisoBoton] = 14)
+        INSERT [dbo].[Permiso_Boton] ([ID_PermisoBoton], [NombreFormulario], [NombreControl], [NombrePatente]) VALUES (14, N'MenuPrincipal', N'btnMaestroClientes', N'Ver Clientes');
+    IF NOT EXISTS (SELECT * FROM [dbo].[Permiso_Boton] WHERE [ID_PermisoBoton] = 15)
+        INSERT [dbo].[Permiso_Boton] ([ID_PermisoBoton], [NombreFormulario], [NombreControl], [NombrePatente]) VALUES (15, N'MenuPrincipal', N'btnSeguimientoNutricional', N'Ver Seguimientos');
+    IF NOT EXISTS (SELECT * FROM [dbo].[Permiso_Boton] WHERE [ID_PermisoBoton] = 16)
+        INSERT [dbo].[Permiso_Boton] ([ID_PermisoBoton], [NombreFormulario], [NombreControl], [NombrePatente]) VALUES (16, N'MenuPrincipal', N'btnReportePredictivo', N'Ver Reporte Predictivo');
+    IF NOT EXISTS (SELECT * FROM [dbo].[Permiso_Boton] WHERE [ID_PermisoBoton] = 17)
+        INSERT [dbo].[Permiso_Boton] ([ID_PermisoBoton], [NombreFormulario], [NombreControl], [NombrePatente]) VALUES (17, N'MenuPrincipal', N'btnBitacoraCambios', N'Ver Bitacora Cambios');
     SET IDENTITY_INSERT [dbo].[Permiso_Boton] OFF;
 END
 GO
 
 -- ASIGNAR TODOS LOS PERMISOS AL PERFIL ADMINISTRADOR (ID_Perfil = 1)
-IF NOT EXISTS (SELECT * FROM [dbo].[Perfil_Permiso] WHERE [ID_Perfil] = 1 AND [ID_Permiso] = 20)
-BEGIN
-    INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 20);
-    INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 21);
-    INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 22);
-    INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 23);
-    INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 24);
-    INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 25);
-    INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 26);
-    INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 27);
-    INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 28);
-    INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 29);
-    INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 30);
-    INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 31);
-    INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 32);
-END
+-- El administrador es el unico que puede ver el sistema completo.
+DELETE FROM [dbo].[Perfil_Permiso] WHERE [ID_Perfil] = 1;
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 20);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 21);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 22);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 23);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 24);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 25);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 26);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 27);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 28);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 29);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 30);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 31);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 32);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 33);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 34);
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (1, 35);
+GO
+
+-- ASIGNAR PERMISOS AL PERFIL NUTRICIONISTA (ID_Perfil = 3)
+-- Un nutricionista unicamente debe ver los botones del PN1 (Turnos, Clientes) y PN2 (Seguimiento, Reporte Predictivo),
+-- pero NO puede ver la bitacora de cambios, bitacora de eventos, usuarios, perfiles ni respaldo.
+DELETE FROM [dbo].[Perfil_Permiso] WHERE [ID_Perfil] = 3;
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (3, 27); -- Ver Turnos (PN1)
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (3, 33); -- Ver Clientes (PN1)
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (3, 31); -- Ver Seguimientos (PN2)
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (3, 34); -- Ver Reporte Predictivo (PN2)
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (3, 28); -- Ver Ayuda
+INSERT [dbo].[Perfil_Permiso] ([ID_Perfil], [ID_Permiso]) VALUES (3, 29); -- Cambiar Contraseña
 GO
 
 -- TABLAS DE PN1: TURNERO NUTRICIONAL
