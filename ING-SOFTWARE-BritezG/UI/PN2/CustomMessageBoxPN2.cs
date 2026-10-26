@@ -2,6 +2,8 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using BE;
+using BLL;
+using Services;
 
 namespace UI.PN2
 {
@@ -13,7 +15,7 @@ namespace UI.PN2
         PrescribirPlan
     }
 
-    public partial class CustomMessageBoxPN2 : Form
+    public partial class CustomMessageBoxPN2 : Form, IIdiomaObserver
     {
         public AccionSeleccionadaPN2 AccionElegida { get; private set; } = AccionSeleccionadaPN2.Ninguna;
 
@@ -22,11 +24,23 @@ namespace UI.PN2
             InitializeComponent();
             ConfigurarDatosPaciente(paciente);
             ConfigurarBotonesAccion();
+            TraductorUI.SuscribirFormulario(this, this);
+            ActualizarIdioma();
+        }
+
+        public void ActualizarIdioma()
+        {
+            if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
+            {
+                var idiomaBLL = new IdiomaBLL();
+                TraductorUI.TraducirFormulario(this, idiomaBLL);
+                ConfigurarBotonesAccion();
+            }
         }
 
         private void ConfigurarDatosPaciente(PacienteBE_DNI101 paciente)
         {
-            lblPacNombre.Text = $"👶 {paciente.NombreCompleto}";
+            lblPacNombre.Text = paciente.NombreCompleto;
 
             int edadMeses = paciente.ObtenerEdadMeses();
             string strEdad = edadMeses < 24 ? $"{edadMeses} meses" : $"{edadMeses / 12} años ({edadMeses}m)";
@@ -35,24 +49,35 @@ namespace UI.PN2
 
         private void ConfigurarBotonesAccion()
         {
+            var idiomaBLL = new IdiomaBLL();
+
+            string titGraficar = idiomaBLL.ExisteTraduccion("btnGraficar") ? idiomaBLL.Traducir("btnGraficar") : "Graficar Diagnóstico";
+            string subGraficar = idiomaBLL.ExisteTraduccion("sub_btnGraficar") ? idiomaBLL.Traducir("sub_btnGraficar") : "Visualizar las curvas evolutivas de la OMS (Peso, Talla, IMC)";
+
+            string titReg = idiomaBLL.ExisteTraduccion("btnRegistrar") ? idiomaBLL.Traducir("btnRegistrar") : "Registrar Consulta";
+            string subReg = idiomaBLL.ExisteTraduccion("sub_btnRegistrar") ? idiomaBLL.Traducir("sub_btnRegistrar") : "Cargar mediciones antropométricas, diagnóstico clínico y alertas";
+
+            string titPlan = idiomaBLL.ExisteTraduccion("btnPrescribir") ? idiomaBLL.Traducir("btnPrescribir") : "Prescribir Plan Alimentario";
+            string subPlan = idiomaBLL.ExisteTraduccion("sub_btnPrescribir") ? idiomaBLL.Traducir("sub_btnPrescribir") : "Definir metas calóricas, macronutrientes y pautas dietarias";
+
             EstilizarBotonAccion(
                 btnGraficar,
-                "📈  Graficar Diagnóstico",
-                "Visualizar las curvas evolutivas de la OMS (Peso, Talla, IMC)",
+                titGraficar,
+                subGraficar,
                 Color.FromArgb(46, 125, 50)
             );
 
             EstilizarBotonAccion(
                 btnRegistrar,
-                "📝  Registrar Consulta",
-                "Cargar mediciones antropométricas, diagnóstico clínico y alertas",
+                titReg,
+                subReg,
                 Color.FromArgb(21, 101, 192)
             );
 
             EstilizarBotonAccion(
                 btnPrescribir,
-                "📋  Prescribir Plan Alimentario",
-                "Definir metas calóricas, macronutrientes y pautas dietarias",
+                titPlan,
+                subPlan,
                 Color.FromArgb(76, 124, 89)
             );
         }

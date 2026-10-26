@@ -357,17 +357,18 @@ namespace SetupApp
                     }
                     else
                     {
-                        Log("⚠️ Carpeta 'App' no encontrada en el origen. Verifique la estructura del instalador.");
+                        Log("[AVISO] Carpeta 'App' no encontrada en el origen. Verifique la estructura del instalador.");
                     }
 
                     // 3. Cadena de conexión final para el cliente
                     string cadenaConexionFinal = ConstruirCadenaConexion(servidor, nombreBD);
 
-                    // 4. Instalar Base de Datos
+                    // 4. Instalar o Reinstalar Base de Datos
                     if (crearBD)
                     {
-                        ActualizarProgreso(40, $"Conectando a SQL Server ({servidor}) para inicializar base de datos '{nombreBD}'...");
+                        ActualizarProgreso(40, $"Conectando a SQL Server ({servidor}) para verificar base de datos '{nombreBD}'...");
                         string connMaster = ConstruirCadenaConexion(servidor, "master");
+                        bool bdExiste = false;
 
                         using (var cnMaster = new SqlConnection(connMaster))
                         {
@@ -379,18 +380,23 @@ namespace SetupApp
                                 var res = cmdCheck.ExecuteScalar();
                                 if (res == null)
                                 {
-                                    ActualizarProgreso(50, $"Creando catálogo [{nombreBD}]...");
+                                    ActualizarProgreso(50, $"Creando catálogo inicial [{nombreBD}]...");
                                     using var cmdCreate = new SqlCommand($"CREATE DATABASE [{nombreBD}]", cnMaster);
                                     cmdCreate.ExecuteNonQuery();
+                                    bdExiste = false;
+                                    Log($"[INSTALACIÓN LIMPIA] Base de datos [{nombreBD}] creada exitosamente.");
                                 }
                                 else
                                 {
-                                    Log($"La base de datos [{nombreBD}] ya existe en el servidor. Se procederá a verificar y actualizar esquema.");
+                                    bdExiste = true;
+                                    Log($"[MODO REINSTALACIÓN ACTIVO] La base de datos [{nombreBD}] ya existe en el servidor.");
+                                    Log("[PROTECCIÓN DE DATOS] Se preservarán intactos todos los registros de pacientes, consultas y configuración.");
+                                    Log("[SEGURIDAD] Se recomienda realizar una copia de seguridad (Backup) antes de continuar.");
                                 }
                             }
                         }
 
-                        // Ejecutar script.sql
+                        // Ejecutar script.sql de forma segura y no destructiva
                         string scriptSqlPath = Path.Combine(origenDatos, "script.sql");
                         if (!File.Exists(scriptSqlPath))
                         {
@@ -399,7 +405,9 @@ namespace SetupApp
 
                         if (File.Exists(scriptSqlPath))
                         {
-                            ActualizarProgreso(60, "Ejecutando script de tablas, vistas y datos iniciales de NutriEvolve...");
+                            ActualizarProgreso(60, bdExiste 
+                                ? "Actualizando esquema y objetos sin alterar registros existentes..." 
+                                : "Ejecutando script de tablas, vistas y datos iniciales de NutriEvolve...");
                             string scriptContent = File.ReadAllText(scriptSqlPath);
                             string[] lotes = Regex.Split(scriptContent, @"^\s*GO\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
@@ -407,6 +415,9 @@ namespace SetupApp
                             {
                                 cnDB.Open();
                                 int loteNum = 0;
+                                int ejecutados = 0;
+                                int omitidos = 0;
+
                                 foreach (var lote in lotes)
                                 {
                                     string batch = lote.Trim();
@@ -418,24 +429,53 @@ namespace SetupApp
                                         continue;
                                     }
 
+                                    // Si la base de datos ya existía, protegerla contra sobreescritura o borrado
+                                    if (bdExiste)
+                                    {
+                                        // 1. Omitir cualquier sentencia destructiva
+                                        if (Regex.IsMatch(batch, @"\b(DELETE\s+FROM|TRUNCATE\s+TABLE|DROP\s+TABLE)\b", RegexOptions.IgnoreCase))
+                                        {
+                                            omitidos++;
+                                            continue;
+                                        }
+
+                                        // 2. Omitir inserción de datos de prueba si ya existen en la base
+                                        if (Regex.IsMatch(batch, @"\bINSERT\s+INTO\s+\[?Pacientes_DNI101\]?", RegexOptions.IgnoreCase) ||
+                                            Regex.IsMatch(batch, @"\bINSERT\s+INTO\s+\[?ConsultasNutricionales_DNI101\]?", RegexOptions.IgnoreCase) ||
+                                            Regex.IsMatch(batch, @"\bINSERT\s+INTO\s+\[?MedicionesAntropometricas_DNI101\]?", RegexOptions.IgnoreCase))
+                                        {
+                                            omitidos++;
+                                            continue;
+                                        }
+                                    }
+
                                     try
                                     {
                                         using var cmd = new SqlCommand(batch, cnDB);
                                         cmd.CommandTimeout = 300;
                                         cmd.ExecuteNonQuery();
+                                        ejecutados++;
                                     }
                                     catch (Exception exBatch)
                                     {
-                                        Log($"Aviso en lote {loteNum}: {exBatch.Message}");
+                                        Log($"[AVISO] Lote {loteNum}: {exBatch.Message}");
                                     }
                                     loteNum++;
                                 }
+
+                                if (bdExiste)
+                                {
+                                    Log($"[OK] Reinstalación completada: {ejecutados} bloques de actualización ejecutados ({omitidos} bloques de prueba/destructivos omitidos para proteger datos existentes).");
+                                }
+                                else
+                                {
+                                    Log($"[OK] Se ejecutaron {ejecutados} bloques SQL iniciales satisfactoriamente.");
+                                }
                             }
-                            Log($"Se ejecutaron {lotes.Length} bloques SQL satisfactoriamente.");
                         }
                         else
                         {
-                            Log("⚠️ Archivo 'script.sql' no encontrado en el paquete de datos.");
+                            Log("[AVISO] Archivo 'script.sql' no encontrado en el paquete de datos.");
                         }
 
                         // Sellar Dígitos Verificadores
@@ -447,11 +487,11 @@ namespace SetupApp
                                 Conexion.EstablecerCadenaConexion(cadenaConexionFinal);
                                 var dvBLL = new DigitoVerificadorBLL();
                                 dvBLL.RecalcularYPersistir();
-                                Log("✅ Integridad de base de datos verificada y sellada al 100%.");
+                                Log("[OK] Integridad de base de datos verificada y sellada al 100%.");
                             }
                             catch (Exception exDV)
                             {
-                                Log($"Aviso al recalcular DV: {exDV.Message}");
+                                Log($"[AVISO] Al recalcular DV: {exDV.Message}");
                             }
                         }
                     }
@@ -494,7 +534,7 @@ namespace SetupApp
             }
             catch (Exception exGral)
             {
-                Log($"\n❌ ERROR CRÍTICO DURANTE LA INSTALACIÓN:\n{exGral.Message}\n{exGral.StackTrace}");
+                Log($"\n[ERROR] ERROR CRÍTICO DURANTE LA INSTALACIÓN:\n{exGral.Message}\n{exGral.StackTrace}");
                 MessageBox.Show($"Ocurrió un error durante la instalación:\n\n{exGral.Message}", "Error de Instalación", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnSiguiente.Enabled = true;
                 btnAtras.Enabled = true;

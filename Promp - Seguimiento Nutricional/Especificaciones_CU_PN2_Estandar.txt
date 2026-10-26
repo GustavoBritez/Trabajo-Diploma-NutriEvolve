@@ -1,0 +1,153 @@
+N02.6 CUN06 “Seleccionar Paciente”
+ID y Nombre                           CUN06 - Seleccionar Paciente
+Estado: 
+Pendiente
+Descripción: 
+El Nutricionista accede al módulo de Seguimiento Nutricional Pediátrico (PN2), consulta el padrón de pacientes registrados y selecciona al paciente pediátrico desde la grilla para habilitar las opciones de atención clínica correspondientes (Graficar Diagnóstico, Registrar Consulta, Prescribir Plan).
+Actor principal: 
+Nutricionista
+Actor secundario: 
+Paciente / Tutor
+Precondiciones: 
+1. El Nutricionista debe haber iniciado sesión en el sistema y contar con permisos para el módulo de Seguimiento Nutricional.
+2. El sistema debe encontrarse en estado consistente de integridad (Dígito Verificador validado).
+3. Deben existir pacientes registrados en la base de datos local.
+1. El Nutricionista presiona el botón “Seguimiento Nutricional” desde el menú principal.
+2. El módulo GUI carga y ejecuta CargarPacientes().
+3. El módulo GUI invoca el servicio de listar pacientes a través de la capa de negocio (PacienteBLL_DNI101.ListarPacientes()).
+4. La capa de negocio solicita a la capa de datos (DAL.ListarTodos()) la totalidad de registros del padrón en un único acceso a la base de datos.
+5. La capa de datos retorna el DataTable con los pacientes registrados.
+6. La capa de negocio itera los registros y mapea cada fila instanciando entidades PacienteBE_DNI101 (new PacienteBE_DNI101(row)), retornando List<PacienteBE_DNI101> a la GUI.
+7. El módulo GUI ejecuta PoblarGrilla(_listaPacientes), invocando en cada entidad paciente el método p.ObtenerEdadMeses() para formatear la edad pediátrica.
+8. El módulo GUI añade las filas a la grilla y asocia la referencia de la entidad en la propiedad Tag (Rows[i].Tag = p).
+9. El módulo GUI despliega la grilla completa de pacientes pediátricos en pantalla.
+10. El Nutricionista selecciona un paciente haciendo clic sobre la fila correspondiente (dgvPacientes_CellClick).
+11. El módulo GUI extrae la entidad PacienteBE_DNI101 desde la fila seleccionada (fila.Tag as PacienteBE_DNI101).
+12. El módulo GUI consulta los datos del paciente (paciente.NombreCompleto, paciente.ObtenerEdadMeses()) para establecer el contexto activo.
+13. El módulo GUI ejecuta MostrarOpciones('Graficar Diagnostico', 'Registrar Consulta', 'Prescribir Plan') habilitando las acciones de atención clínica disponibles para el paciente.
+14. El Nutricionista selecciona la opción clínica deseada.
+15. El módulo GUI abre el formulario correspondiente transfiriendo la instancia de PacienteBE_DNI101 para continuar con la atención clínica.
+Flujos alternativos: 
+4.1.1 No existen pacientes registrados en la base de datos, el módulo notifica una advertencia ("No se encontraron pacientes pediátricos registrados en el sistema").
+4.1.2 El módulo sugiere registrar un nuevo paciente a través del módulo de turnos (PN1) y cancela la selección.
+10.1.1 Selección inválida o fila vacía, si el Nutricionista hace clic sobre el encabezado o una zona vacía de la grilla, el módulo rechaza la acción y solicita seleccionar un registro válido.
+10.1.2 El módulo mantiene deshabilitados los botones de acción clínica hasta que se elija un paciente válido.
+Postcondiciones: 
+El paciente pediátrico queda seleccionado como contexto activo en el módulo de Seguimiento Nutricional mediante su entidad PacienteBE_DNI101, habilitando las operaciones clínicas de graficación, consulta y prescripción.
+
+--------------------------------------------------------------------------------
+
+N02.7 CUN07 “Graficar Diagnóstico”
+ID y Nombre                           CUN07 - Graficar Diagnóstico
+Estado: 
+Pendiente
+Descripción: 
+El Nutricionista solicita la visualización gráfica de diagnóstico y curvas OMS del paciente seleccionado, renderizando las franjas percentilares oficiales (P3, P15, P50, P85, P97) y la trayectoria evolutiva de los controles antropométricos anteriores mediante ScottPlot.
+Actor principal: 
+Nutricionista
+Actor secundario: 
+Paciente
+Precondiciones: 
+1. El Nutricionista debe haber iniciado sesión.
+2. Debe haberse seleccionado previamente un paciente pediátrico en el módulo (CUN06) contando con su entidad PacienteBE_DNI101 instanciada.
+1. El Nutricionista presiona el botón “Graficar Diagnóstico” con el paciente seleccionado.
+2. El formulario GUI recibe la entidad PacienteBE_DNI101 y ejecuta ConfigurarTextosPaciente(), extrayendo paciente.NombreCompleto y paciente.ObtenerEdadMeses().
+3. El módulo GUI ejecuta CargarDatos() solicitando el historial clínico a la capa de negocio (ConsultaNutricionalBLL_DNI101.ObtenerHistorialPorPaciente(paciente.IdPaciente_DNI101)).
+4. La capa de negocio invoca a la capa de datos (DAL.ObtenerHistorialPorPaciente(idPaciente)) en un único hit a base de datos.
+5. La capa de datos retorna el DataTable con las consultas registradas del paciente.
+6. La capa de negocio mapea cada registro construyendo instancias de ConsultaNutricionalBE_DNI101 junto con sus entidades hijas MedicionAntropometricaBE_DNI101, DiagnosticoNutricionalBE_DNI101 y AlertaClinicaBE_DNI101, retornando la lista a la GUI.
+7. El módulo GUI solicita los datos percentilares matemáticos oficiales de la OMS a CurvasOMSData_DNI101 (CurvasOMSData_DNI101.ObtenerCurva(tipoIndicador, sexo)).
+8. CurvasOMSData_DNI101 retorna los percentiles oficiales estandarizados (P3, P15, P50 mediana, P85, P97).
+9. El módulo GUI itera la lista de ConsultaNutricionalBE_DNI101 extrayendo las mediciones reales (Peso, Talla, IMC) y la clasificación diagnóstica OMS.
+10. El módulo GUI ejecuta ActualizarGrafico() incorporando las líneas de referencia percentilar OMS y los puntos evolutivos del paciente mediante Plot.Add.ScatterLine(...).
+11. El módulo GUI renderiza en pantalla el gráfico ScottPlot interactivo y el panel de alertas nutricionales para el análisis profesional.
+Flujos alternativos: 
+4.1.1 Paciente sin consultas previas registradas (primera consulta), si el paciente no cuenta con historial antropométrico en la base de datos, el módulo renderiza las curvas OMS de referencia sin trazado histórico de mediciones.
+4.1.2 El módulo muestra un aviso informativo ("El paciente no tiene mediciones registradas. Haga clic en Nueva Consulta para iniciar el seguimiento").
+7.1.1 Error en la lectura de parámetros OMS, si no se pueden cargar los datos de las curvas OMS correspondientes al sexo o edad, el módulo emite una advertencia clínica y mantiene la escala por defecto.
+Postcondiciones: 
+El gráfico de diagnóstico evolutivo con las curvas y percentiles de la OMS queda renderizado y visible en pantalla, permitiendo la evaluación visual interactiva del estado nutricional del paciente.
+
+--------------------------------------------------------------------------------
+
+N02.8 CUN08 “Registrar Consulta”
+ID y Nombre                           CUN08 - Registrar Consulta
+Estado: 
+Pendiente
+Descripción: 
+El Nutricionista registra una nueva consulta nutricional pediátrica ingresando las mediciones antropométricas (peso, talla, perímetro cefálico), calculando en tiempo real el IMC y la clasificación según el modelo OMS (patrón Strategy LMS), registrando la anamnesis cualitativa y persistiendo la consulta de manera atómica con integridad por Dígito Verificador y auditoría en bitácora.
+Actor principal: 
+Nutricionista
+Actor secundario: 
+Paciente / Tutor
+Precondiciones: 
+1. El Nutricionista debe haber iniciado sesión en el sistema.
+2. Debe haberse seleccionado previamente un paciente pediátrico en el módulo (CUN06) con su entidad PacienteBE_DNI101 activa.
+3. La base de datos debe encontrarse íntegra (Dígitos Verificadores consistentes).
+1. El Nutricionista abre el formulario de registro de consulta recibiendo la entidad PacienteBE_DNI101 y extrayendo sus datos filiatorios.
+2. El Nutricionista ingresa o modifica las mediciones antropométricas en la interfaz (Peso en kg, Talla en cm, Perímetro Cefálico en cm).
+3. El módulo GUI invoca a la capa de negocio (ConsultaNutricionalBLL_DNI101.CalcularIMC(peso, talla)).
+4. La capa de negocio calcula y retorna el IMC a la GUI.
+5. El módulo GUI solicita la evaluación nutricional inmediata a la capa de negocio (ConsultaNutricionalBLL_DNI101.EvaluarEstadoNutricional(imc, edadMeses, sexo)).
+6. La capa de negocio delega al contexto de evaluación nutricional (EvaluadorNutricionalContext_DNI101.EjecutarEvaluacion(...)).
+7. El contexto ejecuta la estrategia OMS activa (IEvaluadorNutricionalStrategy_DNI101.Evaluar(...)) determinando la clasificación y severidad de alertas clínicas.
+8. El resultado de evaluación OMS es devuelto a la GUI, actualizando en tiempo real el indicador de IMC, el semáforo de estado y los badges de alerta.
+9. El Nutricionista completa los campos de anamnesis alimentaria (Lactancia, Alimentación Complementaria, Alergias, Antecedentes Familiares, Observaciones).
+10. El Nutricionista presiona el botón “Guardar Consulta”.
+11. El módulo GUI ejecuta ValidarCamposObligatorios() verificando datos válidos y obtiene la edad en meses desde la entidad PacienteBE_DNI101.
+12. El módulo GUI invoca el registro de la consulta en la capa de negocio (ConsultaNutricionalBLL_DNI101.RegistrarConsulta(...)).
+13. La capa de negocio ejecuta ValidarRangosBiologicos(peso, talla).
+14. La capa de negocio construye la entidad ConsultaNutricionalBE_DNI101 con sus datos antropométricos y diagnóstico OMS.
+15. La capa de negocio envía los datos a la capa de datos (DAL.GuardarConsultaCompleta(...)), ejecutando una transacción atómica única (1 DB Hit) que persiste la consulta, mediciones, diagnóstico y alertas clínicas.
+16. La capa de datos retorna el identificador autogenerado de la consulta (idConsulta).
+17. La capa de negocio registra el evento de auditoría en BitacoraBLL (BitacoraBLL.RegistrarBitacora(...)), la cual persiste el registro a través de DAL.GuardarBitacora(...).
+18. La capa de negocio ejecuta el recálculo general de integridad (DigitoVerificadorBLL.RecalcularYPersistir()), persistiendo las firmas en DAL.PersistirIntegridadCompleta(...).
+19. La capa de negocio retorna el resultado exitoso a la GUI.
+20. El módulo GUI muestra un mensaje de confirmación ("Consulta registrada con éxito"), cierra el formulario y refresca el contexto del paciente.
+Flujos alternativos: 
+11.1.1 Campos obligatorios vacíos o mediciones menores o iguales a cero, el módulo GUI muestra una advertencia ("Por favor, ingrese un peso válido en kilogramos") y detiene el proceso.
+13.1.1 Valores fuera de rango biológico admisible, la capa de negocio arroja ArgumentException impidiendo la transacción si los valores antropométricos no son biológicamente viables.
+15.1.1 Error en la transacción de base de datos, la capa de datos ejecuta un Rollback automático y la GUI notifica el error clínico al usuario.
+Postcondiciones: 
+La consulta nutricional pediátrica queda guardada en la base de datos vinculada a la historia clínica del paciente mediante su entidad ConsultaNutricionalBE_DNI101, con sus mediciones y clasificación OMS consolidadas, los Dígitos Verificadores recalculados y sellados, y la acción registrada en la bitácora de auditoría.
+
+--------------------------------------------------------------------------------
+
+N02.9 CUN09 “Prescribir Plan”
+ID y Nombre                           CUN09 - Prescribir Plan
+Estado: 
+Pendiente
+Descripción: 
+El Nutricionista prescribe el plan alimentario correspondiente a la consulta del paciente, especificando el requerimiento calórico total en Kcal/día, la distribución porcentual de macronutrientes (carbohidratos, proteínas y grasas), las pautas alimentarias familiares y las metas terapéuticas de salud, persistiendo el plan mediante su entidad PlanAlimentarioBE_DNI101 con cálculo de Dígitos Verificadores y registro de auditoría en bitácora.
+Actor principal: 
+Nutricionista
+Actor secundario: 
+Paciente / Tutor
+Precondiciones: 
+1. El Nutricionista debe haber iniciado sesión.
+2. Debe haberse seleccionado un paciente pediátrico (CUN06) y contar con al menos una consulta nutricional registrada (CUN08).
+3. El sistema de Dígitos Verificadores debe encontrarse en estado consistente.
+1. El Nutricionista abre el formulario de prescripción de plan recibiendo la entidad PacienteBE_DNI101 y extrayendo sus datos filiatorios y edad.
+2. El módulo GUI solicita la última atención clínica a ConsultaNutricionalBLL_DNI101 (ObtenerUltimaConsultaPorPaciente(idPaciente)), la cual consulta a la DAL y retorna la entidad ConsultaNutricionalBE_DNI101.
+3. El módulo GUI solicita si existe un plan alimentario previo a PlanAlimentarioBLL_DNI101 (ObtenerUltimoPlanPorPaciente(idPaciente)), precargando los valores anteriores si existieran.
+4. El Nutricionista modifica los porcentajes de macronutrientes (% Carbohidratos, % Proteínas, % Grasas) y el requerimiento calórico (Kcal/día).
+5. El módulo GUI ejecuta en tiempo real RecalcularGramos() y valida que la distribución sume exactamente 100%, actualizando los gramos de macronutrientes y el semáforo visual ("Distribución válida (100%)").
+6. El Nutricionista completa los campos de Pautas Alimentarias Familiares y Metas de Salud del tratamiento.
+7. El Nutricionista presiona el botón “Guardar Plan”.
+8. El módulo GUI valida que los campos requeridos estén completos y que la distribución sume exactamente 100% (ValidarDistribucion100(...)).
+9. El módulo GUI invoca la prescripción en la capa de negocio (PlanAlimentarioBLL_DNI101.PrescribirPlan(...)).
+10. La capa de negocio ejecuta ValidarDistribucionCalorica() verificando rangos calóricos (hasta 8000 kcal) y suma exacta de 100%.
+11. La capa de negocio construye la entidad PlanAlimentarioBE_DNI101 con los parámetros nutricionales y cálculo de DVH preliminar.
+12. La capa de negocio persiste el plan en la base de datos a través de la capa de acceso a datos (DAL.GuardarPlanAlimentario(...)) en 1 único hit a base de datos.
+13. La capa de datos retorna el identificador autogenerado del plan (idPlan).
+14. La capa de negocio registra el evento de prescripción en BitacoraBLL (BitacoraBLL.RegistrarBitacora(...)), persistido en DAL.GuardarBitacora(...).
+15. La capa de negocio invoca el recálculo y persistencia de Dígitos Verificadores (DigitoVerificadorBLL.RecalcularYPersistir()), actualizando la tabla de integridad en DAL.PersistirIntegridadCompleta(...).
+16. La capa de negocio retorna el idPlan a la GUI.
+17. El módulo GUI muestra un mensaje de confirmación de operación exitosa ("Plan Alimentario prescrito exitosamente"), cierra la ventana de prescripción y retorna al seguimiento del paciente.
+Flujos alternativos: 
+2.1.1 Paciente sin consultas médicas previas, el módulo alerta mediante advertencia ("El paciente debe tener al menos una consulta médica registrada para prescribir un plan alimentario") e interrumpe la prescripción.
+5.1.1 Suma de macronutrientes distinta de 100%, el módulo resalta en color rojo la advertencia visual indicando la diferencia respecto al 100%.
+8.1.1 Intento de guardado con distribución inválida, si la suma de Carbohidratos, Proteínas y Grasas difiere del 100%, el módulo rechaza la acción mediante una advertencia ("La suma de los porcentajes de macronutrientes debe ser exactamente 100%") y detiene el guardado.
+8.2.1 Requerimiento calórico menor o igual a cero, el módulo alerta ("Ingrese un requerimiento calórico válido") y mantiene el foco en el campo numérico.
+Postcondiciones: 
+El plan alimentario queda registrado en la base de datos vinculado a la consulta médica del paciente mediante la entidad PlanAlimentarioBE_DNI101, con sus metas y pautas nutricionales vigentes, el Dígito Verificador recalculado y sellado, y la operación registrada en la bitácora de auditoría.

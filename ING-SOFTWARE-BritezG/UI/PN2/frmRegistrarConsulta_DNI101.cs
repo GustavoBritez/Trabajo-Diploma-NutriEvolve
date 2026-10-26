@@ -3,12 +3,14 @@ using System.Drawing;
 using System.Windows.Forms;
 using BE;
 using BE.PN2;
+using BLL;
 using BLL.PN2;
 using BLL.PN2.Strategy;
+using Services;
 
 namespace UI.PN2
 {
-    public partial class frmRegistrarConsulta_DNI101 : Form
+    public partial class frmRegistrarConsulta_DNI101 : Form, IIdiomaObserver
     {
         private readonly PacienteBE_DNI101 _paciente;
         private readonly ConsultaNutricionalBLL_DNI101 _consultaBLL;
@@ -20,6 +22,18 @@ namespace UI.PN2
 
             InitializeComponent();
             ConfigurarTextosPaciente();
+            TraductorUI.SuscribirFormulario(this, this);
+            ActualizarIdioma();
+        }
+
+        public void ActualizarIdioma()
+        {
+            if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
+            {
+                var idiomaBLL = new IdiomaBLL();
+                TraductorUI.TraducirFormulario(this, idiomaBLL);
+                ConfigurarTextosPaciente();
+            }
         }
 
         private void ConfigurarTextosPaciente()
@@ -142,6 +156,19 @@ namespace UI.PN2
         private void BtnCancelar_Click(object? sender, EventArgs e)
         {
             Close();
+        }
+
+        private void BtnAyudaContextual_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                using var frmAyuda = new frmManualAyuda(4);
+                frmAyuda.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir el manual de ayuda: {ex.Message}", "Ayuda", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

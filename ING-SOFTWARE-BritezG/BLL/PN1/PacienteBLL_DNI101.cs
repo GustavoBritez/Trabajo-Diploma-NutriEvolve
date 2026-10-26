@@ -212,5 +212,101 @@ namespace BLL
                 throw;
             }
         }
+
+        public DataTable ListarMaestro()
+        {
+            return _pacienteDAL.ListarMaestro();
+        }
+
+        public int GuardarMaestro(string dni, string apellidos, string nombres, string? email, string? celular, string? direccion)
+        {
+            if (string.IsNullOrWhiteSpace(dni)) throw new ArgumentException("El DNI es obligatorio.");
+            if (string.IsNullOrWhiteSpace(apellidos)) throw new ArgumentException("El apellido es obligatorio.");
+            if (string.IsNullOrWhiteSpace(nombres)) throw new ArgumentException("El nombre es obligatorio.");
+
+            dni = dni.Trim();
+            var existente = ObtenerPacientePorDNI(dni);
+            if (existente != null)
+            {
+                throw new InvalidOperationException($"Ya existe un paciente registrado con el DNI {dni}.");
+            }
+
+            int id = _pacienteDAL.GuardarMaestro(dni, apellidos, nombres, email, celular, direccion);
+            try
+            {
+                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                _bitacoraBLL.RegistrarBitacora(2, $"Alta de Cliente/Paciente: {apellidos}, {nombres} (DNI: {dni}) en Maestro ABM-C", dniActual, "MaestroClientes");
+            }
+            catch { }
+
+            return id;
+        }
+
+        public bool ModificarMaestro(int idPaciente, string dni, string apellidos, string nombres, string? email, string? celular, string? direccion)
+        {
+            if (idPaciente <= 0) throw new ArgumentException("Identificador de paciente inválido.");
+            if (string.IsNullOrWhiteSpace(dni)) throw new ArgumentException("El DNI es obligatorio.");
+            if (string.IsNullOrWhiteSpace(apellidos)) throw new ArgumentException("El apellido es obligatorio.");
+            if (string.IsNullOrWhiteSpace(nombres)) throw new ArgumentException("El nombre es obligatorio.");
+
+            bool ok = _pacienteDAL.ModificarMaestro(idPaciente, dni, apellidos, nombres, email, celular, direccion);
+            try
+            {
+                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                _bitacoraBLL.RegistrarBitacora(2, $"Modificación en Maestro ABM-C del Cliente/Paciente ID {idPaciente} (DNI: {dni})", dniActual, "MaestroClientes");
+            }
+            catch { }
+
+            return ok;
+        }
+
+        public bool EliminarLogico(int idPaciente)
+        {
+            if (idPaciente <= 0) throw new ArgumentException("Identificador de paciente inválido.");
+
+            bool ok = _pacienteDAL.EliminarLogico(idPaciente);
+            try
+            {
+                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+                _bitacoraBLL.RegistrarBitacora(3, $"Baja Lógica del Cliente/Paciente ID {idPaciente} y sus datos 1:N asociados", dniActual, "MaestroClientes");
+            }
+            catch { }
+
+            return ok;
+        }
+
+        public DataTable ObtenerEmails1N(int idPaciente)
+        {
+            return _pacienteDAL.ObtenerEmails1N(idPaciente);
+        }
+
+        public void AgregarEmail1N(int idPaciente, string email, bool esPrincipal)
+        {
+            if (string.IsNullOrWhiteSpace(email)) throw new ArgumentException("El email no puede estar vacío.");
+            _pacienteDAL.AgregarEmail1N(idPaciente, email, esPrincipal);
+        }
+
+        public void EliminarEmailLogico1N(int idEmail)
+        {
+            if (idEmail <= 0) return;
+            _pacienteDAL.EliminarEmailLogico1N(idEmail);
+        }
+
+        public DataTable ObtenerTelefonos1N(int idPaciente)
+        {
+            return _pacienteDAL.ObtenerTelefonos1N(idPaciente);
+        }
+
+        public void AgregarTelefono1N(int idPaciente, string numero, string tipo, bool esPrincipal)
+        {
+            if (string.IsNullOrWhiteSpace(numero)) throw new ArgumentException("El número de teléfono no puede estar vacío.");
+            _pacienteDAL.AgregarTelefono1N(idPaciente, numero, tipo, esPrincipal);
+        }
+
+        public void EliminarTelefonoLogico1N(int idTelefono)
+        {
+            if (idTelefono <= 0) return;
+            _pacienteDAL.EliminarTelefonoLogico1N(idTelefono);
+        }
     }
 }

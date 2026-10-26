@@ -4,7 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using BE;
+using BE.PN2;
 using BLL;
+using BLL.PN2;
 using Services;
 
 namespace UI.PN2
@@ -25,6 +27,8 @@ namespace UI.PN2
 
             AjustarDisenoResponsivo();
             CargarPacientes();
+            TraductorUI.SuscribirFormulario(this, this);
+            ActualizarIdioma();
         }
 
         public void AjustarDisenoResponsivo()
@@ -156,6 +160,10 @@ namespace UI.PN2
             };
 
             _dgvPacientes.Columns.AddRange(colDni, colNombre, colSexo, colEdad, colNac, colObra, colTel);
+            if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
+            {
+                TraductorUI.TraducirDataGridView(_dgvPacientes, new IdiomaBLL(), this.Name);
+            }
 
             foreach (var p in pacientes)
             {
@@ -244,9 +252,56 @@ namespace UI.PN2
             }
         }
 
+        private void _btnComprobante_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                if (_dgvPacientes.CurrentRow == null || _dgvPacientes.CurrentRow.Tag is not PacienteBE_DNI101 paciente)
+                {
+                    MessageBox.Show("Por favor seleccione un paciente en la grilla para emitir su Comprobante Formal / Ficha de Prescripción.", "Selección Requerida", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                var consultaBLL = new ConsultaNutricionalBLL_DNI101();
+                var planBLL = new PlanAlimentarioBLL_DNI101();
+
+                var ultimaConsulta = consultaBLL.ObtenerUltimaConsultaPorPaciente(paciente.IdPaciente_DNI101);
+                var ultimoPlan = planBLL.ObtenerUltimoPlanPorPaciente(paciente.IdPaciente_DNI101);
+
+                using var frmComp = new frmComprobantePrescripcion_DNI101(
+                    paciente,
+                    ultimaConsulta,
+                    ultimoPlan,
+                    ultimaConsulta?.Diagnostico?.ClasificacionOMS_DNI101);
+                frmComp.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al generar el comprobante: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void _btnAyudaContextual_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                using var frmAyuda = new frmManualAyuda(4);
+                frmAyuda.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir la ayuda contextual: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         public void ActualizarIdioma()
         {
-            // Soporte para internacionalización
+            if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
+            {
+                var idiomaBLL = new IdiomaBLL();
+                TraductorUI.TraducirFormulario(this, idiomaBLL);
+                TraductorUI.TraducirDataGridView(_dgvPacientes, idiomaBLL, this.Name);
+            }
         }
     }
 }

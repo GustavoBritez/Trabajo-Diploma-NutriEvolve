@@ -45,6 +45,10 @@ namespace UI
                 if (baseCorrupta)
                 {
                     btnTurnos.Enabled = false;
+                    btnSeguimientoNutricional.Enabled = false;
+                    btnMaestroClientes.Enabled = false;
+                    btnBitacoraCambios.Enabled = false;
+                    btnReportePredictivo.Enabled = false;
                     btnReportes.Enabled = false;
                     btnUsuarios.Enabled = false;
                     btnAyuda.Enabled = false;
@@ -61,6 +65,10 @@ namespace UI
                     if (tieneSession)
                     {
                         btnTurnos.Enabled = true;
+                        btnSeguimientoNutricional.Enabled = true;
+                        btnMaestroClientes.Enabled = true;
+                        btnBitacoraCambios.Enabled = true;
+                        btnReportePredictivo.Enabled = true;
                         btnReportes.Enabled = true;
                         btnUsuarios.Enabled = true;
                         btnAyuda.Enabled = true;
@@ -74,6 +82,10 @@ namespace UI
                     else
                     {
                         btnTurnos.Enabled = false;
+                        btnSeguimientoNutricional.Enabled = false;
+                        btnMaestroClientes.Enabled = false;
+                        btnBitacoraCambios.Enabled = false;
+                        btnReportePredictivo.Enabled = false;
                         btnReportes.Enabled = false;
                         btnUsuarios.Enabled = false;
                         btnAyuda.Enabled = false;
@@ -440,6 +452,10 @@ namespace UI
             {
                 TraductorUI.TraducirFormulario(this, idiomaBLL);
 
+                if (btnMaestroClientes != null && idiomaBLL.ExisteTraduccion("btnMaestroClientes")) btnMaestroClientes.Text = idiomaBLL.Traducir("btnMaestroClientes");
+                if (btnBitacoraCambios != null && idiomaBLL.ExisteTraduccion("btnBitacoraCambios")) btnBitacoraCambios.Text = idiomaBLL.Traducir("btnBitacoraCambios");
+                if (btnReportePredictivo != null && idiomaBLL.ExisteTraduccion("btnReportePredictivo")) btnReportePredictivo.Text = idiomaBLL.Traducir("btnReportePredictivo");
+
                 if (gbDV != null)
                 {
                     if (idiomaBLL.ExisteTraduccion("gbDV")) gbDV.Text = idiomaBLL.Traducir("gbDV");
@@ -459,6 +475,21 @@ namespace UI
                 if (_frmSeguimientoContenido != null && !_frmSeguimientoContenido.IsDisposed && _frmSeguimientoContenido is IIdiomaObserver obsSeg)
                 {
                     obsSeg.ActualizarIdioma();
+                }
+
+                if (_frmMaestroClientesContenido != null && !_frmMaestroClientesContenido.IsDisposed && _frmMaestroClientesContenido is IIdiomaObserver obsMaestro)
+                {
+                    obsMaestro.ActualizarIdioma();
+                }
+
+                if (_frmBitacoraCambiosContenido != null && !_frmBitacoraCambiosContenido.IsDisposed && _frmBitacoraCambiosContenido is IIdiomaObserver obsBitacora)
+                {
+                    obsBitacora.ActualizarIdioma();
+                }
+
+                if (_frmReportePredictivoContenido != null && !_frmReportePredictivoContenido.IsDisposed && _frmReportePredictivoContenido is IIdiomaObserver obsReporte)
+                {
+                    obsReporte.ActualizarIdioma();
                 }
             }
         }
@@ -560,6 +591,162 @@ namespace UI
             _frmSeguimientoContenido.Show();
             _frmSeguimientoContenido.BringToFront();
             _frmSeguimientoContenido.CargarPacientes();
+        }
+
+        private UI.PN1.frmMaestroClientes_DNI101? _frmMaestroClientesContenido;
+
+        private void btnMaestroClientes_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UsuarioBE usuarioActivo = ServicesSessionManager.Instancia.ObtenerUsuarioActivo();
+                if (usuarioActivo == null)
+                {
+                    idiomaBLL.MostrarMensaje("msg_error_nosesion", "titulo_error_nosesion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                MostrarMaestroClientesEnContenedor();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir Maestro de Clientes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void MostrarMaestroClientesEnContenedor()
+        {
+            if (_frmMaestroClientesContenido == null || _frmMaestroClientesContenido.IsDisposed)
+            {
+                _frmMaestroClientesContenido = new UI.PN1.frmMaestroClientes_DNI101();
+            }
+
+            if (ChangePassPanel != null)
+            {
+                ChangePassPanel.Visible = false;
+            }
+
+            panelContenedor.Controls.Clear();
+            _frmMaestroClientesContenido.TopLevel = false;
+            _frmMaestroClientesContenido.FormBorderStyle = FormBorderStyle.None;
+            _frmMaestroClientesContenido.Dock = DockStyle.Fill;
+            _frmMaestroClientesContenido.AutoScroll = true;
+            panelContenedor.Controls.Add(_frmMaestroClientesContenido);
+            _frmMaestroClientesContenido.Show();
+            _frmMaestroClientesContenido.BringToFront();
+        }
+
+        private UI.PN2.frmBitacoraCambiosConsultas? _frmBitacoraCambiosContenido;
+
+        private void btnBitacoraCambios_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UsuarioBE usuarioActivo = ServicesSessionManager.Instancia.ObtenerUsuarioActivo();
+                if (usuarioActivo == null)
+                {
+                    idiomaBLL.MostrarMensaje("msg_error_nosesion", "titulo_error_nosesion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                MostrarBitacoraCambiosEnContenedor();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir Bitacora de Cambios: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void MostrarBitacoraCambiosEnContenedor()
+        {
+            if (_frmBitacoraCambiosContenido == null || _frmBitacoraCambiosContenido.IsDisposed)
+            {
+                _frmBitacoraCambiosContenido = new UI.PN2.frmBitacoraCambiosConsultas();
+            }
+
+            if (ChangePassPanel != null)
+            {
+                ChangePassPanel.Visible = false;
+            }
+
+            panelContenedor.Controls.Clear();
+            _frmBitacoraCambiosContenido.TopLevel = false;
+            _frmBitacoraCambiosContenido.FormBorderStyle = FormBorderStyle.None;
+            _frmBitacoraCambiosContenido.Dock = DockStyle.Fill;
+            _frmBitacoraCambiosContenido.AutoScroll = true;
+            panelContenedor.Controls.Add(_frmBitacoraCambiosContenido);
+            _frmBitacoraCambiosContenido.Show();
+            _frmBitacoraCambiosContenido.BringToFront();
+        }
+
+        private UI.PN2.frmReporteInteligente? _frmReportePredictivoContenido;
+
+        private void btnReportePredictivo_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UsuarioBE usuarioActivo = ServicesSessionManager.Instancia.ObtenerUsuarioActivo();
+                if (usuarioActivo == null)
+                {
+                    idiomaBLL.MostrarMensaje("msg_error_nosesion", "titulo_error_nosesion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                MostrarReportePredictivoEnContenedor();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir Reporte Predictivo: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void MostrarReportePredictivoEnContenedor()
+        {
+            if (_frmReportePredictivoContenido == null || _frmReportePredictivoContenido.IsDisposed)
+            {
+                _frmReportePredictivoContenido = new UI.PN2.frmReporteInteligente();
+            }
+
+            if (ChangePassPanel != null)
+            {
+                ChangePassPanel.Visible = false;
+            }
+
+            panelContenedor.Controls.Clear();
+            _frmReportePredictivoContenido.TopLevel = false;
+            _frmReportePredictivoContenido.FormBorderStyle = FormBorderStyle.None;
+            _frmReportePredictivoContenido.Dock = DockStyle.Fill;
+            _frmReportePredictivoContenido.AutoScroll = true;
+            panelContenedor.Controls.Add(_frmReportePredictivoContenido);
+            _frmReportePredictivoContenido.Show();
+            _frmReportePredictivoContenido.BringToFront();
+        }
+
+        private void btnAyuda_Click(object sender, EventArgs e)
+        {
+            AbrirManualAyuda();
+        }
+
+        private void MenuPrincipal_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F1)
+            {
+                AbrirManualAyuda();
+                e.Handled = true;
+            }
+        }
+
+        private void AbrirManualAyuda()
+        {
+            try
+            {
+                using var frmAyuda = new UI.PN2.frmManualAyuda();
+                frmAyuda.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir el Manual de Ayuda: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 

@@ -1,0 +1,151 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|c:\\users\\danie\\desktop\\git\\td\\generadorinstalador\\generador\\core\\projectanalyzer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|solutionrelative:generador\\core\\projectanalyzer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|c:\\users\\danie\\desktop\\git\\td\\generadorinstalador\\generador\\core\\projectpublisher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|solutionrelative:generador\\core\\projectpublisher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|c:\\users\\danie\\desktop\\git\\td\\generadorinstalador\\universalsetup\\sqlexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|solutionrelative:universalsetup\\sqlexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|c:\\users\\danie\\desktop\\git\\td\\generadorinstalador\\universalsetup\\setupmanifest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|solutionrelative:universalsetup\\setupmanifest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|c:\\users\\danie\\desktop\\git\\td\\generadorinstalador\\universalsetup\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|solutionrelative:universalsetup\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|c:\\users\\danie\\desktop\\git\\td\\generadorinstalador\\universalsetup\\frmuniversalsetup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|solutionrelative:universalsetup\\frmuniversalsetup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|c:\\users\\danie\\desktop\\git\\td\\generadorinstalador\\generador\\core\\installerpackager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|solutionrelative:generador\\core\\installerpackager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ProjectAnalyzer.cs",
+              "DocumentMoniker": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\Generador\\Core\\ProjectAnalyzer.cs",
+              "RelativeDocumentMoniker": "Generador\\Core\\ProjectAnalyzer.cs",
+              "ToolTip": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\Generador\\Core\\ProjectAnalyzer.cs",
+              "RelativeToolTip": "Generador\\Core\\ProjectAnalyzer.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAAAA8AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-25T05:35:04.673Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ProjectPublisher.cs",
+              "DocumentMoniker": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\Generador\\Core\\ProjectPublisher.cs",
+              "RelativeDocumentMoniker": "Generador\\Core\\ProjectPublisher.cs",
+              "ToolTip": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\Generador\\Core\\ProjectPublisher.cs",
+              "RelativeToolTip": "Generador\\Core\\ProjectPublisher.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-25T05:34:57.923Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SetupManifest.cs",
+              "DocumentMoniker": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\UniversalSetup\\SetupManifest.cs",
+              "RelativeDocumentMoniker": "UniversalSetup\\SetupManifest.cs",
+              "ToolTip": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\UniversalSetup\\SetupManifest.cs",
+              "RelativeToolTip": "UniversalSetup\\SetupManifest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-25T05:34:43.758Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\UniversalSetup\\Program.cs",
+              "RelativeDocumentMoniker": "UniversalSetup\\Program.cs",
+              "ToolTip": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\UniversalSetup\\Program.cs",
+              "RelativeToolTip": "UniversalSetup\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-25T05:34:42.323Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "FrmUniversalSetup.cs",
+              "DocumentMoniker": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\UniversalSetup\\FrmUniversalSetup.cs",
+              "RelativeDocumentMoniker": "UniversalSetup\\FrmUniversalSetup.cs",
+              "ToolTip": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\UniversalSetup\\FrmUniversalSetup.cs",
+              "RelativeToolTip": "UniversalSetup\\FrmUniversalSetup.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-25T05:34:40.958Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "InstallerPackager.cs",
+              "DocumentMoniker": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\Generador\\Core\\InstallerPackager.cs",
+              "RelativeDocumentMoniker": "Generador\\Core\\InstallerPackager.cs",
+              "ToolTip": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\Generador\\Core\\InstallerPackager.cs",
+              "RelativeToolTip": "Generador\\Core\\InstallerPackager.cs",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-25T05:34:33.096Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SqlExecutor.cs",
+              "DocumentMoniker": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\UniversalSetup\\SqlExecutor.cs",
+              "RelativeDocumentMoniker": "UniversalSetup\\SqlExecutor.cs",
+              "ToolTip": "C:\\Users\\Danie\\Desktop\\GIT\\TD\\GeneradorInstalador\\UniversalSetup\\SqlExecutor.cs",
+              "RelativeToolTip": "UniversalSetup\\SqlExecutor.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAABoAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-25T04:57:36.271Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

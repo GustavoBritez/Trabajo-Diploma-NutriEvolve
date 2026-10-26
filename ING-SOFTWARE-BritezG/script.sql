@@ -435,22 +435,15 @@ BEGIN
     VALUES ('4444', N'Emma', N'Martínez', '11-7788-9900', 'emma.martinez@test.com', '2022-03-01', N'Femenino', N'Galeno');
 END
 GO
+IF NOT EXISTS (SELECT 1 FROM ConsultasNutricionales_DNI101)
+BEGIN
+    DECLARE @IdP1 INT, @IdP2 INT, @IdP3 INT, @IdP4 INT;
+    SELECT @IdP1 = IdPaciente_DNI101 FROM Pacientes_DNI101 WHERE DniNiño_DNI101 = '1111';
+    SELECT @IdP2 = IdPaciente_DNI101 FROM Pacientes_DNI101 WHERE DniNiño_DNI101 = '2222';
+    SELECT @IdP3 = IdPaciente_DNI101 FROM Pacientes_DNI101 WHERE DniNiño_DNI101 = '3333';
+    SELECT @IdP4 = IdPaciente_DNI101 FROM Pacientes_DNI101 WHERE DniNiño_DNI101 = '4444';
 
-DECLARE @IdP1 INT, @IdP2 INT, @IdP3 INT, @IdP4 INT;
-SELECT @IdP1 = IdPaciente_DNI101 FROM Pacientes_DNI101 WHERE DniNiño_DNI101 = '1111';
-SELECT @IdP2 = IdPaciente_DNI101 FROM Pacientes_DNI101 WHERE DniNiño_DNI101 = '2222';
-SELECT @IdP3 = IdPaciente_DNI101 FROM Pacientes_DNI101 WHERE DniNiño_DNI101 = '3333';
-SELECT @IdP4 = IdPaciente_DNI101 FROM Pacientes_DNI101 WHERE DniNiño_DNI101 = '4444';
-
-DELETE FROM Recordatorios24h_DNI101 WHERE IdConsulta_DNI101 IN (SELECT IdConsulta_DNI101 FROM ConsultasNutricionales_DNI101 WHERE IdPaciente_DNI101 IN (@IdP1, @IdP2, @IdP3, @IdP4));
-DELETE FROM PlanesAlimentarios_DNI101 WHERE IdConsulta_DNI101 IN (SELECT IdConsulta_DNI101 FROM ConsultasNutricionales_DNI101 WHERE IdPaciente_DNI101 IN (@IdP1, @IdP2, @IdP3, @IdP4));
-DELETE FROM AlertasClinicas_DNI101 WHERE IdConsulta_DNI101 IN (SELECT IdConsulta_DNI101 FROM ConsultasNutricionales_DNI101 WHERE IdPaciente_DNI101 IN (@IdP1, @IdP2, @IdP3, @IdP4));
-DELETE FROM DiagnosticosNutricionales_DNI101 WHERE IdConsulta_DNI101 IN (SELECT IdConsulta_DNI101 FROM ConsultasNutricionales_DNI101 WHERE IdPaciente_DNI101 IN (@IdP1, @IdP2, @IdP3, @IdP4));
-DELETE FROM ZScoresResultados_DNI101 WHERE IdConsulta_DNI101 IN (SELECT IdConsulta_DNI101 FROM ConsultasNutricionales_DNI101 WHERE IdPaciente_DNI101 IN (@IdP1, @IdP2, @IdP3, @IdP4));
-DELETE FROM MedicionesAntropometricas_DNI101 WHERE IdConsulta_DNI101 IN (SELECT IdConsulta_DNI101 FROM ConsultasNutricionales_DNI101 WHERE IdPaciente_DNI101 IN (@IdP1, @IdP2, @IdP3, @IdP4));
-DELETE FROM ConsultasNutricionales_DNI101 WHERE IdPaciente_DNI101 IN (@IdP1, @IdP2, @IdP3, @IdP4);
-
-DECLARE @IdConsulta INT;
+    DECLARE @IdConsulta INT;
 
 -- HISTORIAL PACIENTE 1 (DNI 1111 - Mateo Benítez): 7 CONTROLES NORMALES OMS
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, TipoLactancia_DNI101, AlimentacionComplementaria_DNI101, Observaciones_DNI101) VALUES (@IdP1, 11111111, '2024-02-15', 1, N'Materna Exclusiva', N'No', N'Primer control del lactante. Reflejos conservados.');
@@ -601,4 +594,443 @@ SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 13.90, 95.00, 49.00, 51.00, 15.40);
 INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, -0.10, 0.00, -0.10, 0.00, 46.02, 50.00, 46.02);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Niña normopeso con desarrollo antropométrico óptimo.', 0);
+END
 GO
+
+--------------------------------------------------------------------------------
+-- ACTUALIZACIÓN SCHEMA PACIENTES: DIRECCIÓN Y BORRADO LÓGICO
+--------------------------------------------------------------------------------
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Pacientes_DNI101]') AND name = 'Direccion_DNI101')
+BEGIN
+    ALTER TABLE [dbo].[Pacientes_DNI101] ADD [Direccion_DNI101] VARCHAR(200) NULL;
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Pacientes_DNI101]') AND name = 'Activo_DNI101')
+BEGIN
+    ALTER TABLE [dbo].[Pacientes_DNI101] ADD [Activo_DNI101] BIT NOT NULL CONSTRAINT DF_Pacientes_Activo DEFAULT 1;
+END
+GO
+
+--------------------------------------------------------------------------------
+-- TABLAS 1:N DE CONTACTOS DE PACIENTES / CLIENTES (EMAILS Y TELÉFONOS/CELULARES)
+--------------------------------------------------------------------------------
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Paciente_Emails_DNI101' AND xtype='U')
+BEGIN
+CREATE TABLE [dbo].[Paciente_Emails_DNI101](
+    [IdEmail_DNI101] INT IDENTITY(1,1) PRIMARY KEY,
+    [IdPaciente_DNI101] INT NOT NULL,
+    [Email_DNI101] VARCHAR(150) NOT NULL,
+    [EsPrincipal_DNI101] BIT NOT NULL DEFAULT 0,
+    [Activo_DNI101] BIT NOT NULL DEFAULT 1,
+    CONSTRAINT [FK_Paciente_Emails_Pacientes] FOREIGN KEY ([IdPaciente_DNI101]) 
+        REFERENCES [dbo].[Pacientes_DNI101] ([IdPaciente_DNI101]) ON DELETE CASCADE
+) ON [PRIMARY];
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Paciente_Telefonos_DNI101' AND xtype='U')
+BEGIN
+CREATE TABLE [dbo].[Paciente_Telefonos_DNI101](
+    [IdTelefono_DNI101] INT IDENTITY(1,1) PRIMARY KEY,
+    [IdPaciente_DNI101] INT NOT NULL,
+    [Numero_DNI101] VARCHAR(50) NOT NULL,
+    [Tipo_DNI101] VARCHAR(30) NOT NULL DEFAULT 'Celular',
+    [EsPrincipal_DNI101] BIT NOT NULL DEFAULT 0,
+    [Activo_DNI101] BIT NOT NULL DEFAULT 1,
+    CONSTRAINT [FK_Paciente_Telefonos_Pacientes] FOREIGN KEY ([IdPaciente_DNI101]) 
+        REFERENCES [dbo].[Pacientes_DNI101] ([IdPaciente_DNI101]) ON DELETE CASCADE
+) ON [PRIMARY];
+END
+GO
+
+--------------------------------------------------------------------------------
+-- TABLA BITÁCORA DE CAMBIOS: CONSULTAS NUTRICIONALES (HISTORIAL PARA ROLLBACK)
+--------------------------------------------------------------------------------
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ConsultasNutricionales_Cambios_DNI101' AND xtype='U')
+BEGIN
+CREATE TABLE [dbo].[ConsultasNutricionales_Cambios_DNI101](
+    [IdCambio] INT IDENTITY(1,1) PRIMARY KEY,
+    [IdConsulta_DNI101] INT NOT NULL,
+    [IdPaciente_DNI101] INT NOT NULL,
+    [DniNutricionista_DNI101] INT NOT NULL,
+    [FechaControl_DNI101] DATETIME2(7) NOT NULL,
+    [EdadMeses_DNI101] INT NOT NULL,
+    [TipoLactancia_DNI101] VARCHAR(50) NULL,
+    [AlimentacionComplementaria_DNI101] VARCHAR(255) NULL,
+    [Alergias_DNI101] VARCHAR(255) NULL,
+    [AntecedentesFamiliares_DNI101] VARCHAR(255) NULL,
+    [Observaciones_DNI101] VARCHAR(MAX) NULL,
+    [FechaCambio] DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
+    [UsuarioDni] INT NOT NULL DEFAULT 11111111,
+    [TipoOperacion] VARCHAR(20) NOT NULL
+) ON [PRIMARY];
+END
+GO
+
+--------------------------------------------------------------------------------
+-- TRIGGER EN CONSULTAS NUTRICIONALES: REGISTRA ESTADO PREVIO ANTE UPDATE O DELETE
+--------------------------------------------------------------------------------
+CREATE OR ALTER TRIGGER [dbo].[trg_ConsultasNutricionales_BitacoraCambios]
+ON [dbo].[ConsultasNutricionales_DNI101]
+AFTER UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Si fue un UPDATE, registrar el estado anterior (de la pseudotabla 'deleted')
+    IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO [dbo].[ConsultasNutricionales_Cambios_DNI101] (
+            [IdConsulta_DNI101],
+            [IdPaciente_DNI101],
+            [DniNutricionista_DNI101],
+            [FechaControl_DNI101],
+            [EdadMeses_DNI101],
+            [TipoLactancia_DNI101],
+            [AlimentacionComplementaria_DNI101],
+            [Alergias_DNI101],
+            [AntecedentesFamiliares_DNI101],
+            [Observaciones_DNI101],
+            [FechaCambio],
+            [UsuarioDni],
+            [TipoOperacion]
+        )
+        SELECT 
+            d.[IdConsulta_DNI101],
+            d.[IdPaciente_DNI101],
+            d.[DniNutricionista_DNI101],
+            d.[FechaControl_DNI101],
+            d.[EdadMeses_DNI101],
+            d.[TipoLactancia_DNI101],
+            d.[AlimentacionComplementaria_DNI101],
+            d.[Alergias_DNI101],
+            d.[AntecedentesFamiliares_DNI101],
+            d.[Observaciones_DNI101],
+            SYSDATETIME(),
+            ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
+            'UPDATE'
+        FROM deleted d;
+    END
+    -- Si fue un DELETE, registrar el último estado antes del borrado
+    ELSE IF EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO [dbo].[ConsultasNutricionales_Cambios_DNI101] (
+            [IdConsulta_DNI101],
+            [IdPaciente_DNI101],
+            [DniNutricionista_DNI101],
+            [FechaControl_DNI101],
+            [EdadMeses_DNI101],
+            [TipoLactancia_DNI101],
+            [AlimentacionComplementaria_DNI101],
+            [Alergias_DNI101],
+            [AntecedentesFamiliares_DNI101],
+            [Observaciones_DNI101],
+            [FechaCambio],
+            [UsuarioDni],
+            [TipoOperacion]
+        )
+        SELECT 
+            d.[IdConsulta_DNI101],
+            d.[IdPaciente_DNI101],
+            d.[DniNutricionista_DNI101],
+            d.[FechaControl_DNI101],
+            d.[EdadMeses_DNI101],
+            d.[TipoLactancia_DNI101],
+            d.[AlimentacionComplementaria_DNI101],
+            d.[Alergias_DNI101],
+            d.[AntecedentesFamiliares_DNI101],
+            d.[Observaciones_DNI101],
+            SYSDATETIME(),
+            ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
+            'DELETE'
+        FROM deleted d;
+    END
+END
+GO
+
+--------------------------------------------------------------------------------
+-- POBLAR DIRECCIONES INICIALES PARA PACIENTES EXISTENTES
+--------------------------------------------------------------------------------
+UPDATE [dbo].[Pacientes_DNI101] SET [Direccion_DNI101] = 'Av. Santa Fe 3420, CABA' WHERE [DniNiño_DNI101] = '1111' AND ([Direccion_DNI101] IS NULL OR [Direccion_DNI101] = '');
+UPDATE [dbo].[Pacientes_DNI101] SET [Direccion_DNI101] = 'Belgrano 1250, Quilmes' WHERE [DniNiño_DNI101] = '2222' AND ([Direccion_DNI101] IS NULL OR [Direccion_DNI101] = '');
+UPDATE [dbo].[Pacientes_DNI101] SET [Direccion_DNI101] = 'Mitre 450, Avellaneda' WHERE [DniNiño_DNI101] = '3333' AND ([Direccion_DNI101] IS NULL OR [Direccion_DNI101] = '');
+UPDATE [dbo].[Pacientes_DNI101] SET [Direccion_DNI101] = 'Rivadavia 8840, CABA' WHERE [DniNiño_DNI101] = '4444' AND ([Direccion_DNI101] IS NULL OR [Direccion_DNI101] = '');
+GO
+
+--------------------------------------------------------------------------------
+-- POBLAR CONTACTOS 1:N INICIALES PARA PACIENTES EXISTENTES (SI NO EXISTEN)
+--------------------------------------------------------------------------------
+IF NOT EXISTS (SELECT 1 FROM [dbo].[Paciente_Emails_DNI101])
+BEGIN
+    -- 1. Insertar el email principal de cada paciente
+    INSERT INTO [dbo].[Paciente_Emails_DNI101] ([IdPaciente_DNI101], [Email_DNI101], [EsPrincipal_DNI101], [Activo_DNI101])
+    SELECT [IdPaciente_DNI101], [Email_DNI101], 1, 1 
+    FROM [dbo].[Pacientes_DNI101] 
+    WHERE [Email_DNI101] IS NOT NULL AND [Email_DNI101] <> '';
+
+    -- 2. Insertar contactos de email secundarios familiares para demostrar multiplicidad 1:N
+    DECLARE @IdPMateoE INT, @IdPSofiaE INT, @IdPThiagoE INT, @IdPEmmaE INT;
+    SELECT @IdPMateoE = IdPaciente_DNI101 FROM [dbo].[Pacientes_DNI101] WHERE DniNiño_DNI101 = '1111';
+    SELECT @IdPSofiaE = IdPaciente_DNI101 FROM [dbo].[Pacientes_DNI101] WHERE DniNiño_DNI101 = '2222';
+    SELECT @IdPThiagoE = IdPaciente_DNI101 FROM [dbo].[Pacientes_DNI101] WHERE DniNiño_DNI101 = '3333';
+    SELECT @IdPEmmaE = IdPaciente_DNI101 FROM [dbo].[Pacientes_DNI101] WHERE DniNiño_DNI101 = '4444';
+
+    IF @IdPMateoE IS NOT NULL
+    BEGIN
+        INSERT INTO [dbo].[Paciente_Emails_DNI101] ([IdPaciente_DNI101], [Email_DNI101], [EsPrincipal_DNI101], [Activo_DNI101])
+        VALUES 
+            (@IdPMateoE, 'padre.benitez@empresa.com', 0, 1),
+            (@IdPMateoE, 'abuela.rosa@hotmail.com', 0, 1);
+    END
+
+    IF @IdPSofiaE IS NOT NULL
+    BEGIN
+        INSERT INTO [dbo].[Paciente_Emails_DNI101] ([IdPaciente_DNI101], [Email_DNI101], [EsPrincipal_DNI101], [Activo_DNI101])
+        VALUES (@IdPSofiaE, 'mariana.rossi@yahoo.com', 0, 1);
+    END
+
+    IF @IdPThiagoE IS NOT NULL
+    BEGIN
+        INSERT INTO [dbo].[Paciente_Emails_DNI101] ([IdPaciente_DNI101], [Email_DNI101], [EsPrincipal_DNI101], [Activo_DNI101])
+        VALUES (@IdPThiagoE, 'gomez.lucas@outlook.com', 0, 1);
+    END
+
+    IF @IdPEmmaE IS NOT NULL
+    BEGIN
+        INSERT INTO [dbo].[Paciente_Emails_DNI101] ([IdPaciente_DNI101], [Email_DNI101], [EsPrincipal_DNI101], [Activo_DNI101])
+        VALUES (@IdPEmmaE, 'dra.martinez@fibertel.com.ar', 0, 1);
+    END
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [dbo].[Paciente_Telefonos_DNI101])
+BEGIN
+    -- 1. Insertar el teléfono principal de cada paciente
+    INSERT INTO [dbo].[Paciente_Telefonos_DNI101] ([IdPaciente_DNI101], [Numero_DNI101], [Tipo_DNI101], [EsPrincipal_DNI101], [Activo_DNI101])
+    SELECT [IdPaciente_DNI101], [Telefono_DNI101], 'Celular Madre', 1, 1 
+    FROM [dbo].[Pacientes_DNI101] 
+    WHERE [Telefono_DNI101] IS NOT NULL AND [Telefono_DNI101] <> '';
+
+    -- 2. Insertar teléfonos secundarios familiares (celular padre, fijo hogar, laboral)
+    DECLARE @IdPMateoT INT, @IdPSofiaT INT, @IdPThiagoT INT, @IdPEmmaT INT;
+    SELECT @IdPMateoT = IdPaciente_DNI101 FROM [dbo].[Pacientes_DNI101] WHERE DniNiño_DNI101 = '1111';
+    SELECT @IdPSofiaT = IdPaciente_DNI101 FROM [dbo].[Pacientes_DNI101] WHERE DniNiño_DNI101 = '2222';
+    SELECT @IdPThiagoT = IdPaciente_DNI101 FROM [dbo].[Pacientes_DNI101] WHERE DniNiño_DNI101 = '3333';
+    SELECT @IdPEmmaT = IdPaciente_DNI101 FROM [dbo].[Pacientes_DNI101] WHERE DniNiño_DNI101 = '4444';
+
+    IF @IdPMateoT IS NOT NULL
+    BEGIN
+        INSERT INTO [dbo].[Paciente_Telefonos_DNI101] ([IdPaciente_DNI101], [Numero_DNI101], [Tipo_DNI101], [EsPrincipal_DNI101], [Activo_DNI101])
+        VALUES 
+            (@IdPMateoT, '11-6677-8899', 'Celular Padre', 0, 1),
+            (@IdPMateoT, '011-4780-1234', 'Fijo Hogar', 0, 1);
+    END
+
+    IF @IdPSofiaT IS NOT NULL
+    BEGIN
+        INSERT INTO [dbo].[Paciente_Telefonos_DNI101] ([IdPaciente_DNI101], [Numero_DNI101], [Tipo_DNI101], [EsPrincipal_DNI101], [Activo_DNI101])
+        VALUES (@IdPSofiaT, '11-8899-0011', 'Celular Padre', 0, 1);
+    END
+
+    IF @IdPThiagoT IS NOT NULL
+    BEGIN
+        INSERT INTO [dbo].[Paciente_Telefonos_DNI101] ([IdPaciente_DNI101], [Numero_DNI101], [Tipo_DNI101], [EsPrincipal_DNI101], [Activo_DNI101])
+        VALUES (@IdPThiagoT, '11-2233-4455', 'Fijo Abuelos', 0, 1);
+    END
+
+    IF @IdPEmmaT IS NOT NULL
+    BEGIN
+        INSERT INTO [dbo].[Paciente_Telefonos_DNI101] ([IdPaciente_DNI101], [Numero_DNI101], [Tipo_DNI101], [EsPrincipal_DNI101], [Activo_DNI101])
+        VALUES (@IdPEmmaT, '011-4552-1122', 'Laboral Padre', 0, 1);
+    END
+END
+GO
+
+--------------------------------------------------------------------------------
+-- TABLA DE AUDITORÍA: HISTÓRICO DE CAMBIOS DE PLANES ALIMENTARIOS
+--------------------------------------------------------------------------------
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='PlanesAlimentarios_Cambios_DNI101' AND xtype='U')
+BEGIN
+CREATE TABLE [dbo].[PlanesAlimentarios_Cambios_DNI101](
+    [IdCambio] INT IDENTITY(1,1) PRIMARY KEY,
+    [IdPlan_DNI101] INT NOT NULL,
+    [IdConsulta_DNI101] INT NOT NULL,
+    [RequerimientoCalorico_DNI101] DECIMAL(18,2) NOT NULL,
+    [PctCarbohidratos_DNI101] DECIMAL(18,2) NOT NULL,
+    [PctProteinas_DNI101] DECIMAL(18,2) NOT NULL,
+    [PctGrasas_DNI101] DECIMAL(18,2) NOT NULL,
+    [PautasFamiliares_DNI101] VARCHAR(MAX) NULL,
+    [MetasSalud_DNI101] VARCHAR(MAX) NULL,
+    [FechaCambio] DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
+    [UsuarioDni] INT NOT NULL DEFAULT 11111111,
+    [TipoOperacion] VARCHAR(20) NOT NULL
+) ON [PRIMARY];
+END
+GO
+
+--------------------------------------------------------------------------------
+-- TRIGGER EN PLANES ALIMENTARIOS: REGISTRA ESTADO PREVIO ANTE UPDATE O DELETE
+--------------------------------------------------------------------------------
+CREATE OR ALTER TRIGGER [dbo].[trg_PlanesAlimentarios_BitacoraCambios]
+ON [dbo].[PlanesAlimentarios_DNI101]
+AFTER UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO [dbo].[PlanesAlimentarios_Cambios_DNI101] (
+            [IdPlan_DNI101],
+            [IdConsulta_DNI101],
+            [RequerimientoCalorico_DNI101],
+            [PctCarbohidratos_DNI101],
+            [PctProteinas_DNI101],
+            [PctGrasas_DNI101],
+            [PautasFamiliares_DNI101],
+            [MetasSalud_DNI101],
+            [FechaCambio],
+            [UsuarioDni],
+            [TipoOperacion]
+        )
+        SELECT 
+            d.[IdPlan_DNI101],
+            d.[IdConsulta_DNI101],
+            d.[RequerimientoCalorico_DNI101],
+            d.[PctCarbohidratos_DNI101],
+            d.[PctProteinas_DNI101],
+            d.[PctGrasas_DNI101],
+            d.[PautasFamiliares_DNI101],
+            d.[MetasSalud_DNI101],
+            SYSDATETIME(),
+            ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
+            'UPDATE'
+        FROM deleted d;
+    END
+    ELSE IF EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO [dbo].[PlanesAlimentarios_Cambios_DNI101] (
+            [IdPlan_DNI101],
+            [IdConsulta_DNI101],
+            [RequerimientoCalorico_DNI101],
+            [PctCarbohidratos_DNI101],
+            [PctProteinas_DNI101],
+            [PctGrasas_DNI101],
+            [PautasFamiliares_DNI101],
+            [MetasSalud_DNI101],
+            [FechaCambio],
+            [UsuarioDni],
+            [TipoOperacion]
+        )
+        SELECT 
+            d.[IdPlan_DNI101],
+            d.[IdConsulta_DNI101],
+            d.[RequerimientoCalorico_DNI101],
+            d.[PctCarbohidratos_DNI101],
+            d.[PctProteinas_DNI101],
+            d.[PctGrasas_DNI101],
+            d.[PautasFamiliares_DNI101],
+            d.[MetasSalud_DNI101],
+            SYSDATETIME(),
+            ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
+            'DELETE'
+        FROM deleted d;
+    END
+END
+GO
+
+--------------------------------------------------------------------------------
+-- TABLA DE AUDITORÍA: HISTÓRICO DE CAMBIOS DE PACIENTES
+--------------------------------------------------------------------------------
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Pacientes_Cambios_DNI101' AND xtype='U')
+BEGIN
+CREATE TABLE [dbo].[Pacientes_Cambios_DNI101](
+    [IdCambio] INT IDENTITY(1,1) PRIMARY KEY,
+    [IdPaciente_DNI101] INT NOT NULL,
+    [DniNiño_DNI101] VARCHAR(20) NOT NULL,
+    [Nombre_DNI101] VARCHAR(100) NOT NULL,
+    [Apellido_DNI101] VARCHAR(100) NOT NULL,
+    [Telefono_DNI101] VARCHAR(50) NULL,
+    [Email_DNI101] VARCHAR(100) NULL,
+    [Direccion_DNI101] VARCHAR(200) NULL,
+    [Activo_DNI101] BIT NOT NULL DEFAULT 1,
+    [FechaCambio] DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
+    [UsuarioDni] INT NOT NULL DEFAULT 11111111,
+    [TipoOperacion] VARCHAR(20) NOT NULL
+) ON [PRIMARY];
+END
+GO
+
+--------------------------------------------------------------------------------
+-- TRIGGER EN PACIENTES: REGISTRA ESTADO PREVIO ANTE UPDATE O DELETE
+--------------------------------------------------------------------------------
+CREATE OR ALTER TRIGGER [dbo].[trg_Pacientes_BitacoraCambios]
+ON [dbo].[Pacientes_DNI101]
+AFTER UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO [dbo].[Pacientes_Cambios_DNI101] (
+            [IdPaciente_DNI101],
+            [DniNiño_DNI101],
+            [Nombre_DNI101],
+            [Apellido_DNI101],
+            [Telefono_DNI101],
+            [Email_DNI101],
+            [Direccion_DNI101],
+            [Activo_DNI101],
+            [FechaCambio],
+            [UsuarioDni],
+            [TipoOperacion]
+        )
+        SELECT 
+            d.[IdPaciente_DNI101],
+            d.[DniNiño_DNI101],
+            d.[Nombre_DNI101],
+            d.[Apellido_DNI101],
+            d.[Telefono_DNI101],
+            d.[Email_DNI101],
+            d.[Direccion_DNI101],
+            d.[Activo_DNI101],
+            SYSDATETIME(),
+            ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
+            'UPDATE'
+        FROM deleted d;
+    END
+    ELSE IF EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO [dbo].[Pacientes_Cambios_DNI101] (
+            [IdPaciente_DNI101],
+            [DniNiño_DNI101],
+            [Nombre_DNI101],
+            [Apellido_DNI101],
+            [Telefono_DNI101],
+            [Email_DNI101],
+            [Direccion_DNI101],
+            [Activo_DNI101],
+            [FechaCambio],
+            [UsuarioDni],
+            [TipoOperacion]
+        )
+        SELECT 
+            d.[IdPaciente_DNI101],
+            d.[DniNiño_DNI101],
+            d.[Nombre_DNI101],
+            d.[Apellido_DNI101],
+            d.[Telefono_DNI101],
+            d.[Email_DNI101],
+            d.[Direccion_DNI101],
+            d.[Activo_DNI101],
+            SYSDATETIME(),
+            ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
+            'DELETE'
+        FROM deleted d;
+    END
+END
+GO
+
+

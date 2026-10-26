@@ -36,6 +36,9 @@ namespace UI
             btnReportes = new UI.Controles.BotonFuturista();
             btnTurnos = new UI.Controles.BotonFuturista();
             btnSeguimientoNutricional = new UI.Controles.BotonFuturista();
+            btnMaestroClientes = new UI.Controles.BotonFuturista();
+            btnBitacoraCambios = new UI.Controles.BotonFuturista();
+            btnReportePredictivo = new UI.Controles.BotonFuturista();
             lblModulo = new Label();
             btnCambiarContrasena = new UI.Controles.BotonFuturista();
             btnLogin = new UI.Controles.BotonFuturista();
@@ -66,11 +69,15 @@ namespace UI
             // panelMenu
             // 
             panelMenu.BackColor = Color.FromArgb(76, 124, 89);
+            panelMenu.AutoScroll = true;
             panelMenu.Controls.Add(btnAyuda);
             panelMenu.Controls.Add(btnRespaldo);
             panelMenu.Controls.Add(btnGestionarPerfiles);
             panelMenu.Controls.Add(btnUsuarios);
             panelMenu.Controls.Add(btnReportes);
+            panelMenu.Controls.Add(btnReportePredictivo);
+            panelMenu.Controls.Add(btnBitacoraCambios);
+            panelMenu.Controls.Add(btnMaestroClientes);
             panelMenu.Controls.Add(btnSeguimientoNutricional);
             panelMenu.Controls.Add(btnTurnos);
             panelMenu.Controls.Add(lblModulo);
@@ -94,6 +101,7 @@ namespace UI
             lblModulo.TabIndex = 0;
             lblModulo.Text = "MÓDULOS DEL SISTEMA";
             // 
+            // 
             // btnTurnos
             // 
             btnTurnos.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -104,13 +112,13 @@ namespace UI
             btnTurnos.FlatStyle = FlatStyle.Flat;
             btnTurnos.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnTurnos.ForeColor = Color.White;
-            btnTurnos.Location = new Point(12, 56);
+            btnTurnos.Location = new Point(12, 52);
             btnTurnos.Name = "btnTurnos";
             btnTurnos.PaddingIzquierdo = 18;
             btnTurnos.RadioBorde = 24;
-            btnTurnos.Size = new Size(236, 44);
+            btnTurnos.Size = new Size(236, 38);
             btnTurnos.TabIndex = 1;
-            btnTurnos.Text = "📅  Gestión de Turnos";
+            btnTurnos.Text = "Gestion de Turnos";
             btnTurnos.TextAlign = ContentAlignment.MiddleLeft;
             btnTurnos.UseVisualStyleBackColor = false;
             btnTurnos.Click += btnTurnos_Click;
@@ -125,16 +133,79 @@ namespace UI
             btnSeguimientoNutricional.FlatStyle = FlatStyle.Flat;
             btnSeguimientoNutricional.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnSeguimientoNutricional.ForeColor = Color.White;
-            btnSeguimientoNutricional.Location = new Point(12, 106);
+            btnSeguimientoNutricional.Location = new Point(12, 94);
             btnSeguimientoNutricional.Name = "btnSeguimientoNutricional";
             btnSeguimientoNutricional.PaddingIzquierdo = 18;
             btnSeguimientoNutricional.RadioBorde = 24;
-            btnSeguimientoNutricional.Size = new Size(236, 44);
+            btnSeguimientoNutricional.Size = new Size(236, 38);
             btnSeguimientoNutricional.TabIndex = 2;
-            btnSeguimientoNutricional.Text = "🥗  Seguimiento Nutricional";
+            btnSeguimientoNutricional.Text = "Seguimiento Nutricional";
             btnSeguimientoNutricional.TextAlign = ContentAlignment.MiddleLeft;
             btnSeguimientoNutricional.UseVisualStyleBackColor = false;
             btnSeguimientoNutricional.Click += btnSeguimientoNutricional_Click;
+            // 
+            // btnMaestroClientes
+            // 
+            btnMaestroClientes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            btnMaestroClientes.BackColor = Color.Transparent;
+            btnMaestroClientes.Cursor = Cursors.Hand;
+            btnMaestroClientes.EsMenuLateral = true;
+            btnMaestroClientes.FlatAppearance.BorderSize = 0;
+            btnMaestroClientes.FlatStyle = FlatStyle.Flat;
+            btnMaestroClientes.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            btnMaestroClientes.ForeColor = Color.White;
+            btnMaestroClientes.Location = new Point(12, 136);
+            btnMaestroClientes.Name = "btnMaestroClientes";
+            btnMaestroClientes.PaddingIzquierdo = 18;
+            btnMaestroClientes.RadioBorde = 24;
+            btnMaestroClientes.Size = new Size(236, 38);
+            btnMaestroClientes.TabIndex = 3;
+            btnMaestroClientes.Text = "Maestro de Clientes (ABM)";
+            btnMaestroClientes.TextAlign = ContentAlignment.MiddleLeft;
+            btnMaestroClientes.UseVisualStyleBackColor = false;
+            btnMaestroClientes.Click += btnMaestroClientes_Click;
+            // 
+            // btnBitacoraCambios
+            // 
+            btnBitacoraCambios.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            btnBitacoraCambios.BackColor = Color.Transparent;
+            btnBitacoraCambios.Cursor = Cursors.Hand;
+            btnBitacoraCambios.EsMenuLateral = true;
+            btnBitacoraCambios.FlatAppearance.BorderSize = 0;
+            btnBitacoraCambios.FlatStyle = FlatStyle.Flat;
+            btnBitacoraCambios.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            btnBitacoraCambios.ForeColor = Color.White;
+            btnBitacoraCambios.Location = new Point(12, 178);
+            btnBitacoraCambios.Name = "btnBitacoraCambios";
+            btnBitacoraCambios.PaddingIzquierdo = 18;
+            btnBitacoraCambios.RadioBorde = 24;
+            btnBitacoraCambios.Size = new Size(236, 38);
+            btnBitacoraCambios.TabIndex = 4;
+            btnBitacoraCambios.Text = "Bitacora de Cambios";
+            btnBitacoraCambios.TextAlign = ContentAlignment.MiddleLeft;
+            btnBitacoraCambios.UseVisualStyleBackColor = false;
+            btnBitacoraCambios.Click += btnBitacoraCambios_Click;
+            // 
+            // btnReportePredictivo
+            // 
+            btnReportePredictivo.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            btnReportePredictivo.BackColor = Color.Transparent;
+            btnReportePredictivo.Cursor = Cursors.Hand;
+            btnReportePredictivo.EsMenuLateral = true;
+            btnReportePredictivo.FlatAppearance.BorderSize = 0;
+            btnReportePredictivo.FlatStyle = FlatStyle.Flat;
+            btnReportePredictivo.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            btnReportePredictivo.ForeColor = Color.White;
+            btnReportePredictivo.Location = new Point(12, 220);
+            btnReportePredictivo.Name = "btnReportePredictivo";
+            btnReportePredictivo.PaddingIzquierdo = 18;
+            btnReportePredictivo.RadioBorde = 24;
+            btnReportePredictivo.Size = new Size(236, 38);
+            btnReportePredictivo.TabIndex = 5;
+            btnReportePredictivo.Text = "Reporte Predictivo";
+            btnReportePredictivo.TextAlign = ContentAlignment.MiddleLeft;
+            btnReportePredictivo.UseVisualStyleBackColor = false;
+            btnReportePredictivo.Click += btnReportePredictivo_Click;
             // 
             // btnReportes
             // 
@@ -146,13 +217,13 @@ namespace UI
             btnReportes.FlatStyle = FlatStyle.Flat;
             btnReportes.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnReportes.ForeColor = Color.White;
-            btnReportes.Location = new Point(12, 156);
+            btnReportes.Location = new Point(12, 262);
             btnReportes.Name = "btnReportes";
             btnReportes.PaddingIzquierdo = 18;
             btnReportes.RadioBorde = 24;
-            btnReportes.Size = new Size(236, 44);
-            btnReportes.TabIndex = 3;
-            btnReportes.Text = "📒  Bitacora";
+            btnReportes.Size = new Size(236, 38);
+            btnReportes.TabIndex = 6;
+            btnReportes.Text = "Bitacora de Eventos";
             btnReportes.TextAlign = ContentAlignment.MiddleLeft;
             btnReportes.UseVisualStyleBackColor = false;
             btnReportes.Click += btnBitacora_Click;
@@ -167,13 +238,13 @@ namespace UI
             btnUsuarios.FlatStyle = FlatStyle.Flat;
             btnUsuarios.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnUsuarios.ForeColor = Color.White;
-            btnUsuarios.Location = new Point(12, 206);
+            btnUsuarios.Location = new Point(12, 304);
             btnUsuarios.Name = "btnUsuarios";
             btnUsuarios.PaddingIzquierdo = 18;
             btnUsuarios.RadioBorde = 24;
-            btnUsuarios.Size = new Size(236, 44);
-            btnUsuarios.TabIndex = 4;
-            btnUsuarios.Text = "👤  Gestión de Usuarios";
+            btnUsuarios.Size = new Size(236, 38);
+            btnUsuarios.TabIndex = 7;
+            btnUsuarios.Text = "Gestion de Usuarios";
             btnUsuarios.TextAlign = ContentAlignment.MiddleLeft;
             btnUsuarios.UseVisualStyleBackColor = false;
             btnUsuarios.Click += btnUsuarios_Click;
@@ -188,13 +259,13 @@ namespace UI
             btnGestionarPerfiles.FlatStyle = FlatStyle.Flat;
             btnGestionarPerfiles.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnGestionarPerfiles.ForeColor = Color.White;
-            btnGestionarPerfiles.Location = new Point(12, 256);
+            btnGestionarPerfiles.Location = new Point(12, 346);
             btnGestionarPerfiles.Name = "btnGestionarPerfiles";
             btnGestionarPerfiles.PaddingIzquierdo = 18;
             btnGestionarPerfiles.RadioBorde = 24;
-            btnGestionarPerfiles.Size = new Size(236, 44);
-            btnGestionarPerfiles.TabIndex = 10;
-            btnGestionarPerfiles.Text = "🔑  Perfiles";
+            btnGestionarPerfiles.Size = new Size(236, 38);
+            btnGestionarPerfiles.TabIndex = 8;
+            btnGestionarPerfiles.Text = "Perfiles y Permisos";
             btnGestionarPerfiles.TextAlign = ContentAlignment.MiddleLeft;
             btnGestionarPerfiles.UseVisualStyleBackColor = false;
             btnGestionarPerfiles.Click += btnGestionarPerfiles_Click;
@@ -209,13 +280,13 @@ namespace UI
             btnRespaldo.FlatStyle = FlatStyle.Flat;
             btnRespaldo.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnRespaldo.ForeColor = Color.White;
-            btnRespaldo.Location = new Point(12, 306);
+            btnRespaldo.Location = new Point(12, 388);
             btnRespaldo.Name = "btnRespaldo";
             btnRespaldo.PaddingIzquierdo = 18;
             btnRespaldo.RadioBorde = 24;
-            btnRespaldo.Size = new Size(236, 44);
+            btnRespaldo.Size = new Size(236, 38);
             btnRespaldo.TabIndex = 9;
-            btnRespaldo.Text = "🔒  Respaldo";
+            btnRespaldo.Text = "Respaldo y Restauracion";
             btnRespaldo.TextAlign = ContentAlignment.MiddleLeft;
             btnRespaldo.UseVisualStyleBackColor = false;
             btnRespaldo.Click += btnRespaldo_Click;
@@ -230,15 +301,16 @@ namespace UI
             btnAyuda.FlatStyle = FlatStyle.Flat;
             btnAyuda.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnAyuda.ForeColor = Color.White;
-            btnAyuda.Location = new Point(12, 356);
+            btnAyuda.Location = new Point(12, 430);
             btnAyuda.Name = "btnAyuda";
             btnAyuda.PaddingIzquierdo = 18;
             btnAyuda.RadioBorde = 24;
-            btnAyuda.Size = new Size(236, 44);
-            btnAyuda.TabIndex = 5;
-            btnAyuda.Text = "❓  Ayuda";
+            btnAyuda.Size = new Size(236, 38);
+            btnAyuda.TabIndex = 10;
+            btnAyuda.Text = "Manual de Ayuda (F1)";
             btnAyuda.TextAlign = ContentAlignment.MiddleLeft;
             btnAyuda.UseVisualStyleBackColor = false;
+            btnAyuda.Click += btnAyuda_Click;
             // 
             // btnCambiarContrasena
             // 
@@ -301,7 +373,7 @@ namespace UI
             btnLogout.RadioBorde = 38;
             btnLogout.Size = new Size(236, 38);
             btnLogout.TabIndex = 6;
-            btnLogout.Text = "🚪 Cerrar Sesión";
+            btnLogout.Text = "Cerrar Sesión";
             btnLogout.UseVisualStyleBackColor = false;
             btnLogout.Click += btnLogout_Click;
             // 
@@ -520,6 +592,8 @@ namespace UI
             Controls.Add(panelMenu);
             Font = new Font("Segoe UI", 9F);
             FormBorderStyle = FormBorderStyle.Sizable;
+            KeyPreview = true;
+            KeyDown += MenuPrincipal_KeyDown;
             MinimumSize = new Size(1000, 650);
             Name = "MenuPrincipal";
             StartPosition = FormStartPosition.CenterScreen;
@@ -568,5 +642,8 @@ namespace UI
         private UI.Controles.BotonFuturista btnRespaldo;
         private UI.Controles.BotonFuturista btnGestionarPerfiles;
         private UI.Controles.BotonFuturista btnSeguimientoNutricional;
+        private UI.Controles.BotonFuturista btnMaestroClientes;
+        private UI.Controles.BotonFuturista btnBitacoraCambios;
+        private UI.Controles.BotonFuturista btnReportePredictivo;
     }
 }

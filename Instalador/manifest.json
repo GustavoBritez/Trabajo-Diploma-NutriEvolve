@@ -1,0 +1,14 @@
+{
+  "appName": "NutriEvolve",
+  "appDescription": "Sistema de Gestión Integral para Consultorio Nutricional Pediátrico",
+  "exeName": "UI.exe",
+  "targetProcessName": "UI",
+  "databaseName": "NutriEvolve_DNI101",
+  "sqlScriptFile": "Datos/script.sql",
+  "defaultInstallSubfolder": "NutriEvolve",
+  "hasDigitoVerificador": true,
+  "primaryColorHex": "#4C7C59",
+  "accentColorHex": "#2E7D32",
+  "version": "1.0.0",
+  "author": "Gustavo Britez"
+}
