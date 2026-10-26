@@ -74,7 +74,7 @@ namespace UI.PN2
       _lblSub.Name = "_lblSub";
       _lblSub.Size = new Size(720, 17);
       _lblSub.TabIndex = 1;
-      _lblSub.Text = "CUN06: Haga clic sobre un paciente en la grilla para acceder a Graficar Diagnóstico, Registrar Consulta o Prescribir Plan.";
+      _lblSub.Text = "CUN06: Seleccionar Paciente";
 
       // 
       // _pnlFiltros

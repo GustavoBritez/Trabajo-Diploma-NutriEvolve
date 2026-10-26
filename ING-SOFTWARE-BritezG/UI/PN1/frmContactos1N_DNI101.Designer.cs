@@ -96,7 +96,7 @@ namespace UI.PN1
             gbEmails.ForeColor = System.Drawing.Color.FromArgb(40, 70, 50);
             gbEmails.Location = new System.Drawing.Point(18, 75);
             gbEmails.Name = "gbEmails";
-            gbEmails.Size = new System.Drawing.Size(684, 185);
+            gbEmails.Size = new System.Drawing.Size(744, 185);
             gbEmails.TabIndex = 1;
             gbEmails.TabStop = false;
             gbEmails.Text = "Correos Electrónicos (Tabla 1:N)";
@@ -113,7 +113,7 @@ namespace UI.PN1
             dgvEmails.ReadOnly = true;
             dgvEmails.RowHeadersVisible = false;
             dgvEmails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            dgvEmails.Size = new System.Drawing.Size(654, 105);
+            dgvEmails.Size = new System.Drawing.Size(714, 105);
             dgvEmails.TabIndex = 0;
 
             // txtNuevoEmail
@@ -121,30 +121,30 @@ namespace UI.PN1
             txtNuevoEmail.Location = new System.Drawing.Point(15, 142);
             txtNuevoEmail.Name = "txtNuevoEmail";
             txtNuevoEmail.PlaceholderText = "Ingrese nuevo email (ej: paciente@correo.com)";
-            txtNuevoEmail.Size = new System.Drawing.Size(320, 24);
+            txtNuevoEmail.Size = new System.Drawing.Size(265, 24);
             txtNuevoEmail.TabIndex = 1;
 
             // chkEmailPrincipal
             chkEmailPrincipal.AutoSize = true;
-            chkEmailPrincipal.Location = new System.Drawing.Point(345, 144);
+            chkEmailPrincipal.Location = new System.Drawing.Point(290, 144);
             chkEmailPrincipal.Name = "chkEmailPrincipal";
-            chkEmailPrincipal.Size = new System.Drawing.Size(78, 21);
+            chkEmailPrincipal.Size = new System.Drawing.Size(175, 21);
             chkEmailPrincipal.TabIndex = 2;
             chkEmailPrincipal.Text = "Principal";
 
             // btnAgregarEmail
-            btnAgregarEmail.Location = new System.Drawing.Point(435, 138);
+            btnAgregarEmail.Location = new System.Drawing.Point(475, 138);
             btnAgregarEmail.Name = "btnAgregarEmail";
-            btnAgregarEmail.Size = new System.Drawing.Size(110, 32);
+            btnAgregarEmail.Size = new System.Drawing.Size(120, 32);
             btnAgregarEmail.TabIndex = 3;
             btnAgregarEmail.Text = "Agregar Email";
             btnAgregarEmail.Click += btnAgregarEmail_Click;
 
             // btnEliminarEmail
             btnEliminarEmail.EsBotonSecundario = true;
-            btnEliminarEmail.Location = new System.Drawing.Point(555, 138);
+            btnEliminarEmail.Location = new System.Drawing.Point(605, 138);
             btnEliminarEmail.Name = "btnEliminarEmail";
-            btnEliminarEmail.Size = new System.Drawing.Size(114, 32);
+            btnEliminarEmail.Size = new System.Drawing.Size(120, 32);
             btnEliminarEmail.TabIndex = 4;
             btnEliminarEmail.Text = "Baja Lógica";
             btnEliminarEmail.Click += btnEliminarEmail_Click;
@@ -160,7 +160,7 @@ namespace UI.PN1
             gbTelefonos.ForeColor = System.Drawing.Color.FromArgb(40, 70, 50);
             gbTelefonos.Location = new System.Drawing.Point(18, 270);
             gbTelefonos.Name = "gbTelefonos";
-            gbTelefonos.Size = new System.Drawing.Size(684, 185);
+            gbTelefonos.Size = new System.Drawing.Size(744, 185);
             gbTelefonos.TabIndex = 2;
             gbTelefonos.TabStop = false;
             gbTelefonos.Text = "Números Telefónicos / Celulares (Tabla 1:N)";
@@ -177,7 +177,7 @@ namespace UI.PN1
             dgvTelefonos.ReadOnly = true;
             dgvTelefonos.RowHeadersVisible = false;
             dgvTelefonos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            dgvTelefonos.Size = new System.Drawing.Size(654, 105);
+            dgvTelefonos.Size = new System.Drawing.Size(714, 105);
             dgvTelefonos.TabIndex = 0;
 
             // txtNuevoTelefono
@@ -185,7 +185,7 @@ namespace UI.PN1
             txtNuevoTelefono.Location = new System.Drawing.Point(15, 142);
             txtNuevoTelefono.Name = "txtNuevoTelefono";
             txtNuevoTelefono.PlaceholderText = "Número (ej: 11-4455-6677)";
-            txtNuevoTelefono.Size = new System.Drawing.Size(200, 24);
+            txtNuevoTelefono.Size = new System.Drawing.Size(160, 24);
             txtNuevoTelefono.TabIndex = 1;
 
             // cmbTipoTel
@@ -193,39 +193,39 @@ namespace UI.PN1
             cmbTipoTel.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             cmbTipoTel.FormattingEnabled = true;
             cmbTipoTel.Items.AddRange(new object[] { "Celular", "Fijo Particular", "Laboral / Urgencias" });
-            cmbTipoTel.Location = new System.Drawing.Point(225, 142);
+            cmbTipoTel.Location = new System.Drawing.Point(185, 142);
             cmbTipoTel.Name = "cmbTipoTel";
-            cmbTipoTel.Size = new System.Drawing.Size(120, 24);
+            cmbTipoTel.Size = new System.Drawing.Size(95, 24);
             cmbTipoTel.TabIndex = 2;
 
             // chkTelPrincipal
             chkTelPrincipal.AutoSize = true;
-            chkTelPrincipal.Location = new System.Drawing.Point(355, 144);
+            chkTelPrincipal.Location = new System.Drawing.Point(290, 144);
             chkTelPrincipal.Name = "chkTelPrincipal";
-            chkTelPrincipal.Size = new System.Drawing.Size(78, 21);
+            chkTelPrincipal.Size = new System.Drawing.Size(175, 21);
             chkTelPrincipal.TabIndex = 3;
             chkTelPrincipal.Text = "Principal";
 
             // btnAgregarTel
-            btnAgregarTel.Location = new System.Drawing.Point(440, 138);
+            btnAgregarTel.Location = new System.Drawing.Point(475, 138);
             btnAgregarTel.Name = "btnAgregarTel";
-            btnAgregarTel.Size = new System.Drawing.Size(110, 32);
+            btnAgregarTel.Size = new System.Drawing.Size(120, 32);
             btnAgregarTel.TabIndex = 4;
             btnAgregarTel.Text = "Agregar Tel.";
             btnAgregarTel.Click += btnAgregarTel_Click;
 
             // btnEliminarTel
             btnEliminarTel.EsBotonSecundario = true;
-            btnEliminarTel.Location = new System.Drawing.Point(560, 138);
+            btnEliminarTel.Location = new System.Drawing.Point(605, 138);
             btnEliminarTel.Name = "btnEliminarTel";
-            btnEliminarTel.Size = new System.Drawing.Size(109, 32);
+            btnEliminarTel.Size = new System.Drawing.Size(120, 32);
             btnEliminarTel.TabIndex = 5;
             btnEliminarTel.Text = "Baja Lógica";
             btnEliminarTel.Click += btnEliminarTel_Click;
 
             // btnCerrar
             btnCerrar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
-            btnCerrar.Location = new System.Drawing.Point(582, 465);
+            btnCerrar.Location = new System.Drawing.Point(642, 465);
             btnCerrar.Name = "btnCerrar";
             btnCerrar.Size = new System.Drawing.Size(120, 36);
             btnCerrar.TabIndex = 3;
@@ -236,7 +236,7 @@ namespace UI.PN1
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.Color.FromArgb(245, 248, 245);
-            ClientSize = new System.Drawing.Size(720, 515);
+            ClientSize = new System.Drawing.Size(780, 515);
             Controls.Add(btnCerrar);
             Controls.Add(gbTelefonos);
             Controls.Add(gbEmails);

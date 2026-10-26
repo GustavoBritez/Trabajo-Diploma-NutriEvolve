@@ -70,7 +70,7 @@ namespace UI
                     string? clave = null;
 
                     // 1. Claves contextuales por formulario
-                    if (!string.IsNullOrEmpty(formName))
+                    if (!string.IsNullOrEmpty(formName) && !string.IsNullOrWhiteSpace(control.Name))
                     {
                         if (idiomaBLL.ExisteTraduccion($"{formName}_{control.Name}"))
                         {
@@ -80,7 +80,7 @@ namespace UI
                         {
                             clave = $"{control.Name}_{formName}";
                         }
-                        else if (formName.StartsWith("Frm") && idiomaBLL.ExisteTraduccion($"{control.Name}{formName.Substring(3).Replace("_DNI101", "")}"))
+                        else if (formName.StartsWith("Frm", StringComparison.OrdinalIgnoreCase) && idiomaBLL.ExisteTraduccion($"{control.Name}{formName.Substring(3).Replace("_DNI101", "")}"))
                         {
                             clave = $"{control.Name}{formName.Substring(3).Replace("_DNI101", "")}";
                         }

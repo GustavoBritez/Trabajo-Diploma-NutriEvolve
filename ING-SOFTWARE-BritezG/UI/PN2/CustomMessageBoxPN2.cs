@@ -84,6 +84,8 @@ namespace UI.PN2
 
         private void EstilizarBotonAccion(Button btn, string titulo, string subtitulo, Color colorAcento)
         {
+            btn.Controls.Clear();
+            btn.Text = string.Empty;
             btn.BackColor = Color.White;
             btn.FlatStyle = FlatStyle.Flat;
             btn.Cursor = Cursors.Hand;
@@ -94,6 +96,7 @@ namespace UI.PN2
 
             Label lblT = new Label
             {
+                Name = $"lblTitulo_{btn.Name}",
                 Text = titulo,
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = colorAcento,
@@ -105,6 +108,7 @@ namespace UI.PN2
 
             Label lblS = new Label
             {
+                Name = $"lblSub_{btn.Name}",
                 Text = subtitulo,
                 Font = new Font("Segoe UI", 8.5F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(100, 115, 105),
@@ -116,6 +120,7 @@ namespace UI.PN2
 
             Panel pnlBarraLateral = new Panel
             {
+                Name = $"pnlBarra_{btn.Name}",
                 Location = new Point(0, 0),
                 Size = new Size(6, 68),
                 BackColor = colorAcento

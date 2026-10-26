@@ -29,7 +29,9 @@ namespace UI.PN2
       ConfigurarTextosPaciente();
       CargarDatos();
       TraductorUI.SuscribirFormulario(this, this);
+      pnlTop.Resize += (s, e) => AjustarPosicionComboIndicador();
       ActualizarIdioma();
+      AjustarPosicionComboIndicador();
     }
 
     public void ActualizarIdioma()
@@ -43,7 +45,17 @@ namespace UI.PN2
         {
           TraductorUI.TraducirDataGridView(_dgvHistorial, idiomaBLL, this.Name);
         }
+        AjustarPosicionComboIndicador();
         ActualizarGrafico();
+      }
+    }
+
+    private void AjustarPosicionComboIndicador()
+    {
+      if (lblSel != null && _cmbIndicador != null && pnlTop != null)
+      {
+        _cmbIndicador.Location = new Point(pnlTop.Width - _cmbIndicador.Width - 20, 22);
+        lblSel.Location = new Point(_cmbIndicador.Left - lblSel.Width - 8, 25);
       }
     }
 

@@ -17,6 +17,12 @@ namespace BE.PN2
         public string? Observaciones { get; set; }
         public DateTime FechaCambio { get; set; }
         public int UsuarioDni { get; set; }
-        public string TipoOperacion { get; set; } = string.Empty; // UPDATE, DELETE, ROLLBACK
+        public string TipoOperacion { get; set; } = string.Empty; // INSERT, UPDATE, DELETE, ROLLBACK
+        public bool Act { get; set; } = true;
+        public string NombrePaciente { get; set; } = string.Empty;
+        public string DniPaciente { get; set; } = string.Empty;
+        public string FechaStr => FechaCambio.ToString("dd/MM/yy");
+        public string HoraStr => FechaCambio.ToString("HH:mm");
+        public int ActivoInt => Act ? 1 : 0;
     }
 }

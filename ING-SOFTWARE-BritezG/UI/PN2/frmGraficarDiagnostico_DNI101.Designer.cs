@@ -98,7 +98,7 @@ namespace UI.PN2
       lblSel.AutoSize = true;
       lblSel.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
       lblSel.ForeColor = Color.White;
-      lblSel.Location = new Point(pnlTop.Width - 360, 25);
+      lblSel.Location = new Point(pnlTop.Width - 440, 25);
       lblSel.Name = "lblSel";
       lblSel.Size = new Size(69, 17);
       lblSel.TabIndex = 2;
@@ -116,9 +116,9 @@ namespace UI.PN2
         " Peso para la Edad (kg)",
         " Talla para la Edad (cm)"
       });
-      _cmbIndicador.Location = new Point(pnlTop.Width - 280, 22);
+      _cmbIndicador.Location = new Point(pnlTop.Width - 260, 22);
       _cmbIndicador.Name = "_cmbIndicador";
-      _cmbIndicador.Size = new Size(260, 24);
+      _cmbIndicador.Size = new Size(240, 24);
       _cmbIndicador.TabIndex = 3;
       _cmbIndicador.SelectedIndexChanged += _cmbIndicador_SelectedIndexChanged;
 

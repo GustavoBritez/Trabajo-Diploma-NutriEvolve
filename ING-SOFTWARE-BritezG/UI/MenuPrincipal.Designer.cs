@@ -406,23 +406,21 @@ namespace UI
             // 
             // label6
             // 
-            label6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label6.AutoEllipsis = true;
+            label6.AutoSize = true;
             label6.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
             label6.ForeColor = Color.FromArgb(240, 252, 242);
             label6.Location = new Point(480, 18);
             label6.Name = "label6";
-            label6.Size = new Size(290, 25);
+            label6.Size = new Size(0, 20);
             label6.TabIndex = 10;
-            label6.TextAlign = ContentAlignment.MiddleRight;
+            label6.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label4
             // 
-            label4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
             label4.ForeColor = Color.FromArgb(220, 240, 222);
-            label4.Location = new Point(410, 20);
+            label4.Location = new Point(410, 18);
             label4.Name = "label4";
             label4.Size = new Size(69, 20);
             label4.TabIndex = 9;

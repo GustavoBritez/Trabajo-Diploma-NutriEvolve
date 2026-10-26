@@ -16,21 +16,40 @@ namespace DAL.PN2
             _conexion = new Conexion();
         }
 
-        public List<ConsultaCambioBE_DNI101> ListarCambios(int? idConsulta = null)
+        public List<ConsultaCambioBE_DNI101> ListarCambios(int? idConsulta = null, string? nombrePaciente = null, DateTime? fechaIni = null, DateTime? fechaFin = null)
         {
             var lista = new List<ConsultaCambioBE_DNI101>();
             string sql = @"
-                SELECT IdCambio, IdConsulta_DNI101, IdPaciente_DNI101, DniNutricionista_DNI101,
-                       FechaControl_DNI101, EdadMeses_DNI101, TipoLactancia_DNI101,
-                       AlimentacionComplementaria_DNI101, Alergias_DNI101, AntecedentesFamiliares_DNI101,
-                       Observaciones_DNI101, FechaCambio, UsuarioDni, TipoOperacion
-                FROM ConsultasNutricionales_Cambios_DNI101 ";
+                SELECT c.IdCambio, c.IdConsulta_DNI101, c.IdPaciente_DNI101, c.DniNutricionista_DNI101,
+                       c.FechaControl_DNI101, c.EdadMeses_DNI101, c.TipoLactancia_DNI101,
+                       c.AlimentacionComplementaria_DNI101, c.Alergias_DNI101, c.AntecedentesFamiliares_DNI101,
+                       c.Observaciones_DNI101, c.FechaCambio, c.UsuarioDni, c.TipoOperacion,
+                       ISNULL(c.Act, 1) AS Act,
+                       ISNULL(p.Nombre_DNI101, '') AS Nombre,
+                       ISNULL(p.Apellido_DNI101, '') AS Apellido,
+                       ISNULL(p.DniNiño_DNI101, '') AS DniNiño
+                FROM ConsultasNutricionales_Cambios_DNI101 c
+                LEFT JOIN Pacientes_DNI101 p ON c.IdPaciente_DNI101 = p.IdPaciente_DNI101
+                WHERE 1 = 1 ";
 
             if (idConsulta.HasValue && idConsulta.Value > 0)
             {
-                sql += " WHERE IdConsulta_DNI101 = @IdConsulta ";
+                sql += " AND c.IdConsulta_DNI101 = @IdConsulta ";
             }
-            sql += " ORDER BY FechaCambio DESC, IdCambio DESC";
+            if (!string.IsNullOrWhiteSpace(nombrePaciente))
+            {
+                sql += " AND (p.Nombre_DNI101 LIKE @Nombre OR p.Apellido_DNI101 LIKE @Nombre OR (p.Apellido_DNI101 + ' ' + p.Nombre_DNI101) LIKE @Nombre) ";
+            }
+            if (fechaIni.HasValue)
+            {
+                sql += " AND c.FechaCambio >= @FechaIni ";
+            }
+            if (fechaFin.HasValue)
+            {
+                sql += " AND c.FechaCambio <= @FechaFin ";
+            }
+
+            sql += " ORDER BY c.FechaCambio DESC, c.IdCambio DESC";
 
             using (var cn = _conexion.CrearConexion())
             using (var cmd = new SqlCommand(sql, cn))
@@ -39,11 +58,28 @@ namespace DAL.PN2
                 {
                     cmd.Parameters.AddWithValue("@IdConsulta", idConsulta.Value);
                 }
+                if (!string.IsNullOrWhiteSpace(nombrePaciente))
+                {
+                    cmd.Parameters.AddWithValue("@Nombre", $"%{nombrePaciente.Trim()}%");
+                }
+                if (fechaIni.HasValue)
+                {
+                    cmd.Parameters.AddWithValue("@FechaIni", fechaIni.Value.Date);
+                }
+                if (fechaFin.HasValue)
+                {
+                    cmd.Parameters.AddWithValue("@FechaFin", fechaFin.Value.Date.AddDays(1).AddTicks(-1));
+                }
+
                 cn.Open();
                 using (var dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
                     {
+                        string nom = dr.GetString(15);
+                        string ape = dr.GetString(16);
+                        string nombreCompleto = string.IsNullOrWhiteSpace(ape) ? nom : $"{ape}, {nom}";
+
                         lista.Add(new ConsultaCambioBE_DNI101
                         {
                             IdCambio = dr.GetInt32(0),
@@ -59,7 +95,10 @@ namespace DAL.PN2
                             Observaciones = dr.IsDBNull(10) ? null : dr.GetString(10),
                             FechaCambio = dr.GetDateTime(11),
                             UsuarioDni = dr.GetInt32(12),
-                            TipoOperacion = dr.GetString(13)
+                            TipoOperacion = dr.GetString(13),
+                            Act = dr.GetBoolean(14),
+                            NombrePaciente = nombreCompleto,
+                            DniPaciente = dr.GetString(17)
                         });
                     }
                 }
@@ -67,14 +106,15 @@ namespace DAL.PN2
             return lista;
         }
 
-        public bool RevertirCambio(int idCambio, int usuarioDni)
+        public bool ActivarVersionHistorica(int idCambio, int usuarioDni)
         {
             return _conexion.ExecuteTransaction(tx =>
             {
                 // 1. Obtener los valores del estado histórico registrado
                 string sqlSel = @"
                     SELECT IdConsulta_DNI101, TipoLactancia_DNI101, AlimentacionComplementaria_DNI101,
-                           Alergias_DNI101, AntecedentesFamiliares_DNI101, Observaciones_DNI101
+                           Alergias_DNI101, AntecedentesFamiliares_DNI101, Observaciones_DNI101,
+                           EdadMeses_DNI101, FechaControl_DNI101
                     FROM ConsultasNutricionales_Cambios_DNI101
                     WHERE IdCambio = @IdCambio";
 
@@ -84,6 +124,8 @@ namespace DAL.PN2
                 string? alergias = null;
                 string? antFam = null;
                 string? observaciones = null;
+                int edadMeses = 0;
+                DateTime fechaControl = DateTime.Now;
 
                 using (var cmdSel = new SqlCommand(sqlSel, tx.Connection, tx))
                 {
@@ -98,6 +140,8 @@ namespace DAL.PN2
                             alergias = dr.IsDBNull(3) ? null : dr.GetString(3);
                             antFam = dr.IsDBNull(4) ? null : dr.GetString(4);
                             observaciones = dr.IsDBNull(5) ? null : dr.GetString(5);
+                            edadMeses = dr.GetInt32(6);
+                            fechaControl = dr.GetDateTime(7);
                         }
                         else
                         {
@@ -106,21 +150,42 @@ namespace DAL.PN2
                     }
                 }
 
-                // 2. Establecer el usuario responsable en SESSION_CONTEXT
-                using (var cmdCtx = new SqlCommand("EXEC sp_set_session_context @key=N'UsuarioDni', @value=@val;", tx.Connection, tx))
+                // 2. Desmarcar como activo cualquier otro registro de la misma consulta y marcar 1 en este
+                string sqlAct = @"
+                    UPDATE ConsultasNutricionales_Cambios_DNI101
+                    SET Act = 0
+                    WHERE IdConsulta_DNI101 = @IdConsulta;
+
+                    UPDATE ConsultasNutricionales_Cambios_DNI101
+                    SET Act = 1
+                    WHERE IdCambio = @IdCambio;";
+
+                using (var cmdAct = new SqlCommand(sqlAct, tx.Connection, tx))
+                {
+                    cmdAct.Parameters.AddWithValue("@IdConsulta", idConsulta);
+                    cmdAct.Parameters.AddWithValue("@IdCambio", idCambio);
+                    cmdAct.ExecuteNonQuery();
+                }
+
+                // 3. Establecer SESSION_CONTEXT para que el trigger no registre una versión duplicada
+                using (var cmdCtx = new SqlCommand(@"
+                    EXEC sp_set_session_context @key=N'UsuarioDni', @value=@val;
+                    EXEC sp_set_session_context @key=N'EsReversion', @value=1;", tx.Connection, tx))
                 {
                     cmdCtx.Parameters.AddWithValue("@val", usuarioDni);
                     cmdCtx.ExecuteNonQuery();
                 }
 
-                // 3. Restaurar los valores en la consulta activa (el Trigger registrará la versión previa automáticamente)
+                // 4. Restaurar los valores en la tabla activa ConsultasNutricionales_DNI101
                 string sqlUpd = @"
                     UPDATE ConsultasNutricionales_DNI101
                     SET TipoLactancia_DNI101 = @Lact,
                         AlimentacionComplementaria_DNI101 = @Alim,
                         Alergias_DNI101 = @Alergias,
                         AntecedentesFamiliares_DNI101 = @AntFam,
-                        Observaciones_DNI101 = @Obs
+                        Observaciones_DNI101 = @Obs,
+                        EdadMeses_DNI101 = @Edad,
+                        FechaControl_DNI101 = @FechaControl
                     WHERE IdConsulta_DNI101 = @IdConsulta;";
 
                 using (var cmdUpd = new SqlCommand(sqlUpd, tx.Connection, tx))
@@ -131,11 +196,24 @@ namespace DAL.PN2
                     cmdUpd.Parameters.AddWithValue("@Alergias", (object?)alergias ?? DBNull.Value);
                     cmdUpd.Parameters.AddWithValue("@AntFam", (object?)antFam ?? DBNull.Value);
                     cmdUpd.Parameters.AddWithValue("@Obs", (object?)observaciones ?? DBNull.Value);
+                    cmdUpd.Parameters.AddWithValue("@Edad", edadMeses);
+                    cmdUpd.Parameters.AddWithValue("@FechaControl", fechaControl);
                     cmdUpd.ExecuteNonQuery();
+                }
+
+                // 5. Restablecer contexto
+                using (var cmdClear = new SqlCommand("EXEC sp_set_session_context @key=N'EsReversion', @value=0;", tx.Connection, tx))
+                {
+                    cmdClear.ExecuteNonQuery();
                 }
 
                 return true;
             });
+        }
+
+        public bool RevertirCambio(int idCambio, int usuarioDni)
+        {
+            return ActivarVersionHistorica(idCambio, usuarioDni);
         }
 
         public List<PlanAlimentarioCambioBE_DNI101> ListarCambiosPlanes(int? idPlan = null)

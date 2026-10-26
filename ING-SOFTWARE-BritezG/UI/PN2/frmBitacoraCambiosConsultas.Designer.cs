@@ -21,34 +21,43 @@ namespace UI.PN2
             panelHeader = new System.Windows.Forms.Panel();
             lblTitulo = new System.Windows.Forms.Label();
             lblSubtitulo = new System.Windows.Forms.Label();
-
-            gbFiltros = new System.Windows.Forms.GroupBox();
-            lblConsultaFiltro = new System.Windows.Forms.Label();
-            txtIdConsultaFiltro = new System.Windows.Forms.TextBox();
-            btnFiltrar = new UI.Controles.BotonFuturista();
-            btnVerTodos = new UI.Controles.BotonFuturista();
+            btnAyudaContextual = new UI.Controles.BotonFuturista();
 
             gbGrilla = new System.Windows.Forms.GroupBox();
             dgvCambios = new System.Windows.Forms.DataGridView();
+            colCodCons = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colHora = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colDni = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colEdad = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colAct = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colBtnActivar = new System.Windows.Forms.DataGridViewButtonColumn();
 
-            gbDetalle = new System.Windows.Forms.GroupBox();
-            lblDetalleInfo = new System.Windows.Forms.Label();
-            txtDetalleHistorial = new System.Windows.Forms.TextBox();
-            btnRollback = new UI.Controles.BotonFuturista();
-            btnCerrar = new UI.Controles.BotonFuturista();
+            gbControles = new System.Windows.Forms.GroupBox();
+            lblCodProd = new System.Windows.Forms.Label();
+            txtCodConsulta = new System.Windows.Forms.TextBox();
+            lblNombre = new System.Windows.Forms.Label();
+            txtNombre = new System.Windows.Forms.TextBox();
+            lblFechaIni = new System.Windows.Forms.Label();
+            dtpFechaIni = new System.Windows.Forms.DateTimePicker();
+            lblFechaFin = new System.Windows.Forms.Label();
+            dtpFechaFin = new System.Windows.Forms.DateTimePicker();
+            btnAplicar = new UI.Controles.BotonFuturista();
+            btnSalir = new UI.Controles.BotonFuturista();
+            btnLimpiar = new UI.Controles.BotonFuturista();
+            btnActivar = new UI.Controles.BotonFuturista();
 
             panelHeader.SuspendLayout();
-            gbFiltros.SuspendLayout();
             gbGrilla.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvCambios).BeginInit();
-            gbDetalle.SuspendLayout();
+            gbControles.SuspendLayout();
             SuspendLayout();
 
-            lblEntidad = new System.Windows.Forms.Label();
-            cmbEntidad = new System.Windows.Forms.ComboBox();
-            btnAyudaContextual = new UI.Controles.BotonFuturista();
-
+            // 
             // panelHeader
+            // 
             panelHeader.BackColor = System.Drawing.Color.FromArgb(76, 124, 89);
             panelHeader.Controls.Add(lblTitulo);
             panelHeader.Controls.Add(lblSubtitulo);
@@ -56,131 +65,84 @@ namespace UI.PN2
             panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
             panelHeader.Location = new System.Drawing.Point(0, 0);
             panelHeader.Name = "panelHeader";
-            panelHeader.Size = new System.Drawing.Size(980, 65);
+            panelHeader.Size = new System.Drawing.Size(980, 60);
             panelHeader.TabIndex = 0;
 
+            // 
             // btnAyudaContextual
+            // 
             btnAyudaContextual.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             btnAyudaContextual.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            btnAyudaContextual.Location = new System.Drawing.Point(860, 15);
+            btnAyudaContextual.Location = new System.Drawing.Point(860, 12);
             btnAyudaContextual.Name = "btnAyudaContextual";
-            btnAyudaContextual.Size = new System.Drawing.Size(100, 35);
+            btnAyudaContextual.Size = new System.Drawing.Size(100, 36);
             btnAyudaContextual.TabIndex = 2;
             btnAyudaContextual.Text = "? Ayuda";
             btnAyudaContextual.Click += btnAyudaContextual_Click;
 
+            // 
             // lblTitulo
+            // 
             lblTitulo.AutoSize = true;
             lblTitulo.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold);
             lblTitulo.ForeColor = System.Drawing.Color.White;
-            lblTitulo.Location = new System.Drawing.Point(18, 12);
+            lblTitulo.Location = new System.Drawing.Point(18, 10);
             lblTitulo.Name = "lblTitulo";
-            lblTitulo.Size = new System.Drawing.Size(490, 25);
+            lblTitulo.Size = new System.Drawing.Size(560, 25);
             lblTitulo.TabIndex = 0;
-            lblTitulo.Text = "Bitácora de Cambios de Consultas Nutricionales (Trigger SQL)";
+            lblTitulo.Text = "BITÁCORA DE CAMBIOS - CONSULTAS NUTRICIONALES (CUN08)";
 
+            // 
             // lblSubtitulo
+            // 
             lblSubtitulo.AutoSize = true;
-            lblSubtitulo.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            lblSubtitulo.Font = new System.Drawing.Font("Segoe UI", 9.25F);
             lblSubtitulo.ForeColor = System.Drawing.Color.FromArgb(235, 245, 235);
-            lblSubtitulo.Location = new System.Drawing.Point(20, 38);
+            lblSubtitulo.Location = new System.Drawing.Point(20, 35);
             lblSubtitulo.Name = "lblSubtitulo";
-            lblSubtitulo.Size = new System.Drawing.Size(580, 17);
+            lblSubtitulo.Size = new System.Drawing.Size(585, 17);
             lblSubtitulo.TabIndex = 1;
-            lblSubtitulo.Text = "Auditoría de estados históricos ante UPDATE/DELETE y restauración de versiones previas (Rollback)";
+            lblSubtitulo.Text = "Persistencia histórica de cambios en consultas de pacientes y activación de versiones";
 
-            // gbFiltros
-            gbFiltros.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            gbFiltros.Controls.Add(lblEntidad);
-            gbFiltros.Controls.Add(cmbEntidad);
-            gbFiltros.Controls.Add(lblConsultaFiltro);
-            gbFiltros.Controls.Add(txtIdConsultaFiltro);
-            gbFiltros.Controls.Add(btnFiltrar);
-            gbFiltros.Controls.Add(btnVerTodos);
-            gbFiltros.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
-            gbFiltros.ForeColor = System.Drawing.Color.FromArgb(40, 70, 50);
-            gbFiltros.Location = new System.Drawing.Point(18, 75);
-            gbFiltros.Name = "gbFiltros";
-            gbFiltros.Size = new System.Drawing.Size(944, 65);
-            gbFiltros.TabIndex = 1;
-            gbFiltros.TabStop = false;
-            gbFiltros.Text = "Filtro de Auditoría y Selección de Entidad";
-
-            // lblEntidad
-            lblEntidad.AutoSize = true;
-            lblEntidad.Location = new System.Drawing.Point(15, 28);
-            lblEntidad.Name = "lblEntidad";
-            lblEntidad.Size = new System.Drawing.Size(58, 17);
-            lblEntidad.TabIndex = 4;
-            lblEntidad.Text = "Entidad:";
-
-            // cmbEntidad
-            cmbEntidad.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            cmbEntidad.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            cmbEntidad.FormattingEnabled = true;
-            cmbEntidad.Items.AddRange(new object[] { "Consultas Nutricionales", "Planes Alimentarios", "Pacientes (Clientes)" });
-            cmbEntidad.Location = new System.Drawing.Point(78, 25);
-            cmbEntidad.Name = "cmbEntidad";
-            cmbEntidad.Size = new System.Drawing.Size(195, 24);
-            cmbEntidad.TabIndex = 5;
-            cmbEntidad.SelectedIndexChanged += cmbEntidad_SelectedIndexChanged;
-
-            // lblConsultaFiltro
-            lblConsultaFiltro.AutoSize = true;
-            lblConsultaFiltro.Location = new System.Drawing.Point(295, 28);
-            lblConsultaFiltro.Name = "lblConsultaFiltro";
-            lblConsultaFiltro.Size = new System.Drawing.Size(65, 17);
-            lblConsultaFiltro.TabIndex = 0;
-            lblConsultaFiltro.Text = "ID Filtro:";
-
-            // txtIdConsultaFiltro
-            txtIdConsultaFiltro.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            txtIdConsultaFiltro.Location = new System.Drawing.Point(365, 25);
-            txtIdConsultaFiltro.Name = "txtIdConsultaFiltro";
-            txtIdConsultaFiltro.PlaceholderText = "Ej: 1, 2, 3...";
-            txtIdConsultaFiltro.Size = new System.Drawing.Size(110, 24);
-            txtIdConsultaFiltro.TabIndex = 1;
-
-            // btnFiltrar
-            btnFiltrar.Location = new System.Drawing.Point(490, 22);
-            btnFiltrar.Name = "btnFiltrar";
-            btnFiltrar.Size = new System.Drawing.Size(100, 30);
-            btnFiltrar.TabIndex = 2;
-            btnFiltrar.Text = "Filtrar";
-            btnFiltrar.Click += btnFiltrar_Click;
-
-            // btnVerTodos
-            btnVerTodos.EsBotonSecundario = true;
-            btnVerTodos.Location = new System.Drawing.Point(600, 22);
-            btnVerTodos.Name = "btnVerTodos";
-            btnVerTodos.Size = new System.Drawing.Size(100, 30);
-            btnVerTodos.TabIndex = 3;
-            btnVerTodos.Text = "Ver Todos";
-            btnVerTodos.Click += btnVerTodos_Click;
-
+            // 
             // gbGrilla
-            gbGrilla.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            // 
+            gbGrilla.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             gbGrilla.Controls.Add(dgvCambios);
             gbGrilla.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
             gbGrilla.ForeColor = System.Drawing.Color.FromArgb(40, 70, 50);
-            gbGrilla.Location = new System.Drawing.Point(18, 148);
+            gbGrilla.Location = new System.Drawing.Point(18, 68);
             gbGrilla.Name = "gbGrilla";
-            gbGrilla.Size = new System.Drawing.Size(944, 250);
-            gbGrilla.TabIndex = 2;
+            gbGrilla.Size = new System.Drawing.Size(944, 380);
+            gbGrilla.TabIndex = 1;
             gbGrilla.TabStop = false;
-            gbGrilla.Text = "Registro Histórico de Cambios (Pseudotabla 'deleted' en Trigger AFTER UPDATE/DELETE)";
+            gbGrilla.Text = "Registro Histórico de Cambios";
 
+            // 
             // dgvCambios
+            // 
             dgvCambios.AllowUserToAddRows = false;
             dgvCambios.AllowUserToDeleteRows = false;
-            dgvCambios.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            dgvCambios.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             dgvCambios.BackgroundColor = System.Drawing.Color.White;
+            dgvCambios.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dgvStyleHeader.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dgvStyleHeader.BackColor = System.Drawing.Color.FromArgb(76, 124, 89);
             dgvStyleHeader.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
             dgvStyleHeader.ForeColor = System.Drawing.Color.White;
             dgvCambios.ColumnHeadersDefaultCellStyle = dgvStyleHeader;
             dgvCambios.ColumnHeadersHeight = 30;
+            dgvCambios.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+                colCodCons,
+                colFecha,
+                colHora,
+                colNombre,
+                colDni,
+                colEdad,
+                colDesc,
+                colAct,
+                colBtnActivar
+            });
             dgvCambios.EnableHeadersVisualStyles = false;
             dgvCambios.Location = new System.Drawing.Point(15, 25);
             dgvCambios.MultiSelect = false;
@@ -190,106 +152,306 @@ namespace UI.PN2
             dgvStyleRows.Font = new System.Drawing.Font("Segoe UI", 9F);
             dgvCambios.RowsDefaultCellStyle = dgvStyleRows;
             dgvCambios.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            dgvCambios.Size = new System.Drawing.Size(914, 210);
+            dgvCambios.Size = new System.Drawing.Size(914, 340);
             dgvCambios.TabIndex = 0;
-            dgvCambios.SelectionChanged += dgvCambios_SelectionChanged;
+            dgvCambios.CellContentClick += dgvCambios_CellContentClick;
+            dgvCambios.CellFormatting += dgvCambios_CellFormatting;
 
-            // gbDetalle
-            gbDetalle.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            gbDetalle.Controls.Add(lblDetalleInfo);
-            gbDetalle.Controls.Add(txtDetalleHistorial);
-            gbDetalle.Controls.Add(btnRollback);
-            gbDetalle.Controls.Add(btnCerrar);
-            gbDetalle.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
-            gbDetalle.ForeColor = System.Drawing.Color.FromArgb(40, 70, 50);
-            gbDetalle.Location = new System.Drawing.Point(18, 405);
-            gbDetalle.Name = "gbDetalle";
-            gbDetalle.Size = new System.Drawing.Size(944, 180);
-            gbDetalle.TabIndex = 3;
-            gbDetalle.TabStop = false;
-            gbDetalle.Text = "Detalle del Estado Histórico Seleccionado y Opciones de Reversión";
+            // 
+            // colCodCons
+            // 
+            colCodCons.DataPropertyName = "IdConsulta";
+            colCodCons.HeaderText = "Cod_Cons";
+            colCodCons.Name = "colCodCons";
+            colCodCons.ReadOnly = true;
+            colCodCons.Width = 85;
 
-            // lblDetalleInfo
-            lblDetalleInfo.AutoSize = true;
-            lblDetalleInfo.Location = new System.Drawing.Point(15, 24);
-            lblDetalleInfo.Name = "lblDetalleInfo";
-            lblDetalleInfo.Size = new System.Drawing.Size(430, 17);
-            lblDetalleInfo.TabIndex = 0;
-            lblDetalleInfo.Text = "Valores de la consulta nutricional previos a la modificación seleccionada:";
+            // 
+            // colFecha
+            // 
+            colFecha.DataPropertyName = "FechaStr";
+            colFecha.HeaderText = "Fecha";
+            colFecha.Name = "colFecha";
+            colFecha.ReadOnly = true;
+            colFecha.Width = 85;
 
-            // txtDetalleHistorial
-            txtDetalleHistorial.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            txtDetalleHistorial.BackColor = System.Drawing.Color.White;
-            txtDetalleHistorial.Font = new System.Drawing.Font("Consolas", 9F);
-            txtDetalleHistorial.Location = new System.Drawing.Point(18, 48);
-            txtDetalleHistorial.Multiline = true;
-            txtDetalleHistorial.Name = "txtDetalleHistorial";
-            txtDetalleHistorial.ReadOnly = true;
-            txtDetalleHistorial.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            txtDetalleHistorial.Size = new System.Drawing.Size(650, 118);
-            txtDetalleHistorial.TabIndex = 1;
+            // 
+            // colHora
+            // 
+            colHora.DataPropertyName = "HoraStr";
+            colHora.HeaderText = "Hora";
+            colHora.Name = "colHora";
+            colHora.ReadOnly = true;
+            colHora.Width = 70;
 
-            // btnRollback
-            btnRollback.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-            btnRollback.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
-            btnRollback.Location = new System.Drawing.Point(685, 75);
-            btnRollback.Name = "btnRollback";
-            btnRollback.Size = new System.Drawing.Size(245, 42);
-            btnRollback.TabIndex = 2;
-            btnRollback.Text = "Revertir a esta Versión (Rollback)";
-            btnRollback.Click += btnRollback_Click;
+            // 
+            // colNombre
+            // 
+            colNombre.DataPropertyName = "NombrePaciente";
+            colNombre.HeaderText = "Nombre Paciente";
+            colNombre.Name = "colNombre";
+            colNombre.ReadOnly = true;
+            colNombre.Width = 170;
 
-            // btnCerrar
-            btnCerrar.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-            btnCerrar.EsBotonSecundario = true;
-            btnCerrar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
-            btnCerrar.Location = new System.Drawing.Point(685, 125);
-            btnCerrar.Name = "btnCerrar";
-            btnCerrar.Size = new System.Drawing.Size(245, 36);
-            btnCerrar.TabIndex = 3;
-            btnCerrar.Text = "Cerrar";
-            btnCerrar.Click += btnCerrar_Click;
+            // 
+            // colDni
+            // 
+            colDni.DataPropertyName = "DniPaciente";
+            colDni.HeaderText = "DNI";
+            colDni.Name = "colDni";
+            colDni.ReadOnly = true;
+            colDni.Width = 85;
 
-            // Form
+            // 
+            // colEdad
+            // 
+            colEdad.DataPropertyName = "EdadMeses";
+            colEdad.HeaderText = "Edad (m)";
+            colEdad.Name = "colEdad";
+            colEdad.ReadOnly = true;
+            colEdad.Width = 75;
+
+            // 
+            // colDesc
+            // 
+            colDesc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            colDesc.DataPropertyName = "Observaciones";
+            colDesc.HeaderText = "Desc.";
+            colDesc.Name = "colDesc";
+            colDesc.ReadOnly = true;
+
+            // 
+            // colAct
+            // 
+            colAct.DataPropertyName = "ActivoInt";
+            colAct.HeaderText = "Act.";
+            colAct.Name = "colAct";
+            colAct.ReadOnly = true;
+            colAct.Width = 55;
+            colAct.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+
+            // 
+            // colBtnActivar
+            // 
+            colBtnActivar.HeaderText = "";
+            colBtnActivar.Name = "colBtnActivar";
+            colBtnActivar.ReadOnly = true;
+            colBtnActivar.Text = "Activar";
+            colBtnActivar.UseColumnTextForButtonValue = true;
+            colBtnActivar.Width = 75;
+
+            // 
+            // gbControles
+            // 
+            gbControles.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            gbControles.Controls.Add(lblCodProd);
+            gbControles.Controls.Add(txtCodConsulta);
+            gbControles.Controls.Add(lblNombre);
+            gbControles.Controls.Add(txtNombre);
+            gbControles.Controls.Add(lblFechaIni);
+            gbControles.Controls.Add(dtpFechaIni);
+            gbControles.Controls.Add(lblFechaFin);
+            gbControles.Controls.Add(dtpFechaFin);
+            gbControles.Controls.Add(btnAplicar);
+            gbControles.Controls.Add(btnSalir);
+            gbControles.Controls.Add(btnLimpiar);
+            gbControles.Controls.Add(btnActivar);
+            gbControles.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
+            gbControles.ForeColor = System.Drawing.Color.FromArgb(40, 70, 50);
+            gbControles.Location = new System.Drawing.Point(18, 456);
+            gbControles.Name = "gbControles";
+            gbControles.Size = new System.Drawing.Size(944, 125);
+            gbControles.TabIndex = 2;
+            gbControles.TabStop = false;
+            gbControles.Text = "Filtros y Operaciones";
+
+            // 
+            // lblCodProd
+            // 
+            lblCodProd.AutoSize = true;
+            lblCodProd.Location = new System.Drawing.Point(20, 30);
+            lblCodProd.Name = "lblCodProd";
+            lblCodProd.Size = new System.Drawing.Size(73, 17);
+            lblCodProd.TabIndex = 0;
+            lblCodProd.Text = "Cod_Cons.:";
+
+            // 
+            // txtCodConsulta
+            // 
+            txtCodConsulta.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            txtCodConsulta.Location = new System.Drawing.Point(100, 27);
+            txtCodConsulta.Name = "txtCodConsulta";
+            txtCodConsulta.PlaceholderText = "ID Consulta";
+            txtCodConsulta.Size = new System.Drawing.Size(110, 24);
+            txtCodConsulta.TabIndex = 1;
+
+            // 
+            // lblNombre
+            // 
+            lblNombre.AutoSize = true;
+            lblNombre.Location = new System.Drawing.Point(235, 30);
+            lblNombre.Name = "lblNombre";
+            lblNombre.Size = new System.Drawing.Size(61, 17);
+            lblNombre.TabIndex = 2;
+            lblNombre.Text = "Nombre:";
+
+            // 
+            // txtNombre
+            // 
+            txtNombre.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            txtNombre.Location = new System.Drawing.Point(305, 27);
+            txtNombre.Name = "txtNombre";
+            txtNombre.PlaceholderText = "Buscar por paciente";
+            txtNombre.Size = new System.Drawing.Size(180, 24);
+            txtNombre.TabIndex = 3;
+
+            // 
+            // lblFechaIni
+            // 
+            lblFechaIni.AutoSize = true;
+            lblFechaIni.Location = new System.Drawing.Point(20, 75);
+            lblFechaIni.Name = "lblFechaIni";
+            lblFechaIni.Size = new System.Drawing.Size(68, 17);
+            lblFechaIni.TabIndex = 4;
+            lblFechaIni.Text = "Fecha Ini.:";
+
+            // 
+            // dtpFechaIni
+            // 
+            dtpFechaIni.Checked = false;
+            dtpFechaIni.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            dtpFechaIni.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            dtpFechaIni.Location = new System.Drawing.Point(100, 72);
+            dtpFechaIni.Name = "dtpFechaIni";
+            dtpFechaIni.ShowCheckBox = true;
+            dtpFechaIni.Size = new System.Drawing.Size(115, 24);
+            dtpFechaIni.TabIndex = 5;
+
+            // 
+            // lblFechaFin
+            // 
+            lblFechaFin.AutoSize = true;
+            lblFechaFin.Location = new System.Drawing.Point(235, 75);
+            lblFechaFin.Name = "lblFechaFin";
+            lblFechaFin.Size = new System.Drawing.Size(66, 17);
+            lblFechaFin.TabIndex = 6;
+            lblFechaFin.Text = "Fecha Fin:";
+
+            // 
+            // dtpFechaFin
+            // 
+            dtpFechaFin.Checked = false;
+            dtpFechaFin.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            dtpFechaFin.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            dtpFechaFin.Location = new System.Drawing.Point(305, 72);
+            dtpFechaFin.Name = "dtpFechaFin";
+            dtpFechaFin.ShowCheckBox = true;
+            dtpFechaFin.Size = new System.Drawing.Size(115, 24);
+            dtpFechaFin.TabIndex = 7;
+
+            // 
+            // btnAplicar
+            // 
+            btnAplicar.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            btnAplicar.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            btnAplicar.Location = new System.Drawing.Point(530, 22);
+            btnAplicar.Name = "btnAplicar";
+            btnAplicar.Size = new System.Drawing.Size(180, 40);
+            btnAplicar.TabIndex = 8;
+            btnAplicar.Text = "APLICAR";
+            btnAplicar.Click += btnAplicar_Click;
+
+            // 
+            // btnSalir
+            // 
+            btnSalir.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            btnSalir.EsBotonSecundario = true;
+            btnSalir.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            btnSalir.Location = new System.Drawing.Point(730, 22);
+            btnSalir.Name = "btnSalir";
+            btnSalir.Size = new System.Drawing.Size(180, 40);
+            btnSalir.TabIndex = 9;
+            btnSalir.Text = "SALIR";
+            btnSalir.Click += btnSalir_Click;
+
+            // 
+            // btnLimpiar
+            // 
+            btnLimpiar.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            btnLimpiar.EsBotonSecundario = true;
+            btnLimpiar.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            btnLimpiar.Location = new System.Drawing.Point(530, 70);
+            btnLimpiar.Name = "btnLimpiar";
+            btnLimpiar.Size = new System.Drawing.Size(180, 40);
+            btnLimpiar.TabIndex = 10;
+            btnLimpiar.Text = "LIMPIAR";
+            btnLimpiar.Click += btnLimpiar_Click;
+
+            // 
+            // btnActivar
+            // 
+            btnActivar.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            btnActivar.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            btnActivar.Location = new System.Drawing.Point(730, 70);
+            btnActivar.Name = "btnActivar";
+            btnActivar.Size = new System.Drawing.Size(180, 40);
+            btnActivar.TabIndex = 11;
+            btnActivar.Text = "ACTIVAR";
+            btnActivar.Click += btnActivar_Click;
+
+            // 
+            // frmBitacoraCambiosConsultas
+            // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.Color.FromArgb(245, 248, 245);
             ClientSize = new System.Drawing.Size(980, 600);
-            Controls.Add(gbDetalle);
+            Controls.Add(gbControles);
             Controls.Add(gbGrilla);
-            Controls.Add(gbFiltros);
             Controls.Add(panelHeader);
             Name = "frmBitacoraCambiosConsultas";
-            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            Text = "Bitácora de Cambios - Consultas Nutricionales";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            Text = "Bitácora de Cambios - CUN08";
+            Load += frmBitacoraCambiosConsultas_Load;
             panelHeader.ResumeLayout(false);
             panelHeader.PerformLayout();
-            gbFiltros.ResumeLayout(false);
-            gbFiltros.PerformLayout();
             gbGrilla.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvCambios).EndInit();
-            gbDetalle.ResumeLayout(false);
-            gbDetalle.PerformLayout();
+            gbControles.ResumeLayout(false);
+            gbControles.PerformLayout();
             ResumeLayout(false);
         }
 
         private System.Windows.Forms.Panel panelHeader;
         private System.Windows.Forms.Label lblTitulo;
         private System.Windows.Forms.Label lblSubtitulo;
-        private System.Windows.Forms.GroupBox gbFiltros;
-        private System.Windows.Forms.Label lblConsultaFiltro;
-        private System.Windows.Forms.TextBox txtIdConsultaFiltro;
-        private UI.Controles.BotonFuturista btnFiltrar;
-        private UI.Controles.BotonFuturista btnVerTodos;
+        private UI.Controles.BotonFuturista btnAyudaContextual;
+
         private System.Windows.Forms.GroupBox gbGrilla;
         private System.Windows.Forms.DataGridView dgvCambios;
-        private System.Windows.Forms.GroupBox gbDetalle;
-        private System.Windows.Forms.Label lblDetalleInfo;
-        private System.Windows.Forms.TextBox txtDetalleHistorial;
-        private UI.Controles.BotonFuturista btnRollback;
-        private UI.Controles.BotonFuturista btnCerrar;
-        private UI.Controles.BotonFuturista btnAyudaContextual;
-        private System.Windows.Forms.Label lblEntidad;
-        private System.Windows.Forms.ComboBox cmbEntidad;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCodCons;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colFecha;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colHora;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDni;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colEdad;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDesc;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colAct;
+        private System.Windows.Forms.DataGridViewButtonColumn colBtnActivar;
+
+        private System.Windows.Forms.GroupBox gbControles;
+        private System.Windows.Forms.Label lblCodProd;
+        private System.Windows.Forms.TextBox txtCodConsulta;
+        private System.Windows.Forms.Label lblNombre;
+        private System.Windows.Forms.TextBox txtNombre;
+        private System.Windows.Forms.Label lblFechaIni;
+        private System.Windows.Forms.DateTimePicker dtpFechaIni;
+        private System.Windows.Forms.Label lblFechaFin;
+        private System.Windows.Forms.DateTimePicker dtpFechaFin;
+
+        private UI.Controles.BotonFuturista btnAplicar;
+        private UI.Controles.BotonFuturista btnSalir;
+        private UI.Controles.BotonFuturista btnLimpiar;
+        private UI.Controles.BotonFuturista btnActivar;
     }
 }

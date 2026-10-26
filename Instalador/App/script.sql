@@ -758,23 +758,37 @@ CREATE TABLE [dbo].[ConsultasNutricionales_Cambios_DNI101](
     [Observaciones_DNI101] VARCHAR(MAX) NULL,
     [FechaCambio] DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
     [UsuarioDni] INT NOT NULL DEFAULT 11111111,
-    [TipoOperacion] VARCHAR(20) NOT NULL
+    [TipoOperacion] VARCHAR(20) NOT NULL,
+    [Act] BIT NOT NULL CONSTRAINT DF_ConsultasCambios_Act DEFAULT 1
 ) ON [PRIMARY];
+END
+ELSE
+BEGIN
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[ConsultasNutricionales_Cambios_DNI101]') AND name = 'Act')
+    BEGIN
+        ALTER TABLE [dbo].[ConsultasNutricionales_Cambios_DNI101] ADD [Act] BIT NOT NULL CONSTRAINT DF_ConsultasCambios_Act DEFAULT 1;
+    END
 END
 GO
 
 --------------------------------------------------------------------------------
--- TRIGGER EN CONSULTAS NUTRICIONALES: REGISTRA ESTADO PREVIO ANTE UPDATE O DELETE
+-- TRIGGER EN CONSULTAS NUTRICIONALES: BITÁCORA DE CAMBIOS CUN08 (VERSIONADO HISTÓRICO Y REVERSIÓN)
 --------------------------------------------------------------------------------
 CREATE OR ALTER TRIGGER [dbo].[trg_ConsultasNutricionales_BitacoraCambios]
 ON [dbo].[ConsultasNutricionales_DNI101]
-AFTER UPDATE, DELETE
+AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- Si fue un UPDATE, registrar el estado anterior (de la pseudotabla 'deleted')
-    IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
+    -- Si es una reversión o activación controlada desde la aplicación, no generar duplicados en la bitácora
+    IF CAST(SESSION_CONTEXT(N'EsReversion') AS INT) = 1
+    BEGIN
+        RETURN;
+    END
+
+    -- Ante INSERT (nueva consulta nutricional): registrar en la bitácora con Act = 1
+    IF EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted)
     BEGIN
         INSERT INTO [dbo].[ConsultasNutricionales_Cambios_DNI101] (
             [IdConsulta_DNI101],
@@ -789,27 +803,73 @@ BEGIN
             [Observaciones_DNI101],
             [FechaCambio],
             [UsuarioDni],
-            [TipoOperacion]
+            [TipoOperacion],
+            [Act]
         )
         SELECT 
-            d.[IdConsulta_DNI101],
-            d.[IdPaciente_DNI101],
-            d.[DniNutricionista_DNI101],
-            d.[FechaControl_DNI101],
-            d.[EdadMeses_DNI101],
-            d.[TipoLactancia_DNI101],
-            d.[AlimentacionComplementaria_DNI101],
-            d.[Alergias_DNI101],
-            d.[AntecedentesFamiliares_DNI101],
-            d.[Observaciones_DNI101],
+            i.[IdConsulta_DNI101],
+            i.[IdPaciente_DNI101],
+            i.[DniNutricionista_DNI101],
+            i.[FechaControl_DNI101],
+            i.[EdadMeses_DNI101],
+            i.[TipoLactancia_DNI101],
+            i.[AlimentacionComplementaria_DNI101],
+            i.[Alergias_DNI101],
+            i.[AntecedentesFamiliares_DNI101],
+            i.[Observaciones_DNI101],
             SYSDATETIME(),
             ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
-            'UPDATE'
-        FROM deleted d;
+            'INSERT',
+            1
+        FROM inserted i;
     END
-    -- Si fue un DELETE, registrar el último estado antes del borrado
+    -- Ante UPDATE: marcar las versiones anteriores de esa consulta con Act = 0 y registrar la nueva versión activa con Act = 1
+    ELSE IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        UPDATE [dbo].[ConsultasNutricionales_Cambios_DNI101]
+        SET [Act] = 0
+        WHERE [IdConsulta_DNI101] IN (SELECT [IdConsulta_DNI101] FROM inserted);
+
+        INSERT INTO [dbo].[ConsultasNutricionales_Cambios_DNI101] (
+            [IdConsulta_DNI101],
+            [IdPaciente_DNI101],
+            [DniNutricionista_DNI101],
+            [FechaControl_DNI101],
+            [EdadMeses_DNI101],
+            [TipoLactancia_DNI101],
+            [AlimentacionComplementaria_DNI101],
+            [Alergias_DNI101],
+            [AntecedentesFamiliares_DNI101],
+            [Observaciones_DNI101],
+            [FechaCambio],
+            [UsuarioDni],
+            [TipoOperacion],
+            [Act]
+        )
+        SELECT 
+            i.[IdConsulta_DNI101],
+            i.[IdPaciente_DNI101],
+            i.[DniNutricionista_DNI101],
+            i.[FechaControl_DNI101],
+            i.[EdadMeses_DNI101],
+            i.[TipoLactancia_DNI101],
+            i.[AlimentacionComplementaria_DNI101],
+            i.[Alergias_DNI101],
+            i.[AntecedentesFamiliares_DNI101],
+            i.[Observaciones_DNI101],
+            SYSDATETIME(),
+            ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
+            'UPDATE',
+            1
+        FROM inserted i;
+    END
+    -- Ante DELETE: marcar en 0 las versiones de esa consulta y registrar el borrado con Act = 0
     ELSE IF EXISTS (SELECT 1 FROM deleted)
     BEGIN
+        UPDATE [dbo].[ConsultasNutricionales_Cambios_DNI101]
+        SET [Act] = 0
+        WHERE [IdConsulta_DNI101] IN (SELECT [IdConsulta_DNI101] FROM deleted);
+
         INSERT INTO [dbo].[ConsultasNutricionales_Cambios_DNI101] (
             [IdConsulta_DNI101],
             [IdPaciente_DNI101],
@@ -823,7 +883,8 @@ BEGIN
             [Observaciones_DNI101],
             [FechaCambio],
             [UsuarioDni],
-            [TipoOperacion]
+            [TipoOperacion],
+            [Act]
         )
         SELECT 
             d.[IdConsulta_DNI101],
@@ -838,9 +899,47 @@ BEGIN
             d.[Observaciones_DNI101],
             SYSDATETIME(),
             ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
-            'DELETE'
+            'DELETE',
+            0
         FROM deleted d;
     END
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [dbo].[ConsultasNutricionales_Cambios_DNI101])
+BEGIN
+    INSERT INTO [dbo].[ConsultasNutricionales_Cambios_DNI101] (
+        [IdConsulta_DNI101],
+        [IdPaciente_DNI101],
+        [DniNutricionista_DNI101],
+        [FechaControl_DNI101],
+        [EdadMeses_DNI101],
+        [TipoLactancia_DNI101],
+        [AlimentacionComplementaria_DNI101],
+        [Alergias_DNI101],
+        [AntecedentesFamiliares_DNI101],
+        [Observaciones_DNI101],
+        [FechaCambio],
+        [UsuarioDni],
+        [TipoOperacion],
+        [Act]
+    )
+    SELECT 
+        c.[IdConsulta_DNI101],
+        c.[IdPaciente_DNI101],
+        c.[DniNutricionista_DNI101],
+        c.[FechaControl_DNI101],
+        c.[EdadMeses_DNI101],
+        c.[TipoLactancia_DNI101],
+        c.[AlimentacionComplementaria_DNI101],
+        c.[Alergias_DNI101],
+        c.[AntecedentesFamiliares_DNI101],
+        c.[Observaciones_DNI101],
+        c.[FechaControl_DNI101],
+        11111111,
+        'INSERT',
+        1
+    FROM [dbo].[ConsultasNutricionales_DNI101] c;
 END
 GO
 

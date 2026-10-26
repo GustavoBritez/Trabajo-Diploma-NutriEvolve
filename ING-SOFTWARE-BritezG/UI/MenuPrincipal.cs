@@ -30,6 +30,12 @@ namespace UI
 
             TraductorUI.SuscribirFormulario(this, this);
             TraductorUI.ConfigurarComboIdiomas(cmbIdioma, idiomaBLL);
+
+            if (panelTop != null)
+            {
+                panelTop.Resize += (s, e) => CentrarInformacionUsuario();
+            }
+
             ActualizarIdioma();
             ActualizarPanelDV();
         }
@@ -345,6 +351,32 @@ namespace UI
             else
             {
                 this.label6.Text = "";
+            }
+
+            CentrarInformacionUsuario();
+        }
+
+        private void CentrarInformacionUsuario()
+        {
+            try
+            {
+                if (label4 == null || label6 == null || lblTitulo == null || cmbIdioma == null) return;
+                label4.AutoSize = true;
+                label6.AutoSize = true;
+                label6.TextAlign = ContentAlignment.MiddleLeft;
+
+                int totalWidth = label4.Width + 6 + label6.Width;
+                int areaInicio = lblTitulo.Right + 12;
+                int areaFin = cmbIdioma.Left - 12;
+                int anchoDisponible = areaFin - areaInicio;
+
+                int startX = areaInicio + Math.Max(0, (anchoDisponible - totalWidth) / 2);
+
+                label4.Location = new Point(startX, 18);
+                label6.Location = new Point(label4.Right + 6, 18);
+            }
+            catch
+            {
             }
         }
 

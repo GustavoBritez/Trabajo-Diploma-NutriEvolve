@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Drawing;
 using System.Windows.Forms;
-using BE.PN1;
+using BE;
 using BE.PN2;
 using BLL;
 using BLL.PN2;
@@ -14,15 +14,18 @@ namespace UI.PN2
     {
         private readonly BitacoraCambiosConsultaBLL_DNI101 _bll = new();
         private List<ConsultaCambioBE_DNI101> _listaConsultas = new();
-        private List<PlanAlimentarioCambioBE_DNI101> _listaPlanes = new();
-        private List<PacienteCambioBE_DNI101> _listaPacientes = new();
 
         public frmBitacoraCambiosConsultas()
         {
             InitializeComponent();
-            cmbEntidad.SelectedIndex = 0;
+            dgvCambios.AutoGenerateColumns = false;
             TraductorUI.SuscribirFormulario(this, this);
             ActualizarIdioma();
+        }
+
+        private void frmBitacoraCambiosConsultas_Load(object? sender, EventArgs e)
+        {
+            CargarBitacora();
         }
 
         public void ActualizarIdioma()
@@ -31,82 +34,18 @@ namespace UI.PN2
             {
                 var idiomaBLL = new IdiomaBLL();
                 TraductorUI.TraducirFormulario(this, idiomaBLL);
-                ActualizarEtiquetasSegunEntidad();
-                if (dgvCambios.DataSource != null)
-                {
-                    TraductorUI.TraducirDataGridView(dgvCambios, idiomaBLL, this.Name);
-                }
+                gbGrilla.Text = "Registro Histórico de Cambios";
             }
         }
 
-        private void cmbEntidad_SelectedIndexChanged(object? sender, EventArgs e)
-        {
-            txtIdConsultaFiltro.Clear();
-            ActualizarEtiquetasSegunEntidad();
-            CargarBitacora();
-        }
-
-        private void ActualizarEtiquetasSegunEntidad()
-        {
-            var idiomaBLL = new IdiomaBLL();
-            string lblConsulta = idiomaBLL.ExisteTraduccion("IdConsulta") ? idiomaBLL.Traducir("IdConsulta") : "ID Consulta";
-            string lblPlan = idiomaBLL.ExisteTraduccion("IdPlan") ? idiomaBLL.Traducir("IdPlan") : "ID Plan";
-            string lblPac = idiomaBLL.ExisteTraduccion("IdPaciente") ? idiomaBLL.Traducir("IdPaciente") : "ID Paciente";
-
-            var lang = ServicesSessionManager.Instancia.ObtenerIdioma()?.Codigo ?? "es";
-
-            switch (cmbEntidad.SelectedIndex)
-            {
-                case 1: // Planes Alimentarios
-                    lblTitulo.Text = lang == "en" ? "Change Audit Log - Meal Plans (SQL Trigger)"
-                        : lang == "po" ? "Histórico de Alterações - Planos Alimentares (Trigger SQL)"
-                        : "Bitácora de Cambios - Planes Alimentarios (Trigger SQL)";
-                    lblConsultaFiltro.Text = $"{lblPlan}:";
-                    break;
-                case 2: // Pacientes
-                    lblTitulo.Text = lang == "en" ? "Change Audit Log - Patients (SQL Trigger)"
-                        : lang == "po" ? "Histórico de Alterações - Pacientes (Trigger SQL)"
-                        : "Bitácora de Cambios - Pacientes (Trigger SQL)";
-                    lblConsultaFiltro.Text = $"{lblPac}:";
-                    break;
-                default: // Consultas Nutricionales
-                    lblTitulo.Text = lang == "en" ? "Change Audit Log - Nutritional Consultations (SQL Trigger)"
-                        : lang == "po" ? "Histórico de Alterações - Consultas Nutricionais (Trigger SQL)"
-                        : "Bitácora de Cambios - Consultas Nutricionales (Trigger SQL)";
-                    lblConsultaFiltro.Text = $"{lblConsulta}:";
-                    break;
-            }
-        }
-
-        public void CargarBitacora(int? idFiltro = null)
+        public void CargarBitacora(int? idConsulta = null, string? nombre = null, DateTime? fechaIni = null, DateTime? fechaFin = null)
         {
             try
             {
                 dgvCambios.DataSource = null;
-
-                switch (cmbEntidad.SelectedIndex)
-                {
-                    case 1: // Planes Alimentarios
-                        _listaPlanes = _bll.ListarCambiosPlanes(idFiltro);
-                        dgvCambios.DataSource = _listaPlanes;
-                        ConfigurarGrillaPlanes();
-                        break;
-
-                    case 2: // Pacientes
-                        _listaPacientes = _bll.ListarCambiosPacientes(idFiltro);
-                        dgvCambios.DataSource = _listaPacientes;
-                        ConfigurarGrillaPacientes();
-                        break;
-
-                    default: // Consultas Nutricionales
-                        _listaConsultas = _bll.ListarCambios(idFiltro);
-                        dgvCambios.DataSource = _listaConsultas;
-                        ConfigurarGrillaConsultas();
-                        break;
-                }
-
-                btnRollback.Enabled = dgvCambios.CurrentRow != null;
-                MostrarDetalleSeleccionado();
+                _listaConsultas = _bll.ListarCambios(idConsulta, nombre, fechaIni, fechaFin);
+                dgvCambios.DataSource = _listaConsultas;
+                btnActivar.Enabled = dgvCambios.CurrentRow != null;
             }
             catch (Exception ex)
             {
@@ -114,238 +53,184 @@ namespace UI.PN2
             }
         }
 
-        private void ConfigurarGrillaConsultas()
+        private void btnAplicar_Click(object? sender, EventArgs e)
         {
-            if (dgvCambios.Columns["IdCambio"] != null) dgvCambios.Columns["IdCambio"].HeaderText = "Nro Cambio";
-            if (dgvCambios.Columns["IdConsulta"] != null) dgvCambios.Columns["IdConsulta"].HeaderText = "ID Consulta";
-            if (dgvCambios.Columns["IdPaciente"] != null) dgvCambios.Columns["IdPaciente"].HeaderText = "ID Paciente";
-            if (dgvCambios.Columns["FechaCambio"] != null) dgvCambios.Columns["FechaCambio"].HeaderText = "Fecha Modificación";
-            if (dgvCambios.Columns["UsuarioDni"] != null) dgvCambios.Columns["UsuarioDni"].HeaderText = "DNI Usuario";
-            if (dgvCambios.Columns["TipoOperacion"] != null) dgvCambios.Columns["TipoOperacion"].HeaderText = "Operación";
-            if (dgvCambios.Columns["Observaciones"] != null) dgvCambios.Columns["Observaciones"].HeaderText = "Observaciones Previas";
-
-            if (dgvCambios.Columns["DniNutricionista"] != null) dgvCambios.Columns["DniNutricionista"].Visible = false;
-            if (dgvCambios.Columns["FechaControl"] != null) dgvCambios.Columns["FechaControl"].Visible = false;
-            if (dgvCambios.Columns["EdadMeses"] != null) dgvCambios.Columns["EdadMeses"].Visible = false;
-            if (dgvCambios.Columns["TipoLactancia"] != null) dgvCambios.Columns["TipoLactancia"].Visible = false;
-            if (dgvCambios.Columns["AlimentacionComplementaria"] != null) dgvCambios.Columns["AlimentacionComplementaria"].Visible = false;
-            if (dgvCambios.Columns["Alergias"] != null) dgvCambios.Columns["Alergias"].Visible = false;
-            if (dgvCambios.Columns["AntecedentesFamiliares"] != null) dgvCambios.Columns["AntecedentesFamiliares"].Visible = false;
-
-            if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
+            int? idConsulta = null;
+            if (!string.IsNullOrWhiteSpace(txtCodConsulta.Text))
             {
-                TraductorUI.TraducirDataGridView(dgvCambios, new IdiomaBLL(), this.Name);
+                if (int.TryParse(txtCodConsulta.Text.Trim(), out int idVal))
+                {
+                    idConsulta = idVal;
+                }
+                else
+                {
+                    MessageBox.Show("El Código de Consulta (Cod_Cons) debe ser un número entero válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtCodConsulta.Focus();
+                    return;
+                }
             }
-        }
 
-        private void ConfigurarGrillaPlanes()
-        {
-            if (dgvCambios.Columns["IdCambio"] != null) dgvCambios.Columns["IdCambio"].HeaderText = "Nro Cambio";
-            if (dgvCambios.Columns["IdPlan"] != null) dgvCambios.Columns["IdPlan"].HeaderText = "ID Plan";
-            if (dgvCambios.Columns["IdConsulta"] != null) dgvCambios.Columns["IdConsulta"].HeaderText = "ID Consulta";
-            if (dgvCambios.Columns["RequerimientoCalorico"] != null) dgvCambios.Columns["RequerimientoCalorico"].HeaderText = "Kcal Previas";
-            if (dgvCambios.Columns["PctCarbohidratos"] != null) dgvCambios.Columns["PctCarbohidratos"].HeaderText = "% Carbos";
-            if (dgvCambios.Columns["PctProteinas"] != null) dgvCambios.Columns["PctProteinas"].HeaderText = "% Proteínas";
-            if (dgvCambios.Columns["PctGrasas"] != null) dgvCambios.Columns["PctGrasas"].HeaderText = "% Grasas";
-            if (dgvCambios.Columns["FechaCambio"] != null) dgvCambios.Columns["FechaCambio"].HeaderText = "Fecha Modificación";
-            if (dgvCambios.Columns["UsuarioDni"] != null) dgvCambios.Columns["UsuarioDni"].HeaderText = "DNI Usuario";
-            if (dgvCambios.Columns["TipoOperacion"] != null) dgvCambios.Columns["TipoOperacion"].HeaderText = "Operación";
+            string? nombre = string.IsNullOrWhiteSpace(txtNombre.Text) ? null : txtNombre.Text.Trim();
+            DateTime? fechaIni = dtpFechaIni.Checked ? dtpFechaIni.Value.Date : null;
+            DateTime? fechaFin = dtpFechaFin.Checked ? dtpFechaFin.Value.Date : null;
 
-            if (dgvCambios.Columns["PautasFamiliares"] != null) dgvCambios.Columns["PautasFamiliares"].Visible = false;
-            if (dgvCambios.Columns["MetasSalud"] != null) dgvCambios.Columns["MetasSalud"].Visible = false;
-
-            if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
+            if (fechaIni.HasValue && fechaFin.HasValue && fechaIni.Value > fechaFin.Value)
             {
-                TraductorUI.TraducirDataGridView(dgvCambios, new IdiomaBLL(), this.Name);
-            }
-        }
-
-        private void ConfigurarGrillaPacientes()
-        {
-            if (dgvCambios.Columns["IdCambio"] != null) dgvCambios.Columns["IdCambio"].HeaderText = "Nro Cambio";
-            if (dgvCambios.Columns["IdPaciente"] != null) dgvCambios.Columns["IdPaciente"].HeaderText = "ID Paciente";
-            if (dgvCambios.Columns["Dni"] != null) dgvCambios.Columns["Dni"].HeaderText = "DNI";
-            if (dgvCambios.Columns["Apellido"] != null) dgvCambios.Columns["Apellido"].HeaderText = "Apellido";
-            if (dgvCambios.Columns["Nombre"] != null) dgvCambios.Columns["Nombre"].HeaderText = "Nombre";
-            if (dgvCambios.Columns["Telefono"] != null) dgvCambios.Columns["Telefono"].HeaderText = "Teléfono Previo";
-            if (dgvCambios.Columns["Email"] != null) dgvCambios.Columns["Email"].HeaderText = "Email Previo";
-            if (dgvCambios.Columns["Direccion"] != null) dgvCambios.Columns["Direccion"].HeaderText = "Dirección Previa";
-            if (dgvCambios.Columns["Activo"] != null) dgvCambios.Columns["Activo"].HeaderText = "Estado Activo";
-            if (dgvCambios.Columns["FechaCambio"] != null) dgvCambios.Columns["FechaCambio"].HeaderText = "Fecha Modificación";
-            if (dgvCambios.Columns["TipoOperacion"] != null) dgvCambios.Columns["TipoOperacion"].HeaderText = "Operación";
-
-            if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
-            {
-                TraductorUI.TraducirDataGridView(dgvCambios, new IdiomaBLL(), this.Name);
-            }
-        }
-
-        private void MostrarDetalleSeleccionado()
-        {
-            if (dgvCambios.CurrentRow == null)
-            {
-                txtDetalleHistorial.Text = "Seleccione un cambio registrado en la grilla para inspeccionar su estado anterior.";
-                btnRollback.Enabled = false;
+                MessageBox.Show("La fecha inicial no puede ser superior a la fecha final.", "Validación de Fechas", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var sb = new StringBuilder();
-
-            switch (cmbEntidad.SelectedIndex)
-            {
-                case 1: // Planes Alimentarios
-                    if (dgvCambios.CurrentRow.DataBoundItem is PlanAlimentarioCambioBE_DNI101 plan)
-                    {
-                        sb.AppendLine($"[ID CAMBIO: {plan.IdCambio}] - Operación detectada por Trigger: {plan.TipoOperacion}");
-                        sb.AppendLine($"Fecha/Hora: {plan.FechaCambio:dd/MM/yyyy HH:mm:ss} | Usuario Responsable: {plan.UsuarioDni}");
-                        sb.AppendLine($"Plan Alimentario ID: {plan.IdPlan} | Consulta Nutricional Asociada: ID {plan.IdConsulta}");
-                        sb.AppendLine(new string('-', 80));
-                        sb.AppendLine($"Requerimiento Calórico Previo: {plan.RequerimientoCalorico:N0} Kcal/día");
-                        sb.AppendLine($"Distribución Macronutrientes: Carbohidratos {plan.PctCarbohidratos}% | Proteínas {plan.PctProteinas}% | Grasas {plan.PctGrasas}%");
-                        sb.AppendLine($"Metas de Salud Previas: {plan.MetasSalud ?? "(Sin metas registradas)"}");
-                        sb.AppendLine($"Pautas Familiares Previas: {plan.PautasFamiliares ?? "(Sin pautas registradas)"}");
-                    }
-                    break;
-
-                case 2: // Pacientes
-                    if (dgvCambios.CurrentRow.DataBoundItem is PacienteCambioBE_DNI101 pac)
-                    {
-                        sb.AppendLine($"[ID CAMBIO: {pac.IdCambio}] - Operación detectada por Trigger: {pac.TipoOperacion}");
-                        sb.AppendLine($"Fecha/Hora: {pac.FechaCambio:dd/MM/yyyy HH:mm:ss} | Usuario Responsable: {pac.UsuarioDni}");
-                        sb.AppendLine($"Paciente ID: {pac.IdPaciente} | DNI: {pac.Dni} | Nombre: {pac.Apellido}, {pac.Nombre}");
-                        sb.AppendLine(new string('-', 80));
-                        sb.AppendLine($"Teléfono Previo: {pac.Telefono ?? "(Sin teléfono)"}");
-                        sb.AppendLine($"Email Previo: {pac.Email ?? "(Sin email)"}");
-                        sb.AppendLine($"Dirección Previa: {pac.Direccion ?? "(Sin dirección)"}");
-                        sb.AppendLine($"Estado Lógico Previo: {(pac.Activo ? "Activo (1)" : "Baja Lógica (0)")}");
-                    }
-                    break;
-
-                default: // Consultas Nutricionales
-                    if (dgvCambios.CurrentRow.DataBoundItem is ConsultaCambioBE_DNI101 cambio)
-                    {
-                        sb.AppendLine($"[ID CAMBIO: {cambio.IdCambio}] - Operación detectada por Trigger: {cambio.TipoOperacion}");
-                        sb.AppendLine($"Fecha/Hora: {cambio.FechaCambio:dd/MM/yyyy HH:mm:ss} | Usuario Responsable: {cambio.UsuarioDni}");
-                        sb.AppendLine($"Consulta Asociada: ID {cambio.IdConsulta} | Paciente: ID {cambio.IdPaciente} | Fecha Control: {cambio.FechaControl:dd/MM/yyyy}");
-                        sb.AppendLine(new string('-', 80));
-                        sb.AppendLine($"Tipo de Lactancia: {cambio.TipoLactancia ?? "(No especificada)"}");
-                        sb.AppendLine($"Alimentación Complementaria: {cambio.AlimentacionComplementaria ?? "(No especificada)"}");
-                        sb.AppendLine($"Alergias Registradas: {cambio.Alergias ?? "(Ninguna)"}");
-                        sb.AppendLine($"Antecedentes Familiares: {cambio.AntecedentesFamiliares ?? "(Ninguno)"}");
-                        sb.AppendLine($"Observaciones Clínicas Previas: {cambio.Observaciones ?? "(Sin observaciones)"}");
-                    }
-                    break;
-            }
-
-            txtDetalleHistorial.Text = sb.ToString();
-            btnRollback.Enabled = true;
+            CargarBitacora(idConsulta, nombre, fechaIni, fechaFin);
         }
 
-        private void dgvCambios_SelectionChanged(object? sender, EventArgs e)
+        private void btnLimpiar_Click(object? sender, EventArgs e)
         {
-            MostrarDetalleSeleccionado();
-        }
-
-        private void btnFiltrar_Click(object? sender, EventArgs e)
-        {
-            if (int.TryParse(txtIdConsultaFiltro.Text.Trim(), out int id) && id > 0)
-            {
-                CargarBitacora(id);
-            }
-            else
-            {
-                MessageBox.Show("Por favor ingrese un ID numérico válido para filtrar.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        private void btnVerTodos_Click(object? sender, EventArgs e)
-        {
-            txtIdConsultaFiltro.Clear();
+            txtCodConsulta.Clear();
+            txtNombre.Clear();
+            dtpFechaIni.Checked = false;
+            dtpFechaFin.Checked = false;
             CargarBitacora();
         }
 
-        private void btnRollback_Click(object? sender, EventArgs e)
+        private void btnActivar_Click(object? sender, EventArgs e)
         {
-            if (dgvCambios.CurrentRow == null)
+            if (dgvCambios.CurrentRow == null || dgvCambios.CurrentRow.DataBoundItem is not ConsultaCambioBE_DNI101 cambio)
             {
-                MessageBox.Show("Seleccione el registro histórico al cual desea restaurar la entidad.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Seleccione un registro histórico de la grilla para activar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            int dniUsuario = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+            EjecutarActivacion(cambio);
+        }
+
+        private void dgvCambios_CellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.ColumnIndex == colBtnActivar.Index)
+            {
+                if (dgvCambios.Rows[e.RowIndex].DataBoundItem is ConsultaCambioBE_DNI101 cambio)
+                {
+                    EjecutarActivacion(cambio);
+                }
+            }
+        }
+
+        private void EjecutarActivacion(ConsultaCambioBE_DNI101 cambio)
+        {
+            if (cambio.Act)
+            {
+                MessageBox.Show(
+                    $"Esta versión de la consulta #{cambio.IdConsulta} ya es la versión ACTIVA actualmente en el sistema (Act = 1).",
+                    "Versión Ya Activa",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            var dr = MessageBox.Show(
+                $"¿Confirma que desea ACTIVAR la versión histórica #{cambio.IdCambio} de la consulta #{cambio.IdConsulta}?\n\n" +
+                $"Paciente: {cambio.NombrePaciente} (DNI: {cambio.DniPaciente})\n" +
+                $"Fecha del registro: {cambio.FechaStr} {cambio.HoraStr}\n\n" +
+                $"Esta acción actualizará la columna Act = 1 para esta versión, desmarcará las restantes versiones de esta consulta a Act = 0, y restaurará los datos en el sistema clínico activo.",
+                "Confirmar Activación de Versión (CUN08)",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (dr != DialogResult.Yes) return;
 
             try
             {
-                switch (cmbEntidad.SelectedIndex)
+                UsuarioBE usuarioActivo = ServicesSessionManager.Instancia.ObtenerUsuarioActivo();
+                int usuarioDni = usuarioActivo?._Dni ?? 11111111;
+
+                bool resultado = _bll.ActivarVersionHistorica(cambio.IdCambio, usuarioDni);
+
+                if (resultado)
                 {
-                    case 1: // Planes Alimentarios
-                        if (dgvCambios.CurrentRow.DataBoundItem is PlanAlimentarioCambioBE_DNI101 plan)
-                        {
-                            string msg = $"¿Desea restaurar el Plan Alimentario ID {plan.IdPlan} a la versión del {plan.FechaCambio:dd/MM/yyyy HH:mm:ss}?\n\nEl Trigger registrará esta reversión automáticamente.";
-                            if (MessageBox.Show(msg, "Confirmar Rollback de Plan Alimentario", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                            {
-                                if (_bll.RevertirCambioPlan(plan.IdCambio, dniUsuario))
-                                {
-                                    MessageBox.Show($"Rollback exitoso. El Plan Alimentario ID {plan.IdPlan} fue restaurado.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                    CargarBitacora();
-                                }
-                            }
-                        }
-                        break;
+                    BitacoraBLL bitacoraBLL = new BitacoraBLL();
+                    bitacoraBLL.RegistrarEvento(
+                        2,
+                        $"CUN08: Se activó la versión histórica #{cambio.IdCambio} de la Consulta #{cambio.IdConsulta} del paciente {cambio.NombrePaciente} (Act=1).",
+                        usuarioDni,
+                        "CUN08");
 
-                    case 2: // Pacientes
-                        if (dgvCambios.CurrentRow.DataBoundItem is PacienteCambioBE_DNI101 pac)
-                        {
-                            string msg = $"¿Desea restaurar el Paciente {pac.Apellido}, {pac.Nombre} (ID {pac.IdPaciente}) a la versión del {pac.FechaCambio:dd/MM/yyyy HH:mm:ss}?\n\nEl Trigger registrará esta reversión automáticamente.";
-                            if (MessageBox.Show(msg, "Confirmar Rollback de Paciente", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                            {
-                                if (_bll.RevertirCambioPaciente(pac.IdCambio, dniUsuario))
-                                {
-                                    MessageBox.Show($"Rollback exitoso. El Paciente ID {pac.IdPaciente} fue restaurado.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                    CargarBitacora();
-                                }
-                            }
-                        }
-                        break;
+                    MessageBox.Show(
+                        $"¡Versión #{cambio.IdCambio} activada con éxito!\n\n" +
+                        $"La consulta #{cambio.IdConsulta} ha sido restaurada con la información de este registro histórico y se asignó Act = 1.\n" +
+                        $"Los dígitos verificadores fueron recalculados correctamente.",
+                        "Activación Exitosa",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
 
-                    default: // Consultas Nutricionales
-                        if (dgvCambios.CurrentRow.DataBoundItem is ConsultaCambioBE_DNI101 cambio)
-                        {
-                            string msg = $"¿Desea restaurar la Consulta ID {cambio.IdConsulta} a la versión del {cambio.FechaCambio:dd/MM/yyyy HH:mm:ss}?\n\nEl Trigger registrará esta reversión automáticamente.";
-                            if (MessageBox.Show(msg, "Confirmar Rollback de Consulta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                            {
-                                if (_bll.RevertirCambio(cambio.IdCambio, dniUsuario))
-                                {
-                                    MessageBox.Show($"Rollback exitoso. La Consulta ID {cambio.IdConsulta} fue restaurada.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                    CargarBitacora();
-                                }
-                            }
-                        }
-                        break;
+                    btnAplicar_Click(null, EventArgs.Empty);
+                }
+                else
+                {
+                    MessageBox.Show("No se pudo completar la activación de la versión histórica.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error durante la operación de Rollback: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error durante la activación de la versión: {ex.Message}", "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dgvCambios_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.RowIndex < dgvCambios.Rows.Count)
+            {
+                if (dgvCambios.Rows[e.RowIndex].DataBoundItem is ConsultaCambioBE_DNI101 cambio)
+                {
+                    if (cambio.Act)
+                    {
+                        dgvCambios.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.FromArgb(235, 248, 235);
+                        dgvCambios.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = Color.FromArgb(170, 215, 180);
+                        dgvCambios.Rows[e.RowIndex].DefaultCellStyle.SelectionForeColor = Color.Black;
+
+                        if (e.ColumnIndex == colAct.Index)
+                        {
+                            e.CellStyle.Font = new Font(dgvCambios.Font, FontStyle.Bold);
+                            e.CellStyle.ForeColor = Color.FromArgb(20, 120, 40);
+                        }
+                    }
+                    else
+                    {
+                        dgvCambios.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+                        if (e.ColumnIndex == colAct.Index)
+                        {
+                            e.CellStyle.ForeColor = Color.Gray;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btnSalir_Click(object? sender, EventArgs e)
+        {
+            if (this.TopLevel)
+            {
+                this.Close();
+            }
+            else
+            {
+                this.Hide();
             }
         }
 
         private void btnAyudaContextual_Click(object? sender, EventArgs e)
         {
-            try
-            {
-                using var frmAyuda = new frmManualAyuda(5);
-                frmAyuda.ShowDialog(this);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al abrir la ayuda contextual: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void btnCerrar_Click(object? sender, EventArgs e)
-        {
-            Close();
+            MessageBox.Show(
+                "MÓDULO DE BITÁCORA DE CAMBIOS (CUN08)\n\n" +
+                "1. Persistencia Histórica:\n" +
+                "   Cada inserción o modificación en las consultas nutricionales de los pacientes genera automáticamente un registro histórico en la bitácora mediante triggers de base de datos.\n\n" +
+                "2. Columna Act (Estado Activo):\n" +
+                "   Identifica la versión actualmente activa (1) en el sistema. Solamente un registro histórico por consulta mantiene el valor Act = 1.\n\n" +
+                "3. Filtros:\n" +
+                "   Puede filtrar por Código de Consulta (Cod_Cons), Nombre del Paciente y rango de fechas (Fecha Ini / Fecha Fin).\n\n" +
+                "4. Botón ACTIVAR:\n" +
+                "   Permite seleccionar cualquier versión histórica anterior y restaurarla en el sistema activo, asignándole Act = 1 y recalculando la integridad por Dígitos Verificadores.",
+                "Ayuda - Bitácora de Cambios (CUN08)",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
     }
 }

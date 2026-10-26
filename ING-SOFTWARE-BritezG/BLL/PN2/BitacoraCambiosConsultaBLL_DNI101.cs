@@ -14,15 +14,15 @@ namespace BLL.PN2
             _dal = new BitacoraCambiosConsultaDAL_DNI101();
         }
 
-        public List<ConsultaCambioBE_DNI101> ListarCambios(int? idConsulta = null)
+        public List<ConsultaCambioBE_DNI101> ListarCambios(int? idConsulta = null, string? nombrePaciente = null, DateTime? fechaIni = null, DateTime? fechaFin = null)
         {
-            return _dal.ListarCambios(idConsulta);
+            return _dal.ListarCambios(idConsulta, nombrePaciente, fechaIni, fechaFin);
         }
 
-        public bool RevertirCambio(int idCambio, int usuarioDni)
+        public bool ActivarVersionHistorica(int idCambio, int usuarioDni)
         {
             if (idCambio <= 0) throw new ArgumentException("Identificador de cambio inválido.");
-            bool ok = _dal.RevertirCambio(idCambio, usuarioDni);
+            bool ok = _dal.ActivarVersionHistorica(idCambio, usuarioDni);
             if (ok)
             {
                 try
@@ -32,6 +32,11 @@ namespace BLL.PN2
                 catch { }
             }
             return ok;
+        }
+
+        public bool RevertirCambio(int idCambio, int usuarioDni)
+        {
+            return ActivarVersionHistorica(idCambio, usuarioDni);
         }
 
         public List<PlanAlimentarioCambioBE_DNI101> ListarCambiosPlanes(int? idPlan = null)
