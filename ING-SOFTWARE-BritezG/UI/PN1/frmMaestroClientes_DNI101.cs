@@ -1,12 +1,35 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using BLL;
 using Services;
 
 namespace UI.PN1
 {
+    [Serializable]
+    [XmlRoot("Clientes")]
+    public class ClientesXmlContainer
+    {
+        [XmlElement("Cliente")]
+        public List<ClienteXmlItem> Clientes { get; set; } = new();
+    }
+
+    [Serializable]
+    public class ClienteXmlItem
+    {
+        public string DNI { get; set; } = string.Empty;
+        public string APELLIDOS { get; set; } = string.Empty;
+        public string NOMBRES { get; set; } = string.Empty;
+        public string EMAIL { get; set; } = string.Empty;
+        public string CELULAR { get; set; } = string.Empty;
+        public string DIRECCION { get; set; } = string.Empty;
+    }
+
     public partial class frmMaestroClientes_DNI101 : Form, IIdiomaObserver
     {
         private enum ModoOperacion
@@ -27,6 +50,7 @@ namespace UI.PN1
             CargarGrillaClientes();
             TraductorUI.SuscribirFormulario(this, this);
             ActualizarIdioma();
+            AgregarMensaje("Sistema iniciado. Matriz de clientes lista.");
         }
 
         public void ActualizarIdioma()
@@ -71,6 +95,7 @@ namespace UI.PN1
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al cargar el maestro de clientes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AgregarMensaje($"Error al cargar datos: {ex.Message}");
             }
         }
 
@@ -96,6 +121,7 @@ namespace UI.PN1
                     txtDireccion.ReadOnly = true;
                     txtDireccion.BackColor = Color.WhiteSmoke;
 
+                    btnActualizar.Enabled = true;
                     btnAnadir.Enabled = true;
                     btnModificar.Enabled = dgvClientes.CurrentRow != null;
                     btnEliminar.Enabled = dgvClientes.CurrentRow != null;
@@ -106,6 +132,10 @@ namespace UI.PN1
 
                     btnGestionEmail1N.Enabled = dgvClientes.CurrentRow != null;
                     btnGestionCelular1N.Enabled = dgvClientes.CurrentRow != null;
+
+                    btnSerializar.Enabled = true;
+                    btnDesSerializar.Enabled = true;
+                    btnLimpiar.Enabled = true;
                     break;
 
                 case ModoOperacion.Alta:
@@ -126,6 +156,7 @@ namespace UI.PN1
                     txtDireccion.ReadOnly = false;
                     txtDireccion.BackColor = Color.White;
 
+                    btnActualizar.Enabled = false;
                     btnAnadir.Enabled = false;
                     btnModificar.Enabled = false;
                     btnEliminar.Enabled = false;
@@ -138,6 +169,7 @@ namespace UI.PN1
                     btnGestionCelular1N.Enabled = false;
 
                     txtDni.Focus();
+                    AgregarMensaje("Modo AÑADIR activado. Ingrese los datos del nuevo cliente.");
                     break;
 
                 case ModoOperacion.Modificacion:
@@ -157,6 +189,7 @@ namespace UI.PN1
                     txtDireccion.ReadOnly = false;
                     txtDireccion.BackColor = Color.White;
 
+                    btnActualizar.Enabled = false;
                     btnAnadir.Enabled = false;
                     btnModificar.Enabled = false;
                     btnEliminar.Enabled = false;
@@ -169,6 +202,7 @@ namespace UI.PN1
                     btnGestionCelular1N.Enabled = true;
 
                     txtApellidos.Focus();
+                    AgregarMensaje($"Modo MODIFICAR activado para cliente DNI {txtDni.Text}.");
                     break;
             }
         }
@@ -191,7 +225,15 @@ namespace UI.PN1
             try
             {
                 var row = dgvClientes.CurrentRow;
-                _idPacienteSeleccionado = Convert.ToInt32(row.Cells["IdPaciente_DNI101"].Value);
+                if (row.Cells["IdPaciente_DNI101"] != null && row.Cells["IdPaciente_DNI101"].Value != null && int.TryParse(row.Cells["IdPaciente_DNI101"].Value.ToString(), out int id))
+                {
+                    _idPacienteSeleccionado = id;
+                }
+                else
+                {
+                    _idPacienteSeleccionado = 0;
+                }
+
                 txtDni.Text = row.Cells["DNI"].Value?.ToString() ?? "";
                 txtApellidos.Text = row.Cells["APELLIDOS"].Value?.ToString() ?? "";
                 txtNombres.Text = row.Cells["NOMBRES"].Value?.ToString() ?? "";
@@ -223,7 +265,25 @@ namespace UI.PN1
             }
         }
 
-        #region Eventos de Botones
+        private void AgregarMensaje(string texto)
+        {
+            try
+            {
+                string linea = $"[{DateTime.Now:HH:mm:ss}] {texto}\r\n";
+                txtMensaje.AppendText(linea);
+                txtMensaje.SelectionStart = txtMensaje.TextLength;
+                txtMensaje.ScrollToCaret();
+            }
+            catch { }
+        }
+
+        #region Eventos de Botones ABM
+
+        private void btnActualizar_Click(object? sender, EventArgs e)
+        {
+            CargarGrillaClientes();
+            AgregarMensaje($"Matriz de clientes actualizada desde la base de datos ({dgvClientes.Rows.Count} registros).");
+        }
 
         private void btnAnadir_Click(object? sender, EventArgs e)
         {
@@ -232,7 +292,7 @@ namespace UI.PN1
 
         private void btnModificar_Click(object? sender, EventArgs e)
         {
-            if (dgvClientes.CurrentRow == null || _idPacienteSeleccionado <= 0)
+            if (dgvClientes.CurrentRow == null)
             {
                 MessageBox.Show("Por favor seleccione un cliente de la grilla para modificar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -244,7 +304,7 @@ namespace UI.PN1
         {
             if (dgvClientes.CurrentRow == null || _idPacienteSeleccionado <= 0)
             {
-                MessageBox.Show("Por favor seleccione un cliente de la grilla para eliminar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Por favor seleccione un cliente registrado en la base de datos para eliminar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -257,6 +317,7 @@ namespace UI.PN1
                 try
                 {
                     _pacienteBLL.EliminarLogico(_idPacienteSeleccionado);
+                    AgregarMensaje($"Baja lógica realizada para cliente DNI {txtDni.Text} ({cliente}).");
                     MessageBox.Show("Cliente dado de baja lógica correctamente.", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ConfigurarEstado(ModoOperacion.Inicio);
                     CargarGrillaClientes();
@@ -264,6 +325,7 @@ namespace UI.PN1
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Error al eliminar cliente: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    AgregarMensaje($"Error al eliminar: {ex.Message}");
                 }
             }
         }
@@ -301,11 +363,13 @@ namespace UI.PN1
                 if (_modoActual == ModoOperacion.Alta)
                 {
                     _pacienteBLL.GuardarMaestro(dni, apellidos, nombres, email, celular, direccion);
+                    AgregarMensaje($"Alta exitosa: Cliente DNI {dni} ({apellidos}, {nombres}) registrado.");
                     MessageBox.Show("Cliente agregado exitosamente con sus tablas 1:N sincronizadas.", "Alta Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else if (_modoActual == ModoOperacion.Modificacion)
                 {
                     _pacienteBLL.ModificarMaestro(_idPacienteSeleccionado, dni, apellidos, nombres, email, celular, direccion);
+                    AgregarMensaje($"Modificación exitosa: Cliente DNI {dni} actualizado.");
                     MessageBox.Show("Cliente modificado exitosamente con repercusión en sus contactos 1:N.", "Modificación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
@@ -315,6 +379,7 @@ namespace UI.PN1
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al aplicar los cambios: {ex.Message}", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AgregarMensaje($"Error en operación: {ex.Message}");
             }
         }
 
@@ -322,6 +387,7 @@ namespace UI.PN1
         {
             ConfigurarEstado(ModoOperacion.Inicio);
             CargarCamposDesdeGrilla();
+            AgregarMensaje("Operación cancelada. Se restauraron los campos.");
         }
 
         private void btnSalir_Click(object? sender, EventArgs e)
@@ -354,6 +420,182 @@ namespace UI.PN1
             {
                 MessageBox.Show($"Error al abrir la ayuda contextual: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        #endregion
+
+        #region Serialización y Des-serialización XML
+
+        private void btnExaminarSerializar_Click(object? sender, EventArgs e)
+        {
+            using var sfd = new SaveFileDialog
+            {
+                Title = "Seleccionar ubicación y nombre para el archivo XML",
+                Filter = "Archivos XML (*.xml)|*.xml|Todos los archivos (*.*)|*.*",
+                FileName = $"Clientes_{DateTime.Now:yyyyMMdd_HHmmss}.xml",
+                DefaultExt = "xml"
+            };
+
+            if (sfd.ShowDialog(this) == DialogResult.OK)
+            {
+                txtRutaSerializar.Text = sfd.FileName;
+                AgregarMensaje($"Ubicación para serializar seleccionada: {Path.GetFileName(sfd.FileName)}");
+            }
+        }
+
+        private void btnSerializar_Click(object? sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtRutaSerializar.Text))
+            {
+                btnExaminarSerializar_Click(sender, e);
+                if (string.IsNullOrWhiteSpace(txtRutaSerializar.Text))
+                {
+                    MessageBox.Show("Para SERIALIZAR primero se debe seleccionar la ubicación (📁) en el Disco Duro donde se va a almacenar el Archivo XML.", "Ubicación Requerida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
+            if (dgvClientes.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay datos en la matriz de clientes para serializar.", "Matriz Vacía", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            try
+            {
+                string ruta = txtRutaSerializar.Text.Trim();
+                var container = new ClientesXmlContainer();
+
+                foreach (DataGridViewRow row in dgvClientes.Rows)
+                {
+                    if (row.IsNewRow) continue;
+
+                    container.Clientes.Add(new ClienteXmlItem
+                    {
+                        DNI = row.Cells["colDni"].Value?.ToString() ?? "",
+                        APELLIDOS = row.Cells["colApellidos"].Value?.ToString() ?? "",
+                        NOMBRES = row.Cells["colNombres"].Value?.ToString() ?? "",
+                        EMAIL = row.Cells["colEmail"].Value?.ToString() ?? "",
+                        CELULAR = row.Cells["colCelular"].Value?.ToString() ?? "",
+                        DIRECCION = row.Cells["colDireccion"].Value?.ToString() ?? ""
+                    });
+                }
+
+                var serializer = new XmlSerializer(typeof(ClientesXmlContainer));
+                using (var writer = new StreamWriter(ruta, false, Encoding.UTF8))
+                {
+                    serializer.Serialize(writer, container);
+                }
+
+                AgregarMensaje($"SERIALIZACIÓN EXITOSA: {container.Clientes.Count} clientes serializados en '{Path.GetFileName(ruta)}'.");
+                MessageBox.Show(
+                    $"La matriz de datos con los {container.Clientes.Count} clientes se ha serializado exitosamente en el archivo XML:\n\n{ruta}",
+                    "Serialización XML Exitosa",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error durante la serialización XML: {ex.Message}", "Error de Serialización", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AgregarMensaje($"Error en serialización: {ex.Message}");
+            }
+        }
+
+        private void btnExaminarDesSerializar_Click(object? sender, EventArgs e)
+        {
+            using var ofd = new OpenFileDialog
+            {
+                Title = "Seleccionar archivo XML para des-serializar",
+                Filter = "Archivos XML (*.xml)|*.xml|Todos los archivos (*.*)|*.*",
+                CheckFileExists = true
+            };
+
+            if (ofd.ShowDialog(this) == DialogResult.OK)
+            {
+                txtRutaDesSerializar.Text = ofd.FileName;
+                AgregarMensaje($"Archivo XML seleccionado para des-serializar: {Path.GetFileName(ofd.FileName)}");
+            }
+        }
+
+        private void btnDesSerializar_Click(object? sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtRutaDesSerializar.Text) || !File.Exists(txtRutaDesSerializar.Text))
+            {
+                btnExaminarDesSerializar_Click(sender, e);
+                if (string.IsNullOrWhiteSpace(txtRutaDesSerializar.Text) || !File.Exists(txtRutaDesSerializar.Text))
+                {
+                    MessageBox.Show("Para DES-SERIALIZAR un archivo XML este se debe seleccionar (📁) desde el Disco Duro.", "Archivo Requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
+            try
+            {
+                string ruta = txtRutaDesSerializar.Text.Trim();
+                var serializer = new XmlSerializer(typeof(ClientesXmlContainer));
+
+                ClientesXmlContainer? container = null;
+                using (var reader = new StreamReader(ruta, Encoding.UTF8))
+                {
+                    container = (ClientesXmlContainer?)serializer.Deserialize(reader);
+                }
+
+                if (container == null || container.Clientes == null || container.Clientes.Count == 0)
+                {
+                    MessageBox.Show("El archivo XML no contiene registros de clientes válidos.", "XML Vacío", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Subir a la matriz de datos del Cliente presente en la pantalla
+                DataTable dt = new DataTable();
+                dt.Columns.Add("IdPaciente_DNI101", typeof(int));
+                dt.Columns.Add("DNI", typeof(string));
+                dt.Columns.Add("APELLIDOS", typeof(string));
+                dt.Columns.Add("NOMBRES", typeof(string));
+                dt.Columns.Add("EMAIL", typeof(string));
+                dt.Columns.Add("CELULAR", typeof(string));
+                dt.Columns.Add("DIRECCION", typeof(string));
+
+                foreach (var item in container.Clientes)
+                {
+                    dt.Rows.Add(0, item.DNI, item.APELLIDOS, item.NOMBRES, item.EMAIL, item.CELULAR, item.DIRECCION);
+                }
+
+                dgvClientes.DataSource = dt;
+                if (dgvClientes.Columns["IdPaciente_DNI101"] != null)
+                {
+                    dgvClientes.Columns["IdPaciente_DNI101"].Visible = false;
+                }
+
+                if (dgvClientes.Rows.Count > 0)
+                {
+                    dgvClientes.Rows[0].Selected = true;
+                    CargarCamposDesdeGrilla();
+                }
+
+                ActualizarBotonesSegunSeleccion();
+
+                AgregarMensaje($"DES-SERIALIZACIÓN EXITOSA: {container.Clientes.Count} clientes cargados desde '{Path.GetFileName(ruta)}' a la matriz de datos.");
+                MessageBox.Show(
+                    $"El archivo XML se ha des-serializado correctamente.\nSe subieron {container.Clientes.Count} registros a la matriz de datos de la pantalla.",
+                    "Des-serialización XML Exitosa",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error durante la des-serialización XML: {ex.Message}", "Error de Des-serialización", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AgregarMensaje($"Error en des-serialización: {ex.Message}");
+            }
+        }
+
+        private void btnLimpiar_Click(object? sender, EventArgs e)
+        {
+            LimpiarCampos();
+            txtRutaSerializar.Clear();
+            txtRutaDesSerializar.Clear();
+            txtMensaje.Clear();
+            AgregarMensaje("Formulario y rutas limpiados por el usuario.");
         }
 
         #endregion
