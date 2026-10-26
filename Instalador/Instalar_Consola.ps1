@@ -10,11 +10,17 @@ param (
 )
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host "   INSTALACIÓN AUTOMATIZADA DE NUTRIEVOLVE Y BASE DE DATOS" -ForegroundColor Cyan
+Write-Host "   INSTALADOR / REINSTALADOR AUTOMATIZADO DE NUTRIEVOLVE" -ForegroundColor Cyan
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host ""
 
 $baseDir = $PSScriptRoot
+
+# Cerrar procesos activos de NutriEvolve si estuviera abierto para permitir sobreescritura
+Get-Process -Name "UI" -ErrorAction SilentlyContinue | ForEach-Object {
+    Write-Host "Cerrando instancia en ejecución de NutriEvolve (PID: $($_.Id))..." -ForegroundColor Yellow
+    Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue
+}
 
 # Cargar assembly SqlClient si está disponible localmente
 $sqlClientDll = Join-Path $baseDir "Microsoft.Data.SqlClient.dll"
