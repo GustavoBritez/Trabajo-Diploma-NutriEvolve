@@ -22,7 +22,16 @@ namespace BLL.PN2
         public bool RevertirCambio(int idCambio, int usuarioDni)
         {
             if (idCambio <= 0) throw new ArgumentException("Identificador de cambio inválido.");
-            return _dal.RevertirCambio(idCambio, usuarioDni);
+            bool ok = _dal.RevertirCambio(idCambio, usuarioDni);
+            if (ok)
+            {
+                try
+                {
+                    new DigitoVerificadorBLL().RecalcularYPersistir();
+                }
+                catch { }
+            }
+            return ok;
         }
 
         public List<PlanAlimentarioCambioBE_DNI101> ListarCambiosPlanes(int? idPlan = null)
@@ -33,7 +42,16 @@ namespace BLL.PN2
         public bool RevertirCambioPlan(int idCambio, int usuarioDni)
         {
             if (idCambio <= 0) throw new ArgumentException("Identificador de cambio inválido.");
-            return _dal.RevertirCambioPlan(idCambio, usuarioDni);
+            bool ok = _dal.RevertirCambioPlan(idCambio, usuarioDni);
+            if (ok)
+            {
+                try
+                {
+                    new DigitoVerificadorBLL().RecalcularYPersistir();
+                }
+                catch { }
+            }
+            return ok;
         }
 
         public List<BE.PN1.PacienteCambioBE_DNI101> ListarCambiosPacientes(int? idPaciente = null)
@@ -44,7 +62,16 @@ namespace BLL.PN2
         public bool RevertirCambioPaciente(int idCambio, int usuarioDni)
         {
             if (idCambio <= 0) throw new ArgumentException("Identificador de cambio inválido.");
-            return _dal.RevertirCambioPaciente(idCambio, usuarioDni);
+            bool ok = _dal.RevertirCambioPaciente(idCambio, usuarioDni);
+            if (ok)
+            {
+                try
+                {
+                    new DigitoVerificadorBLL().RecalcularYPersistir();
+                }
+                catch { }
+            }
+            return ok;
         }
     }
 }

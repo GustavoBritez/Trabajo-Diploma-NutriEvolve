@@ -46,6 +46,26 @@ namespace UI
                 ? string.Join(", ", _tablasAlteradas)
                 : "Desconocida";
 
+            try
+            {
+                var detalles = _digitoVerificadorBLL.ObtenerDetalleCorrupcionCompleto();
+                var filas = new List<string>();
+                foreach (var kvp in detalles)
+                {
+                    if (kvp.Value != null && kvp.Value.Count > 0)
+                    {
+                        filas.Add($"{kvp.Key}: {string.Join(", ", kvp.Value)}");
+                    }
+                }
+
+                if (filas.Count > 0)
+                {
+                    lblMensajeError.Text = $"Hubo Cambios en la Tabla {nombreTablas}\nRegistros: {string.Join(" | ", filas)}";
+                    return;
+                }
+            }
+            catch { }
+
             lblMensajeError.Text = $"Hubo Cambios en la Tabla {nombreTablas}";
         }
 

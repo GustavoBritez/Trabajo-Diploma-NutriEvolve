@@ -93,6 +93,12 @@ namespace BLL
                     new BitacoraBLL().RegistrarBitacora(3, $"Bloque horario ID {idBloque} actualizado a estado '{nuevoEstado}'", dniActual, "AgendaMedica");
                 }
                 catch { }
+
+                try
+                {
+                    new DigitoVerificadorBLL().RecalcularYPersistir();
+                }
+                catch { }
             }
             return ok;
         }

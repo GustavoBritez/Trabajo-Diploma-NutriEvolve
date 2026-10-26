@@ -239,6 +239,12 @@ namespace BLL
             }
             catch { }
 
+            try
+            {
+                new DigitoVerificadorBLL().RecalcularYPersistir();
+            }
+            catch { }
+
             return id;
         }
 
@@ -257,6 +263,15 @@ namespace BLL
             }
             catch { }
 
+            if (ok)
+            {
+                try
+                {
+                    new DigitoVerificadorBLL().RecalcularYPersistir();
+                }
+                catch { }
+            }
+
             return ok;
         }
 
@@ -272,6 +287,15 @@ namespace BLL
             }
             catch { }
 
+            if (ok)
+            {
+                try
+                {
+                    new DigitoVerificadorBLL().RecalcularYPersistir();
+                }
+                catch { }
+            }
+
             return ok;
         }
 
@@ -284,12 +308,22 @@ namespace BLL
         {
             if (string.IsNullOrWhiteSpace(email)) throw new ArgumentException("El email no puede estar vacío.");
             _pacienteDAL.AgregarEmail1N(idPaciente, email, esPrincipal);
+            try
+            {
+                new DigitoVerificadorBLL().RecalcularYPersistir();
+            }
+            catch { }
         }
 
         public void EliminarEmailLogico1N(int idEmail)
         {
             if (idEmail <= 0) return;
             _pacienteDAL.EliminarEmailLogico1N(idEmail);
+            try
+            {
+                new DigitoVerificadorBLL().RecalcularYPersistir();
+            }
+            catch { }
         }
 
         public DataTable ObtenerTelefonos1N(int idPaciente)
@@ -301,12 +335,22 @@ namespace BLL
         {
             if (string.IsNullOrWhiteSpace(numero)) throw new ArgumentException("El número de teléfono no puede estar vacío.");
             _pacienteDAL.AgregarTelefono1N(idPaciente, numero, tipo, esPrincipal);
+            try
+            {
+                new DigitoVerificadorBLL().RecalcularYPersistir();
+            }
+            catch { }
         }
 
         public void EliminarTelefonoLogico1N(int idTelefono)
         {
             if (idTelefono <= 0) return;
             _pacienteDAL.EliminarTelefonoLogico1N(idTelefono);
+            try
+            {
+                new DigitoVerificadorBLL().RecalcularYPersistir();
+            }
+            catch { }
         }
     }
 }

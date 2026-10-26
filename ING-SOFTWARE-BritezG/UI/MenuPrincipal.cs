@@ -194,8 +194,30 @@ namespace UI
                 }
                 else
                 {
+                    var detalles = digitoVerificadorBLL.ObtenerDetalleCorrupcionCompleto();
+                    var sb = new System.Text.StringBuilder();
+                    sb.AppendLine($"Hubo Cambios en la Tabla: {string.Join(", ", alteradas)}");
+                    
+                    bool hayFilas = false;
+                    foreach (var kvp in detalles)
+                    {
+                        if (kvp.Value != null && kvp.Value.Count > 0)
+                        {
+                            if (!hayFilas)
+                            {
+                                sb.AppendLine();
+                                sb.AppendLine("Registros afectados con DV inconsistente:");
+                                hayFilas = true;
+                            }
+                            sb.AppendLine($"• {kvp.Key}: {string.Join(", ", kvp.Value)}");
+                        }
+                    }
+
+                    sb.AppendLine();
+                    sb.AppendLine("Por favor, utilice la opción 'Recalcular DV' para restaurar la integridad del sistema.");
+
                     MessageBox.Show(
-                        $"Hubo Cambios en la Tabla {string.Join(", ", alteradas)}\n\nPor favor, utilice la opción 'Recalcular DV' para restaurar el sistema.",
+                        sb.ToString(),
                         "Alerta de Seguridad",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);

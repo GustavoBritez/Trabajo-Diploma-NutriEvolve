@@ -237,20 +237,34 @@ namespace UniversalSetup
 
                 if (dvType != null)
                 {
-                    var method = dvType.GetMethod("RecalcularYPersistir", BindingFlags.Public | BindingFlags.Static)
-                              ?? dvType.GetMethod("RecalcularTodosLosDigitos", BindingFlags.Public | BindingFlags.Static)
-                              ?? dvType.GetMethod("RecalcularDV", BindingFlags.Public | BindingFlags.Static);
+                    var staticMethod = dvType.GetMethod("RecalcularYPersistir", BindingFlags.Public | BindingFlags.Static)
+                                    ?? dvType.GetMethod("RecalcularTodosLosDigitos", BindingFlags.Public | BindingFlags.Static)
+                                    ?? dvType.GetMethod("RecalcularDV", BindingFlags.Public | BindingFlags.Static)
+                                    ?? dvType.GetMethod("RecalcularYPersistirStatic", BindingFlags.Public | BindingFlags.Static);
 
-                    if (method != null)
+                    if (staticMethod != null)
                     {
-                        logger?.Invoke($"[DV] Ejecutando método {dvType.Name}.{method.Name}()...");
-                        method.Invoke(null, null);
-                        logger?.Invoke("[DV] ¡Dígitos Verificadores calculados y sellados con éxito!");
+                        logger?.Invoke($"[DV] Ejecutando método estático {dvType.Name}.{staticMethod.Name}()...");
+                        staticMethod.Invoke(null, null);
+                        logger?.Invoke("[DV] Dígitos Verificadores calculados y sellados con éxito!");
+                        return true;
+                    }
+
+                    var instanceMethod = dvType.GetMethod("RecalcularYPersistir", BindingFlags.Public | BindingFlags.Instance)
+                                      ?? dvType.GetMethod("RecalcularTodosLosDigitos", BindingFlags.Public | BindingFlags.Instance)
+                                      ?? dvType.GetMethod("RecalcularDV", BindingFlags.Public | BindingFlags.Instance);
+
+                    if (instanceMethod != null)
+                    {
+                        logger?.Invoke($"[DV] Instanciando {dvType.Name} y ejecutando {instanceMethod.Name}()...");
+                        object? instance = Activator.CreateInstance(dvType);
+                        instanceMethod.Invoke(instance, null);
+                        logger?.Invoke("[DV] Dígitos Verificadores calculados y sellados con éxito!");
                         return true;
                     }
                 }
 
-                logger?.Invoke("[DV] Módulo de DV no implementa método estático estándar, omitiendo.");
+                logger?.Invoke("[DV] Módulo de DV no implementa método de recálculo estándar, omitiendo.");
                 return false;
             }
             catch (Exception ex)

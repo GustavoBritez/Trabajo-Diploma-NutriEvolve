@@ -24,6 +24,7 @@ namespace BLL.Perfiles
                 bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
             }
             catch { }
+            try { new BLL.DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
         }
         public List<PatenteServices> ObtenerPermisosDePerfil(int idPerfil)
         {
@@ -50,6 +51,7 @@ namespace BLL.Perfiles
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Se vinculó el Permiso '{nombrePermiso}' al control '{nombreBoton}' en la pantalla '{nombreFormulario}'";
             bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
+            try { new BLL.DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
         }
         public void EliminarPermisoPerfil(int idPerfil, int idPermiso)
         {
@@ -62,6 +64,7 @@ namespace BLL.Perfiles
                 bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
             }
             catch { }
+            try { new BLL.DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
         }
 
         public void CrearNuevoPermiso(string nombrePermiso)
@@ -82,6 +85,7 @@ namespace BLL.Perfiles
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Creacion de Patente";
             bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
+            try { new BLL.DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
         }
 
         public List<Perfil> ObtenerComponentesTotales() => _patenteDAL.ObtenerComponentesTotales();
@@ -101,6 +105,7 @@ namespace BLL.Perfiles
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Eliminacion de Patente";
             bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
+            try { new BLL.DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
         }
 
 

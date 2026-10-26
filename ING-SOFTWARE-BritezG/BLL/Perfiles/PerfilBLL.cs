@@ -1,4 +1,4 @@
-﻿using DAL;
+using DAL;
 using DAL.Perfiles;
 using Services;
 using Services.Perfiles;
@@ -45,6 +45,7 @@ namespace BLL
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Asignación exitosa de Familia: '{nombreFamilia}' al Perfil '{nombrePerfil}'";
             bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Perfiles");
+            try { new DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
         }
 
         public void AgregarPermisoAFamilia(int idPerfil, int idPermiso, string nombrePermiso)
@@ -60,6 +61,7 @@ namespace BLL
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Asignar Permiso a Perfil";
             bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
+            try { new DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
         }
         #endregion 
 
@@ -80,6 +82,7 @@ namespace BLL
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Eliminación de Permiso: '{nombrePermiso}' del Perfil '{nombrePerfil}'";
             bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Perfiles");
+            try { new DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
         }
         public void EliminarPerfil(int idPerfil, string nombrePerfil)
         {
@@ -95,6 +98,7 @@ namespace BLL
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Eliminacion Perfil";
             bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
+            try { new DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
         }
 
         public void EliminarFamiliaDePerfil(int idPerfil, int idFamilia, string nombrePerfil, string nombreFamilia)
@@ -110,6 +114,7 @@ namespace BLL
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Desvincular Familia '{nombreFamilia}' del Perfil '{nombrePerfil}'";
             bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
+            try { new DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
         }
         #endregion
 
@@ -152,6 +157,7 @@ namespace BLL
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Creación de Perfil";
             bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Permisos");
+            try { new DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
         }
 
         public int ObtenerIdPerfilPorNombre(string nombreRol)
@@ -196,6 +202,7 @@ namespace BLL
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
             string descripcion = $"Asignación de Permiso: '{nombrePermiso}' al Perfil '{nombrePerfil}'";
             bitacoraBLL.RegistrarBitacora(3, descripcion, dniActual, "Perfiles");
+            try { new DigitoVerificadorBLL().RecalcularYPersistir(); } catch { }
         }
     }
 }

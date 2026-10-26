@@ -108,22 +108,28 @@ namespace BLL
             return ObtenerTablasAlteradas().Count == 0;
         }
 
-        public List<string> ObtenerUsuariosCorruptos()
+        public List<string> ObtenerFilasCorruptas(string tabla, string? columnaId = null, string? columnaDescripcion = null)
         {
-            List<string> usuariosCorruptos = new();
-            DataTable dtUsuarios = digitoVerificadorDAL.ObtenerDatosTabla("dbo", "Usuarios");
+            List<string> filasCorruptas = new();
+            DataTable dt = digitoVerificadorDAL.ObtenerDatosTabla("dbo", tabla);
 
-            if (!dtUsuarios.Columns.Contains("DV"))
+            if (!dt.Columns.Contains("DV"))
             {
-                return usuariosCorruptos;
+                return filasCorruptas;
             }
 
-            string columnaId = dtUsuarios.Columns.Contains("NombreDeUsuario") ? "NombreDeUsuario" : dtUsuarios.Columns[0].ColumnName;
+            string idCol = !string.IsNullOrEmpty(columnaId) && dt.Columns.Contains(columnaId)
+                ? columnaId
+                : (dt.Columns.Count > 0 ? dt.Columns[0].ColumnName : "ID");
 
-            foreach (DataRow fila in dtUsuarios.Rows)
+            string descCol = !string.IsNullOrEmpty(columnaDescripcion) && dt.Columns.Contains(columnaDescripcion)
+                ? columnaDescripcion
+                : idCol;
+
+            foreach (DataRow fila in dt.Rows)
             {
                 BigInteger totalFila = BigInteger.Zero;
-                foreach (DataColumn columna in dtUsuarios.Columns)
+                foreach (DataColumn columna in dt.Columns)
                 {
                     if (string.Equals(columna.ColumnName, "DV", StringComparison.OrdinalIgnoreCase))
                     {
@@ -137,12 +143,75 @@ namespace BLL
 
                 if (!string.Equals(dvCalculado, dvGuardado, StringComparison.OrdinalIgnoreCase))
                 {
-                    string usuarioAfectado = fila[columnaId]?.ToString() ?? "ID Desconocido";
-                    usuariosCorruptos.Add(usuarioAfectado);
+                    string idValor = fila[idCol]?.ToString() ?? "Desconocido";
+                    string descValor = fila[descCol]?.ToString() ?? idValor;
+                    string item = idCol == descCol ? idValor : $"{idValor} ({descValor})";
+                    filasCorruptas.Add(item);
                 }
             }
 
-            return usuariosCorruptos;
+            return filasCorruptas;
+        }
+
+        public List<string> ObtenerUsuariosCorruptos() => ObtenerFilasCorruptas("Usuarios", "DNI", "NombreDeUsuario");
+        public List<string> ObtenerPacientesCorruptos() => ObtenerFilasCorruptas("Pacientes_DNI101", "IdPaciente_DNI101", "DniNiño_DNI101");
+        public List<string> ObtenerTurnosCorruptos() => ObtenerFilasCorruptas("Turnos_DNI101", "IdTurno_DNI101", "CodigoTurno_DNI101");
+        public List<string> ObtenerConsultasCorruptas() => ObtenerFilasCorruptas("ConsultasNutricionales_DNI101", "IdConsulta_DNI101", "IdConsulta_DNI101");
+        public List<string> ObtenerPlanesCorruptos() => ObtenerFilasCorruptas("PlanesAlimentarios_DNI101", "IdPlan_DNI101", "IdPlan_DNI101");
+        public List<string> ObtenerAgendasCorruptas() => ObtenerFilasCorruptas("AgendasMedicas_DNI101", "IdAgenda_DNI101", "Fecha_DNI101");
+        public List<string> ObtenerBloquesCorruptos() => ObtenerFilasCorruptas("BloquesHorarios_DNI101", "IdBloque_DNI101", "HoraInicio_DNI101");
+        public List<string> ObtenerMedicionesCorruptas() => ObtenerFilasCorruptas("MedicionesAntropometricas_DNI101", "IdMedicion_DNI101", "IdMedicion_DNI101");
+        public List<string> ObtenerDiagnosticosCorruptos() => ObtenerFilasCorruptas("DiagnosticosNutricionales_DNI101", "IdDiagnostico_DNI101", "ClasificacionOMS_DNI101");
+
+        public Dictionary<string, List<string>> ObtenerDetalleCorrupcionCompleto()
+        {
+            var detalle = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+            var alteradas = ObtenerTablasAlteradas();
+
+            foreach (string tabla in alteradas)
+            {
+                if (string.Equals(tabla, "Usuarios", StringComparison.OrdinalIgnoreCase))
+                {
+                    detalle[tabla] = ObtenerUsuariosCorruptos();
+                }
+                else if (string.Equals(tabla, "Pacientes_DNI101", StringComparison.OrdinalIgnoreCase))
+                {
+                    detalle[tabla] = ObtenerPacientesCorruptos();
+                }
+                else if (string.Equals(tabla, "Turnos_DNI101", StringComparison.OrdinalIgnoreCase))
+                {
+                    detalle[tabla] = ObtenerTurnosCorruptos();
+                }
+                else if (string.Equals(tabla, "ConsultasNutricionales_DNI101", StringComparison.OrdinalIgnoreCase))
+                {
+                    detalle[tabla] = ObtenerConsultasCorruptas();
+                }
+                else if (string.Equals(tabla, "PlanesAlimentarios_DNI101", StringComparison.OrdinalIgnoreCase))
+                {
+                    detalle[tabla] = ObtenerPlanesCorruptos();
+                }
+                else
+                {
+                    detalle[tabla] = ObtenerFilasCorruptas(tabla);
+                }
+            }
+
+            return detalle;
+        }
+
+        public static void RecalcularTodosLosDigitos()
+        {
+            new DigitoVerificadorBLL().RecalcularYPersistir();
+        }
+
+        public static void RecalcularDV()
+        {
+            new DigitoVerificadorBLL().RecalcularYPersistir();
+        }
+
+        public static void RecalcularYPersistirStatic()
+        {
+            new DigitoVerificadorBLL().RecalcularYPersistir();
         }
 
         private (List<ResumenDigitoVerificador> Resumen, List<(string Schema, string Tabla, string ColumnaId, object ValorId, string DV)> FilasDV)
@@ -158,7 +227,15 @@ namespace BLL
             {
                 DataTable datosTabla = digitoVerificadorDAL.ObtenerDatosTabla(schema, table);
                 bool tieneColumnaDV = datosTabla.Columns.Contains("DV");
-                string? columnaId = (tieneColumnaDV && datosTabla.Columns.Count > 0) ? datosTabla.Columns[0].ColumnName : null;
+                string? columnaId = null;
+                if (tieneColumnaDV)
+                {
+                    columnaId = digitoVerificadorDAL.ObtenerColumnaClavePrimaria(schema, table);
+                    if (string.IsNullOrEmpty(columnaId) && datosTabla.Columns.Count > 0)
+                    {
+                        columnaId = datosTabla.Columns[0].ColumnName;
+                    }
+                }
 
                 BigInteger totalHorizontalTabla = BigInteger.Zero;
 
@@ -264,9 +341,10 @@ namespace BLL
             return valor.ToString("X");
         }
 
-        public void ActualizarDVIndividualesUsuarios()
-        {
-            RecalcularYPersistir();
-        }
+        public void ActualizarDVIndividualesUsuarios() => RecalcularYPersistir();
+        public void ActualizarDVIndividualesTurnos() => RecalcularYPersistir();
+        public void ActualizarDVIndividualesPacientes() => RecalcularYPersistir();
+        public void ActualizarDVIndividualesConsultas() => RecalcularYPersistir();
+        public void ActualizarDVIndividualesPlanes() => RecalcularYPersistir();
     }
 }

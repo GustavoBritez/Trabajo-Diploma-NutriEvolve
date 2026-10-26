@@ -23,7 +23,15 @@ namespace DAL
             const string query = @"SELECT TABLE_SCHEMA, TABLE_NAME
                                    FROM INFORMATION_SCHEMA.TABLES
                                    WHERE TABLE_TYPE = 'BASE TABLE'
-                                     AND TABLE_NAME NOT IN ('DV', 'sysdiagrams', '__EFMigrationsHistory')
+                                     AND TABLE_NAME NOT IN (
+                                         'DV', 
+                                         'sysdiagrams', 
+                                         '__EFMigrationsHistory', 
+                                         'Bitacora', 
+                                         'Pacientes_Cambios_DNI101', 
+                                         'ConsultasNutricionales_Cambios_DNI101', 
+                                         'PlanesAlimentarios_Cambios_DNI101'
+                                     )
                                    ORDER BY TABLE_SCHEMA, TABLE_NAME";
 
             // Usamos ExecuteReader de tu clase Conexion
@@ -36,6 +44,37 @@ namespace DAL
             }
 
             return tablas;
+        }
+
+        public string ObtenerColumnaClavePrimaria(string schema, string table)
+        {
+            try
+            {
+                string query = @"
+                    SELECT kcu.COLUMN_NAME
+                    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
+                    JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu
+                      ON tc.CONSTRAINT_NAME = kcu.CONSTRAINT_NAME
+                     AND tc.TABLE_SCHEMA = kcu.TABLE_SCHEMA
+                     AND tc.TABLE_NAME = kcu.TABLE_NAME
+                    WHERE tc.CONSTRAINT_TYPE = 'PRIMARY KEY'
+                      AND tc.TABLE_SCHEMA = @schema
+                      AND tc.TABLE_NAME = @table
+                    ORDER BY kcu.ORDINAL_POSITION";
+
+                SqlParameter[] pars = {
+                    new SqlParameter("@schema", schema),
+                    new SqlParameter("@table", table)
+                };
+
+                DataTable dt = _conexion.ExecuteReader(query, pars);
+                if (dt.Rows.Count > 0 && dt.Rows[0]["COLUMN_NAME"] != DBNull.Value)
+                {
+                    return dt.Rows[0]["COLUMN_NAME"].ToString() ?? string.Empty;
+                }
+            }
+            catch { }
+            return string.Empty;
         }
 
         public DataTable ObtenerDatosTabla(string schema, string table)
