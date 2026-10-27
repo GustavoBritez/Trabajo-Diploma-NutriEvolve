@@ -181,7 +181,7 @@ namespace DAL
                         BEGIN
                             SET NOCOUNT ON;
 
-                            IF CAST(SESSION_CONTEXT(N'EsReversion') AS INT) = 1
+                            IF ISNULL(CAST(SESSION_CONTEXT(N'EsReversion') AS INT), 0) = 1
                             BEGIN
                                 RETURN;
                             END
@@ -211,7 +211,7 @@ namespace DAL
                             ELSE IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
                             BEGIN
                                 -- Si la modificación fue por recálculo de Dígitos Verificadores (DV) y no es modificación clínica explícita, omitir
-                                IF CAST(SESSION_CONTEXT(N'EsModificacionClinica') AS INT) <> 1
+                                IF ISNULL(CAST(SESSION_CONTEXT(N'EsModificacionClinica') AS INT), 0) <> 1
                                 BEGIN
                                     IF NOT EXISTS (
                                         SELECT 1 
@@ -233,10 +233,28 @@ namespace DAL
                                     END
                                 END
 
+                                -- Solo modificar y registrar aquellas filas que realmente representan cambios clínicos
+                                ;WITH Modificadas AS (
+                                    SELECT i.IdConsulta_DNI101
+                                    FROM inserted i
+                                    JOIN deleted d ON i.IdConsulta_DNI101 = d.IdConsulta_DNI101
+                                    WHERE ISNULL(CAST(SESSION_CONTEXT(N'EsModificacionClinica') AS INT), 0) = 1
+                                       OR (
+                                            ISNULL(i.IdPaciente_DNI101, 0) <> ISNULL(d.IdPaciente_DNI101, 0)
+                                            OR ISNULL(i.DniNutricionista_DNI101, 0) <> ISNULL(d.DniNutricionista_DNI101, 0)
+                                            OR ISNULL(i.FechaControl_DNI101, '1900-01-01') <> ISNULL(d.FechaControl_DNI101, '1900-01-01')
+                                            OR ISNULL(i.EdadMeses_DNI101, -1) <> ISNULL(d.EdadMeses_DNI101, -1)
+                                            OR ISNULL(i.TipoLactancia_DNI101, '') <> ISNULL(d.TipoLactancia_DNI101, '')
+                                            OR ISNULL(i.AlimentacionComplementaria_DNI101, '') <> ISNULL(d.AlimentacionComplementaria_DNI101, '')
+                                            OR ISNULL(i.Alergias_DNI101, '') <> ISNULL(d.Alergias_DNI101, '')
+                                            OR ISNULL(i.AntecedentesFamiliares_DNI101, '') <> ISNULL(d.AntecedentesFamiliares_DNI101, '')
+                                            OR ISNULL(i.Observaciones_DNI101, '') <> ISNULL(d.Observaciones_DNI101, '')
+                                       )
+                                )
                                 UPDATE c
                                 SET c.[Act] = 0
                                 FROM [dbo].[ConsultasNutricionales_Cambios_DNI101] c
-                                INNER JOIN inserted i ON c.[IdConsulta_DNI101] = i.[IdConsulta_DNI101];
+                                INNER JOIN Modificadas m ON c.[IdConsulta_DNI101] = m.[IdConsulta_DNI101];
 
                                 INSERT INTO [dbo].[ConsultasNutricionales_Cambios_DNI101] (
                                     [IdConsulta_DNI101], [IdPaciente_DNI101], [DniNutricionista_DNI101],
@@ -255,8 +273,21 @@ namespace DAL
                                     SYSDATETIME(), ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
                                     'UPDATE', 1
                                 FROM inserted i
+                                JOIN deleted del ON i.IdConsulta_DNI101 = del.IdConsulta_DNI101
                                 LEFT JOIN [dbo].[MedicionesAntropometricas_DNI101] m ON i.IdConsulta_DNI101 = m.IdConsulta_DNI101
-                                LEFT JOIN [dbo].[DiagnosticosNutricionales_DNI101] d ON i.IdConsulta_DNI101 = d.IdConsulta_DNI101;
+                                LEFT JOIN [dbo].[DiagnosticosNutricionales_DNI101] d ON i.IdConsulta_DNI101 = d.IdConsulta_DNI101
+                                WHERE ISNULL(CAST(SESSION_CONTEXT(N'EsModificacionClinica') AS INT), 0) = 1
+                                   OR (
+                                        ISNULL(i.IdPaciente_DNI101, 0) <> ISNULL(del.IdPaciente_DNI101, 0)
+                                        OR ISNULL(i.DniNutricionista_DNI101, 0) <> ISNULL(del.DniNutricionista_DNI101, 0)
+                                        OR ISNULL(i.FechaControl_DNI101, '1900-01-01') <> ISNULL(del.FechaControl_DNI101, '1900-01-01')
+                                        OR ISNULL(i.EdadMeses_DNI101, -1) <> ISNULL(del.EdadMeses_DNI101, -1)
+                                        OR ISNULL(i.TipoLactancia_DNI101, '') <> ISNULL(del.TipoLactancia_DNI101, '')
+                                        OR ISNULL(i.AlimentacionComplementaria_DNI101, '') <> ISNULL(del.AlimentacionComplementaria_DNI101, '')
+                                        OR ISNULL(i.Alergias_DNI101, '') <> ISNULL(del.Alergias_DNI101, '')
+                                        OR ISNULL(i.AntecedentesFamiliares_DNI101, '') <> ISNULL(del.AntecedentesFamiliares_DNI101, '')
+                                        OR ISNULL(i.Observaciones_DNI101, '') <> ISNULL(del.Observaciones_DNI101, '')
+                                   );
                             END
                             ELSE IF EXISTS (SELECT 1 FROM deleted)
                             BEGIN

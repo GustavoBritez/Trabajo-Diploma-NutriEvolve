@@ -271,7 +271,47 @@ namespace DAL.PN2
                     cmdCtx.ExecuteNonQuery();
                 }
 
-                // 2. Actualizar ConsultasNutricionales_DNI101 (dispara trigger de bitácora médica)
+                // 2. Actualizar MedicionesAntropometricas_DNI101 primero para que el trigger capture los nuevos valores
+                string sqlMedicion = @"
+                    UPDATE MedicionesAntropometricas_DNI101
+                    SET PesoKg_DNI101 = @Peso,
+                        TallaCm_DNI101 = @Talla,
+                        PerimetroCefalicoCm_DNI101 = @Perimetro,
+                        IMC_DNI101 = @IMC,
+                        DV = @DV
+                    WHERE IdConsulta_DNI101 = @IdConsulta;";
+
+                using (var cmdMedicion = new SqlCommand(sqlMedicion, tx.Connection, tx))
+                {
+                    cmdMedicion.Parameters.AddWithValue("@IdConsulta", idConsulta);
+                    cmdMedicion.Parameters.AddWithValue("@Peso", pesoKg);
+                    cmdMedicion.Parameters.AddWithValue("@Talla", tallaCm);
+                    cmdMedicion.Parameters.AddWithValue("@Perimetro", perimetroCefalico);
+                    cmdMedicion.Parameters.AddWithValue("@IMC", imc);
+                    cmdMedicion.Parameters.AddWithValue("@DV", (object?)dv ?? DBNull.Value);
+                    cmdMedicion.ExecuteNonQuery();
+                }
+
+                // 3. Actualizar DiagnosticosNutricionales_DNI101
+                string sqlDiag = @"
+                    UPDATE DiagnosticosNutricionales_DNI101
+                    SET ClasificacionOMS_DNI101 = @Clasif,
+                        DetallesClinicos_DNI101 = @Detalles,
+                        RequiereAlerta_DNI101 = @Alerta,
+                        DV = @DV
+                    WHERE IdConsulta_DNI101 = @IdConsulta;";
+
+                using (var cmdDiag = new SqlCommand(sqlDiag, tx.Connection, tx))
+                {
+                    cmdDiag.Parameters.AddWithValue("@IdConsulta", idConsulta);
+                    cmdDiag.Parameters.AddWithValue("@Clasif", clasificacionOMS);
+                    cmdDiag.Parameters.AddWithValue("@Detalles", detallesClinicos);
+                    cmdDiag.Parameters.AddWithValue("@Alerta", requiereAlerta ? 1 : 0);
+                    cmdDiag.Parameters.AddWithValue("@DV", (object?)dv ?? DBNull.Value);
+                    cmdDiag.ExecuteNonQuery();
+                }
+
+                // 4. Actualizar ConsultasNutricionales_DNI101 (dispara trigger de bitácora médica que leerá las nuevas mediciones y diagnóstico)
                 string sqlConsulta = @"
                     UPDATE ConsultasNutricionales_DNI101
                     SET DniNutricionista_DNI101 = @DniNutri,
@@ -298,46 +338,6 @@ namespace DAL.PN2
                     cmdConsulta.Parameters.AddWithValue("@Obs", (object?)observaciones ?? DBNull.Value);
                     cmdConsulta.Parameters.AddWithValue("@DV", (object?)dv ?? DBNull.Value);
                     cmdConsulta.ExecuteNonQuery();
-                }
-
-                // 3. Actualizar MedicionesAntropometricas_DNI101
-                string sqlMedicion = @"
-                    UPDATE MedicionesAntropometricas_DNI101
-                    SET PesoKg_DNI101 = @Peso,
-                        TallaCm_DNI101 = @Talla,
-                        PerimetroCefalicoCm_DNI101 = @Perimetro,
-                        IMC_DNI101 = @IMC,
-                        DV = @DV
-                    WHERE IdConsulta_DNI101 = @IdConsulta;";
-
-                using (var cmdMedicion = new SqlCommand(sqlMedicion, tx.Connection, tx))
-                {
-                    cmdMedicion.Parameters.AddWithValue("@IdConsulta", idConsulta);
-                    cmdMedicion.Parameters.AddWithValue("@Peso", pesoKg);
-                    cmdMedicion.Parameters.AddWithValue("@Talla", tallaCm);
-                    cmdMedicion.Parameters.AddWithValue("@Perimetro", perimetroCefalico);
-                    cmdMedicion.Parameters.AddWithValue("@IMC", imc);
-                    cmdMedicion.Parameters.AddWithValue("@DV", (object?)dv ?? DBNull.Value);
-                    cmdMedicion.ExecuteNonQuery();
-                }
-
-                // 4. Actualizar DiagnosticosNutricionales_DNI101
-                string sqlDiag = @"
-                    UPDATE DiagnosticosNutricionales_DNI101
-                    SET ClasificacionOMS_DNI101 = @Clasif,
-                        DetallesClinicos_DNI101 = @Detalles,
-                        RequiereAlerta_DNI101 = @Alerta,
-                        DV = @DV
-                    WHERE IdConsulta_DNI101 = @IdConsulta;";
-
-                using (var cmdDiag = new SqlCommand(sqlDiag, tx.Connection, tx))
-                {
-                    cmdDiag.Parameters.AddWithValue("@IdConsulta", idConsulta);
-                    cmdDiag.Parameters.AddWithValue("@Clasif", clasificacionOMS);
-                    cmdDiag.Parameters.AddWithValue("@Detalles", detallesClinicos);
-                    cmdDiag.Parameters.AddWithValue("@Alerta", requiereAlerta ? 1 : 0);
-                    cmdDiag.Parameters.AddWithValue("@DV", (object?)dv ?? DBNull.Value);
-                    cmdDiag.ExecuteNonQuery();
                 }
 
                 // 5. Alertas Clínicas
