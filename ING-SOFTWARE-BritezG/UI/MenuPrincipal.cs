@@ -514,24 +514,38 @@ namespace UI
         {
             if (ChangePassPanel != null && panelContenedor != null)
             {
-                ChangePassPanel.Location = new Point(
-                    Math.Max(20, (panelContenedor.ClientSize.Width - ChangePassPanel.Width) / 2),
-                    Math.Max(20, (panelContenedor.ClientSize.Height - ChangePassPanel.Height) / 2)
-                );
+                int offsetX = Math.Abs(panelContenedor.AutoScrollPosition.X);
+                int offsetY = Math.Abs(panelContenedor.AutoScrollPosition.Y);
+                int x = offsetX + Math.Max(20, (panelContenedor.ClientSize.Width - ChangePassPanel.Width) / 2);
+                int y = offsetY + Math.Max(20, (panelContenedor.ClientSize.Height - ChangePassPanel.Height) / 2);
+                ChangePassPanel.Location = new Point(x, y);
             }
         }
 
         private void btnCambiarContrasena_Click(object sender, EventArgs e)
         {
+            if (ChangePassPanel == null) return;
+
+            if (!panelContenedor.Controls.Contains(ChangePassPanel))
+            {
+                panelContenedor.Controls.Add(ChangePassPanel);
+            }
+
             ChangePassPanel.Visible = !ChangePassPanel.Visible;
             if (ChangePassPanel.Visible)
             {
                 CentrarPanelCambioPass();
                 ChangePassPanel.BringToFront();
+                txtActualPass.Text = "";
+                txtNewPass.Text = "";
+                txtRepPass.Text = "";
+                txtActualPass.Focus();
             }
         }
+
         private void btnCancelar_Click(object sender, EventArgs e)
         {
+            txtActualPass.Text = "";
             txtNewPass.Text = "";
             txtRepPass.Text = "";
             ChangePassPanel.Visible = false;
@@ -618,6 +632,44 @@ namespace UI
             }
         }
 
+        private void CargarFormularioEnContenedor(Form subForm)
+        {
+            if (ChangePassPanel != null)
+            {
+                ChangePassPanel.Visible = false;
+            }
+
+            // Remover formularios previos del contenedor, preservando controles superpuestos como ChangePassPanel y gbDV
+            for (int i = panelContenedor.Controls.Count - 1; i >= 0; i--)
+            {
+                Control c = panelContenedor.Controls[i];
+                if (c != ChangePassPanel && c != gbDV)
+                {
+                    panelContenedor.Controls.RemoveAt(i);
+                }
+            }
+
+            if (ChangePassPanel != null && !panelContenedor.Controls.Contains(ChangePassPanel))
+            {
+                panelContenedor.Controls.Add(ChangePassPanel);
+            }
+
+            if (gbDV != null && !panelContenedor.Controls.Contains(gbDV))
+            {
+                panelContenedor.Controls.Add(gbDV);
+            }
+
+            subForm.TopLevel = false;
+            subForm.FormBorderStyle = FormBorderStyle.None;
+            subForm.Dock = DockStyle.Fill;
+            subForm.AutoScroll = true;
+            panelContenedor.Controls.Add(subForm);
+            subForm.Show();
+            subForm.BringToFront();
+
+            ActualizarPanelDV();
+        }
+
         public void MostrarTurneroEnContenedor()
         {
             if (_frmTurneroContenido == null || _frmTurneroContenido.IsDisposed)
@@ -625,19 +677,7 @@ namespace UI
                 _frmTurneroContenido = new frmTurnero_DNI101();
             }
 
-            if (ChangePassPanel != null)
-            {
-                ChangePassPanel.Visible = false;
-            }
-
-            panelContenedor.Controls.Clear();
-            _frmTurneroContenido.TopLevel = false;
-            _frmTurneroContenido.FormBorderStyle = FormBorderStyle.None;
-            _frmTurneroContenido.Dock = DockStyle.Fill;
-            _frmTurneroContenido.AutoScroll = true;
-            panelContenedor.Controls.Add(_frmTurneroContenido);
-            _frmTurneroContenido.Show();
-            _frmTurneroContenido.BringToFront();
+            CargarFormularioEnContenedor(_frmTurneroContenido);
             _frmTurneroContenido.CargarTurnos();
         }
 
@@ -669,19 +709,7 @@ namespace UI
                 _frmSeguimientoContenido = new UI.PN2.frmSeguimientoNutricional_DNI101();
             }
 
-            if (ChangePassPanel != null)
-            {
-                ChangePassPanel.Visible = false;
-            }
-
-            panelContenedor.Controls.Clear();
-            _frmSeguimientoContenido.TopLevel = false;
-            _frmSeguimientoContenido.FormBorderStyle = FormBorderStyle.None;
-            _frmSeguimientoContenido.Dock = DockStyle.Fill;
-            _frmSeguimientoContenido.AutoScroll = true;
-            panelContenedor.Controls.Add(_frmSeguimientoContenido);
-            _frmSeguimientoContenido.Show();
-            _frmSeguimientoContenido.BringToFront();
+            CargarFormularioEnContenedor(_frmSeguimientoContenido);
             _frmSeguimientoContenido.CargarPacientes();
         }
 
@@ -713,19 +741,7 @@ namespace UI
                 _frmMaestroClientesContenido = new UI.PN1.frmMaestroClientes_DNI101();
             }
 
-            if (ChangePassPanel != null)
-            {
-                ChangePassPanel.Visible = false;
-            }
-
-            panelContenedor.Controls.Clear();
-            _frmMaestroClientesContenido.TopLevel = false;
-            _frmMaestroClientesContenido.FormBorderStyle = FormBorderStyle.None;
-            _frmMaestroClientesContenido.Dock = DockStyle.Fill;
-            _frmMaestroClientesContenido.AutoScroll = true;
-            panelContenedor.Controls.Add(_frmMaestroClientesContenido);
-            _frmMaestroClientesContenido.Show();
-            _frmMaestroClientesContenido.BringToFront();
+            CargarFormularioEnContenedor(_frmMaestroClientesContenido);
         }
 
         private UI.PN2.frmBitacoraCambiosConsultas? _frmBitacoraCambiosContenido;
@@ -762,19 +778,7 @@ namespace UI
                 _frmBitacoraCambiosContenido = new UI.PN2.frmBitacoraCambiosConsultas();
             }
 
-            if (ChangePassPanel != null)
-            {
-                ChangePassPanel.Visible = false;
-            }
-
-            panelContenedor.Controls.Clear();
-            _frmBitacoraCambiosContenido.TopLevel = false;
-            _frmBitacoraCambiosContenido.FormBorderStyle = FormBorderStyle.None;
-            _frmBitacoraCambiosContenido.Dock = DockStyle.Fill;
-            _frmBitacoraCambiosContenido.AutoScroll = true;
-            panelContenedor.Controls.Add(_frmBitacoraCambiosContenido);
-            _frmBitacoraCambiosContenido.Show();
-            _frmBitacoraCambiosContenido.BringToFront();
+            CargarFormularioEnContenedor(_frmBitacoraCambiosContenido);
         }
 
         private UI.PN2.frmReporteInteligente? _frmReportePredictivoContenido;
@@ -805,19 +809,7 @@ namespace UI
                 _frmReportePredictivoContenido = new UI.PN2.frmReporteInteligente();
             }
 
-            if (ChangePassPanel != null)
-            {
-                ChangePassPanel.Visible = false;
-            }
-
-            panelContenedor.Controls.Clear();
-            _frmReportePredictivoContenido.TopLevel = false;
-            _frmReportePredictivoContenido.FormBorderStyle = FormBorderStyle.None;
-            _frmReportePredictivoContenido.Dock = DockStyle.Fill;
-            _frmReportePredictivoContenido.AutoScroll = true;
-            panelContenedor.Controls.Add(_frmReportePredictivoContenido);
-            _frmReportePredictivoContenido.Show();
-            _frmReportePredictivoContenido.BringToFront();
+            CargarFormularioEnContenedor(_frmReportePredictivoContenido);
         }
 
         private void btnAyuda_Click(object sender, EventArgs e)
