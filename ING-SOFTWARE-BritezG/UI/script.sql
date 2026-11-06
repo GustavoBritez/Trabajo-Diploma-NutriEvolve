@@ -216,6 +216,26 @@ BEGIN
 END
 GO
 
+-- USUARIO NUTRICIONISTA (Lucia / 1234)
+IF NOT EXISTS (SELECT * FROM [dbo].[Usuarios] WHERE [DNI] = 41236111)
+BEGIN
+    INSERT [dbo].[Usuarios] ([DNI], [NombreDeUsuario], [Nombre], [Apellido], [Contraseña], [Bloqueado], [Estado], [ID_Perfil], [Idioma], [DV]) 
+    VALUES (41236111, N'Lucia', N'Lucia', N'Aguero', N'$2a$11$xR8dUaYYFoG3.lY7WPJ.oeR.mlBDKCeUFyQ8zbHbtgAfGuUthDmba', 0, 1, 3, N'Español', NULL);
+END
+ELSE
+BEGIN
+    UPDATE [dbo].[Usuarios]
+    SET [NombreDeUsuario] = N'Lucia',
+        [Nombre] = N'Lucia',
+        [Apellido] = N'Aguero',
+        [Contraseña] = N'$2a$11$xR8dUaYYFoG3.lY7WPJ.oeR.mlBDKCeUFyQ8zbHbtgAfGuUthDmba',
+        [Bloqueado] = 0,
+        [Estado] = 1,
+        [ID_Perfil] = 3
+    WHERE [DNI] = 41236111;
+END
+GO
+
 -- POBLAR PATENTES (PERMISOS)
 IF NOT EXISTS (SELECT * FROM [dbo].[Permiso] WHERE [ID_Permiso] = 20)
 BEGIN
