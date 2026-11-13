@@ -53,6 +53,13 @@ namespace GeneradorInstalador.Core
             {
                 logger?.Invoke($"[EMPAQUETADOR] Copiando script SQL maestro ({Path.GetFileName(manifest.SelectedSqlScriptPath)})...");
                 File.Copy(manifest.SelectedSqlScriptPath, Path.Combine(destDatosDir, scriptFileName), true);
+
+                // Copiar también a App/ para inicialización local si la aplicación lo requiere directamente
+                string appScript = Path.Combine(destAppDir, scriptFileName);
+                if (!File.Exists(appScript))
+                {
+                    File.Copy(manifest.SelectedSqlScriptPath, appScript, true);
+                }
             }
             else
             {

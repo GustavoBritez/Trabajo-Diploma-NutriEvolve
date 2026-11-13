@@ -1,0 +1,169 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|c:\\users\\navegador\\desktop\\triplepp\\generadorinstalador\\universalsetup\\frmuniversalsetup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|solutionrelative:universalsetup\\frmuniversalsetup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|c:\\users\\navegador\\desktop\\triplepp\\generadorinstalador\\universalsetup\\frmuniversalsetup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|solutionrelative:universalsetup\\frmuniversalsetup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|c:\\users\\navegador\\desktop\\triplepp\\generadorinstalador\\universalsetup\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|solutionrelative:universalsetup\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|c:\\users\\navegador\\desktop\\triplepp\\generadorinstalador\\universalsetup\\setupmanifest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|solutionrelative:universalsetup\\setupmanifest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|c:\\users\\navegador\\desktop\\triplepp\\generadorinstalador\\generador\\core\\projectanalyzer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|solutionrelative:generador\\core\\projectanalyzer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|c:\\users\\navegador\\desktop\\triplepp\\generadorinstalador\\generador\\core\\projectmanifest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|solutionrelative:generador\\core\\projectmanifest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|c:\\users\\navegador\\desktop\\triplepp\\generadorinstalador\\generador\\core\\installerpackager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|solutionrelative:generador\\core\\installerpackager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|c:\\users\\navegador\\desktop\\triplepp\\generadorinstalador\\generador\\core\\projectpublisher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E835C0E9-08CD-4B2D-9412-A8B65F2BBC8A}|Generador\\Generador.csproj|solutionrelative:generador\\core\\projectpublisher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|c:\\users\\navegador\\desktop\\triplepp\\generadorinstalador\\universalsetup\\sqlexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0F483ABB-8E4C-48E0-9889-5ABADC3AEB7D}|UniversalSetup\\UniversalSetup.csproj|solutionrelative:universalsetup\\sqlexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{9a5c1b23-6d4f-4e9b-8c32-1f7a2b3c4d5f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FrmUniversalSetup.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\UniversalSetup\\FrmUniversalSetup.cs",
+              "RelativeDocumentMoniker": "UniversalSetup\\FrmUniversalSetup.cs",
+              "ToolTip": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\UniversalSetup\\FrmUniversalSetup.cs [Dise\u00F1o]",
+              "RelativeToolTip": "UniversalSetup\\FrmUniversalSetup.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-13T18:29:25.306Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ProjectManifest.cs",
+              "DocumentMoniker": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\Generador\\Core\\ProjectManifest.cs",
+              "RelativeDocumentMoniker": "Generador\\Core\\ProjectManifest.cs",
+              "ToolTip": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\Generador\\Core\\ProjectManifest.cs",
+              "RelativeToolTip": "Generador\\Core\\ProjectManifest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-13T18:29:13.372Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ProjectAnalyzer.cs",
+              "DocumentMoniker": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\Generador\\Core\\ProjectAnalyzer.cs",
+              "RelativeDocumentMoniker": "Generador\\Core\\ProjectAnalyzer.cs",
+              "ToolTip": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\Generador\\Core\\ProjectAnalyzer.cs",
+              "RelativeToolTip": "Generador\\Core\\ProjectAnalyzer.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAAAEYAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-13T18:29:13.404Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SetupManifest.cs",
+              "DocumentMoniker": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\UniversalSetup\\SetupManifest.cs",
+              "RelativeDocumentMoniker": "UniversalSetup\\SetupManifest.cs",
+              "ToolTip": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\UniversalSetup\\SetupManifest.cs",
+              "RelativeToolTip": "UniversalSetup\\SetupManifest.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-13T18:29:13.408Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\UniversalSetup\\Program.cs",
+              "RelativeDocumentMoniker": "UniversalSetup\\Program.cs",
+              "ToolTip": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\UniversalSetup\\Program.cs",
+              "RelativeToolTip": "UniversalSetup\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-13T18:29:13.415Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "InstallerPackager.cs",
+              "DocumentMoniker": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\Generador\\Core\\InstallerPackager.cs",
+              "RelativeDocumentMoniker": "Generador\\Core\\InstallerPackager.cs",
+              "ToolTip": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\Generador\\Core\\InstallerPackager.cs",
+              "RelativeToolTip": "Generador\\Core\\InstallerPackager.cs",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-13T18:29:13.417Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ProjectPublisher.cs",
+              "DocumentMoniker": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\Generador\\Core\\ProjectPublisher.cs",
+              "RelativeDocumentMoniker": "Generador\\Core\\ProjectPublisher.cs",
+              "ToolTip": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\Generador\\Core\\ProjectPublisher.cs",
+              "RelativeToolTip": "Generador\\Core\\ProjectPublisher.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-13T18:29:13.418Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FrmUniversalSetup.cs",
+              "DocumentMoniker": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\UniversalSetup\\FrmUniversalSetup.cs",
+              "RelativeDocumentMoniker": "UniversalSetup\\FrmUniversalSetup.cs",
+              "ToolTip": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\UniversalSetup\\FrmUniversalSetup.cs",
+              "RelativeToolTip": "UniversalSetup\\FrmUniversalSetup.cs",
+              "ViewState": "AgIAADYCAAAAAAAAAAAuwEcCAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-13T18:29:13.42Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "SqlExecutor.cs",
+              "DocumentMoniker": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\UniversalSetup\\SqlExecutor.cs",
+              "RelativeDocumentMoniker": "UniversalSetup\\SqlExecutor.cs",
+              "ToolTip": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\UniversalSetup\\SqlExecutor.cs",
+              "RelativeToolTip": "UniversalSetup\\SqlExecutor.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAABoAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-13T18:29:13.422Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

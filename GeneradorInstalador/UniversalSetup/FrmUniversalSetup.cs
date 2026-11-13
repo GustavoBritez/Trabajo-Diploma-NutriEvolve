@@ -19,35 +19,40 @@ namespace UniversalSetup
 
         public FrmUniversalSetup()
         {
-            _manifest = SetupManifest.Load();
             InitializeComponent();
-            ConfigurarSegunManifiesto();
-            DetectarInstanciaInicial();
-            VerificarEstadoReinstalacion();
+            _manifest = SetupManifest.Load();
+
+            if (!EsModoDiseno())
+            {
+                ConfigurarSegunManifiesto();
+                DetectarInstanciaInicial();
+                VerificarEstadoReinstalacion();
+            }
+        }
+
+        private bool EsModoDiseno()
+        {
+            if (DesignMode) return true;
+            if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime) return true;
+            try
+            {
+                string proc = Process.GetCurrentProcess().ProcessName.ToLowerInvariant();
+                if (proc.Contains("devenv") || proc.Contains("designtoolsserver")) return true;
+            }
+            catch { }
+            return false;
         }
 
         private void ConfigurarSegunManifiesto()
         {
-            Text = "ASISTENTE DE INSTALACIÓN Y REPARACIÓN - NUTRIEVOLVE";
-            lblBannerTitle.Text = "ASISTENTE DE INSTALACIÓN Y REPARACIÓN - NUTRIEVOLVE";
+            Text = $"Asistente de Instalación / Reinstalación - {_manifest.AppName}";
+            lblBannerTitle.Text = $"Asistente de Instalación y Reinstalación";
             lblBannerSubtitle.Text = "Paso 1 de 5: Bienvenida al Asistente";
 
             lblTituloP1.Text = $"Bienvenido al Asistente de {_manifest.AppName}";
             lblInfoApp.Text = $"Aplicación Principal: {_manifest.AppName} ({_manifest.ExeName})";
             lblInfoBD.Text = $"Base de Datos: {_manifest.DatabaseName} (Script: {Path.GetFileName(_manifest.SqlScriptFile)})";
             lblInfoAutor.Text = $"Versión: {_manifest.Version} | Autor: {_manifest.Author}";
-
-            // Color del banner si se especificó
-            if (!string.IsNullOrWhiteSpace(_manifest.PrimaryColorHex))
-            {
-                try
-                {
-                    Color primary = ColorTranslator.FromHtml(_manifest.PrimaryColorHex);
-                    pnlBanner.BackColor = primary;
-                    btnSiguiente.BackColor = primary;
-                }
-                catch { }
-            }
 
             // Ruta por defecto en AppData Local
             string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -63,6 +68,7 @@ namespace UniversalSetup
             Task.Run(() =>
             {
                 string active = SqlExecutor.DetectActiveInstance();
+                if (IsDisposed || !IsHandleCreated) return;
                 Invoke(new Action(() =>
                 {
                     if (!cboServidor.Items.Contains(active))
@@ -76,6 +82,16 @@ namespace UniversalSetup
         }
 
         private void TxtRutaInstalacion_TextChanged(object? sender, EventArgs e)
+        {
+            VerificarEstadoReinstalacion();
+        }
+
+        private void CboServidor_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            VerificarEstadoReinstalacion();
+        }
+
+        private void CboServidor_TextChanged(object? sender, EventArgs e)
         {
             VerificarEstadoReinstalacion();
         }
@@ -97,20 +113,16 @@ namespace UniversalSetup
 
             if (_esReinstalacion)
             {
-                lblBadgeModo.Text = "REINSTALACIÓN";
-                lblBadgeModo.BackColor = Color.FromArgb(234, 88, 12);
+                lblBadgeModo.Text = "[ MODO REINSTALACIÓN ]";
                 lblAvisoModoP1.Text = "Se detectó una instalación previa. El asistente actuará en MODO REINSTALADOR / REPARADOR.";
-                lblAvisoModoP1.ForeColor = Color.FromArgb(194, 65, 12);
 
                 lblAvisoInstalacionPreviaP2.Visible = carpetaInstalada;
                 grpModoBDReinstalacion.Visible = _baseDatosExisteEnServidor;
             }
             else
             {
-                lblBadgeModo.Text = "NUEVA INSTALACIÓN";
-                lblBadgeModo.BackColor = Color.FromArgb(16, 185, 129);
+                lblBadgeModo.Text = "[ NUEVA INSTALACIÓN ]";
                 lblAvisoModoP1.Text = "Modo de Instalación inicial listo para comenzar.";
-                lblAvisoModoP1.ForeColor = Color.FromArgb(16, 185, 129);
 
                 lblAvisoInstalacionPreviaP2.Visible = false;
                 grpModoBDReinstalacion.Visible = false;
@@ -292,7 +304,6 @@ namespace UniversalSetup
                 lblDescP3.Text = "";
                 lblDescP3.Visible = false;
                 btnSiguiente.Text = _esReinstalacion ? "Reinstalar Ahora" : "Instalar Ahora";
-                btnSiguiente.BackColor = _esReinstalacion ? Color.FromArgb(234, 88, 12) : Color.FromArgb(37, 99, 235);
             }
             else if (paso == 4)
             {
@@ -306,14 +317,12 @@ namespace UniversalSetup
                 lblBannerSubtitle.Text = "Paso 5 de 5: Instalación Finalizada";
                 btnSiguiente.Enabled = true;
                 btnSiguiente.Text = "Finalizar";
-                btnSiguiente.BackColor = Color.FromArgb(16, 185, 129);
                 btnCancelar.Visible = false;
                 btnAnterior.Visible = false;
             }
             else
             {
                 btnSiguiente.Text = "Siguiente >";
-                btnSiguiente.BackColor = Color.FromArgb(37, 99, 235);
             }
         }
 
@@ -568,6 +577,11 @@ namespace UniversalSetup
             {
                 Log($"Aviso: No se pudo crear el acceso directo: {ex.Message}");
             }
+        }
+
+        private void lblDescP1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,82 +1,74 @@
-#nullable enable
-#pragma warning disable CS8618
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-
 namespace UniversalSetup
 {
     partial class FrmUniversalSetup
     {
-        private System.ComponentModel.IContainer? components = null;
+        private System.ComponentModel.IContainer components = null;
 
         // Banner Superior
-        private Panel pnlBanner;
-        private Label lblBannerTitle;
-        private Label lblBannerSubtitle;
-        private Label lblBadgeModo;
+        private System.Windows.Forms.Panel pnlBanner;
+        private System.Windows.Forms.Label lblBannerTitle;
+        private System.Windows.Forms.Label lblBannerSubtitle;
+        private System.Windows.Forms.Label lblBadgeModo;
 
         // Barra Inferior de Navegación
-        private Panel pnlBottom;
-        private Button btnCancelar;
-        private Button btnAnterior;
-        private Button btnSiguiente;
+        private System.Windows.Forms.Panel pnlBottom;
+        private System.Windows.Forms.Button btnCancelar;
+        private System.Windows.Forms.Button btnAnterior;
+        private System.Windows.Forms.Button btnSiguiente;
 
         // Contenedor Central de Pasos
-        private Panel pnlContent;
+        private System.Windows.Forms.Panel pnlContent;
 
         // ===== Paso 1: Bienvenida =====
-        private Panel pnlPaso1_Bienvenida;
-        private Label lblTituloP1;
-        private Label lblDescP1;
-        private Label lblAvisoModoP1;
-        private GroupBox grpInfoP1;
-        private Label lblInfoApp;
-        private Label lblInfoBD;
-        private Label lblInfoAutor;
-        private Label lblInfoRequisitos;
+        private System.Windows.Forms.Panel pnlPaso1_Bienvenida;
+        private System.Windows.Forms.Label lblTituloP1;
+        private System.Windows.Forms.Label lblDescP1;
+        private System.Windows.Forms.Label lblAvisoModoP1;
+        private System.Windows.Forms.GroupBox grpInfoP1;
+        private System.Windows.Forms.Label lblInfoApp;
+        private System.Windows.Forms.Label lblInfoBD;
 
         // ===== Paso 2: Directorio de Instalación =====
-        private Panel pnlPaso2_Ruta;
-        private Label lblTituloP2;
-        private Label lblDescP2;
-        private Label lblRuta;
-        private TextBox txtRutaInstalacion;
-        private Button btnExaminarRuta;
-        private CheckBox chkCrearAccesoDirecto;
-        private Label lblAvisoInstalacionPreviaP2;
+        private System.Windows.Forms.Panel pnlPaso2_Ruta;
+        private System.Windows.Forms.Label lblTituloP2;
+        private System.Windows.Forms.Label lblDescP2;
+        private System.Windows.Forms.Label lblRuta;
+        private System.Windows.Forms.TextBox txtRutaInstalacion;
+        private System.Windows.Forms.Button btnExaminarRuta;
+        private System.Windows.Forms.CheckBox chkCrearAccesoDirecto;
+        private System.Windows.Forms.Label lblAvisoInstalacionPreviaP2;
 
         // ===== Paso 3: Base de Datos y Servidor SQL =====
-        private Panel pnlPaso3_BaseDatos;
-        private Label lblTituloP3;
-        private Label lblDescP3;
-        private Label lblServidor;
-        private ComboBox cboServidor;
-        private Button btnProbarConexion;
-        private RadioButton rdoAuthWindows;
-        private RadioButton rdoAuthSql;
-        private Label lblUsuarioSql;
-        private TextBox txtUsuarioSql;
-        private Label lblClaveSql;
-        private TextBox txtClaveSql;
-        private CheckBox chkInstalarBD;
-        private GroupBox grpModoBDReinstalacion;
-        private RadioButton rdoConservarBD;
-        private RadioButton rdoRecrearBD;
-        private CheckBox chkSellarDV;
+        private System.Windows.Forms.Panel pnlPaso3_BaseDatos;
+        private System.Windows.Forms.Label lblTituloP3;
+        private System.Windows.Forms.Label lblDescP3;
+        private System.Windows.Forms.Label lblServidor;
+        private System.Windows.Forms.ComboBox cboServidor;
+        private System.Windows.Forms.Button btnProbarConexion;
+        private System.Windows.Forms.RadioButton rdoAuthWindows;
+        private System.Windows.Forms.RadioButton rdoAuthSql;
+        private System.Windows.Forms.Label lblUsuarioSql;
+        private System.Windows.Forms.TextBox txtUsuarioSql;
+        private System.Windows.Forms.Label lblClaveSql;
+        private System.Windows.Forms.TextBox txtClaveSql;
+        private System.Windows.Forms.CheckBox chkInstalarBD;
+        private System.Windows.Forms.GroupBox grpModoBDReinstalacion;
+        private System.Windows.Forms.RadioButton rdoConservarBD;
+        private System.Windows.Forms.RadioButton rdoRecrearBD;
+        private System.Windows.Forms.CheckBox chkSellarDV;
 
         // ===== Paso 4: Progreso =====
-        private Panel pnlPaso4_Progreso;
-        private Label lblTituloP4;
-        private Label lblEstadoP4;
-        private ProgressBar progressBar;
-        private TextBox txtLog;
+        private System.Windows.Forms.Panel pnlPaso4_Progreso;
+        private System.Windows.Forms.Label lblTituloP4;
+        private System.Windows.Forms.Label lblEstadoP4;
+        private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.TextBox txtLog;
 
         // ===== Paso 5: Finalizado =====
-        private Panel pnlPaso5_Finalizado;
-        private Label lblTituloP5;
-        private Label lblDescP5;
-        private CheckBox chkIniciarApp;
+        private System.Windows.Forms.Panel pnlPaso5_Finalizado;
+        private System.Windows.Forms.Label lblTituloP5;
+        private System.Windows.Forms.Label lblDescP5;
+        private System.Windows.Forms.CheckBox chkIniciarApp;
 
         protected override void Dispose(bool disposing)
         {
@@ -87,551 +79,654 @@ namespace UniversalSetup
             base.Dispose(disposing);
         }
 
+        #region Windows Form Designer generated code
+
         private void InitializeComponent()
         {
-            Text = "Instalador / Reinstalador Universal .NET";
-            Size = new Size(740, 590);
-            StartPosition = FormStartPosition.CenterScreen;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox = false;
-            Font = new Font("Segoe UI", 9.5f, FontStyle.Regular);
-            BackColor = Color.FromArgb(248, 250, 252);
-
-            // ==================== Banner Superior ====================
-            pnlBanner = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 82,
-                BackColor = Color.FromArgb(30, 58, 138)
-            };
-
-            lblBannerTitle = new Label
-            {
-                Text = "Asistente de Instalación / Reinstalación",
-                Font = new Font("Segoe UI", 13.5f, FontStyle.Bold),
-                ForeColor = Color.White,
-                Location = new Point(24, 15),
-                AutoSize = true
-            };
-
-            lblBannerSubtitle = new Label
-            {
-                Text = "Despliegue automático de aplicación y base de datos SQL Server",
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Regular),
-                ForeColor = Color.FromArgb(219, 234, 254),
-                Location = new Point(25, 45),
-                AutoSize = true
-            };
-
-            lblBadgeModo = new Label
-            {
-                Text = "NUEVA INSTALACIÓN",
-                Font = new Font("Segoe UI", 8.5f, FontStyle.Bold),
-                ForeColor = Color.White,
-                BackColor = Color.FromArgb(16, 185, 129),
-                Location = new Point(540, 25),
-                Size = new Size(160, 28),
-                TextAlign = ContentAlignment.MiddleCenter
-            };
-
-            pnlBanner.Controls.Add(lblBannerTitle);
-            pnlBanner.Controls.Add(lblBannerSubtitle);
+            pnlBanner = new Panel();
+            lblBadgeModo = new Label();
+            lblBannerSubtitle = new Label();
+            lblBannerTitle = new Label();
+            pnlBottom = new Panel();
+            btnSiguiente = new Button();
+            btnAnterior = new Button();
+            btnCancelar = new Button();
+            pnlContent = new Panel();
+            pnlPaso1_Bienvenida = new Panel();
+            grpInfoP1 = new GroupBox();
+            lblInfoBD = new Label();
+            lblInfoApp = new Label();
+            lblAvisoModoP1 = new Label();
+            lblDescP1 = new Label();
+            lblTituloP1 = new Label();
+            pnlPaso2_Ruta = new Panel();
+            lblAvisoInstalacionPreviaP2 = new Label();
+            chkCrearAccesoDirecto = new CheckBox();
+            btnExaminarRuta = new Button();
+            txtRutaInstalacion = new TextBox();
+            lblRuta = new Label();
+            lblDescP2 = new Label();
+            lblTituloP2 = new Label();
+            pnlPaso3_BaseDatos = new Panel();
+            chkSellarDV = new CheckBox();
+            grpModoBDReinstalacion = new GroupBox();
+            rdoRecrearBD = new RadioButton();
+            rdoConservarBD = new RadioButton();
+            chkInstalarBD = new CheckBox();
+            txtClaveSql = new TextBox();
+            lblClaveSql = new Label();
+            txtUsuarioSql = new TextBox();
+            lblUsuarioSql = new Label();
+            rdoAuthSql = new RadioButton();
+            rdoAuthWindows = new RadioButton();
+            btnProbarConexion = new Button();
+            cboServidor = new ComboBox();
+            lblServidor = new Label();
+            lblDescP3 = new Label();
+            lblTituloP3 = new Label();
+            pnlPaso4_Progreso = new Panel();
+            txtLog = new TextBox();
+            progressBar = new ProgressBar();
+            lblEstadoP4 = new Label();
+            lblTituloP4 = new Label();
+            pnlPaso5_Finalizado = new Panel();
+            chkIniciarApp = new CheckBox();
+            lblDescP5 = new Label();
+            lblTituloP5 = new Label();
+            pnlBanner.SuspendLayout();
+            pnlBottom.SuspendLayout();
+            pnlContent.SuspendLayout();
+            pnlPaso1_Bienvenida.SuspendLayout();
+            grpInfoP1.SuspendLayout();
+            pnlPaso2_Ruta.SuspendLayout();
+            pnlPaso3_BaseDatos.SuspendLayout();
+            grpModoBDReinstalacion.SuspendLayout();
+            pnlPaso4_Progreso.SuspendLayout();
+            pnlPaso5_Finalizado.SuspendLayout();
+            SuspendLayout();
+            // 
+            // pnlBanner
+            // 
+            pnlBanner.BorderStyle = BorderStyle.FixedSingle;
             pnlBanner.Controls.Add(lblBadgeModo);
-
-            // ==================== Barra Inferior ====================
-            pnlBottom = new Panel
-            {
-                Dock = DockStyle.Bottom,
-                Height = 65,
-                BackColor = Color.FromArgb(241, 245, 249)
-            };
-
-            btnCancelar = new Button
-            {
-                Text = "Cancelar",
-                Size = new Size(100, 36),
-                Location = new Point(25, 15),
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Regular),
-                BackColor = Color.White,
-                ForeColor = Color.FromArgb(51, 65, 85),
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            btnCancelar.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
-            btnCancelar.Click += BtnCancelar_Click;
-
-            btnAnterior = new Button
-            {
-                Text = "< Anterior",
-                Size = new Size(110, 36),
-                Location = new Point(460, 15),
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Regular),
-                BackColor = Color.White,
-                ForeColor = Color.FromArgb(51, 65, 85),
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Enabled = false
-            };
-            btnAnterior.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
-            btnAnterior.Click += BtnAnterior_Click;
-
-            btnSiguiente = new Button
-            {
-                Text = "Siguiente >",
-                Size = new Size(130, 36),
-                Location = new Point(580, 15),
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-                BackColor = Color.FromArgb(37, 99, 235),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            btnSiguiente.FlatAppearance.BorderSize = 0;
-            btnSiguiente.Click += BtnSiguiente_Click;
-
-            pnlBottom.Controls.Add(btnCancelar);
-            pnlBottom.Controls.Add(btnAnterior);
+            pnlBanner.Controls.Add(lblBannerSubtitle);
+            pnlBanner.Controls.Add(lblBannerTitle);
+            pnlBanner.Dock = DockStyle.Top;
+            pnlBanner.Location = new Point(0, 0);
+            pnlBanner.Name = "pnlBanner";
+            pnlBanner.Size = new Size(734, 75);
+            pnlBanner.TabIndex = 0;
+            // 
+            // lblBadgeModo
+            // 
+            lblBadgeModo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblBadgeModo.BorderStyle = BorderStyle.FixedSingle;
+            lblBadgeModo.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            lblBadgeModo.Location = new Point(530, 18);
+            lblBadgeModo.Name = "lblBadgeModo";
+            lblBadgeModo.Size = new Size(185, 30);
+            lblBadgeModo.TabIndex = 2;
+            lblBadgeModo.Text = "[ NUEVA INSTALACION ]";
+            lblBadgeModo.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lblBannerSubtitle
+            // 
+            lblBannerSubtitle.AutoSize = true;
+            lblBannerSubtitle.Font = new Font("Segoe UI", 9F);
+            lblBannerSubtitle.Location = new Point(17, 38);
+            lblBannerSubtitle.Name = "lblBannerSubtitle";
+            lblBannerSubtitle.Size = new Size(345, 15);
+            lblBannerSubtitle.TabIndex = 1;
+            lblBannerSubtitle.Text = "Despliegue automático de aplicación y base de datos SQL Server";
+            // 
+            // lblBannerTitle
+            // 
+            lblBannerTitle.AutoSize = true;
+            lblBannerTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblBannerTitle.Location = new Point(15, 12);
+            lblBannerTitle.Name = "lblBannerTitle";
+            lblBannerTitle.Size = new Size(311, 21);
+            lblBannerTitle.TabIndex = 0;
+            lblBannerTitle.Text = "Asistente de Instalacion y Reinstalacion";
+            // 
+            // pnlBottom
+            // 
+            pnlBottom.BorderStyle = BorderStyle.FixedSingle;
             pnlBottom.Controls.Add(btnSiguiente);
-
-            // ==================== Contenedor Central ====================
-            pnlContent = new Panel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = Color.Transparent,
-                Padding = new Padding(25)
-            };
-
-            // ==================== Paso 1: Bienvenida ====================
-            pnlPaso1_Bienvenida = new Panel { Dock = DockStyle.Fill, Visible = true };
-
-            lblTituloP1 = new Label
-            {
-                Text = "Bienvenido al Instalador de la Aplicación",
-                Font = new Font("Segoe UI", 13f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(15, 23, 42),
-                Location = new Point(10, 10),
-                AutoSize = true
-            };
-
-            lblDescP1 = new Label
-            {
-                Text = "Este asistente configurará automáticamente la solución .NET, publicará los componentes en su equipo\ny preparará la base de datos SQL Server correspondiente.",
-                Font = new Font("Segoe UI", 9.5f),
-                ForeColor = Color.FromArgb(71, 85, 105),
-                Location = new Point(12, 45),
-                AutoSize = true
-            };
-
-            lblAvisoModoP1 = new Label
-            {
-                Text = "Modo de Instalación inicial listo para comenzar.",
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(16, 185, 129),
-                Location = new Point(12, 95),
-                AutoSize = true
-            };
-
-            grpInfoP1 = new GroupBox
-            {
-                Text = " Ficha Técnica de la Solución ",
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(30, 41, 59),
-                Location = new Point(12, 130),
-                Size = new Size(660, 180)
-            };
-
-            lblInfoApp = new Label
-            {
-                Text = "Aplicación Principal: Cargando...",
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Regular),
-                ForeColor = Color.FromArgb(51, 65, 85),
-                Location = new Point(20, 30),
-                AutoSize = true
-            };
-
-            lblInfoBD = new Label
-            {
-                Text = "Base de Datos SQL: Cargando...",
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Regular),
-                ForeColor = Color.FromArgb(51, 65, 85),
-                Location = new Point(20, 65),
-                AutoSize = true
-            };
-
-            lblInfoAutor = new Label
-            {
-                Text = "Autor / Proyecto: Alumno / Universidad",
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Regular),
-                ForeColor = Color.FromArgb(51, 65, 85),
-                Location = new Point(20, 100),
-                AutoSize = true
-            };
-
-            lblInfoRequisitos = new Label
-            {
-                Text = "Requisitos: Windows 10/11, SQL Server (Local, Express o LocalDB) y .NET Runtime 9.0.",
-                Font = new Font("Segoe UI", 9f, FontStyle.Italic),
-                ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(20, 138),
-                AutoSize = true
-            };
-
-            grpInfoP1.Controls.Add(lblInfoApp);
-            grpInfoP1.Controls.Add(lblInfoBD);
-            grpInfoP1.Controls.Add(lblInfoAutor);
-            grpInfoP1.Controls.Add(lblInfoRequisitos);
-
-            pnlPaso1_Bienvenida.Controls.Add(lblTituloP1);
-            pnlPaso1_Bienvenida.Controls.Add(lblDescP1);
-            pnlPaso1_Bienvenida.Controls.Add(lblAvisoModoP1);
-            pnlPaso1_Bienvenida.Controls.Add(grpInfoP1);
-
-            // ==================== Paso 2: Ruta ====================
-            pnlPaso2_Ruta = new Panel { Dock = DockStyle.Fill, Visible = false };
-
-            lblTituloP2 = new Label
-            {
-                Text = "Directorio de Instalación",
-                Font = new Font("Segoe UI", 13f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(15, 23, 42),
-                Location = new Point(10, 10),
-                AutoSize = true
-            };
-
-            lblDescP2 = new Label
-            {
-                Text = "Seleccione la carpeta donde se copiarán los ejecutables, librerías y componentes del sistema.",
-                Font = new Font("Segoe UI", 9.5f),
-                ForeColor = Color.FromArgb(71, 85, 105),
-                Location = new Point(12, 45),
-                AutoSize = true
-            };
-
-            lblRuta = new Label
-            {
-                Text = "Ruta de Destino:",
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(51, 65, 85),
-                Location = new Point(12, 90),
-                AutoSize = true
-            };
-
-            txtRutaInstalacion = new TextBox
-            {
-                Location = new Point(15, 115),
-                Size = new Size(530, 29),
-                Font = new Font("Segoe UI", 10f),
-                BackColor = Color.White
-            };
-            txtRutaInstalacion.TextChanged += TxtRutaInstalacion_TextChanged;
-
-            btnExaminarRuta = new Button
-            {
-                Text = "Examinar...",
-                Size = new Size(115, 30),
-                Location = new Point(555, 114),
-                Font = new Font("Segoe UI", 9.5f),
-                BackColor = Color.White,
-                ForeColor = Color.FromArgb(51, 65, 85),
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            btnExaminarRuta.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
-            btnExaminarRuta.Click += BtnExaminarRuta_Click;
-
-            chkCrearAccesoDirecto = new CheckBox
-            {
-                Text = "Crear acceso directo en el Escritorio",
-                Checked = true,
-                Font = new Font("Segoe UI", 9.5f),
-                ForeColor = Color.FromArgb(30, 41, 59),
-                Location = new Point(15, 165),
-                AutoSize = true
-            };
-
-            lblAvisoInstalacionPreviaP2 = new Label
-            {
-                Text = "Se detectó una instalación existente en esta carpeta. Se procederá con la REINSTALACIÓN.",
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(194, 65, 12),
-                BackColor = Color.FromArgb(254, 243, 199),
-                Padding = new Padding(10, 8, 10, 8),
-                Location = new Point(15, 210),
-                Size = new Size(655, 40),
-                Visible = false
-            };
-
-            pnlPaso2_Ruta.Controls.Add(lblTituloP2);
-            pnlPaso2_Ruta.Controls.Add(lblDescP2);
-            pnlPaso2_Ruta.Controls.Add(lblRuta);
-            pnlPaso2_Ruta.Controls.Add(txtRutaInstalacion);
-            pnlPaso2_Ruta.Controls.Add(btnExaminarRuta);
-            pnlPaso2_Ruta.Controls.Add(chkCrearAccesoDirecto);
-            pnlPaso2_Ruta.Controls.Add(lblAvisoInstalacionPreviaP2);
-
-            // ==================== Paso 3: Base de Datos ====================
-            pnlPaso3_BaseDatos = new Panel { Dock = DockStyle.Fill, Visible = false };
-
-            lblTituloP3 = new Label
-            {
-                Text = "Paso 3 de 5: Configuración de Base de datos",
-                Font = new Font("Segoe UI", 13f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(15, 23, 42),
-                Location = new Point(10, 10),
-                AutoSize = true
-            };
-
-            lblDescP3 = new Label
-            {
-                Text = "",
-                Font = new Font("Segoe UI", 9.5f),
-                ForeColor = Color.FromArgb(71, 85, 105),
-                Location = new Point(12, 40),
-                AutoSize = true,
-                Visible = false
-            };
-
-            lblServidor = new Label
-            {
-                Text = "Instancia de SQL Server:",
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(51, 65, 85),
-                Location = new Point(12, 75),
-                AutoSize = true
-            };
-
-            cboServidor = new ComboBox
-            {
-                Location = new Point(15, 100),
-                Size = new Size(390, 29),
-                Font = new Font("Segoe UI", 10f),
-                DropDownStyle = ComboBoxStyle.DropDown
-            };
-            cboServidor.Items.AddRange(new object[] { ".", @".\SQLEXPRESS", "localhost", @"(LocalDB)\MSSQLLocalDB" });
-            cboServidor.SelectedIndex = 0;
-
-            btnProbarConexion = new Button
-            {
-                Text = "Probar Conexión",
-                Size = new Size(160, 30),
-                Location = new Point(415, 99),
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-                BackColor = Color.FromArgb(241, 245, 249),
-                ForeColor = Color.FromArgb(30, 58, 138),
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            btnProbarConexion.FlatAppearance.BorderColor = Color.FromArgb(147, 197, 253);
-            btnProbarConexion.Click += BtnProbarConexion_Click;
-
-            rdoAuthWindows = new RadioButton
-            {
-                Text = "Autenticación Integrada de Windows (Recomendada)",
-                Checked = true,
-                Font = new Font("Segoe UI", 9.5f),
-                Location = new Point(15, 140),
-                AutoSize = true
-            };
-            rdoAuthWindows.CheckedChanged += RdoAuth_CheckedChanged;
-
-            rdoAuthSql = new RadioButton
-            {
-                Text = "Autenticación SQL Server (sa / contraseña)",
-                Font = new Font("Segoe UI", 9.5f),
-                Location = new Point(370, 140),
-                AutoSize = true
-            };
-            rdoAuthSql.CheckedChanged += RdoAuth_CheckedChanged;
-
-            lblUsuarioSql = new Label
-            {
-                Text = "Usuario:",
-                Location = new Point(370, 175),
-                AutoSize = true,
-                Enabled = false
-            };
-            txtUsuarioSql = new TextBox
-            {
-                Text = "sa",
-                Location = new Point(435, 172),
-                Size = new Size(100, 25),
-                Enabled = false
-            };
-
-            lblClaveSql = new Label
-            {
-                Text = "Clave:",
-                Location = new Point(545, 175),
-                AutoSize = true,
-                Enabled = false
-            };
-            txtClaveSql = new TextBox
-            {
-                PasswordChar = '●',
-                Location = new Point(590, 172),
-                Size = new Size(95, 25),
-                Enabled = false
-            };
-
-            chkInstalarBD = new CheckBox
-            {
-                Text = "Ejecutar script SQL maestro para inicializar el catálogo de datos",
-                Checked = true,
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(30, 41, 59),
-                Location = new Point(15, 215),
-                AutoSize = true
-            };
-
-            // Selector de modo de reinstalación de base de datos
-            grpModoBDReinstalacion = new GroupBox
-            {
-                Text = " SE DETECTO UNA BASE DE DATOS EXISTENTE EN ESTE SERVIDOR ",
-                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(194, 65, 12),
-                Location = new Point(15, 245),
-                Size = new Size(670, 85),
-                Visible = false
-            };
-
-            rdoConservarBD = new RadioButton
-            {
-                Text = "Conservar datos existentes y reparar/sellar integridad",
-                Checked = true,
-                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(15, 23, 42),
-                Location = new Point(15, 25),
-                AutoSize = true
-            };
-
-            rdoRecrearBD = new RadioButton
-            {
-                Text = "Recrear base de datos desde cero",
-                Font = new Font("Segoe UI", 9f, FontStyle.Regular),
-                ForeColor = Color.FromArgb(185, 28, 28),
-                Location = new Point(15, 52),
-                AutoSize = true
-            };
-
-            grpModoBDReinstalacion.Controls.Add(rdoConservarBD);
-            grpModoBDReinstalacion.Controls.Add(rdoRecrearBD);
-
-            chkSellarDV = new CheckBox
-            {
-                Text = "Calcular y sellar Dígitos Verificadores de integridad (si la solución lo implementa)",
-                Checked = true,
-                Font = new Font("Segoe UI", 9.5f),
-                ForeColor = Color.FromArgb(30, 41, 59),
-                Location = new Point(15, 335),
-                AutoSize = true
-            };
-
-            pnlPaso3_BaseDatos.Controls.Add(lblTituloP3);
-            pnlPaso3_BaseDatos.Controls.Add(lblDescP3);
-            pnlPaso3_BaseDatos.Controls.Add(lblServidor);
-            pnlPaso3_BaseDatos.Controls.Add(cboServidor);
-            pnlPaso3_BaseDatos.Controls.Add(btnProbarConexion);
-            pnlPaso3_BaseDatos.Controls.Add(rdoAuthWindows);
-            pnlPaso3_BaseDatos.Controls.Add(rdoAuthSql);
-            pnlPaso3_BaseDatos.Controls.Add(lblUsuarioSql);
-            pnlPaso3_BaseDatos.Controls.Add(txtUsuarioSql);
-            pnlPaso3_BaseDatos.Controls.Add(lblClaveSql);
-            pnlPaso3_BaseDatos.Controls.Add(txtClaveSql);
-            pnlPaso3_BaseDatos.Controls.Add(chkInstalarBD);
-            pnlPaso3_BaseDatos.Controls.Add(grpModoBDReinstalacion);
-            pnlPaso3_BaseDatos.Controls.Add(chkSellarDV);
-
-            // ==================== Paso 4: Progreso ====================
-            pnlPaso4_Progreso = new Panel { Dock = DockStyle.Fill, Visible = false };
-
-            lblTituloP4 = new Label
-            {
-                Text = "Instalando / Actualizando Componentes...",
-                Font = new Font("Segoe UI", 13f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(15, 23, 42),
-                Location = new Point(10, 10),
-                AutoSize = true
-            };
-
-            lblEstadoP4 = new Label
-            {
-                Text = "Preparando archivos...",
-                Font = new Font("Segoe UI", 9.5f),
-                ForeColor = Color.FromArgb(71, 85, 105),
-                Location = new Point(12, 45),
-                AutoSize = true
-            };
-
-            progressBar = new ProgressBar
-            {
-                Location = new Point(15, 75),
-                Size = new Size(660, 24),
-                Style = ProgressBarStyle.Continuous
-            };
-
-            txtLog = new TextBox
-            {
-                Location = new Point(15, 115),
-                Size = new Size(660, 250),
-                Multiline = true,
-                ReadOnly = true,
-                ScrollBars = ScrollBars.Vertical,
-                BackColor = Color.FromArgb(15, 23, 42),
-                ForeColor = Color.FromArgb(241, 245, 249),
-                Font = new Font("Consolas", 8.8f)
-            };
-
-            pnlPaso4_Progreso.Controls.Add(lblTituloP4);
-            pnlPaso4_Progreso.Controls.Add(lblEstadoP4);
-            pnlPaso4_Progreso.Controls.Add(progressBar);
-            pnlPaso4_Progreso.Controls.Add(txtLog);
-
-            // ==================== Paso 5: Finalizado ====================
-            pnlPaso5_Finalizado = new Panel { Dock = DockStyle.Fill, Visible = false };
-
-            lblTituloP5 = new Label
-            {
-                Text = "¡Instalación Finalizada con Éxito!",
-                Font = new Font("Segoe UI", 14f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(16, 185, 129),
-                Location = new Point(10, 20),
-                AutoSize = true
-            };
-
-            lblDescP5 = new Label
-            {
-                Text = "El sistema ha sido instalado y configurado correctamente en su computadora.\nLa base de datos fue conectada y verificada de manera satisfactoria.",
-                Font = new Font("Segoe UI", 10f),
-                ForeColor = Color.FromArgb(51, 65, 85),
-                Location = new Point(12, 65),
-                AutoSize = true
-            };
-
-            chkIniciarApp = new CheckBox
-            {
-                Text = "Iniciar la aplicación ahora",
-                Checked = true,
-                Font = new Font("Segoe UI", 10.5f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(30, 41, 59),
-                Location = new Point(15, 130),
-                AutoSize = true
-            };
-
-            pnlPaso5_Finalizado.Controls.Add(lblTituloP5);
-            pnlPaso5_Finalizado.Controls.Add(lblDescP5);
-            pnlPaso5_Finalizado.Controls.Add(chkIniciarApp);
-
-            // ==================== Agregar Pasos al Contenedor ====================
+            pnlBottom.Controls.Add(btnAnterior);
+            pnlBottom.Controls.Add(btnCancelar);
+            pnlBottom.Dock = DockStyle.Bottom;
+            pnlBottom.Location = new Point(0, 496);
+            pnlBottom.Name = "pnlBottom";
+            pnlBottom.Size = new Size(734, 55);
+            pnlBottom.TabIndex = 1;
+            // 
+            // btnSiguiente
+            // 
+            btnSiguiente.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnSiguiente.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnSiguiente.Location = new Point(606, 10);
+            btnSiguiente.Name = "btnSiguiente";
+            btnSiguiente.Size = new Size(110, 32);
+            btnSiguiente.TabIndex = 2;
+            btnSiguiente.Text = "Siguiente >";
+            btnSiguiente.UseVisualStyleBackColor = true;
+            btnSiguiente.Click += BtnSiguiente_Click;
+            // 
+            // btnAnterior
+            // 
+            btnAnterior.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnAnterior.Enabled = false;
+            btnAnterior.Location = new Point(495, 10);
+            btnAnterior.Name = "btnAnterior";
+            btnAnterior.Size = new Size(105, 32);
+            btnAnterior.TabIndex = 1;
+            btnAnterior.Text = "< Anterior";
+            btnAnterior.UseVisualStyleBackColor = true;
+            btnAnterior.Click += BtnAnterior_Click;
+            // 
+            // btnCancelar
+            // 
+            btnCancelar.Location = new Point(20, 10);
+            btnCancelar.Name = "btnCancelar";
+            btnCancelar.Size = new Size(95, 32);
+            btnCancelar.TabIndex = 0;
+            btnCancelar.Text = "Cancelar";
+            btnCancelar.UseVisualStyleBackColor = true;
+            btnCancelar.Click += BtnCancelar_Click;
+            // 
+            // pnlContent
+            // 
             pnlContent.Controls.Add(pnlPaso1_Bienvenida);
             pnlContent.Controls.Add(pnlPaso2_Ruta);
             pnlContent.Controls.Add(pnlPaso3_BaseDatos);
             pnlContent.Controls.Add(pnlPaso4_Progreso);
             pnlContent.Controls.Add(pnlPaso5_Finalizado);
-
-            // ==================== Estructura del Form ====================
+            pnlContent.Dock = DockStyle.Fill;
+            pnlContent.Location = new Point(0, 75);
+            pnlContent.Name = "pnlContent";
+            pnlContent.Padding = new Padding(15);
+            pnlContent.Size = new Size(734, 421);
+            pnlContent.TabIndex = 2;
+            // 
+            // pnlPaso1_Bienvenida
+            // 
+            pnlPaso1_Bienvenida.Controls.Add(grpInfoP1);
+            pnlPaso1_Bienvenida.Controls.Add(lblAvisoModoP1);
+            pnlPaso1_Bienvenida.Controls.Add(lblDescP1);
+            pnlPaso1_Bienvenida.Controls.Add(lblTituloP1);
+            pnlPaso1_Bienvenida.Dock = DockStyle.Fill;
+            pnlPaso1_Bienvenida.Location = new Point(15, 15);
+            pnlPaso1_Bienvenida.Name = "pnlPaso1_Bienvenida";
+            pnlPaso1_Bienvenida.Size = new Size(704, 391);
+            pnlPaso1_Bienvenida.TabIndex = 0;
+            // 
+            // grpInfoP1
+            // 
+            grpInfoP1.Controls.Add(lblInfoBD);
+            grpInfoP1.Controls.Add(lblInfoApp);
+            grpInfoP1.Location = new Point(12, 115);
+            grpInfoP1.Name = "grpInfoP1";
+            grpInfoP1.Size = new Size(680, 200);
+            grpInfoP1.TabIndex = 3;
+            grpInfoP1.TabStop = false;
+            grpInfoP1.Text = "Solución";
+            // 
+            // lblInfoBD
+            // 
+            lblInfoBD.AutoSize = true;
+            lblInfoBD.Location = new Point(20, 65);
+            lblInfoBD.Name = "lblInfoBD";
+            lblInfoBD.Size = new Size(147, 15);
+            lblInfoBD.TabIndex = 1;
+            lblInfoBD.Text = "Base de Datos: Cargando...";
+            // 
+            // lblInfoApp
+            // 
+            lblInfoApp.AutoSize = true;
+            lblInfoApp.Location = new Point(20, 30);
+            lblInfoApp.Name = "lblInfoApp";
+            lblInfoApp.Size = new Size(179, 15);
+            lblInfoApp.TabIndex = 0;
+            lblInfoApp.Text = "Aplicacion Principal: Cargando...";
+            // 
+            // lblAvisoModoP1
+            // 
+            lblAvisoModoP1.AutoSize = true;
+            lblAvisoModoP1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblAvisoModoP1.Location = new Point(12, 85);
+            lblAvisoModoP1.Name = "lblAvisoModoP1";
+            lblAvisoModoP1.Size = new Size(262, 15);
+            lblAvisoModoP1.TabIndex = 2;
+            lblAvisoModoP1.Text = "Modo de Instalacioninicial listo para comenzar.";
+            // 
+            // lblDescP1
+            // 
+            lblDescP1.AutoSize = true;
+            lblDescP1.Location = new Point(12, 40);
+            lblDescP1.Name = "lblDescP1";
+            lblDescP1.Size = new Size(284, 15);
+            lblDescP1.TabIndex = 1;
+            lblDescP1.Text = "Este asistente intalara los componentes en su equipo";
+            lblDescP1.Click += lblDescP1_Click;
+            // 
+            // lblTituloP1
+            // 
+            lblTituloP1.AutoSize = true;
+            lblTituloP1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblTituloP1.Location = new Point(10, 10);
+            lblTituloP1.Name = "lblTituloP1";
+            lblTituloP1.Size = new Size(322, 21);
+            lblTituloP1.TabIndex = 0;
+            lblTituloP1.Text = "Bienvenido al Instalador de la Aplicación";
+            // 
+            // pnlPaso2_Ruta
+            // 
+            pnlPaso2_Ruta.Controls.Add(lblAvisoInstalacionPreviaP2);
+            pnlPaso2_Ruta.Controls.Add(chkCrearAccesoDirecto);
+            pnlPaso2_Ruta.Controls.Add(btnExaminarRuta);
+            pnlPaso2_Ruta.Controls.Add(txtRutaInstalacion);
+            pnlPaso2_Ruta.Controls.Add(lblRuta);
+            pnlPaso2_Ruta.Controls.Add(lblDescP2);
+            pnlPaso2_Ruta.Controls.Add(lblTituloP2);
+            pnlPaso2_Ruta.Dock = DockStyle.Fill;
+            pnlPaso2_Ruta.Location = new Point(15, 15);
+            pnlPaso2_Ruta.Name = "pnlPaso2_Ruta";
+            pnlPaso2_Ruta.Size = new Size(704, 391);
+            pnlPaso2_Ruta.TabIndex = 1;
+            pnlPaso2_Ruta.Visible = false;
+            // 
+            // lblAvisoInstalacionPreviaP2
+            // 
+            lblAvisoInstalacionPreviaP2.AutoSize = true;
+            lblAvisoInstalacionPreviaP2.Font = new Font("Segoe UI", 8.5F, FontStyle.Italic);
+            lblAvisoInstalacionPreviaP2.Location = new Point(12, 175);
+            lblAvisoInstalacionPreviaP2.Name = "lblAvisoInstalacionPreviaP2";
+            lblAvisoInstalacionPreviaP2.Size = new Size(424, 15);
+            lblAvisoInstalacionPreviaP2.TabIndex = 6;
+            lblAvisoInstalacionPreviaP2.Text = "(Se detectó una versión previa en esta carpeta. Los binarios serán actualizados).";
+            lblAvisoInstalacionPreviaP2.Visible = false;
+            // 
+            // chkCrearAccesoDirecto
+            // 
+            chkCrearAccesoDirecto.AutoSize = true;
+            chkCrearAccesoDirecto.Checked = true;
+            chkCrearAccesoDirecto.CheckState = CheckState.Checked;
+            chkCrearAccesoDirecto.Location = new Point(15, 140);
+            chkCrearAccesoDirecto.Name = "chkCrearAccesoDirecto";
+            chkCrearAccesoDirecto.Size = new Size(213, 19);
+            chkCrearAccesoDirecto.TabIndex = 5;
+            chkCrearAccesoDirecto.Text = "Crear acceso directo en el Escritorio";
+            chkCrearAccesoDirecto.UseVisualStyleBackColor = true;
+            // 
+            // btnExaminarRuta
+            // 
+            btnExaminarRuta.Location = new Point(585, 93);
+            btnExaminarRuta.Name = "btnExaminarRuta";
+            btnExaminarRuta.Size = new Size(100, 26);
+            btnExaminarRuta.TabIndex = 4;
+            btnExaminarRuta.Text = "Examinar...";
+            btnExaminarRuta.UseVisualStyleBackColor = true;
+            btnExaminarRuta.Click += BtnExaminarRuta_Click;
+            // 
+            // txtRutaInstalacion
+            // 
+            txtRutaInstalacion.Location = new Point(15, 95);
+            txtRutaInstalacion.Name = "txtRutaInstalacion";
+            txtRutaInstalacion.Size = new Size(560, 23);
+            txtRutaInstalacion.TabIndex = 3;
+            txtRutaInstalacion.TextChanged += TxtRutaInstalacion_TextChanged;
+            // 
+            // lblRuta
+            // 
+            lblRuta.AutoSize = true;
+            lblRuta.Location = new Point(12, 75);
+            lblRuta.Name = "lblRuta";
+            lblRuta.Size = new Size(110, 15);
+            lblRuta.TabIndex = 2;
+            lblRuta.Text = "Ruta de Instalación:";
+            // 
+            // lblDescP2
+            // 
+            lblDescP2.AutoSize = true;
+            lblDescP2.Location = new Point(12, 40);
+            lblDescP2.Name = "lblDescP2";
+            lblDescP2.Size = new Size(421, 15);
+            lblDescP2.TabIndex = 1;
+            lblDescP2.Text = "Seleccione el directorio donde se copiarán los archivos ejecutables del sistema:";
+            // 
+            // lblTituloP2
+            // 
+            lblTituloP2.AutoSize = true;
+            lblTituloP2.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblTituloP2.Location = new Point(10, 10);
+            lblTituloP2.Name = "lblTituloP2";
+            lblTituloP2.Size = new Size(254, 21);
+            lblTituloP2.TabIndex = 0;
+            lblTituloP2.Text = "Carpeta de Destino en el Equipo";
+            // 
+            // pnlPaso3_BaseDatos
+            // 
+            pnlPaso3_BaseDatos.Controls.Add(chkSellarDV);
+            pnlPaso3_BaseDatos.Controls.Add(grpModoBDReinstalacion);
+            pnlPaso3_BaseDatos.Controls.Add(chkInstalarBD);
+            pnlPaso3_BaseDatos.Controls.Add(txtClaveSql);
+            pnlPaso3_BaseDatos.Controls.Add(lblClaveSql);
+            pnlPaso3_BaseDatos.Controls.Add(txtUsuarioSql);
+            pnlPaso3_BaseDatos.Controls.Add(lblUsuarioSql);
+            pnlPaso3_BaseDatos.Controls.Add(rdoAuthSql);
+            pnlPaso3_BaseDatos.Controls.Add(rdoAuthWindows);
+            pnlPaso3_BaseDatos.Controls.Add(btnProbarConexion);
+            pnlPaso3_BaseDatos.Controls.Add(cboServidor);
+            pnlPaso3_BaseDatos.Controls.Add(lblServidor);
+            pnlPaso3_BaseDatos.Controls.Add(lblDescP3);
+            pnlPaso3_BaseDatos.Controls.Add(lblTituloP3);
+            pnlPaso3_BaseDatos.Dock = DockStyle.Fill;
+            pnlPaso3_BaseDatos.Location = new Point(15, 15);
+            pnlPaso3_BaseDatos.Name = "pnlPaso3_BaseDatos";
+            pnlPaso3_BaseDatos.Size = new Size(704, 391);
+            pnlPaso3_BaseDatos.TabIndex = 2;
+            pnlPaso3_BaseDatos.Visible = false;
+            // 
+            // chkSellarDV
+            // 
+            chkSellarDV.AutoSize = true;
+            chkSellarDV.Checked = true;
+            chkSellarDV.CheckState = CheckState.Checked;
+            chkSellarDV.Location = new Point(15, 330);
+            chkSellarDV.Name = "chkSellarDV";
+            chkSellarDV.Size = new Size(353, 19);
+            chkSellarDV.TabIndex = 13;
+            chkSellarDV.Text = "Recalcular y sellar Dígitos Verificadores (DVH / DVV) al finalizar";
+            chkSellarDV.UseVisualStyleBackColor = true;
+            // 
+            // grpModoBDReinstalacion
+            // 
+            grpModoBDReinstalacion.Controls.Add(rdoRecrearBD);
+            grpModoBDReinstalacion.Controls.Add(rdoConservarBD);
+            grpModoBDReinstalacion.Location = new Point(15, 235);
+            grpModoBDReinstalacion.Name = "grpModoBDReinstalacion";
+            grpModoBDReinstalacion.Size = new Size(660, 80);
+            grpModoBDReinstalacion.TabIndex = 12;
+            grpModoBDReinstalacion.TabStop = false;
+            grpModoBDReinstalacion.Text = "Comportamiento ante Base de Datos Existente (Reinstalación)";
+            grpModoBDReinstalacion.Visible = false;
+            // 
+            // rdoRecrearBD
+            // 
+            rdoRecrearBD.AutoSize = true;
+            rdoRecrearBD.Location = new Point(15, 50);
+            rdoRecrearBD.Name = "rdoRecrearBD";
+            rdoRecrearBD.Size = new Size(449, 19);
+            rdoRecrearBD.TabIndex = 1;
+            rdoRecrearBD.Text = "Restablecimiento de fábrica: eliminar y volver a crear desde cero la base de datos";
+            rdoRecrearBD.UseVisualStyleBackColor = true;
+            // 
+            // rdoConservarBD
+            // 
+            rdoConservarBD.AutoSize = true;
+            rdoConservarBD.Checked = true;
+            rdoConservarBD.Location = new Point(15, 25);
+            rdoConservarBD.Name = "rdoConservarBD";
+            rdoConservarBD.Size = new Size(428, 19);
+            rdoConservarBD.TabIndex = 0;
+            rdoConservarBD.TabStop = true;
+            rdoConservarBD.Text = "Conservar datos existentes (solo actualiza estructuras sin borrar información)";
+            rdoConservarBD.UseVisualStyleBackColor = true;
+            // 
+            // chkInstalarBD
+            // 
+            chkInstalarBD.AutoSize = true;
+            chkInstalarBD.Checked = true;
+            chkInstalarBD.CheckState = CheckState.Checked;
+            chkInstalarBD.Location = new Point(15, 205);
+            chkInstalarBD.Name = "chkInstalarBD";
+            chkInstalarBD.Size = new Size(359, 19);
+            chkInstalarBD.TabIndex = 11;
+            chkInstalarBD.Text = "Crear o actualizar la base de datos automáticamente (script.sql)";
+            chkInstalarBD.UseVisualStyleBackColor = true;
+            // 
+            // txtClaveSql
+            // 
+            txtClaveSql.Enabled = false;
+            txtClaveSql.Location = new Point(310, 165);
+            txtClaveSql.Name = "txtClaveSql";
+            txtClaveSql.PasswordChar = '*';
+            txtClaveSql.Size = new Size(150, 23);
+            txtClaveSql.TabIndex = 10;
+            // 
+            // lblClaveSql
+            // 
+            lblClaveSql.AutoSize = true;
+            lblClaveSql.Enabled = false;
+            lblClaveSql.Location = new Point(265, 168);
+            lblClaveSql.Name = "lblClaveSql";
+            lblClaveSql.Size = new Size(39, 15);
+            lblClaveSql.TabIndex = 9;
+            lblClaveSql.Text = "Clave:";
+            // 
+            // txtUsuarioSql
+            // 
+            txtUsuarioSql.Enabled = false;
+            txtUsuarioSql.Location = new Point(95, 165);
+            txtUsuarioSql.Name = "txtUsuarioSql";
+            txtUsuarioSql.Size = new Size(150, 23);
+            txtUsuarioSql.TabIndex = 8;
+            txtUsuarioSql.Text = "sa";
+            // 
+            // lblUsuarioSql
+            // 
+            lblUsuarioSql.AutoSize = true;
+            lblUsuarioSql.Enabled = false;
+            lblUsuarioSql.Location = new Point(35, 168);
+            lblUsuarioSql.Name = "lblUsuarioSql";
+            lblUsuarioSql.Size = new Size(50, 15);
+            lblUsuarioSql.TabIndex = 7;
+            lblUsuarioSql.Text = "Usuario:";
+            // 
+            // rdoAuthSql
+            // 
+            rdoAuthSql.AutoSize = true;
+            rdoAuthSql.Location = new Point(15, 140);
+            rdoAuthSql.Name = "rdoAuthSql";
+            rdoAuthSql.Size = new Size(174, 19);
+            rdoAuthSql.TabIndex = 6;
+            rdoAuthSql.Text = "Autenticación de SQL Server";
+            rdoAuthSql.UseVisualStyleBackColor = true;
+            rdoAuthSql.CheckedChanged += RdoAuth_CheckedChanged;
+            // 
+            // rdoAuthWindows
+            // 
+            rdoAuthWindows.AutoSize = true;
+            rdoAuthWindows.Checked = true;
+            rdoAuthWindows.Location = new Point(15, 115);
+            rdoAuthWindows.Name = "rdoAuthWindows";
+            rdoAuthWindows.Size = new Size(254, 19);
+            rdoAuthWindows.TabIndex = 5;
+            rdoAuthWindows.TabStop = true;
+            rdoAuthWindows.Text = "Autenticación de Windows (Recomendada)";
+            rdoAuthWindows.UseVisualStyleBackColor = true;
+            rdoAuthWindows.CheckedChanged += RdoAuth_CheckedChanged;
+            // 
+            // btnProbarConexion
+            // 
+            btnProbarConexion.Location = new Point(345, 78);
+            btnProbarConexion.Name = "btnProbarConexion";
+            btnProbarConexion.Size = new Size(125, 26);
+            btnProbarConexion.TabIndex = 4;
+            btnProbarConexion.Text = "Probar Conexión";
+            btnProbarConexion.UseVisualStyleBackColor = true;
+            btnProbarConexion.Click += BtnProbarConexion_Click;
+            // 
+            // cboServidor
+            // 
+            cboServidor.FormattingEnabled = true;
+            cboServidor.Items.AddRange(new object[] { ".", ".\\SQLEXPRESS", "localhost", "(LocalDB)\\MSSQLLocalDB" });
+            cboServidor.Location = new Point(15, 80);
+            cboServidor.Name = "cboServidor";
+            cboServidor.Size = new Size(320, 23);
+            cboServidor.TabIndex = 3;
+            cboServidor.SelectedIndexChanged += CboServidor_SelectedIndexChanged;
+            cboServidor.TextChanged += CboServidor_TextChanged;
+            // 
+            // lblServidor
+            // 
+            lblServidor.AutoSize = true;
+            lblServidor.Location = new Point(12, 60);
+            lblServidor.Name = "lblServidor";
+            lblServidor.Size = new Size(116, 15);
+            lblServidor.TabIndex = 2;
+            lblServidor.Text = "Instancia SQL Server:";
+            // 
+            // lblDescP3
+            // 
+            lblDescP3.AutoSize = true;
+            lblDescP3.Location = new Point(12, 35);
+            lblDescP3.Name = "lblDescP3";
+            lblDescP3.Size = new Size(429, 15);
+            lblDescP3.TabIndex = 1;
+            lblDescP3.Text = "Indique la instancia de SQL Server donde se creará o actualizará la base de datos:";
+            // 
+            // lblTituloP3
+            // 
+            lblTituloP3.AutoSize = true;
+            lblTituloP3.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblTituloP3.Location = new Point(10, 10);
+            lblTituloP3.Name = "lblTituloP3";
+            lblTituloP3.Size = new Size(302, 21);
+            lblTituloP3.TabIndex = 0;
+            lblTituloP3.Text = "Configuración del Servidor SQL Server";
+            // 
+            // pnlPaso4_Progreso
+            // 
+            pnlPaso4_Progreso.Controls.Add(txtLog);
+            pnlPaso4_Progreso.Controls.Add(progressBar);
+            pnlPaso4_Progreso.Controls.Add(lblEstadoP4);
+            pnlPaso4_Progreso.Controls.Add(lblTituloP4);
+            pnlPaso4_Progreso.Dock = DockStyle.Fill;
+            pnlPaso4_Progreso.Location = new Point(15, 15);
+            pnlPaso4_Progreso.Name = "pnlPaso4_Progreso";
+            pnlPaso4_Progreso.Size = new Size(704, 391);
+            pnlPaso4_Progreso.TabIndex = 3;
+            pnlPaso4_Progreso.Visible = false;
+            // 
+            // txtLog
+            // 
+            txtLog.Font = new Font("Consolas", 9F);
+            txtLog.Location = new Point(15, 100);
+            txtLog.Multiline = true;
+            txtLog.Name = "txtLog";
+            txtLog.ReadOnly = true;
+            txtLog.ScrollBars = ScrollBars.Vertical;
+            txtLog.Size = new Size(670, 260);
+            txtLog.TabIndex = 3;
+            // 
+            // progressBar
+            // 
+            progressBar.Location = new Point(15, 65);
+            progressBar.Name = "progressBar";
+            progressBar.Size = new Size(670, 23);
+            progressBar.TabIndex = 2;
+            // 
+            // lblEstadoP4
+            // 
+            lblEstadoP4.AutoSize = true;
+            lblEstadoP4.Location = new Point(12, 40);
+            lblEstadoP4.Name = "lblEstadoP4";
+            lblEstadoP4.Size = new Size(124, 15);
+            lblEstadoP4.TabIndex = 1;
+            lblEstadoP4.Text = "Preparando archivos...";
+            // 
+            // lblTituloP4
+            // 
+            lblTituloP4.AutoSize = true;
+            lblTituloP4.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblTituloP4.Location = new Point(10, 10);
+            lblTituloP4.Name = "lblTituloP4";
+            lblTituloP4.Size = new Size(226, 21);
+            lblTituloP4.TabIndex = 0;
+            lblTituloP4.Text = "Instalando y Configurando...";
+            // 
+            // pnlPaso5_Finalizado
+            // 
+            pnlPaso5_Finalizado.Controls.Add(chkIniciarApp);
+            pnlPaso5_Finalizado.Controls.Add(lblDescP5);
+            pnlPaso5_Finalizado.Controls.Add(lblTituloP5);
+            pnlPaso5_Finalizado.Dock = DockStyle.Fill;
+            pnlPaso5_Finalizado.Location = new Point(15, 15);
+            pnlPaso5_Finalizado.Name = "pnlPaso5_Finalizado";
+            pnlPaso5_Finalizado.Size = new Size(704, 391);
+            pnlPaso5_Finalizado.TabIndex = 4;
+            pnlPaso5_Finalizado.Visible = false;
+            // 
+            // chkIniciarApp
+            // 
+            chkIniciarApp.AutoSize = true;
+            chkIniciarApp.Checked = true;
+            chkIniciarApp.CheckState = CheckState.Checked;
+            chkIniciarApp.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            chkIniciarApp.Location = new Point(15, 110);
+            chkIniciarApp.Name = "chkIniciarApp";
+            chkIniciarApp.Size = new Size(185, 21);
+            chkIniciarApp.TabIndex = 2;
+            chkIniciarApp.Text = "Iniciar la aplicación ahora";
+            chkIniciarApp.UseVisualStyleBackColor = true;
+            // 
+            // lblDescP5
+            // 
+            lblDescP5.AutoSize = true;
+            lblDescP5.Location = new Point(12, 55);
+            lblDescP5.Name = "lblDescP5";
+            lblDescP5.Size = new Size(417, 30);
+            lblDescP5.TabIndex = 1;
+            lblDescP5.Text = "El sistema ha sido instalado y configurado correctamente en su computadora.\r\nLa base de datos fue conectada y verificada de manera satisfactoria.";
+            // 
+            // lblTituloP5
+            // 
+            lblTituloP5.AutoSize = true;
+            lblTituloP5.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+            lblTituloP5.Location = new Point(10, 15);
+            lblTituloP5.Name = "lblTituloP5";
+            lblTituloP5.Size = new Size(291, 25);
+            lblTituloP5.TabIndex = 0;
+            lblTituloP5.Text = "¡Instalación Finalizada con Éxito!";
+            // 
+            // FrmUniversalSetup
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(734, 551);
             Controls.Add(pnlContent);
             Controls.Add(pnlBottom);
             Controls.Add(pnlBanner);
+            Font = new Font("Segoe UI", 9F);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            Name = "FrmUniversalSetup";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Instalador / Reinstalador Universal .NET";
+            pnlBanner.ResumeLayout(false);
+            pnlBanner.PerformLayout();
+            pnlBottom.ResumeLayout(false);
+            pnlContent.ResumeLayout(false);
+            pnlPaso1_Bienvenida.ResumeLayout(false);
+            pnlPaso1_Bienvenida.PerformLayout();
+            grpInfoP1.ResumeLayout(false);
+            grpInfoP1.PerformLayout();
+            pnlPaso2_Ruta.ResumeLayout(false);
+            pnlPaso2_Ruta.PerformLayout();
+            pnlPaso3_BaseDatos.ResumeLayout(false);
+            pnlPaso3_BaseDatos.PerformLayout();
+            grpModoBDReinstalacion.ResumeLayout(false);
+            grpModoBDReinstalacion.PerformLayout();
+            pnlPaso4_Progreso.ResumeLayout(false);
+            pnlPaso4_Progreso.PerformLayout();
+            pnlPaso5_Finalizado.ResumeLayout(false);
+            pnlPaso5_Finalizado.PerformLayout();
+            ResumeLayout(false);
+
         }
+
+        #endregion
     }
 }

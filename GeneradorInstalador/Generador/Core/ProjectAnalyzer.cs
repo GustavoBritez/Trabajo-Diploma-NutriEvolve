@@ -20,7 +20,7 @@ namespace GeneradorInstalador.Core
             if (File.Exists(inputPath) && Path.GetExtension(inputPath).Equals(".zip", StringComparison.OrdinalIgnoreCase))
             {
                 manifest.IsZip = true;
-                string tempDir = Path.Combine(Path.GetTempPath(), "GeneradorInstalador", $"proj_{Guid.NewGuid():N}");
+                string tempDir = Path.Combine(Path.GetTempPath(), "UniversalInstallerTemp", $"proj_{Guid.NewGuid():N}");
                 Directory.CreateDirectory(tempDir);
                 logger?.Invoke($"[ANALIZADOR] Descomprimiendo archivo zip en carpeta temporal: {tempDir}...");
                 ZipFile.ExtractToDirectory(inputPath, tempDir, true);
@@ -34,53 +34,92 @@ namespace GeneradorInstalador.Core
 
             logger?.Invoke("[ANALIZADOR] Analizando estructura del proyecto .NET...");
 
-            // 1. Buscar solución (.sln)
-            var slnFiles = Directory.GetFiles(workDir, "*.sln", SearchOption.AllDirectories);
-            if (slnFiles.Length > 0)
+            // Helper para comprobar si una ruta pertenece a herramientas auxiliares/generador/scratch
+            bool EsRutaIgnorada(string fullPath)
             {
-                manifest.SolutionPath = slnFiles[0];
-                manifest.AppName = Path.GetFileNameWithoutExtension(slnFiles[0]);
-                logger?.Invoke($"[ANALIZADOR] Solución detectada: {Path.GetFileName(manifest.SolutionPath)}");
+                string fileName = Path.GetFileName(fullPath).ToLowerInvariant();
+                if (fileName == "generador.csproj" ||
+                    fileName == "universalsetup.csproj" ||
+                    fileName == "setupapp.csproj" ||
+                    fileName == "capturasapp.csproj" ||
+                    fileName == "ocr_app.csproj" ||
+                    fileName == "ea_manager.csproj" ||
+                    fileName == "testpass.csproj")
+                {
+                    return true;
+                }
+
+                string rel = Path.GetRelativePath(workDir, fullPath);
+                var parts = rel.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+                return parts.Any(part =>
+                    part.Equals("GeneradorInstalador", StringComparison.OrdinalIgnoreCase) ||
+                    part.Equals("Generador", StringComparison.OrdinalIgnoreCase) ||
+                    part.Equals("UniversalSetup", StringComparison.OrdinalIgnoreCase) ||
+                    part.Equals("Template", StringComparison.OrdinalIgnoreCase) ||
+                    part.Equals("scratch", StringComparison.OrdinalIgnoreCase) ||
+                    part.Equals("Instalador", StringComparison.OrdinalIgnoreCase) ||
+                    part.Equals("bin", StringComparison.OrdinalIgnoreCase) ||
+                    part.Equals("obj", StringComparison.OrdinalIgnoreCase) ||
+                    part.Equals(".vs", StringComparison.OrdinalIgnoreCase));
             }
 
-            // 2. Buscar proyectos .csproj
-            var csprojFiles = Directory.GetFiles(workDir, "*.csproj", SearchOption.AllDirectories)
-                .Where(p => !p.Contains("SetupApp") && !p.Contains("UniversalSetup") && !p.Contains("Generador"))
+            // 1. Buscar proyectos .csproj
+            var allCsprojFiles = Directory.GetFiles(workDir, "*.csproj", SearchOption.AllDirectories)
+                .Where(p => !EsRutaIgnorada(p))
                 .ToList();
+
+            // Si hay proyectos fuera de la carpeta 'Patrones', priorizarlos y descartar ejercicios auxiliares de Patrones
+            var nonPatronesProjects = allCsprojFiles.Where(p =>
+            {
+                string rel = Path.GetRelativePath(workDir, p);
+                var parts = rel.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+                return !parts.Any(part => part.Equals("Patrones", StringComparison.OrdinalIgnoreCase));
+            }).ToList();
+
+            var csprojFiles = nonPatronesProjects.Count > 0 ? nonPatronesProjects : allCsprojFiles;
 
             manifest.DetectedProjects = csprojFiles;
             logger?.Invoke($"[ANALIZADOR] Se encontraron {csprojFiles.Count} proyectos .csproj.");
 
-            // 3. Detectar proyecto principal ejecutable
+            // 2. Detectar proyecto principal ejecutable
             string? startupProject = null;
 
-            // Prioridad por nombre convencional
+            // Prioridad 1: Por nombre convencional
             startupProject = csprojFiles.FirstOrDefault(p =>
             {
                 string name = Path.GetFileNameWithoutExtension(p).ToLowerInvariant();
-                return name == "ui" || name == "gui" || name == "presentacion" || name == "vistas" || name == "frontend";
+                return name == "ui" || name == "gui" || name == "presentacion" || name == "vistas" || name == "frontend" || name == "main";
             });
 
-            // Si no se encuentra por nombre, buscar por <OutputType>WinExe o <OutputType>Exe
+            // Prioridad 2: Si no se encuentra por nombre, buscar por <OutputType>WinExe
             if (startupProject == null)
             {
-                foreach (var proj in csprojFiles)
+                startupProject = csprojFiles.FirstOrDefault(p =>
                 {
                     try
                     {
-                        string content = File.ReadAllText(proj);
-                        if (content.Contains("<OutputType>WinExe</OutputType>", StringComparison.OrdinalIgnoreCase) ||
-                            content.Contains("<OutputType>Exe</OutputType>", StringComparison.OrdinalIgnoreCase))
-                        {
-                            startupProject = proj;
-                            break;
-                        }
+                        string content = File.ReadAllText(p);
+                        return content.Contains("<OutputType>WinExe</OutputType>", StringComparison.OrdinalIgnoreCase);
                     }
-                    catch { }
-                }
+                    catch { return false; }
+                });
             }
 
-            // Si aún no se encuentra, usar el primer proyecto
+            // Prioridad 3: Buscar por <OutputType>Exe
+            if (startupProject == null)
+            {
+                startupProject = csprojFiles.FirstOrDefault(p =>
+                {
+                    try
+                    {
+                        string content = File.ReadAllText(p);
+                        return content.Contains("<OutputType>Exe</OutputType>", StringComparison.OrdinalIgnoreCase);
+                    }
+                    catch { return false; }
+                });
+            }
+
+            // Prioridad 4: Si aún no se encuentra, usar el primer proyecto
             if (startupProject == null && csprojFiles.Count > 0)
             {
                 startupProject = csprojFiles[0];
@@ -92,14 +131,100 @@ namespace GeneradorInstalador.Core
                 string projName = Path.GetFileNameWithoutExtension(startupProject);
                 manifest.ExeName = $"{projName}.exe";
                 manifest.TargetProcessName = projName;
-                if (string.IsNullOrWhiteSpace(manifest.AppName))
-                {
-                    manifest.AppName = projName;
-                }
                 logger?.Invoke($"[ANALIZADOR] Proyecto ejecutable detectado: {projName} ({manifest.ExeName})");
             }
 
-            // 4. Detectar capas de la arquitectura
+            // 3. Buscar solución (.sln) vinculada al proyecto principal
+            var allSlnFiles = Directory.GetFiles(workDir, "*.sln", SearchOption.AllDirectories)
+                .Where(s => !EsRutaIgnorada(s))
+                .ToList();
+
+            var nonPatronesSln = allSlnFiles.Where(s =>
+            {
+                string rel = Path.GetRelativePath(workDir, s);
+                var parts = rel.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+                return !parts.Any(part => part.Equals("Patrones", StringComparison.OrdinalIgnoreCase));
+            }).ToList();
+
+            var validSlnFiles = nonPatronesSln.Count > 0 ? nonPatronesSln : allSlnFiles;
+
+            string? chosenSln = null;
+            if (startupProject != null)
+            {
+                string startupFileName = Path.GetFileName(startupProject);
+                chosenSln = validSlnFiles.FirstOrDefault(s =>
+                {
+                    try
+                    {
+                        return File.ReadAllText(s).Contains(startupFileName, StringComparison.OrdinalIgnoreCase);
+                    }
+                    catch { return false; }
+                });
+            }
+
+            if (chosenSln == null && validSlnFiles.Count > 0)
+            {
+                chosenSln = validSlnFiles[0];
+            }
+
+            if (chosenSln != null)
+            {
+                manifest.SolutionPath = chosenSln;
+                logger?.Invoke($"[ANALIZADOR] Solución detectada: {Path.GetFileName(manifest.SolutionPath)}");
+            }
+
+            // 4. Deducir nombre amigable para la aplicación
+            string appNameCandidate = "";
+            if (!string.IsNullOrWhiteSpace(manifest.SolutionPath))
+            {
+                string slnName = Path.GetFileNameWithoutExtension(manifest.SolutionPath);
+                if (!slnName.Equals("UI", StringComparison.OrdinalIgnoreCase) &&
+                    !slnName.Equals("GUI", StringComparison.OrdinalIgnoreCase) &&
+                    !slnName.Equals("Consola", StringComparison.OrdinalIgnoreCase) &&
+                    !slnName.Equals("Console", StringComparison.OrdinalIgnoreCase))
+                {
+                    appNameCandidate = slnName;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(appNameCandidate))
+            {
+                string rawInputName = Path.GetFileNameWithoutExtension(inputPath);
+                rawInputName = Regex.Replace(rawInputName, @"-(main|master|dev|release)$", "", RegexOptions.IgnoreCase);
+                if (!string.IsNullOrWhiteSpace(rawInputName) &&
+                    !rawInputName.Contains("Generador", StringComparison.OrdinalIgnoreCase))
+                {
+                    appNameCandidate = rawInputName;
+                }
+            }
+
+            if ((string.IsNullOrWhiteSpace(appNameCandidate) || appNameCandidate.Equals("UI", StringComparison.OrdinalIgnoreCase)) && startupProject != null)
+            {
+                var dir = Directory.GetParent(startupProject);
+                while (dir != null && !dir.FullName.Equals(workDir, StringComparison.OrdinalIgnoreCase))
+                {
+                    string dirName = dir.Name;
+                    if (!dirName.Equals("UI", StringComparison.OrdinalIgnoreCase) &&
+                        !dirName.Equals("bin", StringComparison.OrdinalIgnoreCase) &&
+                        !dirName.Equals("obj", StringComparison.OrdinalIgnoreCase) &&
+                        !dirName.StartsWith("proj_", StringComparison.OrdinalIgnoreCase))
+                    {
+                        appNameCandidate = dirName;
+                        break;
+                    }
+                    dir = dir.Parent;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(appNameCandidate))
+            {
+                appNameCandidate = startupProject != null ? Path.GetFileNameWithoutExtension(startupProject) : "MiProyecto";
+            }
+
+            manifest.AppName = appNameCandidate;
+            logger?.Invoke($"[ANALIZADOR] Nombre de aplicación detectado: {manifest.AppName}");
+
+            // 5. Detectar capas de la arquitectura
             foreach (var proj in csprojFiles)
             {
                 string name = Path.GetFileNameWithoutExtension(proj).ToUpperInvariant();
@@ -109,8 +234,11 @@ namespace GeneradorInstalador.Core
                 if (name.Contains("SERVICES") || name.Contains("SERVICIOS")) manifest.HasServices = true;
             }
 
-            // 5. Detectar Dígitos Verificadores
-            var csFiles = Directory.GetFiles(workDir, "*.cs", SearchOption.AllDirectories);
+            // 6. Detectar Dígitos Verificadores
+            var csFiles = Directory.GetFiles(workDir, "*.cs", SearchOption.AllDirectories)
+                .Where(f => !EsRutaIgnorada(f))
+                .ToList();
+
             manifest.HasDigitoVerificador = csFiles.Any(f =>
             {
                 string fn = Path.GetFileName(f).ToLowerInvariant();
@@ -122,20 +250,26 @@ namespace GeneradorInstalador.Core
                 logger?.Invoke("[ANALIZADOR] Módulo de Dígitos Verificadores (DV) detectado.");
             }
 
-            // 6. Buscar archivos SQL (.sql)
+            // 7. Buscar archivos SQL (.sql)
             var sqlFiles = Directory.GetFiles(workDir, "*.sql", SearchOption.AllDirectories)
-                .Where(s => !s.Contains("bin") && !s.Contains("obj"))
+                .Where(s => !EsRutaIgnorada(s))
                 .ToList();
 
             manifest.DetectedSqlFiles = sqlFiles;
             if (sqlFiles.Count > 0)
             {
-                // Preferir "script.sql", "database.sql" o el más grande
-                var preferredSql = sqlFiles.FirstOrDefault(s => Path.GetFileName(s).Equals("script.sql", StringComparison.OrdinalIgnoreCase))
-                                ?? sqlFiles.OrderByDescending(s => new FileInfo(s).Length).First();
+                // Preferir "script.sql" en la carpeta del proyecto o el más grande
+                var preferredSql = sqlFiles.FirstOrDefault(s =>
+                {
+                    string fn = Path.GetFileName(s).ToLowerInvariant();
+                    string rel = Path.GetRelativePath(workDir, s).ToLowerInvariant();
+                    return fn == "script.sql" && (rel.Contains("ing-software") || rel.Contains("database") || rel.Contains("datos") || rel.Contains("ui"));
+                })
+                ?? sqlFiles.FirstOrDefault(s => Path.GetFileName(s).Equals("script.sql", StringComparison.OrdinalIgnoreCase))
+                ?? sqlFiles.OrderByDescending(s => new FileInfo(s).Length).First();
 
                 manifest.SelectedSqlScriptPath = preferredSql;
-                logger?.Invoke($"[ANALIZADOR] Script SQL detectado: {Path.GetFileName(preferredSql)}");
+                logger?.Invoke($"[ANALIZADOR] Script SQL detectado: {Path.GetFileName(preferredSql)} ({Path.GetRelativePath(workDir, preferredSql)})");
 
                 // Intentar deducir nombre de base de datos desde el script SQL
                 manifest.DatabaseName = DetectDatabaseNameFromSql(preferredSql);
@@ -146,9 +280,13 @@ namespace GeneradorInstalador.Core
                 manifest.DatabaseName = string.IsNullOrWhiteSpace(manifest.AppName) ? "MiBaseDatos" : $"{manifest.AppName}DB";
             }
 
-            // 7. Ruta de salida por defecto
+            // 8. Ruta de salida por defecto
             string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             string safeAppName = string.IsNullOrWhiteSpace(manifest.AppName) ? "Proyecto" : manifest.AppName;
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                safeAppName = safeAppName.Replace(c, '_');
+            }
             manifest.OutputPath = Path.Combine(desktop, "Instaladores", $"{safeAppName}_Instalador");
 
             return manifest;

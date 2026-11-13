@@ -112,7 +112,7 @@ namespace GeneradorInstalador
             ActualizarBadge(lblBadgeDv, "DÍGITOS VERIFICADORES", m.HasDigitoVerificador);
 
             lblResumenDiagnostico.Text = $"Se detectaron {m.DetectedProjects.Count} proyectos, {m.DetectedSqlFiles.Count} scripts SQL y arquitectura en capas.";
-            lblResumenDiagnostico.ForeColor = Color.FromArgb(16, 185, 129);
+            lblResumenDiagnostico.ForeColor = Color.DarkGreen;
 
             // Campos de texto
             txtNombreApp.Text = m.AppName;
@@ -147,8 +147,8 @@ namespace GeneradorInstalador
         private void ActualizarBadge(Label lbl, string nombre, bool activo)
         {
             lbl.Text = activo ? $"{nombre} [OK]" : $"{nombre} [-]";
-            lbl.BackColor = activo ? Color.FromArgb(16, 185, 129) : Color.FromArgb(226, 232, 240);
-            lbl.ForeColor = activo ? Color.White : Color.FromArgb(148, 163, 184);
+            lbl.ForeColor = activo ? Color.DarkGreen : Color.Gray;
+            lbl.BackColor = Color.Transparent;
         }
 
         private void BtnExaminarSqlManual_Click(object? sender, EventArgs e)
@@ -204,6 +204,37 @@ namespace GeneradorInstalador
             _manifestActual.RecompileWithDotnet = chkCompilarRelease.Checked;
             _manifestActual.CreateZipPackage = chkGenerarZip.Checked;
             _manifestActual.HasDigitoVerificador = chkDigitosVerificadores.Checked;
+
+            // Sincronizar proyecto principal seleccionado
+            if (cboProyectoPrincipal.SelectedItem != null)
+            {
+                string selectedName = cboProyectoPrincipal.SelectedItem.ToString()!;
+                var matchedProj = _manifestActual.DetectedProjects.Find(p => Path.GetFileName(p).Equals(selectedName, StringComparison.OrdinalIgnoreCase));
+                if (matchedProj != null)
+                {
+                    _manifestActual.StartupProjectPath = matchedProj;
+                    string projName = Path.GetFileNameWithoutExtension(matchedProj);
+                    _manifestActual.ExeName = $"{projName}.exe";
+                    _manifestActual.TargetProcessName = projName;
+                }
+            }
+
+            // Sincronizar script SQL seleccionado
+            if (cboArchivoSql.SelectedItem != null)
+            {
+                string selectedSql = cboArchivoSql.SelectedItem.ToString()!;
+                var matchedSql = _manifestActual.DetectedSqlFiles.Find(s => Path.GetFileName(s).Equals(selectedSql, StringComparison.OrdinalIgnoreCase));
+                if (matchedSql != null)
+                {
+                    _manifestActual.SelectedSqlScriptPath = matchedSql;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(_manifestActual.StartupProjectPath) || !File.Exists(_manifestActual.StartupProjectPath))
+            {
+                MessageBox.Show("No se especificó un proyecto de inicio válido para compilar. Seleccione un proyecto en 'Proyecto Principal (UI / GUI)'.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             if (string.IsNullOrWhiteSpace(_manifestActual.AppName))
             {
@@ -384,7 +415,7 @@ namespace GeneradorInstalador
             ActualizarBadge(lblBadgeSql, "SQL SCRIPT", false);
             ActualizarBadge(lblBadgeDv, "DÍGITOS VERIFICADORES", false);
             lblResumenDiagnostico.Text = "Esperando selección de archivo o carpeta...";
-            lblResumenDiagnostico.ForeColor = Color.FromArgb(100, 116, 139);
+            lblResumenDiagnostico.ForeColor = Color.Gray;
         }
     }
 }
