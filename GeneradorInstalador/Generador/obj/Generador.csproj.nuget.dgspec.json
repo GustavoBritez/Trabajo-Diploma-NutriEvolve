@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\Generador\\Generador.csproj": {}
+    "c:\\Users\\Navegador\\Desktop\\ELL\\GeneradorInstalador\\Generador\\Generador.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\Generador\\Generador.csproj": {
+    "c:\\Users\\Navegador\\Desktop\\ELL\\GeneradorInstalador\\Generador\\Generador.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\Generador\\Generador.csproj",
+        "projectUniqueName": "c:\\Users\\Navegador\\Desktop\\ELL\\GeneradorInstalador\\Generador\\Generador.csproj",
         "projectName": "GeneradorInstalador",
-        "projectPath": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\Generador\\Generador.csproj",
+        "projectPath": "c:\\Users\\Navegador\\Desktop\\ELL\\GeneradorInstalador\\Generador\\Generador.csproj",
         "packagesPath": "C:\\Users\\Navegador\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Navegador\\Desktop\\TriplePP\\GeneradorInstalador\\Generador\\obj\\",
+        "outputPath": "c:\\Users\\Navegador\\Desktop\\ELL\\GeneradorInstalador\\Generador\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -72,7 +72,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.401/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

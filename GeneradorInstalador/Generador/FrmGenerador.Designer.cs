@@ -61,6 +61,7 @@ namespace GeneradorInstalador
 
         // Barra Inferior de Acciones
         private System.Windows.Forms.Panel pnlBottom;
+        private System.Windows.Forms.Label lblCreditos;
         private System.Windows.Forms.Button btnAbrirSalida;
         private System.Windows.Forms.Button btnProbarInstalador;
         private System.Windows.Forms.Button btnLimpiar;
@@ -83,6 +84,7 @@ namespace GeneradorInstalador
             this.lblBannerSubtitle = new System.Windows.Forms.Label();
             this.lblBadgeVersion = new System.Windows.Forms.Label();
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.lblCreditos = new System.Windows.Forms.Label();
             this.btnLimpiar = new System.Windows.Forms.Button();
             this.btnProbarInstalador = new System.Windows.Forms.Button();
             this.btnAbrirSalida = new System.Windows.Forms.Button();
@@ -149,17 +151,19 @@ namespace GeneradorInstalador
             this.lblBannerTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblBannerTitle.Location = new System.Drawing.Point(15, 12);
             this.lblBannerTitle.Name = "lblBannerTitle";
-            this.lblBannerTitle.Size = new System.Drawing.Size(360, 21);
+            this.lblBannerTitle.Size = new System.Drawing.Size(165, 21);
             this.lblBannerTitle.TabIndex = 0;
-            this.lblBannerTitle.Text = "Generador Universal de Reinstaladores .NET";
+            this.lblBannerTitle.Text = "Generador R Alpha";
             // 
             // lblBannerSubtitle
             // 
-            this.lblBannerSubtitle.AutoSize = true;
+            this.lblBannerSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblBannerSubtitle.AutoEllipsis = true;
             this.lblBannerSubtitle.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblBannerSubtitle.Location = new System.Drawing.Point(17, 38);
             this.lblBannerSubtitle.Name = "lblBannerSubtitle";
-            this.lblBannerSubtitle.Size = new System.Drawing.Size(550, 15);
+            this.lblBannerSubtitle.Size = new System.Drawing.Size(715, 18);
             this.lblBannerSubtitle.TabIndex = 1;
             this.lblBannerSubtitle.Text = "Automatiza la creación de instaladores para proyectos en capas (DAL, BE, BLL, GUI + SQL Server)";
             // 
@@ -178,6 +182,7 @@ namespace GeneradorInstalador
             // pnlBottom
             // 
             this.pnlBottom.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlBottom.Controls.Add(this.lblCreditos);
             this.pnlBottom.Controls.Add(this.btnAbrirSalida);
             this.pnlBottom.Controls.Add(this.btnProbarInstalador);
             this.pnlBottom.Controls.Add(this.btnLimpiar);
@@ -186,6 +191,17 @@ namespace GeneradorInstalador
             this.pnlBottom.Name = "pnlBottom";
             this.pnlBottom.Size = new System.Drawing.Size(914, 60);
             this.pnlBottom.TabIndex = 1;
+            // 
+            // lblCreditos
+            // 
+            this.lblCreditos.AutoSize = true;
+            this.lblCreditos.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.lblCreditos.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
+            this.lblCreditos.Location = new System.Drawing.Point(210, 20);
+            this.lblCreditos.Name = "lblCreditos";
+            this.lblCreditos.Size = new System.Drawing.Size(202, 17);
+            this.lblCreditos.TabIndex = 3;
+            this.lblCreditos.Text = "Desarrollado por Codigo Mecha";
             // 
             // btnLimpiar
             // 
@@ -239,6 +255,8 @@ namespace GeneradorInstalador
             // 
             // grpEntrada
             // 
+            this.grpEntrada.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpEntrada.Controls.Add(this.lblDropHint);
             this.grpEntrada.Controls.Add(this.btnExaminarCarpeta);
             this.grpEntrada.Controls.Add(this.btnExaminarZip);
@@ -252,6 +270,8 @@ namespace GeneradorInstalador
             // 
             // txtRutaEntrada
             // 
+            this.txtRutaEntrada.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRutaEntrada.Location = new System.Drawing.Point(15, 25);
             this.txtRutaEntrada.Name = "txtRutaEntrada";
             this.txtRutaEntrada.Size = new System.Drawing.Size(550, 23);
@@ -259,6 +279,7 @@ namespace GeneradorInstalador
             // 
             // btnExaminarZip
             // 
+            this.btnExaminarZip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExaminarZip.Location = new System.Drawing.Point(575, 23);
             this.btnExaminarZip.Name = "btnExaminarZip";
             this.btnExaminarZip.Size = new System.Drawing.Size(140, 27);
@@ -269,6 +290,7 @@ namespace GeneradorInstalador
             // 
             // btnExaminarCarpeta
             // 
+            this.btnExaminarCarpeta.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExaminarCarpeta.Location = new System.Drawing.Point(725, 23);
             this.btnExaminarCarpeta.Name = "btnExaminarCarpeta";
             this.btnExaminarCarpeta.Size = new System.Drawing.Size(140, 27);
@@ -279,16 +301,20 @@ namespace GeneradorInstalador
             // 
             // lblDropHint
             // 
-            this.lblDropHint.AutoSize = true;
+            this.lblDropHint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblDropHint.AutoEllipsis = true;
             this.lblDropHint.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Italic);
             this.lblDropHint.Location = new System.Drawing.Point(15, 58);
             this.lblDropHint.Name = "lblDropHint";
-            this.lblDropHint.Size = new System.Drawing.Size(525, 15);
+            this.lblDropHint.Size = new System.Drawing.Size(850, 18);
             this.lblDropHint.TabIndex = 3;
             this.lblDropHint.Text = "Nota: Puede arrastrar y soltar un archivo .zip o carpeta de proyecto directamente dentro de esta ventana.";
             // 
             // grpDiagnostico
             // 
+            this.grpDiagnostico.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpDiagnostico.Controls.Add(this.lblResumenDiagnostico);
             this.grpDiagnostico.Controls.Add(this.flowBadges);
             this.grpDiagnostico.Location = new System.Drawing.Point(15, 105);
@@ -300,6 +326,8 @@ namespace GeneradorInstalador
             // 
             // flowBadges
             // 
+            this.flowBadges.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.flowBadges.Controls.Add(this.lblBadgeDal);
             this.flowBadges.Controls.Add(this.lblBadgeBe);
             this.flowBadges.Controls.Add(this.lblBadgeBll);
@@ -391,15 +419,19 @@ namespace GeneradorInstalador
             // 
             // lblResumenDiagnostico
             // 
-            this.lblResumenDiagnostico.AutoSize = true;
+            this.lblResumenDiagnostico.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblResumenDiagnostico.AutoEllipsis = true;
             this.lblResumenDiagnostico.Location = new System.Drawing.Point(15, 55);
             this.lblResumenDiagnostico.Name = "lblResumenDiagnostico";
-            this.lblResumenDiagnostico.Size = new System.Drawing.Size(237, 15);
+            this.lblResumenDiagnostico.Size = new System.Drawing.Size(850, 18);
             this.lblResumenDiagnostico.TabIndex = 1;
             this.lblResumenDiagnostico.Text = "Esperando selección de archivo o carpeta...";
             // 
             // grpConfiguracion
             // 
+            this.grpConfiguracion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpConfiguracion.Controls.Add(this.chkDigitosVerificadores);
             this.grpConfiguracion.Controls.Add(this.chkGenerarZip);
             this.grpConfiguracion.Controls.Add(this.chkCompilarRelease);
@@ -583,6 +615,8 @@ namespace GeneradorInstalador
             // 
             // btnGenerar
             // 
+            this.btnGenerar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnGenerar.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnGenerar.Location = new System.Drawing.Point(15, 405);
             this.btnGenerar.Name = "btnGenerar";
@@ -594,6 +628,8 @@ namespace GeneradorInstalador
             // 
             // progressBar
             // 
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.Location = new System.Drawing.Point(15, 455);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(880, 15);
@@ -601,6 +637,9 @@ namespace GeneradorInstalador
             // 
             // txtLog
             // 
+            this.txtLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLog.Font = new System.Drawing.Font("Consolas", 8.8F);
             this.txtLog.Location = new System.Drawing.Point(15, 480);
             this.txtLog.Multiline = true;
@@ -612,6 +651,7 @@ namespace GeneradorInstalador
             // 
             // FrmGenerador
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(914, 731);
@@ -619,14 +659,18 @@ namespace GeneradorInstalador
             this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.pnlBanner);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            this.MaximizeBox = true;
+            this.MinimumSize = new System.Drawing.Size(780, 640);
             this.Name = "FrmGenerador";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Generador Universal de Instaladores y Reinstaladores .NET";
+            this.Text = "Generador R Alpha";
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.FrmGenerador_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FrmGenerador_DragEnter);
             this.pnlBanner.ResumeLayout(false);
             this.pnlBanner.PerformLayout();
             this.pnlBottom.ResumeLayout(false);
+            this.pnlBottom.PerformLayout();
             this.pnlMain.ResumeLayout(false);
             this.pnlMain.PerformLayout();
             this.grpEntrada.ResumeLayout(false);

@@ -1,9 +1,9 @@
 @echo off
 chcp 65001 > nul
-title Generador Universal de Instaladores .NET
+title Generador R Alpha
 
 echo ==========================================================
-echo    GENERADOR UNIVERSAL DE REINSTALADORES .NET (UAI)
+echo        GENERADOR R ALPHA - Desarrollado por Codigo Mecha
 echo ==========================================================
 echo.
 echo Iniciando interfaz grafica del generador...

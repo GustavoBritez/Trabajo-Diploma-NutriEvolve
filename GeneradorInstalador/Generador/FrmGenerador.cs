@@ -17,6 +17,82 @@ namespace GeneradorInstalador
         public FrmGenerador()
         {
             InitializeComponent();
+            this.Load += (_, _) => AjustarLayoutResponsivo();
+            this.Resize += (_, _) => AjustarLayoutResponsivo();
+            this.grpConfiguracion.Resize += (_, _) => AjustarLayoutResponsivo();
+            this.pnlBottom.Resize += (_, _) => AjustarLayoutResponsivo();
+        }
+
+        private void AjustarLayoutResponsivo()
+        {
+            if (grpConfiguracion.ClientSize.Width > 100)
+            {
+                grpConfiguracion.SuspendLayout();
+                int pad = 15;
+                int gap = 20;
+                int availableWidth = Math.Max(300, grpConfiguracion.ClientSize.Width - (pad * 2) - (gap * 2));
+
+                int col1W = availableWidth / 3;
+                int col2W = availableWidth / 3;
+                int col3W = availableWidth - col1W - col2W;
+
+                int col1X = pad;
+                int col2X = col1X + col1W + gap;
+                int col3X = col2X + col2W + gap;
+
+                // Columna 1
+                lblNombreApp.Left = col1X;
+                txtNombreApp.Left = col1X;
+                txtNombreApp.Width = col1W;
+
+                lblDescripcion.Left = col1X;
+                txtDescripcion.Left = col1X;
+                txtDescripcion.Width = col1W;
+
+                lblNombreBD.Left = col1X;
+                txtNombreBD.Left = col1X;
+                txtNombreBD.Width = col1W;
+
+                // Columna 2
+                lblProyectoPrincipal.Left = col2X;
+                cboProyectoPrincipal.Left = col2X;
+                cboProyectoPrincipal.Width = col2W;
+
+                lblArchivoSql.Left = col2X;
+                cboArchivoSql.Left = col2X;
+                cboArchivoSql.Width = col2W;
+
+                btnExaminarSqlManual.Left = col2X;
+
+                // Columna 3
+                lblRutaSalida.Left = col3X;
+                txtRutaSalida.Left = col3X;
+                int btnBrowseW = btnExaminarSalida.Width;
+                txtRutaSalida.Width = Math.Max(80, col3W - btnBrowseW - 8);
+                btnExaminarSalida.Left = txtRutaSalida.Right + 8;
+
+                chkCompilarRelease.Left = col3X;
+                chkGenerarZip.Left = col3X;
+                chkDigitosVerificadores.Left = col3X;
+
+                grpConfiguracion.ResumeLayout();
+            }
+
+            if (pnlBottom.ClientSize.Width > 100)
+            {
+                int leftEdge = btnLimpiar.Right + 16;
+                int rightEdge = btnProbarInstalador.Left - 16;
+                int space = rightEdge - leftEdge;
+                if (space > lblCreditos.Width)
+                {
+                    lblCreditos.Left = leftEdge + (space - lblCreditos.Width) / 2;
+                }
+                else
+                {
+                    lblCreditos.Left = leftEdge;
+                }
+                lblCreditos.Top = (pnlBottom.ClientSize.Height - lblCreditos.Height) / 2;
+            }
         }
 
         private void FrmGenerador_DragEnter(object? sender, DragEventArgs e)
