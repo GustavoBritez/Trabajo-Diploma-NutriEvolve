@@ -433,28 +433,28 @@ namespace UI.PN1
         {
             if (dgvClientes.CurrentRow == null || _idPacienteSeleccionado <= 0)
             {
-                MessageBox.Show("Por favor seleccione un cliente registrado en la base de datos para eliminar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Por favor seleccione un cliente registrado en la base de datos para bloquear / dar de baja.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             string cliente = $"{txtApellidos.Text}, {txtNombres.Text}".Trim();
-            string msg = $"¿Confirma la eliminación lógica del cliente '{cliente}' (DNI: {txtDni.Text})?\n\n" +
-                         "Nota de Repercusión 1:N: Se conservarán los registros históricos y se marcarán como inactivos sus contactos asociados.";
+            string msg = $"¿Confirma el bloqueo / baja lógica del cliente '{cliente}' (DNI: {txtDni.Text})?\n\n" +
+                         "Nota: El cliente no se elimina físicamente de la base de datos; la operación se registrará como 'BLOQUEAR' en la Bitácora de Cambios, conservando sus registros históricos y desactivando sus contactos asociados.";
 
-            if (MessageBox.Show(msg, "Confirmar Baja Lógica", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show(msg, "Confirmar Bloqueo (Baja Lógica)", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 try
                 {
                     _pacienteBLL.EliminarLogico(_idPacienteSeleccionado);
-                    AgregarMensaje($"Baja lógica realizada para cliente DNI {txtDni.Text} ({cliente}).");
-                    MessageBox.Show("Cliente dado de baja lógica correctamente.", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    AgregarMensaje($"Bloqueo lógico realizado para cliente DNI {txtDni.Text} ({cliente}). Operación registrada en Bitácora de Cambios como BLOQUEAR.");
+                    MessageBox.Show("Cliente bloqueado (baja lógica) correctamente.\nOperación registrada en la Bitácora de Cambios como BLOQUEAR.", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ConfigurarEstado(ModoOperacion.Inicio);
                     CargarGrillaClientes();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al eliminar cliente: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    AgregarMensaje($"Error al eliminar: {ex.Message}");
+                    MessageBox.Show($"Error al bloquear cliente: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    AgregarMensaje($"Error al bloquear: {ex.Message}");
                 }
             }
         }

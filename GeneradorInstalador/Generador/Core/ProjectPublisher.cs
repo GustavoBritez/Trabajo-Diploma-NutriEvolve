@@ -13,6 +13,8 @@ namespace GeneradorInstalador.Core
                 throw new FileNotFoundException("No se especificó un proyecto de inicio válido para compilar.");
             }
 
+            ConnectionInjector.Inject(manifest);
+
             if (!Directory.Exists(outputAppDir))
             {
                 Directory.CreateDirectory(outputAppDir);

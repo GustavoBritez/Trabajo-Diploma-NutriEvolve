@@ -59,9 +59,15 @@ namespace BLL.PN2
             return ok;
         }
 
-        public List<BE.PN1.PacienteCambioBE_DNI101> ListarCambiosPacientes(int? idPaciente = null)
+        public List<BE.PN1.PacienteCambioBE_DNI101> ListarCambiosPacientes(
+            int? idPaciente = null,
+            string? dni = null,
+            string? nombre = null,
+            DateTime? fechaIni = null,
+            DateTime? fechaFin = null,
+            string? tipoOperacion = null)
         {
-            return _dal.ListarCambiosPacientes(idPaciente);
+            return _dal.ListarCambiosPacientes(idPaciente, dni, nombre, fechaIni, fechaFin, tipoOperacion);
         }
 
         public bool RevertirCambioPaciente(int idCambio, int usuarioDni)

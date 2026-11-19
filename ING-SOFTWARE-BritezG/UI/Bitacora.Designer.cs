@@ -1,4 +1,4 @@
-﻿namespace UI
+namespace UI
 {
     partial class Bitacora
     {
@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            toolTipGeneral = new ToolTip(components);
+            btnAyudaContextual = new Button();
             panelLateral = new Panel();
             btnExportar = new Button();
             btnLimpiarFiltros = new Button();
@@ -325,10 +328,31 @@
             cmbIdioma.TabIndex = 15;
             cmbIdioma.SelectedIndexChanged += cmbIdioma_SelectedIndexChanged;
             // 
+            // btnAyudaContextual
+            // 
+            btnAyudaContextual.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnAyudaContextual.BackColor = Color.FromArgb(76, 124, 89);
+            btnAyudaContextual.Cursor = Cursors.Hand;
+            btnAyudaContextual.FlatStyle = FlatStyle.Flat;
+            btnAyudaContextual.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnAyudaContextual.ForeColor = Color.White;
+            btnAyudaContextual.Location = new Point(948, 8);
+            btnAyudaContextual.Name = "btnAyudaContextual";
+            btnAyudaContextual.Size = new Size(104, 30);
+            btnAyudaContextual.TabIndex = 16;
+            btnAyudaContextual.Text = "? Ayuda";
+            btnAyudaContextual.UseVisualStyleBackColor = false;
+            toolTipGeneral.SetToolTip(btnAyudaContextual, "Ayuda: Abre el manual operativo de Auditoría y Bitácora del Sistema (Capítulo 5).");
+            toolTipGeneral.SetToolTip(btnLimpiarFiltros, "Limpiar: Restablece todos los filtros de búsqueda de la bitácora.");
+            toolTipGeneral.SetToolTip(btnExportar, "Exportar: Genera y exporta la auditoría actual a un documento PDF formal.");
+            toolTipGeneral.SetToolTip(btnSalir, "Salir: Cierra la consulta de bitácora y regresa al menú.");
+            btnAyudaContextual.Click += btnAyudaContextual_Click;
+            // 
             // Bitacora
             // 
             BackColor = Color.FromArgb(218, 237, 223);
             ClientSize = new Size(1240, 614);
+            Controls.Add(btnAyudaContextual);
             Controls.Add(cmbIdioma);
             Controls.Add(textBox2);
             Controls.Add(textBox1);
@@ -379,5 +403,7 @@
         private TextBox textBox1;
         private TextBox textBox2;
         private ComboBox cmbIdioma;
+        private System.Windows.Forms.Button btnAyudaContextual;
+        private System.Windows.Forms.ToolTip toolTipGeneral;
     }
 }

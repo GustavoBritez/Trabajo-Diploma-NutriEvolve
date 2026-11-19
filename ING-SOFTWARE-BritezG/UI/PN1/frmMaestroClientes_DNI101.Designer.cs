@@ -200,6 +200,7 @@ namespace UI.PN1
             btnAyudaContextual.Size = new System.Drawing.Size(130, 26);
             btnAyudaContextual.TabIndex = 10;
             btnAyudaContextual.Text = "? Ayuda";
+            toolTipGeneral.SetToolTip(btnAyudaContextual, "Ayuda: Despliega el manual de usuario y las directivas operativas del Maestro de Clientes (Capítulo 2).");
             btnAyudaContextual.Click += btnAyudaContextual_Click;
 
             // 
@@ -223,6 +224,7 @@ namespace UI.PN1
             btnAnadir.Size = new System.Drawing.Size(130, 28);
             btnAnadir.TabIndex = 4;
             btnAnadir.Text = "Añadir";
+            toolTipGeneral.SetToolTip(btnAnadir, "Añadir: Habilita el formulario para ingresar y registrar un nuevo cliente en el sistema.");
             btnAnadir.Click += btnAnadir_Click;
 
             // 
@@ -234,6 +236,7 @@ namespace UI.PN1
             btnModificar.Size = new System.Drawing.Size(130, 28);
             btnModificar.TabIndex = 5;
             btnModificar.Text = "Modificar";
+            toolTipGeneral.SetToolTip(btnModificar, "Modificar: Habilita la edición de los datos del cliente seleccionado en la grilla.");
             btnModificar.Click += btnModificar_Click;
 
             // 
@@ -245,6 +248,7 @@ namespace UI.PN1
             btnEliminar.Size = new System.Drawing.Size(130, 28);
             btnEliminar.TabIndex = 6;
             btnEliminar.Text = "Eliminar";
+            toolTipGeneral.SetToolTip(btnEliminar, "Bloquear / Baja Lógica: Desactiva lógicamente al cliente seleccionado (no se elimina físicamente, en la bitácora se registra como Bloquear).");
             btnEliminar.Click += btnEliminar_Click;
 
             // 
@@ -256,6 +260,7 @@ namespace UI.PN1
             btnAplicar.Size = new System.Drawing.Size(130, 28);
             btnAplicar.TabIndex = 7;
             btnAplicar.Text = "Aplicar";
+            toolTipGeneral.SetToolTip(btnAplicar, "Aplicar: Valida y confirma la modificación del cliente seleccionado, persistiendo los cambios en la base de datos.");
             btnAplicar.Click += btnAplicar_Click;
 
             // 
@@ -267,6 +272,7 @@ namespace UI.PN1
             btnCancelar.Size = new System.Drawing.Size(130, 28);
             btnCancelar.TabIndex = 8;
             btnCancelar.Text = "Cancelar";
+            toolTipGeneral.SetToolTip(btnCancelar, "Cancelar: Descarta la operación actual de alta o modificación y restaura el estado inicial.");
             btnCancelar.Click += btnCancelar_Click;
 
             // 
@@ -278,6 +284,7 @@ namespace UI.PN1
             btnSalir.Size = new System.Drawing.Size(130, 28);
             btnSalir.TabIndex = 9;
             btnSalir.Text = "Salir";
+            toolTipGeneral.SetToolTip(btnSalir, "Salir: Cierra el módulo de Maestro de Clientes y regresa a la pantalla principal.");
             btnSalir.Click += btnSalir_Click;
 
             // 

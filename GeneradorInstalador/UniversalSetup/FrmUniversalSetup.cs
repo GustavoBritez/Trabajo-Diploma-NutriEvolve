@@ -52,7 +52,6 @@ namespace UniversalSetup
             lblTituloP1.Text = $"Bienvenido al Asistente de {_manifest.AppName}";
             lblInfoApp.Text = $"Aplicación Principal: {_manifest.AppName} ({_manifest.ExeName})";
             lblInfoBD.Text = $"Base de Datos: {_manifest.DatabaseName} (Script: {Path.GetFileName(_manifest.SqlScriptFile)})";
-            lblInfoAutor.Text = $"Versión: {_manifest.Version} | Autor: {_manifest.Author}";
 
             // Ruta por defecto en AppData Local
             string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -67,10 +66,18 @@ namespace UniversalSetup
         {
             Task.Run(() =>
             {
+                var candidates = SqlExecutor.GetCandidateInstances();
                 string active = SqlExecutor.DetectActiveInstance();
                 if (IsDisposed || !IsHandleCreated) return;
                 Invoke(new Action(() =>
                 {
+                    foreach (var cand in candidates)
+                    {
+                        if (!cboServidor.Items.Contains(cand))
+                        {
+                            cboServidor.Items.Add(cand);
+                        }
+                    }
                     if (!cboServidor.Items.Contains(active))
                     {
                         cboServidor.Items.Insert(0, active);

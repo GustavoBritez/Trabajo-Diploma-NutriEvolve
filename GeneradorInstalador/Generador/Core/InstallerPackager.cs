@@ -17,25 +17,34 @@ namespace GeneradorInstalador.Core
                 Directory.CreateDirectory(outDir);
             }
 
-            // 1. Localizar y copiar archivos de la plantilla UniversalSetup
-            string templateDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Template");
-            if (!Directory.Exists(templateDir))
-            {
-                // Buscar relativo en desarrollo
-                string devTemplate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Template");
-                if (Directory.Exists(devTemplate))
-                {
-                    templateDir = Path.GetFullPath(devTemplate);
-                }
-            }
-
-            if (!Directory.Exists(templateDir))
-            {
-                throw new DirectoryNotFoundException($"No se encontró la carpeta con la plantilla del instalador en: {templateDir}");
-            }
-
+            // 1. Extraer motor de instalación inteligente (Setup.exe) desde recurso embebido o carpeta Template
             logger?.Invoke("[EMPAQUETADOR] Copiando motor de instalación inteligente (Setup.exe)...");
-            CopiarDirectorio(templateDir, outDir, true);
+            var asm = typeof(InstallerPackager).Assembly;
+            using var resourceStream = asm.GetManifestResourceStream("GeneradorInstalador.Template.zip");
+            if (resourceStream != null)
+            {
+                using var archive = new ZipArchive(resourceStream, ZipArchiveMode.Read);
+                archive.ExtractToDirectory(outDir, true);
+            }
+            else
+            {
+                string templateDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Template");
+                if (!Directory.Exists(templateDir))
+                {
+                    string devTemplate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Template");
+                    if (Directory.Exists(devTemplate))
+                    {
+                        templateDir = Path.GetFullPath(devTemplate);
+                    }
+                }
+
+                if (!Directory.Exists(templateDir))
+                {
+                    throw new DirectoryNotFoundException("No se encontró la plantilla embebida ni la carpeta Template.");
+                }
+
+                CopiarDirectorio(templateDir, outDir, true);
+            }
 
             // 2. Crear carpeta App/ y copiar aplicación publicada
             string destAppDir = Path.Combine(outDir, "App");

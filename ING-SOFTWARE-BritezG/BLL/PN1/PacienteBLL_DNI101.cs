@@ -231,10 +231,10 @@ namespace BLL
                 throw new InvalidOperationException($"Ya existe un paciente registrado con el DNI {dni}.");
             }
 
-            int id = _pacienteDAL.GuardarMaestro(dni, apellidos, nombres, email, celular, direccion);
+            int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+            int id = _pacienteDAL.GuardarMaestro(dni, apellidos, nombres, email, celular, direccion, dniActual);
             try
             {
-                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 _bitacoraBLL.RegistrarBitacora(2, $"Alta de Cliente/Paciente: {apellidos}, {nombres} (DNI: {dni}) en Maestro ABM-C", dniActual, "MaestroClientes");
             }
             catch { }
@@ -255,10 +255,10 @@ namespace BLL
             if (string.IsNullOrWhiteSpace(apellidos)) throw new ArgumentException("El apellido es obligatorio.");
             if (string.IsNullOrWhiteSpace(nombres)) throw new ArgumentException("El nombre es obligatorio.");
 
-            bool ok = _pacienteDAL.ModificarMaestro(idPaciente, dni, apellidos, nombres, email, celular, direccion);
+            int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+            bool ok = _pacienteDAL.ModificarMaestro(idPaciente, dni, apellidos, nombres, email, celular, direccion, dniActual);
             try
             {
-                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 _bitacoraBLL.RegistrarBitacora(2, $"Modificación en Maestro ABM-C del Cliente/Paciente ID {idPaciente} (DNI: {dni})", dniActual, "MaestroClientes");
             }
             catch { }
@@ -279,11 +279,35 @@ namespace BLL
         {
             if (idPaciente <= 0) throw new ArgumentException("Identificador de paciente inválido.");
 
-            bool ok = _pacienteDAL.EliminarLogico(idPaciente);
+            int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+            bool ok = _pacienteDAL.EliminarLogico(idPaciente, dniActual);
             try
             {
-                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-                _bitacoraBLL.RegistrarBitacora(3, $"Baja Lógica del Cliente/Paciente ID {idPaciente} y sus datos 1:N asociados", dniActual, "MaestroClientes");
+                _bitacoraBLL.RegistrarBitacora(3, $"Bloqueo / Baja Lógica del Cliente/Paciente ID {idPaciente} y sus datos 1:N asociados", dniActual, "MaestroClientes");
+            }
+            catch { }
+
+            if (ok)
+            {
+                try
+                {
+                    new DigitoVerificadorBLL().RecalcularYPersistir();
+                }
+                catch { }
+            }
+
+            return ok;
+        }
+
+        public bool DesbloquearLogico(int idPaciente)
+        {
+            if (idPaciente <= 0) throw new ArgumentException("Identificador de paciente inválido.");
+
+            int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+            bool ok = _pacienteDAL.DesbloquearLogico(idPaciente, dniActual);
+            try
+            {
+                _bitacoraBLL.RegistrarBitacora(2, $"Desbloqueo / Reactivación del Cliente/Paciente ID {idPaciente} y sus datos 1:N asociados", dniActual, "MaestroClientes");
             }
             catch { }
 

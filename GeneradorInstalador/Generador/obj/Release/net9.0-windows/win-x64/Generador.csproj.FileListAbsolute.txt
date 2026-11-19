@@ -1,0 +1,14 @@
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\bin\Release\net9.0-windows\win-x64\GeneradorInstalador.exe
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\bin\Release\net9.0-windows\win-x64\GeneradorInstalador.deps.json
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\bin\Release\net9.0-windows\win-x64\GeneradorInstalador.runtimeconfig.json
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\bin\Release\net9.0-windows\win-x64\GeneradorInstalador.dll
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\obj\Release\net9.0-windows\win-x64\GeneradorInstalador.FrmGenerador.resources
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\obj\Release\net9.0-windows\win-x64\Generador.csproj.GenerateResource.cache
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\obj\Release\net9.0-windows\win-x64\Generador.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\obj\Release\net9.0-windows\win-x64\Generador.AssemblyInfoInputs.cache
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\obj\Release\net9.0-windows\win-x64\Generador.AssemblyInfo.cs
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\obj\Release\net9.0-windows\win-x64\Generador.csproj.CoreCompileInputs.cache
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\obj\Release\net9.0-windows\win-x64\GeneradorInstalador.dll
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\obj\Release\net9.0-windows\win-x64\refint\GeneradorInstalador.dll
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\obj\Release\net9.0-windows\win-x64\Generador.genruntimeconfig.cache
+C:\Users\Danie\Desktop\GIT\GeneradorInstalador\Generador\obj\Release\net9.0-windows\win-x64\ref\GeneradorInstalador.dll

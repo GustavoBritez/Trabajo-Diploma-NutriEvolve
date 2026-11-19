@@ -169,10 +169,16 @@ ORDER BY Apellido_DNI101, Nombre_DNI101;";
             }
         }
 
-        public int GuardarMaestro(string dni, string apellidos, string nombres, string? email, string? celular, string? direccion)
+        public int GuardarMaestro(string dni, string apellidos, string nombres, string? email, string? celular, string? direccion, int usuarioDni = 11111111)
         {
             return _conexion.ExecuteTransaction(tx =>
             {
+                using (var cmdCtx = new SqlCommand("EXEC sp_set_session_context @key=N'UsuarioDni', @value=@val;", tx.Connection, tx))
+                {
+                    cmdCtx.Parameters.AddWithValue("@val", usuarioDni);
+                    cmdCtx.ExecuteNonQuery();
+                }
+
                 string sqlPac = @"
 INSERT INTO Pacientes_DNI101 
 (DniNiño_DNI101, Nombre_DNI101, Apellido_DNI101, Telefono_DNI101, Email_DNI101, Direccion_DNI101, FechaNacimiento_DNI101, Sexo_DNI101, ObraSocial_DNI101, Activo_DNI101)
@@ -220,10 +226,16 @@ SELECT CAST(SCOPE_IDENTITY() AS INT);";
             });
         }
 
-        public bool ModificarMaestro(int idPaciente, string dni, string apellidos, string nombres, string? email, string? celular, string? direccion)
+        public bool ModificarMaestro(int idPaciente, string dni, string apellidos, string nombres, string? email, string? celular, string? direccion, int usuarioDni = 11111111)
         {
             return _conexion.ExecuteTransaction(tx =>
             {
+                using (var cmdCtx = new SqlCommand("EXEC sp_set_session_context @key=N'UsuarioDni', @value=@val;", tx.Connection, tx))
+                {
+                    cmdCtx.Parameters.AddWithValue("@val", usuarioDni);
+                    cmdCtx.ExecuteNonQuery();
+                }
+
                 string sqlUpd = @"
 UPDATE Pacientes_DNI101
 SET DniNiño_DNI101 = @dni,
@@ -284,11 +296,17 @@ ELSE
             });
         }
 
-        public bool EliminarLogico(int idPaciente)
+        public bool EliminarLogico(int idPaciente, int usuarioDni = 11111111)
         {
             return _conexion.ExecuteTransaction(tx =>
             {
-                // 1. Borrado lógico de Paciente (Activo = 0)
+                using (var cmdCtx = new SqlCommand("EXEC sp_set_session_context @key=N'UsuarioDni', @value=@val;", tx.Connection, tx))
+                {
+                    cmdCtx.Parameters.AddWithValue("@val", usuarioDni);
+                    cmdCtx.ExecuteNonQuery();
+                }
+
+                // 1. Borrado lógico / Bloqueo de Paciente (Activo = 0)
                 string sqlPac = "UPDATE Pacientes_DNI101 SET Activo_DNI101 = 0 WHERE IdPaciente_DNI101 = @id;";
                 using (var cmd = new SqlCommand(sqlPac, tx.Connection, tx))
                 {
@@ -300,6 +318,38 @@ ELSE
                 string sql1N = @"
 UPDATE Paciente_Emails_DNI101 SET Activo_DNI101 = 0 WHERE IdPaciente_DNI101 = @id;
 UPDATE Paciente_Telefonos_DNI101 SET Activo_DNI101 = 0 WHERE IdPaciente_DNI101 = @id;";
+
+                using (var cmd1N = new SqlCommand(sql1N, tx.Connection, tx))
+                {
+                    cmd1N.Parameters.AddWithValue("@id", idPaciente);
+                    cmd1N.ExecuteNonQuery();
+                }
+
+                return true;
+            });
+        }
+
+        public bool DesbloquearLogico(int idPaciente, int usuarioDni = 11111111)
+        {
+            return _conexion.ExecuteTransaction(tx =>
+            {
+                using (var cmdCtx = new SqlCommand("EXEC sp_set_session_context @key=N'UsuarioDni', @value=@val;", tx.Connection, tx))
+                {
+                    cmdCtx.Parameters.AddWithValue("@val", usuarioDni);
+                    cmdCtx.ExecuteNonQuery();
+                }
+
+                // Reactivación / Desbloqueo de Paciente (Activo = 1)
+                string sqlPac = "UPDATE Pacientes_DNI101 SET Activo_DNI101 = 1 WHERE IdPaciente_DNI101 = @id;";
+                using (var cmd = new SqlCommand(sqlPac, tx.Connection, tx))
+                {
+                    cmd.Parameters.AddWithValue("@id", idPaciente);
+                    cmd.ExecuteNonQuery();
+                }
+
+                string sql1N = @"
+UPDATE Paciente_Emails_DNI101 SET Activo_DNI101 = 1 WHERE IdPaciente_DNI101 = @id;
+UPDATE Paciente_Telefonos_DNI101 SET Activo_DNI101 = 1 WHERE IdPaciente_DNI101 = @id;";
 
                 using (var cmd1N = new SqlCommand(sql1N, tx.Connection, tx))
                 {

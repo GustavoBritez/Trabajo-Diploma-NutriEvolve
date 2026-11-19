@@ -9,9 +9,24 @@ namespace UniversalSetup
 {
     public static class SqlExecutor
     {
-        public static string DetectActiveInstance()
+        public static List<string> GetCandidateInstances()
         {
-            string[] candidateInstances = new[]
+            var list = new List<string>();
+            try
+            {
+                using var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL");
+                if (key != null)
+                {
+                    foreach (string nombre in key.GetValueNames())
+                    {
+                        string inst = nombre == "MSSQLSERVER" ? "." : @".\" + nombre;
+                        if (!list.Contains(inst)) list.Add(inst);
+                    }
+                }
+            }
+            catch { }
+
+            string[] fallbacks = new[]
             {
                 ".",
                 @".\SQLEXPRESS",
@@ -21,7 +36,17 @@ namespace UniversalSetup
                 $@"{Environment.MachineName}\SQLEXPRESS"
             };
 
-            foreach (var instance in candidateInstances)
+            foreach (var f in fallbacks)
+            {
+                if (!list.Contains(f)) list.Add(f);
+            }
+
+            return list;
+        }
+
+        public static string DetectActiveInstance()
+        {
+            foreach (var instance in GetCandidateInstances())
             {
                 if (TestServerConnection(instance, true, null, null))
                 {
@@ -143,10 +168,19 @@ namespace UniversalSetup
             int current = 0;
             int ejecutados = 0;
             int omitidos = 0;
-            foreach (var batch in batches)
+            foreach (var rawBatch in batches)
             {
                 current++;
-                if (string.IsNullOrWhiteSpace(batch)) continue;
+                if (string.IsNullOrWhiteSpace(rawBatch)) continue;
+
+                // Ignorar CREATE DATABASE o USE hacia otros catálogos ya que nos conectamos directamente a 'database'
+                if (Regex.IsMatch(rawBatch.Trim(), @"^\s*CREATE\s+DATABASE\b", RegexOptions.IgnoreCase) ||
+                    Regex.IsMatch(rawBatch.Trim(), @"^\s*USE\s+\[?[a-zA-Z0-9_]+\]?\s*;?\s*$", RegexOptions.IgnoreCase))
+                {
+                    continue;
+                }
+
+                string batch = rawBatch;
 
                 if (esReinstalacion)
                 {

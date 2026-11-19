@@ -289,6 +289,8 @@ namespace GeneradorInstalador.Core
             }
             manifest.OutputPath = Path.Combine(desktop, "Instaladores", $"{safeAppName}_Instalador");
 
+            ConnectionInjector.Inject(manifest);
+
             return manifest;
         }
 

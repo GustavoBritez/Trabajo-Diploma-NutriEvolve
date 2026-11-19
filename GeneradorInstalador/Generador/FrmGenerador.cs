@@ -339,6 +339,7 @@ namespace GeneradorInstalador
             {
                 try
                 {
+                    ConnectionInjector.Inject(_manifestActual);
                     string tempAppOut = Path.Combine(Path.GetTempPath(), "GeneradorInstalador", $"publish_{Guid.NewGuid():N}");
 
                     // 1. Compilación

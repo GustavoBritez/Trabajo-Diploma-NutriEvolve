@@ -371,19 +371,55 @@ namespace DAL.PN2
             });
         }
 
-        public List<PacienteCambioBE_DNI101> ListarCambiosPacientes(int? idPaciente = null)
+        public List<PacienteCambioBE_DNI101> ListarCambiosPacientes(
+            int? idPaciente = null,
+            string? dni = null,
+            string? nombre = null,
+            DateTime? fechaIni = null,
+            DateTime? fechaFin = null,
+            string? tipoOperacion = null)
         {
             var lista = new List<PacienteCambioBE_DNI101>();
             string sql = @"
                 SELECT IdCambio, IdPaciente_DNI101, DniNiño_DNI101, Nombre_DNI101, Apellido_DNI101,
                        Telefono_DNI101, Email_DNI101, Direccion_DNI101, Activo_DNI101,
-                       FechaCambio, UsuarioDni, TipoOperacion
-                FROM Pacientes_Cambios_DNI101 ";
+                       FechaCambio, UsuarioDni, TipoOperacion,
+                       ISNULL(Act, 1) AS Act
+                FROM Pacientes_Cambios_DNI101
+                WHERE 1 = 1 ";
 
             if (idPaciente.HasValue && idPaciente.Value > 0)
             {
-                sql += " WHERE IdPaciente_DNI101 = @IdPaciente ";
+                sql += " AND IdPaciente_DNI101 = @IdPaciente ";
             }
+            if (!string.IsNullOrWhiteSpace(dni))
+            {
+                sql += " AND DniNiño_DNI101 LIKE @Dni ";
+            }
+            if (!string.IsNullOrWhiteSpace(nombre))
+            {
+                sql += " AND (Nombre_DNI101 LIKE @Nombre OR Apellido_DNI101 LIKE @Nombre OR (Apellido_DNI101 + ' ' + Nombre_DNI101) LIKE @Nombre) ";
+            }
+            if (fechaIni.HasValue)
+            {
+                sql += " AND FechaCambio >= @FechaIni ";
+            }
+            if (fechaFin.HasValue)
+            {
+                sql += " AND FechaCambio <= @FechaFin ";
+            }
+            if (!string.IsNullOrWhiteSpace(tipoOperacion) && tipoOperacion != "Todas" && tipoOperacion != "Todos")
+            {
+                if (tipoOperacion.Contains("BLOQ") || tipoOperacion.Contains("DESBLOQ"))
+                {
+                    sql += " AND (TipoOperacion LIKE '%BLOQ%' OR TipoOperacion = 'DELETE') ";
+                }
+                else
+                {
+                    sql += " AND TipoOperacion = @TipoOperacion ";
+                }
+            }
+
             sql += " ORDER BY FechaCambio DESC, IdCambio DESC";
 
             using (var cn = _conexion.CrearConexion())
@@ -393,6 +429,27 @@ namespace DAL.PN2
                 {
                     cmd.Parameters.AddWithValue("@IdPaciente", idPaciente.Value);
                 }
+                if (!string.IsNullOrWhiteSpace(dni))
+                {
+                    cmd.Parameters.AddWithValue("@Dni", $"%{dni.Trim()}%");
+                }
+                if (!string.IsNullOrWhiteSpace(nombre))
+                {
+                    cmd.Parameters.AddWithValue("@Nombre", $"%{nombre.Trim()}%");
+                }
+                if (fechaIni.HasValue)
+                {
+                    cmd.Parameters.AddWithValue("@FechaIni", fechaIni.Value.Date);
+                }
+                if (fechaFin.HasValue)
+                {
+                    cmd.Parameters.AddWithValue("@FechaFin", fechaFin.Value.Date.AddDays(1).AddTicks(-1));
+                }
+                if (!string.IsNullOrWhiteSpace(tipoOperacion) && tipoOperacion != "Todas" && tipoOperacion != "Todos")
+                {
+                    cmd.Parameters.AddWithValue("@TipoOperacion", tipoOperacion.Trim());
+                }
+
                 cn.Open();
                 using (var dr = cmd.ExecuteReader())
                 {
@@ -411,7 +468,8 @@ namespace DAL.PN2
                             Activo = dr.GetBoolean(8),
                             FechaCambio = dr.GetDateTime(9),
                             UsuarioDni = dr.GetInt32(10),
-                            TipoOperacion = dr.GetString(11)
+                            TipoOperacion = dr.GetString(11),
+                            Act = dr.GetBoolean(12)
                         });
                     }
                 }
@@ -424,13 +482,13 @@ namespace DAL.PN2
             return _conexion.ExecuteTransaction(tx =>
             {
                 string sqlSel = @"
-                    SELECT IdPaciente_DNI101, Nombre_DNI101, Apellido_DNI101,
-                           Telefono_DNI101, Email_DNI101, Direccion_DNI101, Activo_DNI101
+                    SELECT IdPaciente_DNI101, DniNiño_DNI101, Nombre_DNI101, Apellido_DNI101,
+                           Telefono_DNI101, Email_DNI101, Direccion_DNI101, Activo_DNI101, ISNULL(Act, 1)
                     FROM Pacientes_Cambios_DNI101
                     WHERE IdCambio = @IdCambio";
 
                 int idPaciente = 0;
-                string? nombre = null, apellido = null, tel = null, email = null, dir = null;
+                string? dni = null, nombre = null, apellido = null, tel = null, email = null, dir = null;
                 bool activo = true;
 
                 using (var cmdSel = new SqlCommand(sqlSel, tx.Connection, tx))
@@ -441,12 +499,13 @@ namespace DAL.PN2
                         if (dr.Read())
                         {
                             idPaciente = dr.GetInt32(0);
-                            nombre = dr.GetString(1);
-                            apellido = dr.GetString(2);
-                            tel = dr.IsDBNull(3) ? null : dr.GetString(3);
-                            email = dr.IsDBNull(4) ? null : dr.GetString(4);
-                            dir = dr.IsDBNull(5) ? null : dr.GetString(5);
-                            activo = dr.GetBoolean(6);
+                            dni = dr.GetString(1);
+                            nombre = dr.GetString(2);
+                            apellido = dr.GetString(3);
+                            tel = dr.IsDBNull(4) ? null : dr.GetString(4);
+                            email = dr.IsDBNull(5) ? null : dr.GetString(5);
+                            dir = dr.IsDBNull(6) ? null : dr.GetString(6);
+                            activo = dr.GetBoolean(7);
                         }
                         else
                         {
@@ -455,7 +514,8 @@ namespace DAL.PN2
                     }
                 }
 
-                using (var cmdCtx = new SqlCommand("EXEC sp_set_session_context @key=N'UsuarioDni', @value=@val;", tx.Connection, tx))
+                // Desactivar trigger temporalmente durante la reversión directa
+                using (var cmdCtx = new SqlCommand("EXEC sp_set_session_context @key=N'EsReversion', @value=1; EXEC sp_set_session_context @key=N'UsuarioDni', @value=@val;", tx.Connection, tx))
                 {
                     cmdCtx.Parameters.AddWithValue("@val", usuarioDni);
                     cmdCtx.ExecuteNonQuery();
@@ -469,11 +529,22 @@ namespace DAL.PN2
                         Email_DNI101 = @Email,
                         Direccion_DNI101 = @Dir,
                         Activo_DNI101 = @Activo
-                    WHERE IdPaciente_DNI101 = @IdPaciente;";
+                    WHERE IdPaciente_DNI101 = @IdPaciente;
+
+                    UPDATE Pacientes_Cambios_DNI101
+                    SET Act = 0
+                    WHERE IdPaciente_DNI101 = @IdPaciente;
+
+                    UPDATE Pacientes_Cambios_DNI101
+                    SET Act = 1
+                    WHERE IdCambio = @IdCambio;
+
+                    EXEC sp_set_session_context @key=N'EsReversion', @value=0;";
 
                 using (var cmdUpd = new SqlCommand(sqlUpd, tx.Connection, tx))
                 {
                     cmdUpd.Parameters.AddWithValue("@IdPaciente", idPaciente);
+                    cmdUpd.Parameters.AddWithValue("@IdCambio", idCambio);
                     cmdUpd.Parameters.AddWithValue("@Nombre", (object?)nombre ?? DBNull.Value);
                     cmdUpd.Parameters.AddWithValue("@Apellido", (object?)apellido ?? DBNull.Value);
                     cmdUpd.Parameters.AddWithValue("@Tel", (object?)tel ?? DBNull.Value);

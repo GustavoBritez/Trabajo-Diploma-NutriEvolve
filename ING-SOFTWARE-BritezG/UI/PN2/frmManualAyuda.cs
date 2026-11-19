@@ -175,21 +175,25 @@ namespace UI.PN2
                     sb.AppendLine("   * Bitácora de Cambios (Auditoría de Datos): Registra 'EL ESTADO DE LOS DATOS'");
                     sb.AppendLine("     antes y después de una modificación sobre entidades del negocio.");
                     sb.AppendLine();
-                    sb.AppendLine("2. DISPARADORES SQL (TRIGGERS AFTER UPDATE/DELETE):");
+                    sb.AppendLine("2. DISPARADORES SQL (TRIGGERS AFTER INSERT/UPDATE/DELETE):");
+                    sb.AppendLine("   * Maestro de Clientes / Pacientes: 'trg_Pacientes_BitacoraCambios'.");
+                    sb.AppendLine("     Audita operaciones de ALTA, MODIFICACIÓN, BLOQUEAR y DESBLOQUEAR.");
+                    sb.AppendLine("     NOTA ESENCIAL: En la arquitectura no existe la eliminación física ni el botón eliminar");
+                    sb.AppendLine("     en la bitácora; la baja es lógica y se registra como BLOQUEAR / DESBLOQUEAR.");
                     sb.AppendLine("   * Consultas Nutricionales: 'trg_ConsultasNutricionales_BitacoraCambios'.");
                     sb.AppendLine("   * Planes Alimentarios: 'trg_PlanesAlimentarios_BitacoraCambios'.");
-                    sb.AppendLine("   * Pacientes: 'trg_Pacientes_BitacoraCambios'.");
-                    sb.AppendLine("   * Los triggers leen la pseudotabla 'deleted' del motor SQL Server e insertan");
-                    sb.AppendLine("     el estado previo junto con el usuario autenticado (SESSION_CONTEXT).");
+                    sb.AppendLine("   * Los triggers capturan las mutaciones e insertan el histórico con el usuario autenticado.");
                     sb.AppendLine();
-                    sb.AppendLine("3. MECANISMO DE ROLLBACK (DESHACER CAMBIOS):");
-                    sb.AppendLine("   * La pantalla de Bitácora de Cambios permite seleccionar cualquier versión histórica.");
-                    sb.AppendLine("   * Al pulsar 'Revertir a esta Versión (Rollback)', el sistema restaura los datos de");
-                    sb.AppendLine("     la entidad activa, provocando que el Trigger audite la reversión como un nuevo evento.");
+                    sb.AppendLine("3. MECANISMO DE ROLLBACK (DESHACER CAMBIOS Y ACTIVAR VERSIONES):");
+                    sb.AppendLine("   * La pantalla de Bitácora de Cambios permite seleccionar cualquier versión histórica");
+                    sb.AppendLine("     tanto del Maestro de Clientes (ABM) como de Consultas Nutricionales.");
+                    sb.AppendLine("   * Al pulsar 'Activar / Revertir (Rollback)', el sistema restaura los datos de");
+                    sb.AppendLine("     la versión seleccionada hacia la base de datos activa, actualizando Act = 1 y");
+                    sb.AppendLine("     recalculando automáticamente los Dígitos Verificadores (DV).");
                     sb.AppendLine();
                     sb.AppendLine("ENLACES RELACIONADOS:");
+                    sb.AppendLine("   -> Ver Capítulo 2: Maestro de Clientes (ABM-C)");
                     sb.AppendLine("   -> Ver Capítulo 4: Consultas Nutricionales");
-                    sb.AppendLine("   -> Ver Capítulo 2: Maestro de Clientes");
                     break;
 
                 case 6:

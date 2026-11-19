@@ -89,6 +89,7 @@ namespace DAL
                         {
                             // If the database already exists, ensure the bitacora table and triggers are created/updated
                             AsegurarEstructuraBitacora(dbConnString);
+                            AsegurarEstructuraBitacoraPacientes(dbConnString);
                         }
                     }
                 }
@@ -338,6 +339,154 @@ namespace DAL
                                 c.[AntecedentesFamiliares_DNI101], c.[Observaciones_DNI101],
                                 c.[FechaControl_DNI101], 11111111, 'INSERT', 1
                             FROM [dbo].[ConsultasNutricionales_DNI101] c;
+                        END";
+
+                    using (SqlCommand cmd = new SqlCommand(sqlPoblar, dbConn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private static void AsegurarEstructuraBitacoraPacientes(string dbConnString)
+        {
+            try
+            {
+                using (SqlConnection dbConn = new SqlConnection(dbConnString))
+                {
+                    dbConn.Open();
+
+                    // 1. Asegurar tabla Pacientes_Cambios_DNI101 y columna Act
+                    string sqlTabla = @"
+                        IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Pacientes_Cambios_DNI101' AND xtype='U')
+                        BEGIN
+                            CREATE TABLE [dbo].[Pacientes_Cambios_DNI101](
+                                [IdCambio] INT IDENTITY(1,1) PRIMARY KEY,
+                                [IdPaciente_DNI101] INT NOT NULL,
+                                [DniNiño_DNI101] VARCHAR(20) NOT NULL,
+                                [Nombre_DNI101] VARCHAR(100) NOT NULL,
+                                [Apellido_DNI101] VARCHAR(100) NOT NULL,
+                                [Telefono_DNI101] VARCHAR(50) NULL,
+                                [Email_DNI101] VARCHAR(100) NULL,
+                                [Direccion_DNI101] VARCHAR(200) NULL,
+                                [Activo_DNI101] BIT NOT NULL DEFAULT 1,
+                                [FechaCambio] DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
+                                [UsuarioDni] INT NOT NULL DEFAULT 11111111,
+                                [TipoOperacion] VARCHAR(20) NOT NULL,
+                                [Act] BIT NOT NULL CONSTRAINT DF_PacientesCambios_Act DEFAULT 1
+                            ) ON [PRIMARY];
+                        END
+                        ELSE
+                        BEGIN
+                            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Pacientes_Cambios_DNI101]') AND name = 'Act')
+                            BEGIN
+                                ALTER TABLE [dbo].[Pacientes_Cambios_DNI101] ADD [Act] BIT NOT NULL CONSTRAINT DF_PacientesCambios_Act DEFAULT 1;
+                            END
+                        END";
+
+                    using (SqlCommand cmd = new SqlCommand(sqlTabla, dbConn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // 2. Asegurar Trigger trg_Pacientes_BitacoraCambios con soporte de ALTA, MODIFICACIÓN, BLOQUEAR y DESBLOQUEAR
+                    string sqlTrigger = @"
+                        CREATE OR ALTER TRIGGER [dbo].[trg_Pacientes_BitacoraCambios]
+                        ON [dbo].[Pacientes_DNI101]
+                        AFTER INSERT, UPDATE, DELETE
+                        AS
+                        BEGIN
+                            SET NOCOUNT ON;
+
+                            IF ISNULL(CAST(SESSION_CONTEXT(N'EsReversion') AS INT), 0) = 1
+                            BEGIN
+                                RETURN;
+                            END
+
+                            -- 1. ALTA (INSERT)
+                            IF EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted)
+                            BEGIN
+                                INSERT INTO [dbo].[Pacientes_Cambios_DNI101] (
+                                    [IdPaciente_DNI101], [DniNiño_DNI101], [Nombre_DNI101], [Apellido_DNI101],
+                                    [Telefono_DNI101], [Email_DNI101], [Direccion_DNI101], [Activo_DNI101],
+                                    [FechaCambio], [UsuarioDni], [TipoOperacion], [Act]
+                                )
+                                SELECT 
+                                    i.[IdPaciente_DNI101], i.[DniNiño_DNI101], i.[Nombre_DNI101], i.[Apellido_DNI101],
+                                    i.[Telefono_DNI101], i.[Email_DNI101], i.[Direccion_DNI101], ISNULL(i.[Activo_DNI101], 1),
+                                    SYSDATETIME(), ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
+                                    'ALTA', 1
+                                FROM inserted i;
+                            END
+                            -- 2. MODIFICACION / BLOQUEAR / DESBLOQUEAR (UPDATE)
+                            ELSE IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
+                            BEGIN
+                                UPDATE c
+                                SET c.[Act] = 0
+                                FROM [dbo].[Pacientes_Cambios_DNI101] c
+                                INNER JOIN inserted i ON c.[IdPaciente_DNI101] = i.[IdPaciente_DNI101];
+
+                                INSERT INTO [dbo].[Pacientes_Cambios_DNI101] (
+                                    [IdPaciente_DNI101], [DniNiño_DNI101], [Nombre_DNI101], [Apellido_DNI101],
+                                    [Telefono_DNI101], [Email_DNI101], [Direccion_DNI101], [Activo_DNI101],
+                                    [FechaCambio], [UsuarioDni], [TipoOperacion], [Act]
+                                )
+                                SELECT 
+                                    i.[IdPaciente_DNI101], i.[DniNiño_DNI101], i.[Nombre_DNI101], i.[Apellido_DNI101],
+                                    i.[Telefono_DNI101], i.[Email_DNI101], i.[Direccion_DNI101], ISNULL(i.[Activo_DNI101], 1),
+                                    SYSDATETIME(), ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
+                                    CASE 
+                                        WHEN ISNULL(d.[Activo_DNI101], 1) = 1 AND ISNULL(i.[Activo_DNI101], 1) = 0 THEN 'BLOQUEAR'
+                                        WHEN ISNULL(d.[Activo_DNI101], 1) = 0 AND ISNULL(i.[Activo_DNI101], 1) = 1 THEN 'DESBLOQUEAR'
+                                        ELSE 'MODIFICACIÓN'
+                                    END,
+                                    1
+                                FROM inserted i
+                                JOIN deleted d ON i.[IdPaciente_DNI101] = d.[IdPaciente_DNI101];
+                            END
+                            -- 3. DELETE físico (registrado como BLOQUEAR)
+                            ELSE IF EXISTS (SELECT 1 FROM deleted)
+                            BEGIN
+                                UPDATE c
+                                SET c.[Act] = 0
+                                FROM [dbo].[Pacientes_Cambios_DNI101] c
+                                INNER JOIN deleted d ON c.[IdPaciente_DNI101] = d.[IdPaciente_DNI101];
+
+                                INSERT INTO [dbo].[Pacientes_Cambios_DNI101] (
+                                    [IdPaciente_DNI101], [DniNiño_DNI101], [Nombre_DNI101], [Apellido_DNI101],
+                                    [Telefono_DNI101], [Email_DNI101], [Direccion_DNI101], [Activo_DNI101],
+                                    [FechaCambio], [UsuarioDni], [TipoOperacion], [Act]
+                                )
+                                SELECT 
+                                    d.[IdPaciente_DNI101], d.[DniNiño_DNI101], d.[Nombre_DNI101], d.[Apellido_DNI101],
+                                    d.[Telefono_DNI101], d.[Email_DNI101], d.[Direccion_DNI101], 0,
+                                    SYSDATETIME(), ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
+                                    'BLOQUEAR', 0
+                                FROM deleted d;
+                            END
+                        END";
+
+                    using (SqlCommand cmd = new SqlCommand(sqlTrigger, dbConn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // 3. Poblar datos iniciales si la tabla de cambios está vacía
+                    string sqlPoblar = @"
+                        IF NOT EXISTS (SELECT 1 FROM [dbo].[Pacientes_Cambios_DNI101])
+                        BEGIN
+                            INSERT INTO [dbo].[Pacientes_Cambios_DNI101] (
+                                [IdPaciente_DNI101], [DniNiño_DNI101], [Nombre_DNI101], [Apellido_DNI101],
+                                [Telefono_DNI101], [Email_DNI101], [Direccion_DNI101], [Activo_DNI101],
+                                [FechaCambio], [UsuarioDni], [TipoOperacion], [Act]
+                            )
+                            SELECT 
+                                p.[IdPaciente_DNI101], p.[DniNiño_DNI101], p.[Nombre_DNI101], p.[Apellido_DNI101],
+                                p.[Telefono_DNI101], p.[Email_DNI101], p.[Direccion_DNI101], ISNULL(p.[Activo_DNI101], 1),
+                                SYSDATETIME(), 11111111, 'ALTA', 1
+                            FROM [dbo].[Pacientes_DNI101] p;
                         END";
 
                     using (SqlCommand cmd = new SqlCommand(sqlPoblar, dbConn))

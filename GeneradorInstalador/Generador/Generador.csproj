@@ -8,12 +8,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>GeneradorInstalador</RootNamespace>
     <AssemblyName>GeneradorInstalador</AssemblyName>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="Template\**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <EmbeddedResource Include="Template.zip" Condition="Exists('Template.zip')" />
   </ItemGroup>
 
 </Project>

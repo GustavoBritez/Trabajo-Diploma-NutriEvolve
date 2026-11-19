@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.IO;
@@ -41,7 +42,32 @@ namespace DAL
                 return _cadenaConexionEstatica;
             }
 
-            // 1. Intentar leer desde ConfigurationManager (App.config / *.dll.config)
+            // 1. Intentar leer desde 'db_connection.txt' generado por el instalador
+            try
+            {
+                string asmDir = Path.GetDirectoryName(typeof(Conexion).Assembly.Location) ?? AppDomain.CurrentDomain.BaseDirectory;
+                string[] candidatosTxt = new[]
+                {
+                    Path.Combine(asmDir, "db_connection.txt"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "db_connection.txt")
+                };
+
+                foreach (string pathTxt in candidatosTxt)
+                {
+                    if (File.Exists(pathTxt))
+                    {
+                        string contenido = File.ReadAllText(pathTxt).Trim();
+                        if (!string.IsNullOrWhiteSpace(contenido))
+                        {
+                            _cadenaConexionEstatica = NormalizarCadena(contenido);
+                            return _cadenaConexionEstatica;
+                        }
+                    }
+                }
+            }
+            catch { }
+
+            // 2. Intentar leer desde ConfigurationManager (App.config / *.dll.config)
             try
             {
                 var connSetting = ConfigurationManager.ConnectionStrings["MiConexionDB"]
@@ -50,22 +76,6 @@ namespace DAL
                 {
                     _cadenaConexionEstatica = NormalizarCadena(connSetting.ConnectionString);
                     return _cadenaConexionEstatica;
-                }
-            }
-            catch { }
-
-            // 2. Intentar leer desde un archivo de texto plano local 'db_connection.txt' en la carpeta de la app
-            try
-            {
-                string pathTxt = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "db_connection.txt");
-                if (File.Exists(pathTxt))
-                {
-                    string contenido = File.ReadAllText(pathTxt).Trim();
-                    if (!string.IsNullOrWhiteSpace(contenido))
-                    {
-                        _cadenaConexionEstatica = NormalizarCadena(contenido);
-                        return _cadenaConexionEstatica;
-                    }
                 }
             }
             catch { }
@@ -104,13 +114,25 @@ namespace DAL
 
         private static string DetectarInstanciaDisponible()
         {
-            string[] instancias = new[]
+            var instancias = new List<string>();
+            try
             {
-                ".",
-                @".\SQLEXPRESS",
-                @"localhost",
-                @"(LocalDB)\MSSQLLocalDB"
-            };
+                using var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL");
+                if (key != null)
+                {
+                    foreach (string nombre in key.GetValueNames())
+                    {
+                        string inst = nombre == "MSSQLSERVER" ? "." : @".\" + nombre;
+                        if (!instancias.Contains(inst)) instancias.Add(inst);
+                    }
+                }
+            }
+            catch { }
+
+            foreach (var fallback in new[] { ".", @".\SQLEXPRESS", @"localhost", @"(LocalDB)\MSSQLLocalDB" })
+            {
+                if (!instancias.Contains(fallback)) instancias.Add(fallback);
+            }
 
             foreach (var inst in instancias)
             {

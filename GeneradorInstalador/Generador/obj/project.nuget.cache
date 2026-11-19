@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "5C1neZ17paw=",
+  "dgSpecHash": "XNR0CTH2YNg=",
   "success": true,
-  "projectFilePath": "c:\\Users\\Navegador\\Desktop\\ELL\\GeneradorInstalador\\Generador\\Generador.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\Danie\\Desktop\\GIT\\GeneradorInstalador\\Generador\\Generador.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Danie\\.nuget\\packages\\microsoft.net.illink.tasks\\9.0.8\\microsoft.net.illink.tasks.9.0.8.nupkg.sha512"
+  ],
   "logs": []
 }

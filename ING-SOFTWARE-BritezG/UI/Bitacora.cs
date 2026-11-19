@@ -103,6 +103,19 @@ namespace UI
             FormManager.Navegar(this, FormManager.ObtenerMenuPrincipal());
         }
 
+        private void btnAyudaContextual_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                using var frmAyuda = new UI.PN2.frmManualAyuda(5);
+                frmAyuda.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir la ayuda contextual: {ex.Message}", "Ayuda", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
         private void Bitacora_Load(object? sender, EventArgs e)
         {
             GestionBitacora_Load(sender, e);

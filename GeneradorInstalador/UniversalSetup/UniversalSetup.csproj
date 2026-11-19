@@ -9,6 +9,12 @@
     <RootNamespace>UniversalSetup</RootNamespace>
     <AssemblyName>Setup</AssemblyName>
     <ApplicationManifest Condition="Exists('app.manifest')">app.manifest</ApplicationManifest>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
