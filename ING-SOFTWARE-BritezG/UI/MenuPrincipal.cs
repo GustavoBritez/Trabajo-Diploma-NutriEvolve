@@ -779,6 +779,7 @@ namespace UI
             }
 
             CargarFormularioEnContenedor(_frmBitacoraCambiosContenido);
+            _frmBitacoraCambiosContenido.RefrescarDatos();
         }
 
         private UI.PN2.frmReporteInteligente? _frmReportePredictivoContenido;

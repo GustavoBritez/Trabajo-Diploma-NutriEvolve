@@ -423,11 +423,38 @@ namespace DAL
                             -- 2. MODIFICACION / BLOQUEAR / DESBLOQUEAR (UPDATE)
                             ELSE IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
                             BEGIN
+                                -- Ignorar actualizaciones puramente técnicas (como recálculo de Dígito Verificador DV)
+                                IF NOT EXISTS (
+                                    SELECT 1 
+                                    FROM inserted i 
+                                    JOIN deleted d ON i.[IdPaciente_DNI101] = d.[IdPaciente_DNI101]
+                                    WHERE ISNULL(i.[DniNiño_DNI101], '') <> ISNULL(d.[DniNiño_DNI101], '')
+                                       OR ISNULL(i.[Nombre_DNI101], '') <> ISNULL(d.[Nombre_DNI101], '')
+                                       OR ISNULL(i.[Apellido_DNI101], '') <> ISNULL(d.[Apellido_DNI101], '')
+                                       OR ISNULL(i.[Telefono_DNI101], '') <> ISNULL(d.[Telefono_DNI101], '')
+                                       OR ISNULL(i.[Email_DNI101], '') <> ISNULL(d.[Email_DNI101], '')
+                                       OR ISNULL(i.[Direccion_DNI101], '') <> ISNULL(d.[Direccion_DNI101], '')
+                                       OR ISNULL(i.[Activo_DNI101], 1) <> ISNULL(d.[Activo_DNI101], 1)
+                                )
+                                BEGIN
+                                    RETURN;
+                                END
+
+                                -- Desmarcar versiones previas de ESE paciente que cambió
                                 UPDATE c
                                 SET c.[Act] = 0
                                 FROM [dbo].[Pacientes_Cambios_DNI101] c
-                                INNER JOIN inserted i ON c.[IdPaciente_DNI101] = i.[IdPaciente_DNI101];
+                                INNER JOIN inserted i ON c.[IdPaciente_DNI101] = i.[IdPaciente_DNI101]
+                                INNER JOIN deleted d ON i.[IdPaciente_DNI101] = d.[IdPaciente_DNI101]
+                                WHERE ISNULL(i.[DniNiño_DNI101], '') <> ISNULL(d.[DniNiño_DNI101], '')
+                                   OR ISNULL(i.[Nombre_DNI101], '') <> ISNULL(d.[Nombre_DNI101], '')
+                                   OR ISNULL(i.[Apellido_DNI101], '') <> ISNULL(d.[Apellido_DNI101], '')
+                                   OR ISNULL(i.[Telefono_DNI101], '') <> ISNULL(d.[Telefono_DNI101], '')
+                                   OR ISNULL(i.[Email_DNI101], '') <> ISNULL(d.[Email_DNI101], '')
+                                   OR ISNULL(i.[Direccion_DNI101], '') <> ISNULL(d.[Direccion_DNI101], '')
+                                   OR ISNULL(i.[Activo_DNI101], 1) <> ISNULL(d.[Activo_DNI101], 1);
 
+                                -- Insertar la nueva versión activa con Act = 1
                                 INSERT INTO [dbo].[Pacientes_Cambios_DNI101] (
                                     [IdPaciente_DNI101], [DniNiño_DNI101], [Nombre_DNI101], [Apellido_DNI101],
                                     [Telefono_DNI101], [Email_DNI101], [Direccion_DNI101], [Activo_DNI101],
@@ -444,7 +471,14 @@ namespace DAL
                                     END,
                                     1
                                 FROM inserted i
-                                JOIN deleted d ON i.[IdPaciente_DNI101] = d.[IdPaciente_DNI101];
+                                JOIN deleted d ON i.[IdPaciente_DNI101] = d.[IdPaciente_DNI101]
+                                WHERE ISNULL(i.[DniNiño_DNI101], '') <> ISNULL(d.[DniNiño_DNI101], '')
+                                   OR ISNULL(i.[Nombre_DNI101], '') <> ISNULL(d.[Nombre_DNI101], '')
+                                   OR ISNULL(i.[Apellido_DNI101], '') <> ISNULL(d.[Apellido_DNI101], '')
+                                   OR ISNULL(i.[Telefono_DNI101], '') <> ISNULL(d.[Telefono_DNI101], '')
+                                   OR ISNULL(i.[Email_DNI101], '') <> ISNULL(d.[Email_DNI101], '')
+                                   OR ISNULL(i.[Direccion_DNI101], '') <> ISNULL(d.[Direccion_DNI101], '')
+                                   OR ISNULL(i.[Activo_DNI101], 1) <> ISNULL(d.[Activo_DNI101], 1);
                             END
                             -- 3. DELETE físico (registrado como BLOQUEAR)
                             ELSE IF EXISTS (SELECT 1 FROM deleted)

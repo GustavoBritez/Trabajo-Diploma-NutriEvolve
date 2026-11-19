@@ -539,6 +539,23 @@ namespace DAL.PN2
                     SET Act = 1
                     WHERE IdCambio = @IdCambio;
 
+                    -- Sincronizar también en las tablas 1:N de contactos
+                    IF @Email IS NOT NULL AND LEN(TRIM(@Email)) > 0
+                    BEGIN
+                        IF EXISTS (SELECT 1 FROM Paciente_Emails_DNI101 WHERE IdPaciente_DNI101 = @IdPaciente AND EsPrincipal_DNI101 = 1)
+                            UPDATE Paciente_Emails_DNI101 SET Email_DNI101 = @Email WHERE IdPaciente_DNI101 = @IdPaciente AND EsPrincipal_DNI101 = 1;
+                        ELSE
+                            INSERT INTO Paciente_Emails_DNI101 (IdPaciente_DNI101, Email_DNI101, EsPrincipal_DNI101, Activo_DNI101) VALUES (@IdPaciente, @Email, 1, 1);
+                    END
+
+                    IF @Tel IS NOT NULL AND LEN(TRIM(@Tel)) > 0
+                    BEGIN
+                        IF EXISTS (SELECT 1 FROM Paciente_Telefonos_DNI101 WHERE IdPaciente_DNI101 = @IdPaciente AND EsPrincipal_DNI101 = 1)
+                            UPDATE Paciente_Telefonos_DNI101 SET Numero_DNI101 = @Tel WHERE IdPaciente_DNI101 = @IdPaciente AND EsPrincipal_DNI101 = 1;
+                        ELSE
+                            INSERT INTO Paciente_Telefonos_DNI101 (IdPaciente_DNI101, Numero_DNI101, Tipo_DNI101, EsPrincipal_DNI101, Activo_DNI101) VALUES (@IdPaciente, @Tel, 'Celular', 1, 1);
+                    END
+
                     EXEC sp_set_session_context @key=N'EsReversion', @value=0;";
 
                 using (var cmdUpd = new SqlCommand(sqlUpd, tx.Connection, tx))

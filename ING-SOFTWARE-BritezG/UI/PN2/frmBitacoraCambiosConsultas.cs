@@ -43,6 +43,37 @@ namespace UI.PN2
             ConfigurarVistaSegunModulo();
         }
 
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+            if (this.Visible)
+            {
+                RefrescarDatos();
+            }
+        }
+
+        public void RefrescarDatos()
+        {
+            txtCodConsulta.Clear();
+            txtNombre.Clear();
+            dtpFechaIni.Checked = false;
+            dtpFechaFin.Checked = false;
+
+            if (cmbOperacion.Items.Count > 0)
+            {
+                cmbOperacion.SelectedIndex = 0; // Todas
+            }
+
+            if (cmbModulo.SelectedIndex == 0)
+            {
+                CargarBitacoraPacientes();
+            }
+            else
+            {
+                CargarBitacoraConsultas();
+            }
+        }
+
         public void ActualizarIdioma()
         {
             if (ServicesSessionManager.Instancia.ObtenerIdioma() != null)
@@ -206,24 +237,7 @@ namespace UI.PN2
 
         private void btnLimpiar_Click(object? sender, EventArgs e)
         {
-            txtCodConsulta.Clear();
-            txtNombre.Clear();
-            dtpFechaIni.Checked = false;
-            dtpFechaFin.Checked = false;
-
-            if (cmbOperacion.Items.Count > 0)
-            {
-                cmbOperacion.SelectedIndex = 0;
-            }
-
-            if (cmbModulo.SelectedIndex == 0)
-            {
-                CargarBitacoraPacientes();
-            }
-            else
-            {
-                CargarBitacoraConsultas();
-            }
+            RefrescarDatos();
         }
 
         private void btnActivar_Click(object? sender, EventArgs e)
@@ -376,15 +390,6 @@ namespace UI.PN2
                         if (e.ColumnIndex == colPacAct.Index)
                         {
                             e.CellStyle.ForeColor = Color.Gray;
-                        }
-                    }
-
-                    if (e.ColumnIndex == colPacEstado.Index)
-                    {
-                        if (!cambio.Activo)
-                        {
-                            e.CellStyle.ForeColor = Color.DarkRed;
-                            e.CellStyle.Font = new Font(dgvCambiosPacientes.Font, FontStyle.Bold);
                         }
                     }
 

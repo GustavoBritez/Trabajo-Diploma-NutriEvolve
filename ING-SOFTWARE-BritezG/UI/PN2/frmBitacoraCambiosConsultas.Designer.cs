@@ -42,7 +42,6 @@ namespace UI.PN2
             colPacEmail = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colPacCelular = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colPacDireccion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            colPacEstado = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colPacOperacion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colPacUsuario = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colPacAct = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -207,7 +206,6 @@ namespace UI.PN2
                 colPacEmail,
                 colPacCelular,
                 colPacDireccion,
-                colPacEstado,
                 colPacOperacion,
                 colPacUsuario,
                 colPacAct,
@@ -298,15 +296,6 @@ namespace UI.PN2
             colPacDireccion.HeaderText = "Dirección";
             colPacDireccion.Name = "colPacDireccion";
             colPacDireccion.ReadOnly = true;
-
-            // 
-            // colPacEstado
-            // 
-            colPacEstado.DataPropertyName = "EstadoStr";
-            colPacEstado.HeaderText = "Estado";
-            colPacEstado.Name = "colPacEstado";
-            colPacEstado.ReadOnly = true;
-            colPacEstado.Width = 75;
 
             // 
             // colPacOperacion
@@ -739,7 +728,6 @@ namespace UI.PN2
         private System.Windows.Forms.DataGridViewTextBoxColumn colPacEmail;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPacCelular;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPacDireccion;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colPacEstado;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPacOperacion;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPacUsuario;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPacAct;
