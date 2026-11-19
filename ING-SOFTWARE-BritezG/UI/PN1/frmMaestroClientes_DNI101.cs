@@ -43,6 +43,7 @@ namespace UI.PN1
         private readonly PacienteBLL_DNI101 _pacienteBLL = new();
         private int _idPacienteSeleccionado = 0;
         private bool _procesandoAltaDialogo = false;
+        private bool _dniCifradoActivo = false;
 
         public frmMaestroClientes_DNI101()
         {
@@ -174,6 +175,14 @@ namespace UI.PN1
                     TraductorUI.TraducirDataGridView(dgvClientes, new IdiomaBLL(), this.Name);
                 }
 
+                _dniCifradoActivo = false;
+                ActualizarEstadoBotonRevertir();
+                if (dgvClientes.Columns["colDni"] != null)
+                {
+                    dgvClientes.Columns["colDni"].Width = 90;
+                }
+                lblDni.Text = " DNI:";
+
                 if (dgvClientes.Rows.Count > 0)
                 {
                     dgvClientes.Rows[0].Selected = true;
@@ -236,6 +245,7 @@ namespace UI.PN1
                     txtRutaDesSerializar.Enabled = true;
                     btnLimpiar.Enabled = true;
                     btnAyudaContextual.Enabled = true;
+                    btnRevertirDni.Enabled = true;
                     break;
 
                 case ModoOperacion.Alta:
@@ -277,6 +287,7 @@ namespace UI.PN1
                     btnExaminarDesSerializar.Enabled = false;
                     txtRutaSerializar.Enabled = false;
                     txtRutaDesSerializar.Enabled = false;
+                    btnRevertirDni.Enabled = false;
 
                     txtDni.Focus();
                     AgregarMensaje("Modo AÑADIR activado. Ingrese los datos del nuevo cliente.");
@@ -320,6 +331,7 @@ namespace UI.PN1
                     btnExaminarDesSerializar.Enabled = false;
                     txtRutaSerializar.Enabled = false;
                     txtRutaDesSerializar.Enabled = false;
+                    btnRevertirDni.Enabled = false;
 
                     txtApellidos.Focus();
                     AgregarMensaje($"Modo MODIFICAR activado para cliente DNI {txtDni.Text}.");
@@ -416,6 +428,10 @@ namespace UI.PN1
 
         private void btnAnadir_Click(object? sender, EventArgs e)
         {
+            if (_dniCifradoActivo)
+            {
+                RevertirDnisAPlano();
+            }
             ConfigurarEstado(ModoOperacion.Alta);
         }
 
@@ -425,6 +441,10 @@ namespace UI.PN1
             {
                 MessageBox.Show("Por favor seleccione un cliente de la grilla para modificar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
+            }
+            if (_dniCifradoActivo)
+            {
+                RevertirDnisAPlano();
             }
             ConfigurarEstado(ModoOperacion.Modificacion);
         }
@@ -458,6 +478,129 @@ namespace UI.PN1
                 }
             }
         }
+
+        #region Criptografía Reversible (AES-256)
+
+        private void btnRevertirDni_Click(object? sender, EventArgs e)
+        {
+            if (_modoActual != ModoOperacion.Inicio)
+            {
+                MessageBox.Show("La función de Criptografía Reversible (AES-256) solo está disponible en modo de consulta de clientes.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (dgvClientes.DataSource is not DataTable dt || dt.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay registros de clientes en la grilla para aplicar criptografía reversible.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            try
+            {
+                _dniCifradoActivo = !_dniCifradoActivo;
+
+                if (dt.Columns.Contains("DNI"))
+                {
+                    dt.Columns["DNI"].ReadOnly = false;
+                    dt.Columns["DNI"].MaxLength = -1;
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (row.RowState == DataRowState.Deleted) continue;
+                        string valorActual = row["DNI"]?.ToString() ?? "";
+                        if (string.IsNullOrWhiteSpace(valorActual)) continue;
+
+                        if (_dniCifradoActivo)
+                        {
+                            // Cifrar a AES-256 (Base64)
+                            row["DNI"] = _pacienteBLL.CifrarDniAES256(valorActual);
+                        }
+                        else
+                        {
+                            // Desrevertir a número DNI original
+                            row["DNI"] = _pacienteBLL.DescifrarDniAES256(valorActual);
+                        }
+                    }
+                }
+
+                // Ajustar el ancho visual de la columna DNI
+                if (dgvClientes.Columns["colDni"] != null)
+                {
+                    dgvClientes.Columns["colDni"].Width = _dniCifradoActivo ? 210 : 90;
+                }
+
+                // Actualizar la etiqueta del panel de campos
+                lblDni.Text = _dniCifradoActivo ? " DNI (AES):" : " DNI:";
+
+                // Actualizar texto y tooltip del botón
+                ActualizarEstadoBotonRevertir();
+
+                // Reflejar el valor de la fila seleccionada en txtDni
+                CargarCamposDesdeGrilla();
+
+                if (_dniCifradoActivo)
+                {
+                    AgregarMensaje("CRIPTOGRAFÍA REVERSIBLE ACTIVADA: Números de DNI cifrados con AES-256 (Base64). Confidencialidad activa.");
+                }
+                else
+                {
+                    AgregarMensaje("CRIPTOGRAFÍA REVERSIBLE DESREVERTIDA: Números de DNI descifrados a su valor numérico original en texto plano.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al procesar criptografía reversible: {ex.Message}", "Error de Criptografía", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AgregarMensaje($"Error en criptografía AES-256: {ex.Message}");
+            }
+        }
+
+        private void ActualizarEstadoBotonRevertir()
+        {
+            if (_dniCifradoActivo)
+            {
+                btnRevertirDni.Text = "Desrevertir DNI";
+                toolTipGeneral.SetToolTip(btnRevertirDni, "Criptografía Reversible (AES-256 Activa): Presione para descifrar y volver a ver el número de DNI original en texto plano.");
+            }
+            else
+            {
+                btnRevertirDni.Text = "Revertir/Desrevertir";
+                toolTipGeneral.SetToolTip(btnRevertirDni, "Criptografía Reversible (AES-256): Presione para cifrar con AES-256 los números de DNI y ver su representación en Base64.");
+            }
+        }
+
+        private void RevertirDnisAPlano()
+        {
+            if (!_dniCifradoActivo) return;
+
+            try
+            {
+                if (dgvClientes.DataSource is DataTable dt && dt.Columns.Contains("DNI"))
+                {
+                    dt.Columns["DNI"].ReadOnly = false;
+                    dt.Columns["DNI"].MaxLength = -1;
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (row.RowState == DataRowState.Deleted) continue;
+                        string valorActual = row["DNI"]?.ToString() ?? "";
+                        if (string.IsNullOrWhiteSpace(valorActual)) continue;
+                        row["DNI"] = _pacienteBLL.DescifrarDniAES256(valorActual);
+                    }
+                }
+
+                _dniCifradoActivo = false;
+                if (dgvClientes.Columns["colDni"] != null)
+                {
+                    dgvClientes.Columns["colDni"].Width = 90;
+                }
+                lblDni.Text = " DNI:";
+                ActualizarEstadoBotonRevertir();
+                CargarCamposDesdeGrilla();
+            }
+            catch { }
+        }
+
+        #endregion
 
         private void btnAplicar_Click(object? sender, EventArgs e)
         {

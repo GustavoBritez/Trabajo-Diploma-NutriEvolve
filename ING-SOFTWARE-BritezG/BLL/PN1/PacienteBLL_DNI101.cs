@@ -395,5 +395,25 @@ namespace BLL
             }
             catch { }
         }
+
+        #region Criptografía Reversible (AES-256)
+
+        /// <summary>
+        /// Cifra un número de DNI aplicando criptografía reversible simétrica AES-256.
+        /// </summary>
+        public string CifrarDniAES256(string dni)
+        {
+            return ServicioCriptografiaAES.CifrarAES256(dni);
+        }
+
+        /// <summary>
+        /// Descifra un DNI previamente cifrado en AES-256 devolviendo el valor numérico original en texto plano.
+        /// </summary>
+        public string DescifrarDniAES256(string dniCifrado)
+        {
+            return ServicioCriptografiaAES.DescifrarAES256(dniCifrado);
+        }
+
+        #endregion
     }
 }

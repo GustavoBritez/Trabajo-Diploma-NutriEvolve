@@ -60,6 +60,7 @@ namespace UI.PN1
             btnCancelar = new UI.Controles.BotonFuturista();
             btnSalir = new UI.Controles.BotonFuturista();
             btnAyudaContextual = new UI.Controles.BotonFuturista();
+            btnRevertirDni = new UI.Controles.BotonFuturista();
 
             panelSeparador = new System.Windows.Forms.Panel();
             btnSerializar = new System.Windows.Forms.Button();
@@ -250,6 +251,18 @@ namespace UI.PN1
             btnEliminar.Text = "Eliminar";
             toolTipGeneral.SetToolTip(btnEliminar, "Bloquear / Baja Lógica: Desactiva lógicamente al cliente seleccionado (no se elimina físicamente, en la bitácora se registra como Bloquear).");
             btnEliminar.Click += btnEliminar_Click;
+
+            // 
+            // btnRevertirDni
+            // 
+            btnRevertirDni.Font = new System.Drawing.Font("Segoe UI Semibold", 8.5F, System.Drawing.FontStyle.Bold);
+            btnRevertirDni.Location = new System.Drawing.Point(800, 198);
+            btnRevertirDni.Name = "btnRevertirDni";
+            btnRevertirDni.Size = new System.Drawing.Size(130, 36);
+            btnRevertirDni.TabIndex = 6;
+            btnRevertirDni.Text = "Revertir/Desrevertir";
+            toolTipGeneral.SetToolTip(btnRevertirDni, "Criptografía Reversible (AES-256): Permite alternar entre cifrar los números de DNI en AES-256 (Base64) y descifrarlos para volver a ver el número original en texto plano.");
+            btnRevertirDni.Click += btnRevertirDni_Click;
 
             // 
             // btnAplicar
@@ -604,6 +617,7 @@ namespace UI.PN1
             Controls.Add(btnCancelar);
             Controls.Add(btnAplicar);
             Controls.Add(btnEliminar);
+            Controls.Add(btnRevertirDni);
             Controls.Add(btnModificar);
             Controls.Add(btnAnadir);
             Controls.Add(btnActualizar);
@@ -664,6 +678,7 @@ namespace UI.PN1
         private UI.Controles.BotonFuturista btnCancelar;
         private UI.Controles.BotonFuturista btnSalir;
         private UI.Controles.BotonFuturista btnAyudaContextual;
+        private UI.Controles.BotonFuturista btnRevertirDni;
 
         private System.Windows.Forms.Panel panelSeparador;
         private System.Windows.Forms.Button btnSerializar;
