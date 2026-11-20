@@ -1,5 +1,6 @@
 using System;
-using PdfSharpCore.Pdf.IO;
+using System.IO;
+using UI.PN2;
 
 namespace TestRunner
 {
@@ -7,14 +8,15 @@ namespace TestRunner
     {
         static void Main()
         {
-            string pdfPath = @"C:\Users\Navegador\Desktop\GIT\ING-SOFTWARE-BritezG\Manual_de_Ayuda_NutriEvolve.pdf";
-            var doc = PdfReader.Open(pdfPath, PdfDocumentOpenMode.ReadOnly);
-            Console.WriteLine($"El documento PDF tiene {doc.PageCount} páginas.");
-            for (int i = 0; i < doc.PageCount; i++)
-            {
-                var p = doc.Pages[i];
-                Console.WriteLine($"  Página {i + 1}: Ancho={p.Width}, Alto={p.Height}");
-            }
+            string pdfRoot = @"C:\Users\Danie\Desktop\GIT\Manual_de_Ayuda_NutriEvolve.pdf";
+            string pdfProj = @"C:\Users\Danie\Desktop\GIT\ING-SOFTWARE-BritezG\Manual_de_Ayuda_NutriEvolve.pdf";
+
+            Console.WriteLine("Generando PDF limpio y simplificado...");
+            ManualAyudaPdfGenerator.GenerarPdf(pdfRoot);
+            Console.WriteLine($"Generado en raíz: {pdfRoot} (Tamaño: {new FileInfo(pdfRoot).Length} bytes)");
+
+            File.Copy(pdfRoot, pdfProj, true);
+            Console.WriteLine($"Copiado a proyecto: {pdfProj} (Tamaño: {new FileInfo(pdfProj).Length} bytes)");
         }
     }
 }

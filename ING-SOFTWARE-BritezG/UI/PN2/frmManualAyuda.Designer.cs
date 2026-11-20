@@ -89,7 +89,7 @@ namespace UI.PN2
             lblSubtitulo.Name = "lblSubtitulo";
             lblSubtitulo.Size = new System.Drawing.Size(560, 17);
             lblSubtitulo.TabIndex = 1;
-            lblSubtitulo.Text = "Índice interactivo para navegación rápida (secciones extensas) y directivas operativas del sistema";
+            lblSubtitulo.Text = "Guía práctica de uso del sistema y funciones de cada botón";
 
             // panelAvisoSeguridad (Callout de seguridad destacado)
             panelAvisoSeguridad.BackColor = System.Drawing.Color.FromArgb(254, 243, 199);
@@ -110,7 +110,7 @@ namespace UI.PN2
             lblAvisoTitulo.Name = "lblAvisoTitulo";
             lblAvisoTitulo.Size = new System.Drawing.Size(295, 15);
             lblAvisoTitulo.TabIndex = 0;
-            lblAvisoTitulo.Text = "DIRECTIVA CRÍTICA DE SEGURIDAD Y PREVENCIÓN:";
+            lblAvisoTitulo.Text = "CONSEJO PRÁCTICO:";
 
             // lblAvisoTexto
             lblAvisoTexto.AutoSize = true;
@@ -120,7 +120,7 @@ namespace UI.PN2
             lblAvisoTexto.Name = "lblAvisoTexto";
             lblAvisoTexto.Size = new System.Drawing.Size(730, 15);
             lblAvisoTexto.TabIndex = 1;
-            lblAvisoTexto.Text = "Realice un backup completo de la base de datos antes de reinstalar. El instalador inteligente detectará y protegerá sus datos existentes.";
+            lblAvisoTexto.Text = "Recuerde guardar sus cambios al completar una ficha médica y realizar copias de seguridad periódicas.";
 
             // panelIndice (Índice de navegación interactivo)
             panelIndice.BackColor = System.Drawing.Color.FromArgb(240, 245, 240);
@@ -154,7 +154,7 @@ namespace UI.PN2
             btnTema1.Name = "btnTema1";
             btnTema1.Size = new System.Drawing.Size(240, 36);
             btnTema1.TabIndex = 1;
-            btnTema1.Text = "1. Arquitectura General";
+            btnTema1.Text = "1. Bienvenida y Ayuda";
             btnTema1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             btnTema1.Click += (s, e) => MostrarCapitulo(1);
 
@@ -163,7 +163,7 @@ namespace UI.PN2
             btnTema2.Name = "btnTema2";
             btnTema2.Size = new System.Drawing.Size(240, 36);
             btnTema2.TabIndex = 2;
-            btnTema2.Text = "2. Maestro de Clientes (ABM-C)";
+            btnTema2.Text = "2. Gestión de Pacientes";
             btnTema2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             btnTema2.Click += (s, e) => MostrarCapitulo(2);
 
@@ -172,7 +172,7 @@ namespace UI.PN2
             btnTema3.Name = "btnTema3";
             btnTema3.Size = new System.Drawing.Size(240, 36);
             btnTema3.TabIndex = 3;
-            btnTema3.Text = "3. Tablas 1:N y Baja Lógica";
+            btnTema3.Text = "3. Teléfonos y Correos";
             btnTema3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             btnTema3.Click += (s, e) => MostrarCapitulo(3);
 
@@ -190,7 +190,7 @@ namespace UI.PN2
             btnTema5.Name = "btnTema5";
             btnTema5.Size = new System.Drawing.Size(240, 36);
             btnTema5.TabIndex = 5;
-            btnTema5.Text = "5. Bitácora Trigger y Rollback";
+            btnTema5.Text = "5. Historial de Cambios";
             btnTema5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             btnTema5.Click += (s, e) => MostrarCapitulo(5);
 
@@ -208,7 +208,7 @@ namespace UI.PN2
             btnTema7.Name = "btnTema7";
             btnTema7.Size = new System.Drawing.Size(240, 36);
             btnTema7.TabIndex = 7;
-            btnTema7.Text = "7. Reinstalador y Seguridad";
+            btnTema7.Text = "7. Copias de Seguridad";
             btnTema7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             btnTema7.Click += (s, e) => MostrarCapitulo(7);
 

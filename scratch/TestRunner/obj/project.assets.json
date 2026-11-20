@@ -1,7 +1,7 @@
 {
-  "version": 4,
+  "version": 3,
   "targets": {
-    "net9.0-windows": {
+    "net9.0-windows7.0": {
       "BCrypt.Net-Next/4.2.0": {
         "type": "package",
         "compile": {
@@ -2204,7 +2204,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net9.0-windows": [
+    "net9.0-windows7.0": [
       "BE >= 1.0.0",
       "BLL >= 1.0.0",
       "DAL >= 1.0.0",
@@ -2214,23 +2214,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Navegador\\.nuget\\packages\\": {},
+    "C:\\Users\\Danie\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Navegador\\Desktop\\GIT\\scratch\\TestRunner\\TestRunner.csproj",
+      "projectUniqueName": "C:\\Users\\Danie\\Desktop\\GIT\\scratch\\TestRunner\\TestRunner.csproj",
       "projectName": "TestRunner",
-      "projectPath": "C:\\Users\\Navegador\\Desktop\\GIT\\scratch\\TestRunner\\TestRunner.csproj",
-      "packagesPath": "C:\\Users\\Navegador\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Navegador\\Desktop\\GIT\\scratch\\TestRunner\\obj\\",
+      "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\scratch\\TestRunner\\TestRunner.csproj",
+      "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Danie\\Desktop\\GIT\\scratch\\TestRunner\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Navegador\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Danie\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -2239,29 +2239,26 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
-        "C:\\Users\\Navegador\\SQLClient": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net9.0-windows": {
-          "framework": "net9.0-windows7.0",
+        "net9.0-windows7.0": {
           "targetAlias": "net9.0-windows",
           "projectReferences": {
-            "C:\\Users\\Navegador\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
-              "projectPath": "C:\\Users\\Navegador\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\BE\\BE.csproj"
+            "C:\\Users\\Danie\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\BE\\BE.csproj": {
+              "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\BE\\BE.csproj"
             },
-            "C:\\Users\\Navegador\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj": {
-              "projectPath": "C:\\Users\\Navegador\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj"
+            "C:\\Users\\Danie\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj": {
+              "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\BLL\\BLL.csproj"
             },
-            "C:\\Users\\Navegador\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj": {
-              "projectPath": "C:\\Users\\Navegador\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj"
+            "C:\\Users\\Danie\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj": {
+              "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\DAL\\DAL.csproj"
             },
-            "C:\\Users\\Navegador\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\Services\\Services.csproj": {
-              "projectPath": "C:\\Users\\Navegador\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\Services\\Services.csproj"
+            "C:\\Users\\Danie\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\Services\\Services.csproj": {
+              "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\Services\\Services.csproj"
             },
-            "C:\\Users\\Navegador\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\UI\\UI.csproj": {
-              "projectPath": "C:\\Users\\Navegador\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\UI\\UI.csproj"
+            "C:\\Users\\Danie\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\UI\\UI.csproj": {
+              "projectPath": "C:\\Users\\Danie\\Desktop\\GIT\\ING-SOFTWARE-BritezG\\UI\\UI.csproj"
             }
           }
         }
@@ -2276,11 +2273,10 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.400"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
-      "net9.0-windows": {
-        "framework": "net9.0-windows7.0",
+      "net9.0-windows7.0": {
         "targetAlias": "net9.0-windows",
         "dependencies": {
           "PdfSharpCore": {
@@ -2307,7 +2303,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.403/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
       }
     }
   },
@@ -2319,7 +2315,7 @@
       "message": "El paquete \"OpenTK 3.1.0\" se restauró con \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\" en lugar de la plataforma de destino del proyecto \"net9.0-windows7.0\". Puede que el paquete no sea totalmente compatible con el proyecto.",
       "libraryId": "OpenTK",
       "targetGraphs": [
-        "net9.0-windows"
+        "net9.0-windows7.0"
       ]
     },
     {
@@ -2329,7 +2325,7 @@
       "message": "El paquete \"OpenTK.GLControl 3.1.0\" se restauró con \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\" en lugar de la plataforma de destino del proyecto \"net9.0-windows7.0\". Puede que el paquete no sea totalmente compatible con el proyecto.",
       "libraryId": "OpenTK.GLControl",
       "targetGraphs": [
-        "net9.0-windows"
+        "net9.0-windows7.0"
       ]
     },
     {
@@ -2339,7 +2335,7 @@
       "message": "El paquete \"SkiaSharp.Views.WindowsForms 3.119.0\" se restauró con \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\" en lugar de la plataforma de destino del proyecto \"net9.0-windows7.0\". Puede que el paquete no sea totalmente compatible con el proyecto.",
       "libraryId": "SkiaSharp.Views.WindowsForms",
       "targetGraphs": [
-        "net9.0-windows"
+        "net9.0-windows7.0"
       ]
     }
   ]

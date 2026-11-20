@@ -1,3 +1,0 @@
-# ING-SOFTWARE
-
-
