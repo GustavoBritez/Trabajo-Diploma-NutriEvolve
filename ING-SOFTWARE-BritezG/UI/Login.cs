@@ -209,6 +209,13 @@ namespace UI
         }
         #endregion
 
+        public void LimpiarCampos()
+        {
+            txtPassword.Text = string.Empty;
+            txtUsuario.Text = string.Empty;
+            txtUsuario.Focus();
+        }
+
         private void Login_Load(object? sender, EventArgs e)
         {
             TraductorUI.SincronizarComboIdioma(cmbIdioma);

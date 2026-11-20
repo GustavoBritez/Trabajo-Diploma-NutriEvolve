@@ -14,33 +14,37 @@ namespace DAL
             TurnosDatabaseInitializer.AsegurarTablas();
         }
 
-        public int Guardar(string dniNiño, string nombre, string apellido, string? telefono, string? email, DateTime fechaNacimiento, string? sexo, string? obraSocial, string? dv)
+        public int Guardar(string dniNiño, string nombre, string apellido, string? telefono, string? email, DateTime fechaNacimiento, string? sexo, string? obraSocial, string? dv, int usuarioDni = 11111111)
         {
             try
             {
-                string query = @"
+                return _conexion.ExecuteTransaction(tx =>
+                {
+                    using (var cmdCtx = new SqlCommand("EXEC sp_set_session_context @key=N'UsuarioDni', @value=@val;", tx.Connection, tx))
+                    {
+                        cmdCtx.Parameters.AddWithValue("@val", usuarioDni);
+                        cmdCtx.ExecuteNonQuery();
+                    }
+
+                    string query = @"
 INSERT INTO Pacientes_DNI101 (DniNiño_DNI101, Nombre_DNI101, Apellido_DNI101, Telefono_DNI101, Email_DNI101, FechaNacimiento_DNI101, Sexo_DNI101, ObraSocial_DNI101, DV)
 VALUES (@dni, @nombre, @apellido, @telefono, @email, @fechaNac, @sexo, @obraSocial, @dv);
 SELECT CAST(SCOPE_IDENTITY() as int);";
 
-                DataTable dt = _conexion.ExecuteReader(query,
-                    new SqlParameter("@dni", dniNiño),
-                    new SqlParameter("@nombre", nombre),
-                    new SqlParameter("@apellido", apellido),
-                    new SqlParameter("@telefono", (object?)telefono ?? DBNull.Value),
-                    new SqlParameter("@email", (object?)email ?? DBNull.Value),
-                    new SqlParameter("@fechaNac", fechaNacimiento),
-                    new SqlParameter("@sexo", (object?)sexo ?? DBNull.Value),
-                    new SqlParameter("@obraSocial", (object?)obraSocial ?? DBNull.Value),
-                    new SqlParameter("@dv", (object?)dv ?? DBNull.Value)
-                );
+                    using var cmd = new SqlCommand(query, tx.Connection, tx);
+                    cmd.Parameters.AddWithValue("@dni", dniNiño);
+                    cmd.Parameters.AddWithValue("@nombre", nombre);
+                    cmd.Parameters.AddWithValue("@apellido", apellido);
+                    cmd.Parameters.AddWithValue("@telefono", (object?)telefono ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@email", (object?)email ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@fechaNac", fechaNacimiento);
+                    cmd.Parameters.AddWithValue("@sexo", (object?)sexo ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@obraSocial", (object?)obraSocial ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@dv", (object?)dv ?? DBNull.Value);
 
-                if (dt.Rows.Count > 0 && dt.Rows[0][0] != DBNull.Value)
-                {
-                    return Convert.ToInt32(dt.Rows[0][0]);
-                }
-
-                return 0;
+                    object? obj = cmd.ExecuteScalar();
+                    return obj != null && obj != DBNull.Value ? Convert.ToInt32(obj) : 0;
+                });
             }
             catch (Exception ex)
             {
@@ -49,11 +53,19 @@ SELECT CAST(SCOPE_IDENTITY() as int);";
             }
         }
 
-        public bool Modificar(int idPaciente, string dniNiño, string nombre, string apellido, string? telefono, string? email, DateTime fechaNacimiento, string? sexo, string? obraSocial, string? dv)
+        public bool Modificar(int idPaciente, string dniNiño, string nombre, string apellido, string? telefono, string? email, DateTime fechaNacimiento, string? sexo, string? obraSocial, string? dv, int usuarioDni = 11111111)
         {
             try
             {
-                string query = @"
+                return _conexion.ExecuteTransaction(tx =>
+                {
+                    using (var cmdCtx = new SqlCommand("EXEC sp_set_session_context @key=N'UsuarioDni', @value=@val;", tx.Connection, tx))
+                    {
+                        cmdCtx.Parameters.AddWithValue("@val", usuarioDni);
+                        cmdCtx.ExecuteNonQuery();
+                    }
+
+                    string query = @"
 UPDATE Pacientes_DNI101
 SET DniNiño_DNI101 = @dni,
     Nombre_DNI101 = @nombre,
@@ -66,20 +78,21 @@ SET DniNiño_DNI101 = @dni,
     DV = @dv
 WHERE IdPaciente_DNI101 = @idPaciente;";
 
-                _conexion.ExecuteNonQuery(query,
-                    new SqlParameter("@idPaciente", idPaciente),
-                    new SqlParameter("@dni", dniNiño),
-                    new SqlParameter("@nombre", nombre),
-                    new SqlParameter("@apellido", apellido),
-                    new SqlParameter("@telefono", (object?)telefono ?? DBNull.Value),
-                    new SqlParameter("@email", (object?)email ?? DBNull.Value),
-                    new SqlParameter("@fechaNac", fechaNacimiento),
-                    new SqlParameter("@sexo", (object?)sexo ?? DBNull.Value),
-                    new SqlParameter("@obraSocial", (object?)obraSocial ?? DBNull.Value),
-                    new SqlParameter("@dv", (object?)dv ?? DBNull.Value)
-                );
+                    using var cmd = new SqlCommand(query, tx.Connection, tx);
+                    cmd.Parameters.AddWithValue("@idPaciente", idPaciente);
+                    cmd.Parameters.AddWithValue("@dni", dniNiño);
+                    cmd.Parameters.AddWithValue("@nombre", nombre);
+                    cmd.Parameters.AddWithValue("@apellido", apellido);
+                    cmd.Parameters.AddWithValue("@telefono", (object?)telefono ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@email", (object?)email ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@fechaNac", fechaNacimiento);
+                    cmd.Parameters.AddWithValue("@sexo", (object?)sexo ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@obraSocial", (object?)obraSocial ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@dv", (object?)dv ?? DBNull.Value);
+                    cmd.ExecuteNonQuery();
 
-                return true;
+                    return true;
+                });
             }
             catch (Exception ex)
             {
@@ -426,22 +439,34 @@ UPDATE Paciente_Telefonos_DNI101 SET Activo_DNI101 = 1 WHERE IdPaciente_DNI101 =
             _conexion.ExecuteNonQuery(sql, new SqlParameter("@id", idTelefono));
         }
 
-        public void ImportarClientesDesdeXml(List<(string dni, string apellidos, string nombres, string email, string celular, string direccion)> clientes)
+        public void ImportarClientesDesdeXml(List<(string dni, string apellidos, string nombres, string email, string celular, string direccion)> clientes, int usuarioDni = 11111111)
         {
             if (clientes == null || clientes.Count == 0) return;
 
             _conexion.ExecuteTransaction(tx =>
             {
+                using (var cmdCtx = new SqlCommand("EXEC sp_set_session_context @key=N'UsuarioDni', @value=@val;", tx.Connection, tx))
+                {
+                    cmdCtx.Parameters.AddWithValue("@val", usuarioDni);
+                    cmdCtx.ExecuteNonQuery();
+                }
+
                 foreach (var c in clientes)
                 {
                     string dni = c.dni.Trim();
+                    // Si el DNI viene cifrado en Base64 desde el archivo XML, lo desciframos al valor original plano
+                    if (Services.ServicioCriptografiaAES.EsTextoCifrado(dni))
+                    {
+                        dni = Services.ServicioCriptografiaAES.DescifrarAES256(dni).Trim();
+                    }
+
                     string apellidos = c.apellidos.Trim();
                     string nombres = c.nombres.Trim();
                     string email = c.email?.Trim() ?? "";
                     string celular = c.celular?.Trim() ?? "";
                     string direccion = c.direccion?.Trim() ?? "";
 
-                    if (string.IsNullOrWhiteSpace(dni)) continue;
+                    if (string.IsNullOrWhiteSpace(dni) || (string.IsNullOrWhiteSpace(apellidos) && string.IsNullOrWhiteSpace(nombres))) continue;
 
                     // 1. Verificar si ya existe por DNI (activo o inactivo)
                     string sqlCheck = "SELECT IdPaciente_DNI101 FROM Pacientes_DNI101 WHERE DniNiño_DNI101 = @dni;";

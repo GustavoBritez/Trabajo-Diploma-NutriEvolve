@@ -47,7 +47,7 @@ namespace BLL
                 BitacoraBLL bitacoraBLL = new();
                 int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 string descripcion = $"Restauración de Base de Datos (Restore) ejecutada desde: {ruta}";
-                bitacoraBLL.RegistrarBitacora(5, descripcion, dniActual, "Respaldo");
+                bitacoraBLL.RegistrarBitacora(1, descripcion, dniActual, "Respaldo");
                 new DigitoVerificadorBLL().RecalcularYPersistir();
             }
             catch (Exception ex)

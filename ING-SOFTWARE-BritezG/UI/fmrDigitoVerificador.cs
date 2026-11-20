@@ -99,14 +99,12 @@ namespace UI
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
 
-                if (ServicesSessionManager.Instancia.ObtenerUsuarioActivo() != null)
-                {
-                    FormManager.Navegar(this, FormManager.ObtenerMenuPrincipal());
-                }
-                else
-                {
-                    FormManager.Navegar(this, FormManager.ObtenerLogin());
-                }
+                // Por directiva de seguridad, tras recalcular los DV se invalida la sesión temporal
+                // y se regresa a la pantalla de LOGIN exigiendo reautenticación completa con credenciales.
+                ServicesSessionManager.Instancia.Logout();
+                var formLogin = FormManager.ObtenerLogin();
+                formLogin.LimpiarCampos();
+                FormManager.Navegar(this, formLogin);
             }
             catch (Exception ex)
             {

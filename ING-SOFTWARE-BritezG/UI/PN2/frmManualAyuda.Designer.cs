@@ -18,6 +18,7 @@ namespace UI.PN2
             panelHeader = new System.Windows.Forms.Panel();
             lblTitulo = new System.Windows.Forms.Label();
             lblSubtitulo = new System.Windows.Forms.Label();
+            btnExportarPdf = new UI.Controles.BotonFuturista();
 
             panelAvisoSeguridad = new System.Windows.Forms.Panel();
             lblAvisoTitulo = new System.Windows.Forms.Label();
@@ -47,11 +48,28 @@ namespace UI.PN2
             panelHeader.BackColor = System.Drawing.Color.FromArgb(76, 124, 89);
             panelHeader.Controls.Add(lblTitulo);
             panelHeader.Controls.Add(lblSubtitulo);
+            panelHeader.Controls.Add(btnExportarPdf);
             panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
             panelHeader.Location = new System.Drawing.Point(0, 0);
             panelHeader.Name = "panelHeader";
             panelHeader.Size = new System.Drawing.Size(960, 60);
             panelHeader.TabIndex = 0;
+
+            // btnExportarPdf
+            btnExportarPdf.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            btnExportarPdf.ColorPrincipal = System.Drawing.Color.FromArgb(235, 245, 235);
+            btnExportarPdf.ColorSecundario = System.Drawing.Color.FromArgb(215, 230, 218);
+            btnExportarPdf.Cursor = System.Windows.Forms.Cursors.Hand;
+            btnExportarPdf.EsBotonSecundario = true;
+            btnExportarPdf.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            btnExportarPdf.ForeColor = System.Drawing.Color.FromArgb(30, 60, 40);
+            btnExportarPdf.Location = new System.Drawing.Point(790, 12);
+            btnExportarPdf.Name = "btnExportarPdf";
+            btnExportarPdf.Size = new System.Drawing.Size(155, 36);
+            btnExportarPdf.TabIndex = 2;
+            btnExportarPdf.Text = "📄 Exportar PDF";
+            btnExportarPdf.UseVisualStyleBackColor = false;
+            btnExportarPdf.Click += btnExportarPdf_Click;
 
             // lblTitulo
             lblTitulo.AutoSize = true;
@@ -268,5 +286,6 @@ namespace UI.PN2
         private System.Windows.Forms.Panel panelContenido;
         private System.Windows.Forms.Label lblCapituloTitulo;
         private System.Windows.Forms.RichTextBox rtbContenido;
+        private UI.Controles.BotonFuturista btnExportarPdf;
     }
 }

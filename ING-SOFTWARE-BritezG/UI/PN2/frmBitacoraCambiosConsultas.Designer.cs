@@ -577,7 +577,8 @@ namespace UI.PN2
                 "Todas",
                 "ALTA",
                 "MODIFICACIÓN",
-                "BLOQUEAR / DESBLOQUEAR"
+                "BLOQUEAR",
+                "DESBLOQUEAR"
             });
             cmbOperacion.Location = new System.Drawing.Point(300, 72);
             cmbOperacion.Name = "cmbOperacion";

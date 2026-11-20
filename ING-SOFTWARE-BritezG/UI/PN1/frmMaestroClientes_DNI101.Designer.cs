@@ -59,6 +59,7 @@ namespace UI.PN1
             btnAplicar = new UI.Controles.BotonFuturista();
             btnCancelar = new UI.Controles.BotonFuturista();
             btnSalir = new UI.Controles.BotonFuturista();
+            btnBitacoraCambios = new UI.Controles.BotonFuturista();
             btnAyudaContextual = new UI.Controles.BotonFuturista();
             btnRevertirDni = new UI.Controles.BotonFuturista();
 
@@ -299,6 +300,18 @@ namespace UI.PN1
             btnSalir.Text = "Salir";
             toolTipGeneral.SetToolTip(btnSalir, "Salir: Cierra el módulo de Maestro de Clientes y regresa a la pantalla principal.");
             btnSalir.Click += btnSalir_Click;
+
+            // 
+            // btnBitacoraCambios
+            // 
+            btnBitacoraCambios.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            btnBitacoraCambios.Location = new System.Drawing.Point(800, 357);
+            btnBitacoraCambios.Name = "btnBitacoraCambios";
+            btnBitacoraCambios.Size = new System.Drawing.Size(130, 30);
+            btnBitacoraCambios.TabIndex = 10;
+            btnBitacoraCambios.Text = "Bitácora Cambios";
+            toolTipGeneral.SetToolTip(btnBitacoraCambios, "Bitácora de Cambios: Consulta el historial de cambios, bajas y modificaciones del cliente seleccionado y permite revertir versiones.");
+            btnBitacoraCambios.Click += btnBitacoraCambios_Click;
 
             // 
             // panelCampos (Lower input boxes with bright green label badges matching Excel)
@@ -614,6 +627,7 @@ namespace UI.PN1
             Controls.Add(panelMensaje);
             Controls.Add(panelCampos);
             Controls.Add(btnSalir);
+            Controls.Add(btnBitacoraCambios);
             Controls.Add(btnCancelar);
             Controls.Add(btnAplicar);
             Controls.Add(btnEliminar);
@@ -677,6 +691,7 @@ namespace UI.PN1
         private UI.Controles.BotonFuturista btnAplicar;
         private UI.Controles.BotonFuturista btnCancelar;
         private UI.Controles.BotonFuturista btnSalir;
+        private UI.Controles.BotonFuturista btnBitacoraCambios;
         private UI.Controles.BotonFuturista btnAyudaContextual;
         private UI.Controles.BotonFuturista btnRevertirDni;
 

@@ -245,6 +245,7 @@ namespace UI.PN1
                     txtRutaDesSerializar.Enabled = true;
                     btnLimpiar.Enabled = true;
                     btnAyudaContextual.Enabled = true;
+                    btnBitacoraCambios.Enabled = true;
                     btnRevertirDni.Enabled = true;
                     break;
 
@@ -276,6 +277,7 @@ namespace UI.PN1
                     btnCancelar.Enabled = true;
                     btnSalir.Enabled = false;
                     btnAyudaContextual.Enabled = false;
+                    btnBitacoraCambios.Enabled = false;
                     btnLimpiar.Enabled = false;
 
                     btnGestionEmail1N.Enabled = false;
@@ -320,6 +322,7 @@ namespace UI.PN1
                     btnCancelar.Enabled = true;
                     btnSalir.Enabled = false;
                     btnAyudaContextual.Enabled = false;
+                    btnBitacoraCambios.Enabled = false;
                     btnLimpiar.Enabled = false;
 
                     btnGestionEmail1N.Enabled = false;
@@ -458,7 +461,13 @@ namespace UI.PN1
             }
 
             string cliente = $"{txtApellidos.Text}, {txtNombres.Text}".Trim();
-            string msg = $"¿Confirma el bloqueo / baja lógica del cliente '{cliente}' (DNI: {txtDni.Text})?\n\n" +
+            string dniMostrar = txtDni.Text.Trim();
+            if (_dniCifradoActivo || ServicioCriptografiaAES.EsTextoCifrado(dniMostrar))
+            {
+                dniMostrar = _pacienteBLL.DescifrarDniAES256(dniMostrar);
+            }
+
+            string msg = $"¿Confirma el bloqueo / baja lógica del cliente '{cliente}' (DNI: {dniMostrar})?\n\n" +
                          "Nota: El cliente no se elimina físicamente de la base de datos; la operación se registrará como 'BLOQUEAR' en la Bitácora de Cambios, conservando sus registros históricos y desactivando sus contactos asociados.";
 
             if (MessageBox.Show(msg, "Confirmar Bloqueo (Baja Lógica)", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
@@ -466,7 +475,7 @@ namespace UI.PN1
                 try
                 {
                     _pacienteBLL.EliminarLogico(_idPacienteSeleccionado);
-                    AgregarMensaje($"Bloqueo lógico realizado para cliente DNI {txtDni.Text} ({cliente}). Operación registrada en Bitácora de Cambios como BLOQUEAR.");
+                    AgregarMensaje($"Bloqueo lógico realizado para cliente DNI {dniMostrar} ({cliente}). Operación registrada en Bitácora de Cambios como BLOQUEAR.");
                     MessageBox.Show("Cliente bloqueado (baja lógica) correctamente.\nOperación registrada en la Bitácora de Cambios como BLOQUEAR.", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ConfigurarEstado(ModoOperacion.Inicio);
                     CargarGrillaClientes();
@@ -663,6 +672,23 @@ namespace UI.PN1
             Close();
         }
 
+        private void btnBitacoraCambios_Click(object? sender, EventArgs e)
+        {
+            string? dniSeleccionado = null;
+            if (dgvClientes.CurrentRow != null)
+            {
+                dniSeleccionado = ObtenerValorCelda(dgvClientes.CurrentRow, "colDni", "DNI");
+                if (_dniCifradoActivo || ServicioCriptografiaAES.EsTextoCifrado(dniSeleccionado))
+                {
+                    dniSeleccionado = _pacienteBLL.DescifrarDniAES256(dniSeleccionado);
+                }
+            }
+
+            using var frmBitacora = new UI.PN2.frmBitacoraCambiosConsultas(dniSeleccionado);
+            frmBitacora.ShowDialog(this);
+            CargarGrillaClientes();
+        }
+
         private void btnGestionContactos1N_Click(object? sender, EventArgs e)
         {
             if (_idPacienteSeleccionado <= 0)
@@ -738,9 +764,15 @@ namespace UI.PN1
                 {
                     if (row.IsNewRow) continue;
 
+                    string dniVal = ObtenerValorCelda(row, "colDni", "DNI");
+                    if (_dniCifradoActivo || ServicioCriptografiaAES.EsTextoCifrado(dniVal))
+                    {
+                        dniVal = _pacienteBLL.DescifrarDniAES256(dniVal);
+                    }
+
                     container.Clientes.Add(new ClienteXmlItem
                     {
-                        DNI = ObtenerValorCelda(row, "colDni", "DNI"),
+                        DNI = dniVal,
                         APELLIDOS = ObtenerValorCelda(row, "colApellidos", "APELLIDOS"),
                         NOMBRES = ObtenerValorCelda(row, "colNombres", "NOMBRES"),
                         EMAIL = ObtenerValorCelda(row, "colEmail", "EMAIL"),
@@ -818,7 +850,12 @@ namespace UI.PN1
                 var lista = new List<(string dni, string apellidos, string nombres, string email, string celular, string direccion)>();
                 foreach (var item in container.Clientes)
                 {
-                    lista.Add((item.DNI, item.APELLIDOS, item.NOMBRES, item.EMAIL, item.CELULAR, item.DIRECCION));
+                    string dniLimpio = item.DNI;
+                    if (ServicioCriptografiaAES.EsTextoCifrado(dniLimpio))
+                    {
+                        dniLimpio = _pacienteBLL.DescifrarDniAES256(dniLimpio);
+                    }
+                    lista.Add((dniLimpio, item.APELLIDOS, item.NOMBRES, item.EMAIL, item.CELULAR, item.DIRECCION));
                 }
 
                 _pacienteBLL.ImportarClientesDesdeXml(lista);
@@ -842,6 +879,10 @@ namespace UI.PN1
 
         private void btnLimpiar_Click(object? sender, EventArgs e)
         {
+            if (_dniCifradoActivo)
+            {
+                RevertirDnisAPlano();
+            }
             LimpiarCampos();
             txtRutaSerializar.Clear();
             txtRutaDesSerializar.Clear();

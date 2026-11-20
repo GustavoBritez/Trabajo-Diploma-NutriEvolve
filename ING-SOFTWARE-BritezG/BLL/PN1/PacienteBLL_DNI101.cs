@@ -45,6 +45,7 @@ namespace BLL
 
             try
             {
+                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 int idGenerado = _pacienteDAL.Guardar(
                     nuevoPaciente.DNINiño_DNI101,
                     nuevoPaciente.Nombre_DNI101,
@@ -54,13 +55,13 @@ namespace BLL
                     nuevoPaciente.FechaNacimiento_DNI101,
                     nuevoPaciente.Sexo_DNI101,
                     nuevoPaciente.ObraSocial_DNI101,
-                    nuevoPaciente.DV
+                    nuevoPaciente.DV,
+                    dniActual
                 );
                 nuevoPaciente.IdPaciente_DNI101 = idGenerado;
 
                 try
                 {
-                    int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                     _bitacoraBLL.RegistrarBitacora(1, $"Registro de Paciente Pediátrico: {nuevoPaciente.NombreCompleto} (DNI: {nuevoPaciente.DNINiño_DNI101})", dniActual, "TurneroNutricional");
                 }
                 catch { }
@@ -172,6 +173,7 @@ namespace BLL
             if (paciente == null || paciente.IdPaciente_DNI101 <= 0) return false;
             try
             {
+                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 bool ok = _pacienteDAL.Modificar(
                     paciente.IdPaciente_DNI101,
                     paciente.DNINiño_DNI101,
@@ -182,13 +184,13 @@ namespace BLL
                     paciente.FechaNacimiento_DNI101,
                     paciente.Sexo_DNI101,
                     paciente.ObraSocial_DNI101,
-                    paciente.DV
+                    paciente.DV,
+                    dniActual
                 );
                 if (ok)
                 {
                     try
                     {
-                        int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                         _bitacoraBLL.RegistrarBitacora(2, $"Modificación de datos del Paciente: {paciente.NombreCompleto} (DNI: {paciente.DNINiño_DNI101})", dniActual, "TurneroNutricional");
                     }
                     catch { }
@@ -380,11 +382,11 @@ namespace BLL
         public void ImportarClientesDesdeXml(List<(string dni, string apellidos, string nombres, string email, string celular, string direccion)> clientes)
         {
             if (clientes == null || clientes.Count == 0) return;
-            _pacienteDAL.ImportarClientesDesdeXml(clientes);
+            int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
+            _pacienteDAL.ImportarClientesDesdeXml(clientes, dniActual);
 
             try
             {
-                int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
                 _bitacoraBLL.RegistrarBitacora(2, $"Des-serialización XML: sincronizados {clientes.Count} clientes en la base de datos", dniActual, "MaestroClientes");
             }
             catch { }

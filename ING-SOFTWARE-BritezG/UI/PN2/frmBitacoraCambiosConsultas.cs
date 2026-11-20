@@ -38,6 +38,16 @@ namespace UI.PN2
             ActualizarIdioma();
         }
 
+        public frmBitacoraCambiosConsultas(string? dniFiltro) : this()
+        {
+            if (!string.IsNullOrWhiteSpace(dniFiltro))
+            {
+                txtCodConsulta.Text = dniFiltro;
+                cmbModulo.SelectedIndex = 0; // Maestro de Clientes (ABM)
+                CargarBitacoraPacientes(dni: dniFiltro);
+            }
+        }
+
         private void frmBitacoraCambiosConsultas_Load(object? sender, EventArgs e)
         {
             ConfigurarVistaSegunModulo();

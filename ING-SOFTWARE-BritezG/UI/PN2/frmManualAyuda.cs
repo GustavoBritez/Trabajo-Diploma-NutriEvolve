@@ -272,5 +272,26 @@ namespace UI.PN2
                 }
             }
         }
+
+        private void btnExportarPdf_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                using var sfd = new SaveFileDialog();
+                sfd.Filter = "Documento PDF (*.pdf)|*.pdf";
+                sfd.FileName = "Manual_de_Ayuda_NutriEvolve.pdf";
+                sfd.Title = "Guardar Manual de Ayuda y Directivas en PDF";
+
+                if (sfd.ShowDialog(this) == DialogResult.OK)
+                {
+                    ManualAyudaPdfGenerator.GenerarPdf(sfd.FileName);
+                    MessageBox.Show("¡El Manual de Ayuda se ha generado y exportado exitosamente a PDF!", "Exportación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al exportar el manual de ayuda a PDF: {ex.Message}", "Error de Exportación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

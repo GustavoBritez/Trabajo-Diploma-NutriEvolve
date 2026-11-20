@@ -345,9 +345,13 @@ namespace UI
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    if (saveFileDialog.FileName.EndsWith(".pdf"))
+                    if (saveFileDialog.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
                     {
                         ExportarAPDF(saveFileDialog.FileName);
+                    }
+                    else if (saveFileDialog.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+                    {
+                        ExportarACSV(saveFileDialog.FileName);
                     }
                 }
             }
@@ -382,7 +386,7 @@ namespace UI
                 double anchoUtil = page.Width - margenIzq - margenDer;
                 double yPos = margenSup;
 
-                gfx.DrawString("📋 Auditoría y Bitácora del Sistema", fontTitulo, XBrushes.DarkGreen,
+                gfx.DrawString("Auditoría y Bitácora del Sistema", fontTitulo, XBrushes.DarkGreen,
                     new XRect(margenIzq, yPos, anchoUtil, 30), XStringFormats.TopCenter);
                 yPos += 40;
 
@@ -510,6 +514,31 @@ namespace UI
             catch (Exception ex)
             {
                 idiomaBLL.MostrarMensaje("msg_error_exportar_pdf", "titulo_error_exportar_pdf", MessageBoxButtons.OK, MessageBoxIcon.Error, ex.Message);
+            }
+        }
+
+        private void ExportarACSV(string rutaArchivo)
+        {
+            try
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine("ID Bitácora;Fecha y Hora;DNI;Criticidad;Módulo;Descripción");
+
+                if (dgvBitacora.DataSource is List<BitacoraBE> bitacoraData)
+                {
+                    foreach (var item in bitacoraData)
+                    {
+                        string desc = (item._Descripcion ?? "").Replace(";", ",").Replace("\r", " ").Replace("\n", " ");
+                        sb.AppendLine($"{item._Id_Bitacora};{item._Fecha:dd/MM/yyyy HH:mm:ss};{item._Dni};{item._Criticidad};{item._Modulo};{desc}");
+                    }
+                }
+
+                File.WriteAllText(rutaArchivo, sb.ToString(), Encoding.UTF8);
+                idiomaBLL.MostrarMensaje("msg_exportar_ok", "titulo_exportar_ok", MessageBoxButtons.OK, MessageBoxIcon.Information, rutaArchivo);
+            }
+            catch (Exception ex)
+            {
+                idiomaBLL.MostrarMensaje("msg_error_exportar", "titulo_error_exportar", MessageBoxButtons.OK, MessageBoxIcon.Error, ex.Message);
             }
         }
 

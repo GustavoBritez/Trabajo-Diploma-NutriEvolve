@@ -31,6 +31,12 @@ namespace Services
                 return string.Empty;
             }
 
+            // Evitar re-cifrado si la cadena ya es un texto cifrado válido con este servicio (Idempotencia)
+            if (EsTextoCifrado(textoPlano))
+            {
+                return textoPlano;
+            }
+
             using (Aes aes = Aes.Create())
             {
                 aes.KeySize = 256;

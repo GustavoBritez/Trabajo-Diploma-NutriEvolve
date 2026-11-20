@@ -1,0 +1,17 @@
+﻿[
+  {
+    "Nombre": "Español",
+    "Codigo": "es",
+    "ArchivoJson": "es.json"
+  },
+  {
+    "Nombre": "English",
+    "Codigo": "en",
+    "ArchivoJson": "en.json"
+  },
+  {
+    "Nombre": "Portugues",
+    "Codigo": "po",
+    "ArchivoJson": "po.json"
+  }
+]

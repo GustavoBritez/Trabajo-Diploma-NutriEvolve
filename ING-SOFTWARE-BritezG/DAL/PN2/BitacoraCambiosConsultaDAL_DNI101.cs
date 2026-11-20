@@ -410,9 +410,22 @@ namespace DAL.PN2
             }
             if (!string.IsNullOrWhiteSpace(tipoOperacion) && tipoOperacion != "Todas" && tipoOperacion != "Todos")
             {
-                if (tipoOperacion.Contains("BLOQ") || tipoOperacion.Contains("DESBLOQ"))
+                string opUpper = tipoOperacion.Trim().ToUpperInvariant();
+                if (opUpper.Contains("DESBLOQ"))
                 {
-                    sql += " AND (TipoOperacion LIKE '%BLOQ%' OR TipoOperacion = 'DELETE') ";
+                    sql += " AND TipoOperacion = 'DESBLOQUEAR' ";
+                }
+                else if (opUpper.Contains("BLOQ") && !opUpper.Contains("DESBLOQ"))
+                {
+                    sql += " AND (TipoOperacion = 'BLOQUEAR' OR TipoOperacion = 'DELETE' OR TipoOperacion = 'BAJA') ";
+                }
+                else if (opUpper.Contains("ALTA") || opUpper.Contains("INSERT"))
+                {
+                    sql += " AND TipoOperacion = 'ALTA' ";
+                }
+                else if (opUpper.Contains("MODIF"))
+                {
+                    sql += " AND (TipoOperacion = 'MODIFICACIÓN' OR TipoOperacion = 'MODIFICACION') ";
                 }
                 else
                 {
@@ -523,7 +536,8 @@ namespace DAL.PN2
 
                 string sqlUpd = @"
                     UPDATE Pacientes_DNI101
-                    SET Nombre_DNI101 = @Nombre,
+                    SET DniNiño_DNI101 = @Dni,
+                        Nombre_DNI101 = @Nombre,
                         Apellido_DNI101 = @Apellido,
                         Telefono_DNI101 = @Tel,
                         Email_DNI101 = @Email,
@@ -562,6 +576,7 @@ namespace DAL.PN2
                 {
                     cmdUpd.Parameters.AddWithValue("@IdPaciente", idPaciente);
                     cmdUpd.Parameters.AddWithValue("@IdCambio", idCambio);
+                    cmdUpd.Parameters.AddWithValue("@Dni", (object?)dni ?? DBNull.Value);
                     cmdUpd.Parameters.AddWithValue("@Nombre", (object?)nombre ?? DBNull.Value);
                     cmdUpd.Parameters.AddWithValue("@Apellido", (object?)apellido ?? DBNull.Value);
                     cmdUpd.Parameters.AddWithValue("@Tel", (object?)tel ?? DBNull.Value);

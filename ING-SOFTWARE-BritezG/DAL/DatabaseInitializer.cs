@@ -365,7 +365,7 @@ namespace DAL
                             CREATE TABLE [dbo].[Pacientes_Cambios_DNI101](
                                 [IdCambio] INT IDENTITY(1,1) PRIMARY KEY,
                                 [IdPaciente_DNI101] INT NOT NULL,
-                                [DniNiño_DNI101] VARCHAR(20) NOT NULL,
+                                [DniNiño_DNI101] VARCHAR(100) NOT NULL,
                                 [Nombre_DNI101] VARCHAR(100) NOT NULL,
                                 [Apellido_DNI101] VARCHAR(100) NOT NULL,
                                 [Telefono_DNI101] VARCHAR(50) NULL,
@@ -384,6 +384,16 @@ namespace DAL
                             BEGIN
                                 ALTER TABLE [dbo].[Pacientes_Cambios_DNI101] ADD [Act] BIT NOT NULL CONSTRAINT DF_PacientesCambios_Act DEFAULT 1;
                             END
+                        END
+
+                        -- Garantizar ancho de columna suficiente para DNI cifrado en Base64 (VARCHAR(100))
+                        IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Pacientes_Cambios_DNI101]') AND name = 'DniNiño_DNI101' AND max_length < 100)
+                        BEGIN
+                            ALTER TABLE [dbo].[Pacientes_Cambios_DNI101] ALTER COLUMN [DniNiño_DNI101] VARCHAR(100) NOT NULL;
+                        END
+                        IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Pacientes_DNI101]') AND name = 'DniNiño_DNI101' AND max_length < 100)
+                        BEGIN
+                            ALTER TABLE [dbo].[Pacientes_DNI101] ALTER COLUMN [DniNiño_DNI101] VARCHAR(100) NOT NULL;
                         END";
 
                     using (SqlCommand cmd = new SqlCommand(sqlTabla, dbConn))
