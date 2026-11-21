@@ -22,7 +22,7 @@ namespace DAL
 
             try
             {
-                string query = $@"SELECT Criticidad, Descripcion, Dni, Fecha, Id_Event, Modulo
+                string query = $@"SELECT Criticidad, Descripcion, Dni, Fecha, Id_Bitacora, Modulo
                                   FROM {TABLA_BITACORA}
                                   WHERE Fecha BETWEEN @desde AND @hasta
                                   ORDER BY Fecha DESC";
@@ -43,7 +43,7 @@ namespace DAL
                         dni: (int)row["Dni"],
                         fecha: (DateTime)row["Fecha"],
                         modulo: row["Modulo"].ToString(),
-                        id_bitacora: (int)row["Id_Event"]
+                        id_bitacora: (int)row["Id_Bitacora"]
                     ));
                 }
             }
@@ -86,7 +86,7 @@ namespace DAL
 
             try
             {
-                string query = $@"SELECT Criticidad, Descripcion, Dni, Fecha, Id_Event, Modulo
+                string query = $@"SELECT Criticidad, Descripcion, Dni, Fecha, Id_Bitacora, Modulo
                                   FROM {TABLA_BITACORA}
                                   ORDER BY Fecha DESC";
 
@@ -100,7 +100,7 @@ namespace DAL
                         dni: (int)row["Dni"],
                         fecha: (DateTime)row["Fecha"],
                         modulo: row["Modulo"].ToString(),
-                        id_bitacora: (int)row["Id_Event"]
+                        id_bitacora: (int)row["Id_Bitacora"]
                     ));
                 }
             }
@@ -112,10 +112,5 @@ namespace DAL
 
             return bitacoras;
         }
-    }
-
-    [Obsolete("Usar BitacoraDAL")]
-    public class EventoDAL : BitacoraDAL
-    {
     }
 }

@@ -39,26 +39,6 @@ namespace BLL.PN2
             return ActivarVersionHistorica(idCambio, usuarioDni);
         }
 
-        public List<PlanAlimentarioCambioBE_DNI101> ListarCambiosPlanes(int? idPlan = null)
-        {
-            return _dal.ListarCambiosPlanes(idPlan);
-        }
-
-        public bool RevertirCambioPlan(int idCambio, int usuarioDni)
-        {
-            if (idCambio <= 0) throw new ArgumentException("Identificador de cambio inválido.");
-            bool ok = _dal.RevertirCambioPlan(idCambio, usuarioDni);
-            if (ok)
-            {
-                try
-                {
-                    new DigitoVerificadorBLL().RecalcularYPersistir();
-                }
-                catch { }
-            }
-            return ok;
-        }
-
         public List<BE.PN1.PacienteCambioBE_DNI101> ListarCambiosPacientes(
             int? idPaciente = null,
             string? dni = null,

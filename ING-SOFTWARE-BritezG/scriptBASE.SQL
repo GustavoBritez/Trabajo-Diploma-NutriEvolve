@@ -28,13 +28,13 @@ GO
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Bitacora' AND xtype='U')
 BEGIN
 CREATE TABLE [dbo].[Bitacora](
-	[Id_Event] [int] IDENTITY(1,1) NOT NULL,
+	[Id_Bitacora] [int] IDENTITY(1,1) NOT NULL,
 	[Dni] [int] NOT NULL,
 	[Modulo] [varchar](100) NOT NULL,
 	[Criticidad] [int] NOT NULL,
 	[Descripcion] [varchar](max) NOT NULL,
 	[Fecha] [datetime2](7) NOT NULL,
- CONSTRAINT [PK_Bitacora] PRIMARY KEY CLUSTERED ([Id_Event] ASC)
+ CONSTRAINT [PK_Bitacora] PRIMARY KEY CLUSTERED ([Id_Bitacora] ASC)
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
 END
 GO
@@ -77,16 +77,6 @@ CREATE TABLE [dbo].[Perfil](
 	[ID_Perfil] [int] IDENTITY(1,1) NOT NULL,
 	[Nombre] [varchar](50) NOT NULL,
 PRIMARY KEY CLUSTERED ([ID_Perfil] ASC)
-) ON [PRIMARY];
-END
-GO
-
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Perfil_Familia' AND xtype='U')
-BEGIN
-CREATE TABLE [dbo].[Perfil_Familia](
-	[ID_Perfil] [int] NOT NULL,
-	[ID_Familia] [int] NOT NULL,
- CONSTRAINT [PK_Perfil_Familia] PRIMARY KEY CLUSTERED ([ID_Perfil] ASC, [ID_Familia] ASC)
 ) ON [PRIMARY];
 END
 GO
@@ -302,23 +292,6 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ZScoresResultados_DNI101' AND xtype='U')
-BEGIN
-    CREATE TABLE [dbo].[ZScoresResultados_DNI101](
-        [IdZScore_DNI101] INT IDENTITY(1,1) PRIMARY KEY,
-        [IdConsulta_DNI101] INT NOT NULL,
-        [ZPesoEdad_DNI101] DECIMAL(4,2) NOT NULL,
-        [ZTallaEdad_DNI101] DECIMAL(4,2) NOT NULL,
-        [ZIMCEdad_DNI101] DECIMAL(4,2) NOT NULL,
-        [ZPCEdad_DNI101] DECIMAL(4,2) NOT NULL,
-        [PercentilPeso_DNI101] DECIMAL(5,2) NOT NULL,
-        [PercentilTalla_DNI101] DECIMAL(5,2) NOT NULL,
-        [PercentilIMC_DNI101] DECIMAL(5,2) NOT NULL,
-        [DV] VARCHAR(255) NULL
-    );
-END
-GO
-
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='DiagnosticosNutricionales_DNI101' AND xtype='U')
 BEGIN
     CREATE TABLE [dbo].[DiagnosticosNutricionales_DNI101](
@@ -357,22 +330,6 @@ BEGIN
         [PctGrasas_DNI101] DECIMAL(4,2) NOT NULL,
         [PautasFamiliares_DNI101] VARCHAR(1000) NOT NULL,
         [MetasSalud_DNI101] VARCHAR(500) NOT NULL,
-        [DV] VARCHAR(255) NULL
-    );
-END
-GO
-
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Recordatorios24h_DNI101' AND xtype='U')
-BEGIN
-    CREATE TABLE [dbo].[Recordatorios24h_DNI101](
-        [IdRecordatorio_DNI101] INT IDENTITY(1,1) PRIMARY KEY,
-        [IdConsulta_DNI101] INT NOT NULL,
-        [Desayuno_DNI101] VARCHAR(255) NOT NULL,
-        [Almuerzo_DNI101] VARCHAR(255) NOT NULL,
-        [Merienda_DNI101] VARCHAR(255) NOT NULL,
-        [Cena_DNI101] VARCHAR(255) NOT NULL,
-        [Colaciones_DNI101] VARCHAR(255) NULL,
-        [FrecuenciaAlimentos_DNI101] VARCHAR(500) NULL,
         [DV] VARCHAR(255) NULL
     );
 END
@@ -429,25 +386,6 @@ CREATE TABLE [dbo].[ConsultasNutricionales_Cambios_DNI101](
     [UsuarioDni] INT NOT NULL DEFAULT 11111111,
     [TipoOperacion] VARCHAR(20) NOT NULL,
     [Act] BIT NOT NULL CONSTRAINT DF_ConsultasCambios_Act DEFAULT 1
-) ON [PRIMARY];
-END
-GO
-
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='PlanesAlimentarios_Cambios_DNI101' AND xtype='U')
-BEGIN
-CREATE TABLE [dbo].[PlanesAlimentarios_Cambios_DNI101](
-    [IdCambio] INT IDENTITY(1,1) PRIMARY KEY,
-    [IdPlan_DNI101] INT NOT NULL,
-    [IdConsulta_DNI101] INT NOT NULL,
-    [RequerimientoCalorico_DNI101] DECIMAL(18,2) NOT NULL,
-    [PctCarbohidratos_DNI101] DECIMAL(18,2) NOT NULL,
-    [PctProteinas_DNI101] DECIMAL(18,2) NOT NULL,
-    [PctGrasas_DNI101] DECIMAL(18,2) NOT NULL,
-    [PautasFamiliares_DNI101] VARCHAR(MAX) NULL,
-    [MetasSalud_DNI101] VARCHAR(MAX) NULL,
-    [FechaCambio] DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
-    [UsuarioDni] INT NOT NULL DEFAULT 11111111,
-    [TipoOperacion] VARCHAR(20) NOT NULL
 ) ON [PRIMARY];
 END
 GO
@@ -681,44 +619,6 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER TRIGGER [dbo].[trg_PlanesAlimentarios_BitacoraCambios]
-ON [dbo].[PlanesAlimentarios_DNI101]
-AFTER UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
-    BEGIN
-        INSERT INTO [dbo].[PlanesAlimentarios_Cambios_DNI101] (
-            [IdPlan_DNI101], [IdConsulta_DNI101], [RequerimientoCalorico_DNI101],
-            [PctCarbohidratos_DNI101], [PctProteinas_DNI101], [PctGrasas_DNI101],
-            [PautasFamiliares_DNI101], [MetasSalud_DNI101], [FechaCambio], [UsuarioDni], [TipoOperacion]
-        )
-        SELECT 
-            d.[IdPlan_DNI101], d.[IdConsulta_DNI101], d.[RequerimientoCalorico_DNI101],
-            d.[PctCarbohidratos_DNI101], d.[PctProteinas_DNI101], d.[PctGrasas_DNI101],
-            d.[PautasFamiliares_DNI101], d.[MetasSalud_DNI101], SYSDATETIME(),
-            ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111), 'UPDATE'
-        FROM deleted d;
-    END
-    ELSE IF EXISTS (SELECT 1 FROM deleted)
-    BEGIN
-        INSERT INTO [dbo].[PlanesAlimentarios_Cambios_DNI101] (
-            [IdPlan_DNI101], [IdConsulta_DNI101], [RequerimientoCalorico_DNI101],
-            [PctCarbohidratos_DNI101], [PctProteinas_DNI101], [PctGrasas_DNI101],
-            [PautasFamiliares_DNI101], [MetasSalud_DNI101], [FechaCambio], [UsuarioDni], [TipoOperacion]
-        )
-        SELECT 
-            d.[IdPlan_DNI101], d.[IdConsulta_DNI101], d.[RequerimientoCalorico_DNI101],
-            d.[PctCarbohidratos_DNI101], d.[PctProteinas_DNI101], d.[PctGrasas_DNI101],
-            d.[PautasFamiliares_DNI101], d.[MetasSalud_DNI101], SYSDATETIME(),
-            ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111), 'DELETE'
-        FROM deleted d;
-    END
-END
-GO
-
 -- ============================================================================
 -- 6. LIMPIEZA DE DATOS PREEXISTENTES (SOLO QUEDARÁN SEGURIDAD BASE Y ADMIN)
 -- ============================================================================
@@ -727,13 +627,10 @@ DELETE FROM [dbo].[Bitacora];
 DELETE FROM [dbo].[DV];
 
 DELETE FROM [dbo].[ConsultasNutricionales_Cambios_DNI101];
-DELETE FROM [dbo].[PlanesAlimentarios_Cambios_DNI101];
 DELETE FROM [dbo].[Pacientes_Cambios_DNI101];
 
-DELETE FROM [dbo].[Recordatorios24h_DNI101];
 DELETE FROM [dbo].[AlertasClinicas_DNI101];
 DELETE FROM [dbo].[DiagnosticosNutricionales_DNI101];
-DELETE FROM [dbo].[ZScoresResultados_DNI101];
 DELETE FROM [dbo].[MedicionesAntropometricas_DNI101];
 DELETE FROM [dbo].[PlanesAlimentarios_DNI101];
 DELETE FROM [dbo].[ConsultasNutricionales_DNI101];
@@ -752,7 +649,6 @@ DELETE FROM [dbo].[Permiso_Boton];
 DELETE FROM [dbo].[Permiso];
 DELETE FROM [dbo].[Perfil];
 DELETE FROM [dbo].[Familia_Perfil];
-DELETE FROM [dbo].[Perfil_Familia];
 DELETE FROM [dbo].[Permiso_Familia];
 DELETE FROM [dbo].[Familia_Familia];
 DELETE FROM [dbo].[Familia];

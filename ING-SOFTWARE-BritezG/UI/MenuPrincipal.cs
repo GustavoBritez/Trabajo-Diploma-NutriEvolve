@@ -524,23 +524,30 @@ namespace UI
 
         private void btnCambiarContrasena_Click(object sender, EventArgs e)
         {
-            if (ChangePassPanel == null) return;
+            if (ChangePassPanel == null || panelContenedor == null) return;
+
+            // Remover cualquier módulo activo dentro del panelContenedor para mostrar únicamente la ventana de cambio de contraseña
+            for (int i = panelContenedor.Controls.Count - 1; i >= 0; i--)
+            {
+                Control c = panelContenedor.Controls[i];
+                if (c != ChangePassPanel && c != gbDV)
+                {
+                    panelContenedor.Controls.RemoveAt(i);
+                }
+            }
 
             if (!panelContenedor.Controls.Contains(ChangePassPanel))
             {
                 panelContenedor.Controls.Add(ChangePassPanel);
             }
 
-            ChangePassPanel.Visible = !ChangePassPanel.Visible;
-            if (ChangePassPanel.Visible)
-            {
-                CentrarPanelCambioPass();
-                ChangePassPanel.BringToFront();
-                txtActualPass.Text = "";
-                txtNewPass.Text = "";
-                txtRepPass.Text = "";
-                txtActualPass.Focus();
-            }
+            ChangePassPanel.Visible = true;
+            CentrarPanelCambioPass();
+            ChangePassPanel.BringToFront();
+            txtActualPass.Text = "";
+            txtNewPass.Text = "";
+            txtRepPass.Text = "";
+            txtActualPass.Focus();
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)

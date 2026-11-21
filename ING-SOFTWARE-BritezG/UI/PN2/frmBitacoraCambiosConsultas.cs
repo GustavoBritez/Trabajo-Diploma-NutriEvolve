@@ -349,7 +349,7 @@ namespace UI.PN2
                 if (resultado)
                 {
                     BitacoraBLL bitacoraBLL = new BitacoraBLL();
-                    bitacoraBLL.RegistrarEvento(
+                    bitacoraBLL.RegistrarBitacora(
                         2,
                         $"Bitácora de Cambios: Se activó / restauró la versión histórica #{cambio.IdCambio} del cliente {cambio.Cliente} (DNI: {cambio.Dni}).",
                         usuarioDni,
@@ -473,7 +473,7 @@ namespace UI.PN2
                 if (resultado)
                 {
                     BitacoraBLL bitacoraBLL = new BitacoraBLL();
-                    bitacoraBLL.RegistrarEvento(
+                    bitacoraBLL.RegistrarBitacora(
                         2,
                         $"CUN08: Se activó la versión histórica #{cambio.IdCambio} de la Consulta #{cambio.IdConsulta} del paciente {cambio.NombrePaciente} (Act=1).",
                         usuarioDni,

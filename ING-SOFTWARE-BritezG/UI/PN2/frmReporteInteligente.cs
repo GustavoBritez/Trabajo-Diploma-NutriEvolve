@@ -46,17 +46,17 @@ namespace UI.PN2
                 dgvReporte.DataSource = _reportes;
 
                 if (dgvReporte.Columns["IdPaciente"] != null) dgvReporte.Columns["IdPaciente"].Visible = false;
-                if (dgvReporte.Columns["TotalConsultas"] != null) dgvReporte.Columns["TotalConsultas"].HeaderText = "Controles";
-                if (dgvReporte.Columns["NombreCompleto"] != null) dgvReporte.Columns["NombreCompleto"].HeaderText = "Paciente";
-                if (dgvReporte.Columns["Dni"] != null) dgvReporte.Columns["Dni"].HeaderText = "DNI";
-                if (dgvReporte.Columns["EdadMesesActual"] != null) dgvReporte.Columns["EdadMesesActual"].HeaderText = "Edad (m)";
-                if (dgvReporte.Columns["UltimoPesoKg"] != null) dgvReporte.Columns["UltimoPesoKg"].HeaderText = "Peso Actual (kg)";
-                if (dgvReporte.Columns["UltimaTallaCm"] != null) dgvReporte.Columns["UltimaTallaCm"].HeaderText = "Talla Actual (cm)";
-                if (dgvReporte.Columns["UltimoZScoreIMC"] != null) dgvReporte.Columns["UltimoZScoreIMC"].HeaderText = "Z-Score IMC";
-                if (dgvReporte.Columns["VelocidadPesoKgMes"] != null) dgvReporte.Columns["VelocidadPesoKgMes"].HeaderText = "Vel. Peso (kg/m)";
-                if (dgvReporte.Columns["DeltaZScoreIMC"] != null) dgvReporte.Columns["DeltaZScoreIMC"].HeaderText = "Delta Z-IMC";
-                if (dgvReporte.Columns["NivelRiesgo"] != null) dgvReporte.Columns["NivelRiesgo"].HeaderText = "Nivel Riesgo";
-                if (dgvReporte.Columns["ClasificacionRiesgoFuturo"] != null) dgvReporte.Columns["ClasificacionRiesgoFuturo"].HeaderText = "Predicción Clínica";
+                ConfigurarColumna(dgvReporte, "NombreCompleto", "Paciente", 145);
+                ConfigurarColumna(dgvReporte, "Dni", "DNI", 85);
+                ConfigurarColumna(dgvReporte, "EdadMesesActual", "Edad (m)", 78);
+                ConfigurarColumna(dgvReporte, "TotalConsultas", "Controles", 82);
+                ConfigurarColumna(dgvReporte, "UltimoPesoKg", "Peso Actual (kg)", 120);
+                ConfigurarColumna(dgvReporte, "UltimaTallaCm", "Talla Actual (cm)", 125);
+                ConfigurarColumna(dgvReporte, "UltimoZScoreIMC", "Z-Score IMC", 100);
+                ConfigurarColumna(dgvReporte, "VelocidadPesoKgMes", "Vel. Peso (kg/m)", 120);
+                ConfigurarColumna(dgvReporte, "DeltaZScoreIMC", "Delta Z-IMC", 98);
+                ConfigurarColumna(dgvReporte, "ClasificacionRiesgoFuturo", "Predicción Clínica", 310);
+                ConfigurarColumna(dgvReporte, "NivelRiesgo", "Nivel Riesgo", 115);
 
                 // Ocultar columnas detalladas de la grilla principal
                 if (dgvReporte.Columns["Sexo"] != null) dgvReporte.Columns["Sexo"].Visible = false;
@@ -81,6 +81,18 @@ namespace UI.PN2
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al generar el reporte predictivo: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private static void ConfigurarColumna(DataGridView dgv, string colName, string headerText, int width)
+        {
+            var col = dgv.Columns[colName];
+            if (col != null)
+            {
+                col.HeaderText = headerText;
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                col.MinimumWidth = width;
+                col.Width = width;
             }
         }
 

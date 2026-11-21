@@ -5,13 +5,13 @@ GO
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Bitacora' AND xtype='U')
 BEGIN
 CREATE TABLE [dbo].[Bitacora](
-	[Id_Event] [int] IDENTITY(1,1) NOT NULL,
+	[Id_Bitacora] [int] IDENTITY(1,1) NOT NULL,
 	[Dni] [int] NOT NULL,
 	[Modulo] [varchar](100) NOT NULL,
 	[Criticidad] [int] NOT NULL,
 	[Descripcion] [varchar](max) NOT NULL,
 	[Fecha] [datetime2](7) NOT NULL,
- CONSTRAINT [PK_Bitacora] PRIMARY KEY CLUSTERED ([Id_Event] ASC)
+ CONSTRAINT [PK_Bitacora] PRIMARY KEY CLUSTERED ([Id_Bitacora] ASC)
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
 GO
@@ -54,16 +54,6 @@ CREATE TABLE [dbo].[Perfil](
 	[ID_Perfil] [int] IDENTITY(1,1) NOT NULL,
 	[Nombre] [varchar](50) NOT NULL,
 PRIMARY KEY CLUSTERED ([ID_Perfil] ASC)
-) ON [PRIMARY]
-END
-GO
-
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Perfil_Familia' AND xtype='U')
-BEGIN
-CREATE TABLE [dbo].[Perfil_Familia](
-	[ID_Perfil] [int] NOT NULL,
-	[ID_Familia] [int] NOT NULL,
- CONSTRAINT [PK_Perfil_Familia] PRIMARY KEY CLUSTERED ([ID_Perfil] ASC, [ID_Familia] ASC)
 ) ON [PRIMARY]
 END
 GO
@@ -437,23 +427,6 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ZScoresResultados_DNI101' AND xtype='U')
-BEGIN
-    CREATE TABLE [dbo].[ZScoresResultados_DNI101](
-        [IdZScore_DNI101] INT IDENTITY(1,1) PRIMARY KEY,
-        [IdConsulta_DNI101] INT NOT NULL,
-        [ZPesoEdad_DNI101] DECIMAL(4,2) NOT NULL,
-        [ZTallaEdad_DNI101] DECIMAL(4,2) NOT NULL,
-        [ZIMCEdad_DNI101] DECIMAL(4,2) NOT NULL,
-        [ZPCEdad_DNI101] DECIMAL(4,2) NOT NULL,
-        [PercentilPeso_DNI101] DECIMAL(5,2) NOT NULL,
-        [PercentilTalla_DNI101] DECIMAL(5,2) NOT NULL,
-        [PercentilIMC_DNI101] DECIMAL(5,2) NOT NULL,
-        [DV] VARCHAR(255) NULL
-    );
-END
-GO
-
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='DiagnosticosNutricionales_DNI101' AND xtype='U')
 BEGIN
     CREATE TABLE [dbo].[DiagnosticosNutricionales_DNI101](
@@ -492,22 +465,6 @@ BEGIN
         [PctGrasas_DNI101] DECIMAL(4,2) NOT NULL,
         [PautasFamiliares_DNI101] VARCHAR(1000) NOT NULL,
         [MetasSalud_DNI101] VARCHAR(500) NOT NULL,
-        [DV] VARCHAR(255) NULL
-    );
-END
-GO
-
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Recordatorios24h_DNI101' AND xtype='U')
-BEGIN
-    CREATE TABLE [dbo].[Recordatorios24h_DNI101](
-        [IdRecordatorio_DNI101] INT IDENTITY(1,1) PRIMARY KEY,
-        [IdConsulta_DNI101] INT NOT NULL,
-        [Desayuno_DNI101] VARCHAR(255) NOT NULL,
-        [Almuerzo_DNI101] VARCHAR(255) NOT NULL,
-        [Merienda_DNI101] VARCHAR(255) NOT NULL,
-        [Cena_DNI101] VARCHAR(255) NOT NULL,
-        [Colaciones_DNI101] VARCHAR(255) NULL,
-        [FrecuenciaAlimentos_DNI101] VARCHAR(500) NULL,
         [DV] VARCHAR(255) NULL
     );
 END
@@ -564,118 +521,99 @@ BEGIN
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, TipoLactancia_DNI101, AlimentacionComplementaria_DNI101, Observaciones_DNI101) VALUES (@IdP1, 11111111, '2024-02-15', 1, N'Materna Exclusiva', N'No', N'Primer control del lactante. Reflejos conservados.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 4.50, 54.50, 37.50, 0, 15.13);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 0.10, 0.20, 0.00, 0.15, 53.98, 57.93, 50.00);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Lactante con desarrollo normopeso acorde a su edad.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, TipoLactancia_DNI101, AlimentacionComplementaria_DNI101, Observaciones_DNI101) VALUES (@IdP1, 11111111, '2024-04-15', 3, N'Materna Exclusiva', N'No', N'Buen agarre y succión.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 6.40, 61.20, 40.50, 0, 17.09);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 0.20, 0.10, 0.20, 0.10, 57.93, 53.98, 57.93);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Crecimiento constante siguiendo la curva P50.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, TipoLactancia_DNI101, AlimentacionComplementaria_DNI101, Observaciones_DNI101) VALUES (@IdP1, 11111111, '2024-07-15', 6, N'Predominante', N'Inicio de papillas y frutas', N'Comienza alimentación complementaria con excelente tolerancia.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 7.90, 67.60, 43.20, 0, 17.29);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 0.10, 0.00, 0.10, 0.05, 53.98, 50.00, 53.98);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Transición adecuada a sólidos.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, TipoLactancia_DNI101, AlimentacionComplementaria_DNI101, Observaciones_DNI101) VALUES (@IdP1, 11111111, '2024-10-15', 9, N'Parcial / Mixta', N'Purés, carnes magras, vegetales', N'Crecimiento longitudinal muy armónico.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 8.90, 72.00, 45.00, 0, 17.17);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 0.00, -0.10, 0.10, 0.00, 50.00, 46.02, 53.98);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Estado nutricional óptimo.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, TipoLactancia_DNI101, AlimentacionComplementaria_DNI101, Observaciones_DNI101) VALUES (@IdP1, 11111111, '2025-01-15', 12, N'Complementaria', N'Incorporado a la mesa familiar', N'Cumple 1 año. Marcha independiente iniciada.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 9.60, 75.70, 46.20, 0, 16.75);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, -0.10, -0.10, -0.10, -0.05, 46.02, 46.02, 46.02);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Desarrollo psicomotor y nutricional excelente.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, TipoLactancia_DNI101, AlimentacionComplementaria_DNI101, Observaciones_DNI101) VALUES (@IdP1, 11111111, '2025-04-15', 15, N'Destetado', N'Dieta completa y variada', N'Controles pediátricos de rutina.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 10.30, 79.10, 47.10, 0, 16.46);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 0.00, 0.00, -0.10, 0.00, 50.00, 50.00, 46.02);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Saludable.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, TipoLactancia_DNI101, AlimentacionComplementaria_DNI101, Observaciones_DNI101) VALUES (@IdP1, 11111111, '2025-09-15', 20, N'Destetado', N'Alimentación equilibrada', N'Último control de seguimiento normopeso.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 11.40, 84.50, 48.00, 0, 15.97);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 0.10, 0.10, 0.00, 0.05, 53.98, 53.98, 50.00);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Estado nutricional excelente. Continuar pautas habituales.', 0);
 
 -- HISTORIAL PACIENTE 2 (DNI 2222 - Sofía Rossi): 6 CONTROLES CURVA SOBREPESO/OBESIDAD
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP2, 11111111, '2023-05-10', 24, N'Consulta por hábito alimentario con alto consumo de ultraprocesados.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 13.50, 86.00, 48.20, 50.00, 18.25);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 1.20, 0.30, 1.40, 0.40, 88.49, 61.79, 91.92);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Riesgo de Sobrepeso', N'Inicia leve ascenso percentilar de IMC.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP2, 11111111, '2023-11-10', 30, N'Consumo de jugos azucarados frecuente.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 15.20, 91.50, 49.00, 52.50, 18.16);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 1.50, 0.40, 1.60, 0.50, 93.32, 65.54, 94.52);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Sobrepeso', N'Z-IMC mayor a +1.5. Se refuerzan pautas familiares.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP2, 11111111, '2024-05-10', 36, N'Sedentarismo incrementado.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 17.00, 96.00, 49.60, 55.00, 18.44);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 1.70, 0.50, 1.80, 0.50, 95.54, 69.15, 96.41);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Sobrepeso', N'Mantiene curva de sobrepeso por encima de P95.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP2, 11111111, '2024-11-10', 42, N'Aumento ponderal acelerado.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 19.10, 100.50, 50.10, 58.00, 18.91);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 2.00, 0.60, 2.10, 0.50, 97.72, 72.57, 98.21);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Obesidad Moderada', N'Z-IMC cruza la línea +2.0 SD (Obesidad OMS).', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP2, 11111111, '2025-05-10', 48, N'Se prescribe plan de alimentación estructurada.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 21.50, 104.50, 50.50, 61.00, 19.69);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 2.30, 0.70, 2.40, 0.60, 98.93, 75.80, 99.18);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Obesidad Severa', N'Tendencia sostenida en percentil > 99.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP2, 11111111, '2025-09-10', 52, N'Último control. En tratamiento nutricional multifactorial.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 23.20, 107.00, 50.80, 63.00, 20.26);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 2.50, 0.70, 2.60, 0.60, 99.38, 75.80, 99.53);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Obesidad Severa Pediátrica', N'Seguimiento intensivo de pautas de actividad física y nutrición.', 0);
 
 -- HISTORIAL PACIENTE 3 (DNI 3333 - Thiago Gómez): ⚠️ ALERTA CLÍNICA ROJA
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP3, 11111111, '2023-09-20', 3, N'Lactante con leve hiporexia.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 5.80, 60.00, 39.50, 0, 16.11);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, -0.60, -0.50, -0.40, -0.30, 27.43, 30.85, 34.46);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Monitoreo por ingesta limítrofe.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP3, 11111111, '2023-12-20', 6, N'Dificultad en la incorporación de papillas.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 6.80, 63.50, 41.00, 0, 16.86);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, -1.10, -1.20, -0.60, -0.50, 13.57, 11.51, 27.43);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Riesgo de Desnutrición', N'Pérdida de carril percentilar de talla y peso.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP3, 11111111, '2024-03-20', 9, N'Astenia y palidez cutánea.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 7.20, 66.00, 42.10, 0, 16.53);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, -1.80, -2.10, -0.90, -0.80, 3.59, 1.79, 18.41);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Desnutrición Moderada / Talla Baja', N'Caída de Z-Talla por debajo de -2.00 SD.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP3, 11111111, '2024-06-20', 12, N'Escasa ganancia estatural en 6 meses.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 7.50, 68.00, 42.80, 0, 16.22);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, -2.30, -2.70, -1.20, -1.00, 1.07, 0.35, 11.51);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Desnutrición Severa', N'Aplanamiento severo de la curva de longitud.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP3, 11111111, '2024-09-20', 15, N'Derivado a Gastroenterología Pediátrica.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 7.80, 69.50, 43.30, 0, 16.15);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, -2.60, -3.00, -1.40, -1.20, 0.47, 0.13, 8.08);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Talla Baja Severa', N'Z-Score Talla/Edad cruza el límite de -3.00 SD.', 1);
 INSERT INTO AlertasClinicas_DNI101 (IdConsulta_DNI101, TipoAlerta_DNI101, Severidad_DNI101, MensajeAlerta_DNI101, FechaGeneracion_DNI101) VALUES (@IdConsulta, N'Desnutrición / Talla Baja Severa', N'CRÍTICA', N'🚨 ALERTA ROJA: Z-Score Talla/Edad de -3.00 (Talla Baja Severa). Requiere intervención urgente.', '2024-09-20');
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP3, 11111111, '2024-12-20', 18, N'Control de seguimiento en curso con soporte nutricional enteral.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 8.00, 71.00, 43.80, 0, 15.87);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, -2.80, -3.20, -1.60, -1.30, 0.26, 0.07, 5.48);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Talla Baja Severa / Desnutrición Crónica', N'Desnutrición crónica reagudizada. Z-Talla de -3.20 SD. El paciente presenta un retardo severo del crecimiento.', 1);
 INSERT INTO AlertasClinicas_DNI101 (IdConsulta_DNI101, TipoAlerta_DNI101, Severidad_DNI101, MensajeAlerta_DNI101, FechaGeneracion_DNI101) VALUES (@IdConsulta, N'Desnutrición / Talla Baja Severa', N'CRÍTICA', N'🚨 ALERTA ROJA: Z-Score Talla/Edad de -3.20 (Talla Baja Severa / Desnutrición Crónica). Se requiere intervención nutricional urgente e interconsulta médica.', '2024-12-20');
 
@@ -683,31 +621,26 @@ INSERT INTO AlertasClinicas_DNI101 (IdConsulta_DNI101, TipoAlerta_DNI101, Severi
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP4, 11111111, '2023-03-01', 12, N'Control al año de vida.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 8.90, 74.00, 45.10, 0, 16.25);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, -0.10, -0.10, -0.10, -0.05, 46.02, 46.02, 46.02);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Desarrollo normal.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP4, 11111111, '2023-09-01', 18, N'Control de rutina.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 10.20, 80.50, 46.40, 0, 15.74);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 0.00, 0.00, 0.00, 0.00, 50.00, 50.00, 50.00);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Saludable.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP4, 11111111, '2024-03-01', 24, N'Cumple 2 años. Curva impecable.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 11.50, 85.50, 47.50, 48.00, 15.73);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 0.10, 0.00, 0.10, 0.05, 53.98, 50.00, 53.98);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Excelente estado general.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP4, 11111111, '2024-09-01', 30, N'Seguimiento semestral.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 12.70, 90.00, 48.30, 49.50, 15.68);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, 0.00, 0.00, 0.00, 0.00, 50.00, 50.00, 50.00);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Alimentación variada.', 0);
 
 INSERT INTO ConsultasNutricionales_DNI101 (IdPaciente_DNI101, DniNutricionista_DNI101, FechaControl_DNI101, EdadMeses_DNI101, Observaciones_DNI101) VALUES (@IdP4, 11111111, '2025-03-01', 36, N'Control a los 3 años de vida.');
 SET @IdConsulta = SCOPE_IDENTITY();
 INSERT INTO MedicionesAntropometricas_DNI101 (IdConsulta_DNI101, PesoKg_DNI101, TallaCm_DNI101, PerimetroCefalicoCm_DNI101, CircunferenciaCinturaCm_DNI101, IMC_DNI101) VALUES (@IdConsulta, 13.90, 95.00, 49.00, 51.00, 15.40);
-INSERT INTO ZScoresResultados_DNI101 (IdConsulta_DNI101, ZPesoEdad_DNI101, ZTallaEdad_DNI101, ZIMCEdad_DNI101, ZPCEdad_DNI101, PercentilPeso_DNI101, PercentilTalla_DNI101, PercentilIMC_DNI101) VALUES (@IdConsulta, -0.10, 0.00, -0.10, 0.00, 46.02, 50.00, 46.02);
 INSERT INTO DiagnosticosNutricionales_DNI101 (IdConsulta_DNI101, ClasificacionOMS_DNI101, DetallesClinicos_DNI101, RequiereAlerta_DNI101) VALUES (@IdConsulta, N'Eutrófico (Normal)', N'Niña normopeso con desarrollo antropométrico óptimo.', 0);
 END
 GO
@@ -1172,99 +1105,6 @@ END
 GO
 
 --------------------------------------------------------------------------------
--- TABLA DE AUDITORÍA: HISTÓRICO DE CAMBIOS DE PLANES ALIMENTARIOS
---------------------------------------------------------------------------------
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='PlanesAlimentarios_Cambios_DNI101' AND xtype='U')
-BEGIN
-CREATE TABLE [dbo].[PlanesAlimentarios_Cambios_DNI101](
-    [IdCambio] INT IDENTITY(1,1) PRIMARY KEY,
-    [IdPlan_DNI101] INT NOT NULL,
-    [IdConsulta_DNI101] INT NOT NULL,
-    [RequerimientoCalorico_DNI101] DECIMAL(18,2) NOT NULL,
-    [PctCarbohidratos_DNI101] DECIMAL(18,2) NOT NULL,
-    [PctProteinas_DNI101] DECIMAL(18,2) NOT NULL,
-    [PctGrasas_DNI101] DECIMAL(18,2) NOT NULL,
-    [PautasFamiliares_DNI101] VARCHAR(MAX) NULL,
-    [MetasSalud_DNI101] VARCHAR(MAX) NULL,
-    [FechaCambio] DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
-    [UsuarioDni] INT NOT NULL DEFAULT 11111111,
-    [TipoOperacion] VARCHAR(20) NOT NULL
-) ON [PRIMARY];
-END
-GO
-
---------------------------------------------------------------------------------
--- TRIGGER EN PLANES ALIMENTARIOS: REGISTRA ESTADO PREVIO ANTE UPDATE O DELETE
---------------------------------------------------------------------------------
-CREATE OR ALTER TRIGGER [dbo].[trg_PlanesAlimentarios_BitacoraCambios]
-ON [dbo].[PlanesAlimentarios_DNI101]
-AFTER UPDATE, DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
-    BEGIN
-        INSERT INTO [dbo].[PlanesAlimentarios_Cambios_DNI101] (
-            [IdPlan_DNI101],
-            [IdConsulta_DNI101],
-            [RequerimientoCalorico_DNI101],
-            [PctCarbohidratos_DNI101],
-            [PctProteinas_DNI101],
-            [PctGrasas_DNI101],
-            [PautasFamiliares_DNI101],
-            [MetasSalud_DNI101],
-            [FechaCambio],
-            [UsuarioDni],
-            [TipoOperacion]
-        )
-        SELECT 
-            d.[IdPlan_DNI101],
-            d.[IdConsulta_DNI101],
-            d.[RequerimientoCalorico_DNI101],
-            d.[PctCarbohidratos_DNI101],
-            d.[PctProteinas_DNI101],
-            d.[PctGrasas_DNI101],
-            d.[PautasFamiliares_DNI101],
-            d.[MetasSalud_DNI101],
-            SYSDATETIME(),
-            ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
-            'UPDATE'
-        FROM deleted d;
-    END
-    ELSE IF EXISTS (SELECT 1 FROM deleted)
-    BEGIN
-        INSERT INTO [dbo].[PlanesAlimentarios_Cambios_DNI101] (
-            [IdPlan_DNI101],
-            [IdConsulta_DNI101],
-            [RequerimientoCalorico_DNI101],
-            [PctCarbohidratos_DNI101],
-            [PctProteinas_DNI101],
-            [PctGrasas_DNI101],
-            [PautasFamiliares_DNI101],
-            [MetasSalud_DNI101],
-            [FechaCambio],
-            [UsuarioDni],
-            [TipoOperacion]
-        )
-        SELECT 
-            d.[IdPlan_DNI101],
-            d.[IdConsulta_DNI101],
-            d.[RequerimientoCalorico_DNI101],
-            d.[PctCarbohidratos_DNI101],
-            d.[PctProteinas_DNI101],
-            d.[PctGrasas_DNI101],
-            d.[PautasFamiliares_DNI101],
-            d.[MetasSalud_DNI101],
-            SYSDATETIME(),
-            ISNULL(CAST(SESSION_CONTEXT(N'UsuarioDni') AS INT), 11111111),
-            'DELETE'
-        FROM deleted d;
-    END
-END
-GO
-
---------------------------------------------------------------------------------
 -- TABLA DE AUDITORÍA: HISTÓRICO DE CAMBIOS DE PACIENTES
 --------------------------------------------------------------------------------
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Pacientes_Cambios_DNI101' AND xtype='U')
@@ -1281,8 +1121,16 @@ CREATE TABLE [dbo].[Pacientes_Cambios_DNI101](
     [Activo_DNI101] BIT NOT NULL DEFAULT 1,
     [FechaCambio] DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
     [UsuarioDni] INT NOT NULL DEFAULT 11111111,
-    [TipoOperacion] VARCHAR(20) NOT NULL
+    [TipoOperacion] VARCHAR(20) NOT NULL,
+    [Act] BIT NOT NULL CONSTRAINT DF_PacientesCambios_Act DEFAULT 1
 ) ON [PRIMARY];
+END
+ELSE
+BEGIN
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Pacientes_Cambios_DNI101]') AND name = 'Act')
+    BEGIN
+        ALTER TABLE [dbo].[Pacientes_Cambios_DNI101] ADD [Act] BIT NOT NULL CONSTRAINT DF_PacientesCambios_Act DEFAULT 1;
+    END
 END
 GO
 

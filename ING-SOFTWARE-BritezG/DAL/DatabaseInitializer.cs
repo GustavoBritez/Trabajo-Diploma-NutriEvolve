@@ -113,6 +113,43 @@ namespace DAL
                 {
                     dbConn.Open();
 
+                    // 0. Migrar Bitacora.Id_Event -> Id_Bitacora y eliminar tablas fantasmas si existen
+                    string sqlLimpiezaFantasmas = @"
+                        IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Bitacora]') AND name = 'Id_Event')
+                        BEGIN
+                            EXEC sp_rename 'dbo.Bitacora.Id_Event', 'Id_Bitacora', 'COLUMN';
+                        END
+
+                        IF OBJECT_ID(N'[dbo].[trg_PlanesAlimentarios_BitacoraCambios]', N'TR') IS NOT NULL
+                            DROP TRIGGER [dbo].[trg_PlanesAlimentarios_BitacoraCambios];
+
+                        IF OBJECT_ID(N'[dbo].[Perfil_Familia]', N'U') IS NOT NULL
+                            DROP TABLE [dbo].[Perfil_Familia];
+
+                        IF OBJECT_ID(N'[dbo].[ZScoresResultados_DNI101]', N'U') IS NOT NULL
+                            DROP TABLE [dbo].[ZScoresResultados_DNI101];
+
+                        IF OBJECT_ID(N'[dbo].[Recordatorios24h_DNI101]', N'U') IS NOT NULL
+                            DROP TABLE [dbo].[Recordatorios24h_DNI101];
+
+                        IF OBJECT_ID(N'[dbo].[PlanesAlimentarios_Cambios_DNI101]', N'U') IS NOT NULL
+                            DROP TABLE [dbo].[PlanesAlimentarios_Cambios_DNI101];
+
+                        IF OBJECT_ID(N'[dbo].[DV]', N'U') IS NOT NULL
+                        BEGIN
+                            DELETE FROM [dbo].[DV] WHERE [NombreTabla] IN (
+                                'Perfil_Familia',
+                                'ZScoresResultados_DNI101',
+                                'Recordatorios24h_DNI101',
+                                'PlanesAlimentarios_Cambios_DNI101'
+                            );
+                        END";
+
+                    using (SqlCommand cmdClean = new SqlCommand(sqlLimpiezaFantasmas, dbConn))
+                    {
+                        cmdClean.ExecuteNonQuery();
+                    }
+
                     // 1. Asegurar tabla ConsultasNutricionales_Cambios_DNI101 y columnas antropométricas
                     string sqlTabla = @"
                         IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ConsultasNutricionales_Cambios_DNI101' AND xtype='U')

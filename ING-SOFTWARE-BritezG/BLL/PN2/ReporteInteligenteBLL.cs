@@ -52,15 +52,13 @@ namespace BLL.PN2
         {
             string sql = @"
                 SELECT 
-                    p.IdPaciente_DNI101, p.Nombre_DNI101, p.Apellido_DNI101, p.DniNiño_DNI101, p.Sexo_DNI101,
+                    p.IdPaciente_DNI101, p.Nombre_DNI101, p.Apellido_DNI101, p.DniNiño_DNI101, ISNULL(p.Sexo_DNI101, 'Masculino'),
                     c.IdConsulta_DNI101, c.FechaControl_DNI101, c.EdadMeses_DNI101,
                     m.PesoKg_DNI101, m.TallaCm_DNI101, m.IMC_DNI101,
-                    z.ZIMCEdad_DNI101, z.PercentilIMC_DNI101,
                     d.ClasificacionOMS_DNI101
                 FROM Pacientes_DNI101 p
                 INNER JOIN ConsultasNutricionales_DNI101 c ON p.IdPaciente_DNI101 = c.IdPaciente_DNI101
                 INNER JOIN MedicionesAntropometricas_DNI101 m ON c.IdConsulta_DNI101 = m.IdConsulta_DNI101
-                LEFT JOIN ZScoresResultados_DNI101 z ON c.IdConsulta_DNI101 = z.IdConsulta_DNI101
                 LEFT JOIN DiagnosticosNutricionales_DNI101 d ON c.IdConsulta_DNI101 = d.IdConsulta_DNI101
                 WHERE p.IdPaciente_DNI101 = @IdPac
                 ORDER BY c.FechaControl_DNI101 ASC, c.IdConsulta_DNI101 ASC";
@@ -70,6 +68,7 @@ namespace BLL.PN2
             string apellido = string.Empty;
             string dni = string.Empty;
             string sexo = string.Empty;
+            var evalImc = new Strategy.EvaluacionIMCEdadStrategy();
 
             using (var cn = _conexion.CrearConexion())
             using (var cmd = new SqlCommand(sql, cn))
@@ -85,15 +84,35 @@ namespace BLL.PN2
                         dni = dr.GetString(3);
                         sexo = dr.GetString(4);
 
+                        DateTime fecha = dr.GetDateTime(6);
+                        int edadMeses = dr.GetInt32(7);
+                        decimal peso = dr.GetDecimal(8);
+                        decimal talla = dr.GetDecimal(9);
+                        decimal imc = dr.GetDecimal(10);
+                        string clasif = dr.IsDBNull(11) ? "Sin diagnóstico" : dr.GetString(11);
+
+                        var resOms = evalImc.Evaluar(imc, edadMeses, sexo);
+                        var curvaImc = CurvasOMSData_DNI101.ObtenerCurva("IMC", sexo);
+                        int idxCurva = 0;
+                        double minDist = double.MaxValue;
+                        for (int i = 0; i < curvaImc.Meses.Length; i++)
+                        {
+                            double dist = Math.Abs(curvaImc.Meses[i] - edadMeses);
+                            if (dist < minDist) { minDist = dist; idxCurva = i; }
+                        }
+                        double p50 = curvaImc.P50[idxCurva];
+                        double sdAprox = Math.Max(0.1, (curvaImc.P85[idxCurva] - curvaImc.P15[idxCurva]) / 2.072);
+                        decimal zImcCalc = Math.Round((decimal)(((double)imc - p50) / sdAprox), 2);
+
                         mediciones.Add((
-                            dr.GetDateTime(6),
-                            dr.GetInt32(7),
-                            dr.GetDecimal(8),
-                            dr.GetDecimal(9),
-                            dr.GetDecimal(10),
-                            dr.IsDBNull(11) ? 0m : dr.GetDecimal(11),
-                            dr.IsDBNull(12) ? 50m : dr.GetDecimal(12),
-                            dr.IsDBNull(13) ? "Sin diagnóstico" : dr.GetString(13)
+                            fecha,
+                            edadMeses,
+                            peso,
+                            talla,
+                            imc,
+                            zImcCalc,
+                            resOms.PercentilAproximado,
+                            clasif
                         ));
                     }
                 }

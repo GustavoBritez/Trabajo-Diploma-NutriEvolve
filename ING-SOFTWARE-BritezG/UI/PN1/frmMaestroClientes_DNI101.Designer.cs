@@ -21,13 +21,15 @@ namespace UI.PN1
 
             toolTipGeneral = new System.Windows.Forms.ToolTip(components);
 
-            lblTituloSuperior = new System.Windows.Forms.Label();
             lblTituloMaestro = new System.Windows.Forms.Label();
 
             dgvClientes = new System.Windows.Forms.DataGridView();
             colDni = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colApellidos = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colNombres = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colFechaNacimiento = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colSexo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colCobertura = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colEmail = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colCelular = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colDireccion = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -35,10 +37,17 @@ namespace UI.PN1
             panelCampos = new System.Windows.Forms.Panel();
             lblDni = new System.Windows.Forms.Label();
             txtDni = new System.Windows.Forms.TextBox();
+            lblSexo = new System.Windows.Forms.Label();
+            cmbSexo = new System.Windows.Forms.ComboBox();
             lblApellidos = new System.Windows.Forms.Label();
             txtApellidos = new System.Windows.Forms.TextBox();
             lblNombres = new System.Windows.Forms.Label();
             txtNombres = new System.Windows.Forms.TextBox();
+            lblFechaNacimiento = new System.Windows.Forms.Label();
+            dtpFechaNacimiento = new System.Windows.Forms.DateTimePicker();
+            lblEdadActual = new System.Windows.Forms.Label();
+            lblCobertura = new System.Windows.Forms.Label();
+            txtCobertura = new System.Windows.Forms.TextBox();
             lblEmail = new System.Windows.Forms.Label();
             txtEmail = new System.Windows.Forms.TextBox();
             btnGestionEmail1N = new System.Windows.Forms.Button();
@@ -59,7 +68,6 @@ namespace UI.PN1
             btnAplicar = new UI.Controles.BotonFuturista();
             btnCancelar = new UI.Controles.BotonFuturista();
             btnSalir = new UI.Controles.BotonFuturista();
-            btnBitacoraCambios = new UI.Controles.BotonFuturista();
             btnAyudaContextual = new UI.Controles.BotonFuturista();
             btnRevertirDni = new UI.Controles.BotonFuturista();
 
@@ -80,24 +88,12 @@ namespace UI.PN1
             SuspendLayout();
 
             // 
-            // lblTituloSuperior
-            // 
-            lblTituloSuperior.AutoSize = true;
-            lblTituloSuperior.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            lblTituloSuperior.ForeColor = System.Drawing.Color.FromArgb(30, 60, 40);
-            lblTituloSuperior.Location = new System.Drawing.Point(20, 8);
-            lblTituloSuperior.Name = "lblTituloSuperior";
-            lblTituloSuperior.Size = new System.Drawing.Size(510, 17);
-            lblTituloSuperior.TabIndex = 0;
-            lblTituloSuperior.Text = "Modelo de GUI para SERIALIZACIÓN sobre una operación de ABM-C";
-
-            // 
             // lblTituloMaestro
             // 
             lblTituloMaestro.AutoSize = true;
             lblTituloMaestro.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             lblTituloMaestro.ForeColor = System.Drawing.Color.Black;
-            lblTituloMaestro.Location = new System.Drawing.Point(20, 30);
+            lblTituloMaestro.Location = new System.Drawing.Point(20, 14);
             lblTituloMaestro.Name = "lblTituloMaestro";
             lblTituloMaestro.Size = new System.Drawing.Size(260, 21);
             lblTituloMaestro.TabIndex = 1;
@@ -113,8 +109,8 @@ namespace UI.PN1
             dgvClientes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 
             dgvStyleHeader.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dgvStyleHeader.BackColor = System.Drawing.Color.FromArgb(0, 220, 240); // Cyan header matching excel
-            dgvStyleHeader.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            dgvStyleHeader.BackColor = System.Drawing.Color.FromArgb(0, 220, 240);
+            dgvStyleHeader.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
             dgvStyleHeader.ForeColor = System.Drawing.Color.Black;
             dgvClientes.ColumnHeadersDefaultCellStyle = dgvStyleHeader;
             dgvClientes.ColumnHeadersHeight = 28;
@@ -122,20 +118,23 @@ namespace UI.PN1
                 colDni,
                 colApellidos,
                 colNombres,
+                colFechaNacimiento,
+                colSexo,
+                colCobertura,
                 colEmail,
                 colCelular,
                 colDireccion
             });
             dgvClientes.EnableHeadersVisualStyles = false;
-            dgvClientes.Location = new System.Drawing.Point(20, 58);
+            dgvClientes.Location = new System.Drawing.Point(20, 42);
             dgvClientes.MultiSelect = false;
             dgvClientes.Name = "dgvClientes";
             dgvClientes.ReadOnly = true;
             dgvClientes.RowHeadersVisible = false;
-            dgvStyleRows.Font = new System.Drawing.Font("Segoe UI", 9F);
+            dgvStyleRows.Font = new System.Drawing.Font("Segoe UI", 8.5F);
             dgvClientes.RowsDefaultCellStyle = dgvStyleRows;
             dgvClientes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            dgvClientes.Size = new System.Drawing.Size(760, 175);
+            dgvClientes.Size = new System.Drawing.Size(760, 185);
             dgvClientes.TabIndex = 2;
             dgvClientes.SelectionChanged += dgvClientes_SelectionChanged;
 
@@ -146,7 +145,7 @@ namespace UI.PN1
             colDni.HeaderText = "DNI";
             colDni.Name = "colDni";
             colDni.ReadOnly = true;
-            colDni.Width = 90;
+            colDni.Width = 75;
 
             // 
             // colApellidos
@@ -155,7 +154,7 @@ namespace UI.PN1
             colApellidos.HeaderText = "APELLIDOS";
             colApellidos.Name = "colApellidos";
             colApellidos.ReadOnly = true;
-            colApellidos.Width = 130;
+            colApellidos.Width = 95;
 
             // 
             // colNombres
@@ -164,7 +163,35 @@ namespace UI.PN1
             colNombres.HeaderText = "NOMBRES";
             colNombres.Name = "colNombres";
             colNombres.ReadOnly = true;
-            colNombres.Width = 130;
+            colNombres.Width = 95;
+
+            // 
+            // colFechaNacimiento
+            // 
+            colFechaNacimiento.DataPropertyName = "FECHA_NACIMIENTO";
+            colFechaNacimiento.HeaderText = "FECHA NAC.";
+            colFechaNacimiento.Name = "colFechaNacimiento";
+            colFechaNacimiento.ReadOnly = true;
+            colFechaNacimiento.Width = 85;
+            colFechaNacimiento.DefaultCellStyle.Format = "dd/MM/yyyy";
+
+            // 
+            // colSexo
+            // 
+            colSexo.DataPropertyName = "SEXO";
+            colSexo.HeaderText = "SEXO";
+            colSexo.Name = "colSexo";
+            colSexo.ReadOnly = true;
+            colSexo.Width = 75;
+
+            // 
+            // colCobertura
+            // 
+            colCobertura.DataPropertyName = "COBERTURA";
+            colCobertura.HeaderText = "COBERTURA";
+            colCobertura.Name = "colCobertura";
+            colCobertura.ReadOnly = true;
+            colCobertura.Width = 90;
 
             // 
             // colEmail
@@ -173,7 +200,7 @@ namespace UI.PN1
             colEmail.HeaderText = "EMAIL";
             colEmail.Name = "colEmail";
             colEmail.ReadOnly = true;
-            colEmail.Width = 140;
+            colEmail.Width = 110;
 
             // 
             // colCelular
@@ -182,7 +209,7 @@ namespace UI.PN1
             colCelular.HeaderText = "CELULAR";
             colCelular.Name = "colCelular";
             colCelular.ReadOnly = true;
-            colCelular.Width = 110;
+            colCelular.Width = 85;
 
             // 
             // colDireccion
@@ -197,19 +224,19 @@ namespace UI.PN1
             // btnAyudaContextual
             // 
             btnAyudaContextual.Font = new System.Drawing.Font("Segoe UI Semibold", 8.5F, System.Drawing.FontStyle.Bold);
-            btnAyudaContextual.Location = new System.Drawing.Point(800, 18);
+            btnAyudaContextual.Location = new System.Drawing.Point(800, 12);
             btnAyudaContextual.Name = "btnAyudaContextual";
             btnAyudaContextual.Size = new System.Drawing.Size(130, 26);
             btnAyudaContextual.TabIndex = 10;
             btnAyudaContextual.Text = "? Ayuda";
-            toolTipGeneral.SetToolTip(btnAyudaContextual, "Ayuda: Despliega el manual de usuario y las directivas operativas del Maestro de Clientes (Capítulo 2).");
+            toolTipGeneral.SetToolTip(btnAyudaContextual, "Ayuda: Despliega el manual de usuario del Maestro de Clientes (Capítulo 2).");
             btnAyudaContextual.Click += btnAyudaContextual_Click;
 
             // 
             // btnActualizar
             // 
             btnActualizar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
-            btnActualizar.Location = new System.Drawing.Point(800, 58);
+            btnActualizar.Location = new System.Drawing.Point(800, 46);
             btnActualizar.Name = "btnActualizar";
             btnActualizar.Size = new System.Drawing.Size(130, 28);
             btnActualizar.TabIndex = 3;
@@ -221,7 +248,7 @@ namespace UI.PN1
             // btnAnadir
             // 
             btnAnadir.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
-            btnAnadir.Location = new System.Drawing.Point(800, 92);
+            btnAnadir.Location = new System.Drawing.Point(800, 80);
             btnAnadir.Name = "btnAnadir";
             btnAnadir.Size = new System.Drawing.Size(130, 28);
             btnAnadir.TabIndex = 4;
@@ -233,7 +260,7 @@ namespace UI.PN1
             // btnModificar
             // 
             btnModificar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
-            btnModificar.Location = new System.Drawing.Point(800, 126);
+            btnModificar.Location = new System.Drawing.Point(800, 114);
             btnModificar.Name = "btnModificar";
             btnModificar.Size = new System.Drawing.Size(130, 28);
             btnModificar.TabIndex = 5;
@@ -245,55 +272,55 @@ namespace UI.PN1
             // btnEliminar
             // 
             btnEliminar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
-            btnEliminar.Location = new System.Drawing.Point(800, 160);
+            btnEliminar.Location = new System.Drawing.Point(800, 148);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new System.Drawing.Size(130, 28);
             btnEliminar.TabIndex = 6;
             btnEliminar.Text = "Eliminar";
-            toolTipGeneral.SetToolTip(btnEliminar, "Bloquear / Baja Lógica: Desactiva lógicamente al cliente seleccionado (no se elimina físicamente, en la bitácora se registra como Bloquear).");
+            toolTipGeneral.SetToolTip(btnEliminar, "Bloquear / Baja Lógica: Desactiva lógicamente al cliente seleccionado.");
             btnEliminar.Click += btnEliminar_Click;
 
             // 
             // btnRevertirDni
             // 
             btnRevertirDni.Font = new System.Drawing.Font("Segoe UI Semibold", 8.5F, System.Drawing.FontStyle.Bold);
-            btnRevertirDni.Location = new System.Drawing.Point(800, 198);
+            btnRevertirDni.Location = new System.Drawing.Point(800, 184);
             btnRevertirDni.Name = "btnRevertirDni";
             btnRevertirDni.Size = new System.Drawing.Size(130, 36);
             btnRevertirDni.TabIndex = 6;
             btnRevertirDni.Text = "Revertir/Desrevertir";
-            toolTipGeneral.SetToolTip(btnRevertirDni, "Criptografía Reversible (AES-256): Permite alternar entre cifrar los números de DNI en AES-256 (Base64) y descifrarlos para volver a ver el número original en texto plano.");
+            toolTipGeneral.SetToolTip(btnRevertirDni, "Criptografía Reversible (AES-256): Permite alternar entre cifrar los números de DNI en AES-256 (Base64) y descifrarlos.");
             btnRevertirDni.Click += btnRevertirDni_Click;
 
             // 
             // btnAplicar
             // 
             btnAplicar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
-            btnAplicar.Location = new System.Drawing.Point(800, 255);
+            btnAplicar.Location = new System.Drawing.Point(800, 240);
             btnAplicar.Name = "btnAplicar";
             btnAplicar.Size = new System.Drawing.Size(130, 28);
             btnAplicar.TabIndex = 7;
             btnAplicar.Text = "Aplicar";
-            toolTipGeneral.SetToolTip(btnAplicar, "Aplicar: Valida y confirma la modificación del cliente seleccionado, persistiendo los cambios en la base de datos.");
+            toolTipGeneral.SetToolTip(btnAplicar, "Aplicar: Valida y confirma la modificación del cliente seleccionado.");
             btnAplicar.Click += btnAplicar_Click;
 
             // 
             // btnCancelar
             // 
             btnCancelar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
-            btnCancelar.Location = new System.Drawing.Point(800, 289);
+            btnCancelar.Location = new System.Drawing.Point(800, 274);
             btnCancelar.Name = "btnCancelar";
             btnCancelar.Size = new System.Drawing.Size(130, 28);
             btnCancelar.TabIndex = 8;
             btnCancelar.Text = "Cancelar";
-            toolTipGeneral.SetToolTip(btnCancelar, "Cancelar: Descarta la operación actual de alta o modificación y restaura el estado inicial.");
+            toolTipGeneral.SetToolTip(btnCancelar, "Cancelar: Descarta la operación actual de alta o modificación.");
             btnCancelar.Click += btnCancelar_Click;
 
             // 
             // btnSalir
             // 
             btnSalir.Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, System.Drawing.FontStyle.Bold);
-            btnSalir.Location = new System.Drawing.Point(800, 323);
+            btnSalir.Location = new System.Drawing.Point(800, 308);
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new System.Drawing.Size(130, 28);
             btnSalir.TabIndex = 9;
@@ -302,27 +329,22 @@ namespace UI.PN1
             btnSalir.Click += btnSalir_Click;
 
             // 
-            // btnBitacoraCambios
-            // 
-            btnBitacoraCambios.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            btnBitacoraCambios.Location = new System.Drawing.Point(800, 357);
-            btnBitacoraCambios.Name = "btnBitacoraCambios";
-            btnBitacoraCambios.Size = new System.Drawing.Size(130, 30);
-            btnBitacoraCambios.TabIndex = 10;
-            btnBitacoraCambios.Text = "Bitácora Cambios";
-            toolTipGeneral.SetToolTip(btnBitacoraCambios, "Bitácora de Cambios: Consulta el historial de cambios, bajas y modificaciones del cliente seleccionado y permite revertir versiones.");
-            btnBitacoraCambios.Click += btnBitacoraCambios_Click;
-
-            // 
-            // panelCampos (Lower input boxes with bright green label badges matching Excel)
+            // panelCampos
             // 
             panelCampos.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             panelCampos.Controls.Add(lblDni);
             panelCampos.Controls.Add(txtDni);
+            panelCampos.Controls.Add(lblSexo);
+            panelCampos.Controls.Add(cmbSexo);
             panelCampos.Controls.Add(lblApellidos);
             panelCampos.Controls.Add(txtApellidos);
             panelCampos.Controls.Add(lblNombres);
             panelCampos.Controls.Add(txtNombres);
+            panelCampos.Controls.Add(lblFechaNacimiento);
+            panelCampos.Controls.Add(dtpFechaNacimiento);
+            panelCampos.Controls.Add(lblEdadActual);
+            panelCampos.Controls.Add(lblCobertura);
+            panelCampos.Controls.Add(txtCobertura);
             panelCampos.Controls.Add(lblEmail);
             panelCampos.Controls.Add(txtEmail);
             panelCampos.Controls.Add(btnGestionEmail1N);
@@ -331,13 +353,13 @@ namespace UI.PN1
             panelCampos.Controls.Add(btnGestionCelular1N);
             panelCampos.Controls.Add(lblDireccion);
             panelCampos.Controls.Add(txtDireccion);
-            panelCampos.Location = new System.Drawing.Point(20, 245);
+            panelCampos.Location = new System.Drawing.Point(20, 232);
             panelCampos.Name = "panelCampos";
-            panelCampos.Size = new System.Drawing.Size(420, 162);
+            panelCampos.Size = new System.Drawing.Size(455, 190);
             panelCampos.TabIndex = 11;
 
-            // Row 1: DNI
-            lblDni.BackColor = System.Drawing.Color.FromArgb(0, 230, 0); // Bright green matching Excel
+            // Row 1: DNI + Sexo
+            lblDni.BackColor = System.Drawing.Color.FromArgb(0, 230, 0);
             lblDni.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             lblDni.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             lblDni.Location = new System.Drawing.Point(0, 0);
@@ -351,8 +373,26 @@ namespace UI.PN1
             txtDni.Font = new System.Drawing.Font("Segoe UI", 9F);
             txtDni.Location = new System.Drawing.Point(90, 0);
             txtDni.Name = "txtDni";
-            txtDni.Size = new System.Drawing.Size(328, 23);
+            txtDni.Size = new System.Drawing.Size(180, 23);
             txtDni.TabIndex = 1;
+
+            lblSexo.BackColor = System.Drawing.Color.FromArgb(0, 230, 0);
+            lblSexo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            lblSexo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            lblSexo.Location = new System.Drawing.Point(272, 0);
+            lblSexo.Name = "lblSexo";
+            lblSexo.Size = new System.Drawing.Size(55, 26);
+            lblSexo.TabIndex = 2;
+            lblSexo.Text = " Sexo:";
+            lblSexo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+
+            cmbSexo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cmbSexo.Font = new System.Drawing.Font("Segoe UI", 9F);
+            cmbSexo.Items.AddRange(new object[] { "Masculino", "Femenino" });
+            cmbSexo.Location = new System.Drawing.Point(328, 1);
+            cmbSexo.Name = "cmbSexo";
+            cmbSexo.Size = new System.Drawing.Size(124, 23);
+            cmbSexo.TabIndex = 3;
 
             // Row 2: Apellidos
             lblApellidos.BackColor = System.Drawing.Color.FromArgb(0, 230, 0);
@@ -361,7 +401,7 @@ namespace UI.PN1
             lblApellidos.Location = new System.Drawing.Point(0, 27);
             lblApellidos.Name = "lblApellidos";
             lblApellidos.Size = new System.Drawing.Size(90, 26);
-            lblApellidos.TabIndex = 2;
+            lblApellidos.TabIndex = 4;
             lblApellidos.Text = " Apellidos:";
             lblApellidos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
@@ -369,8 +409,8 @@ namespace UI.PN1
             txtApellidos.Font = new System.Drawing.Font("Segoe UI", 9F);
             txtApellidos.Location = new System.Drawing.Point(90, 27);
             txtApellidos.Name = "txtApellidos";
-            txtApellidos.Size = new System.Drawing.Size(328, 23);
-            txtApellidos.TabIndex = 3;
+            txtApellidos.Size = new System.Drawing.Size(362, 23);
+            txtApellidos.TabIndex = 5;
 
             // Row 3: Nombres
             lblNombres.BackColor = System.Drawing.Color.FromArgb(0, 230, 0);
@@ -379,7 +419,7 @@ namespace UI.PN1
             lblNombres.Location = new System.Drawing.Point(0, 54);
             lblNombres.Name = "lblNombres";
             lblNombres.Size = new System.Drawing.Size(90, 26);
-            lblNombres.TabIndex = 4;
+            lblNombres.TabIndex = 6;
             lblNombres.Text = " Nombres:";
             lblNombres.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
@@ -387,91 +427,137 @@ namespace UI.PN1
             txtNombres.Font = new System.Drawing.Font("Segoe UI", 9F);
             txtNombres.Location = new System.Drawing.Point(90, 54);
             txtNombres.Name = "txtNombres";
-            txtNombres.Size = new System.Drawing.Size(328, 23);
-            txtNombres.TabIndex = 5;
+            txtNombres.Size = new System.Drawing.Size(362, 23);
+            txtNombres.TabIndex = 7;
 
-            // Row 4: Email
+            // Row 4: Fecha Nacimiento + Edad + Cobertura Médica
+            lblFechaNacimiento.BackColor = System.Drawing.Color.FromArgb(0, 230, 0);
+            lblFechaNacimiento.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            lblFechaNacimiento.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
+            lblFechaNacimiento.Location = new System.Drawing.Point(0, 81);
+            lblFechaNacimiento.Name = "lblFechaNacimiento";
+            lblFechaNacimiento.Size = new System.Drawing.Size(90, 26);
+            lblFechaNacimiento.TabIndex = 8;
+            lblFechaNacimiento.Text = " Fecha Nac.:";
+            lblFechaNacimiento.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+
+            dtpFechaNacimiento.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+            dtpFechaNacimiento.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            dtpFechaNacimiento.Location = new System.Drawing.Point(90, 82);
+            dtpFechaNacimiento.Name = "dtpFechaNacimiento";
+            dtpFechaNacimiento.Size = new System.Drawing.Size(98, 23);
+            dtpFechaNacimiento.TabIndex = 9;
+
+            lblEdadActual.BackColor = System.Drawing.Color.FromArgb(235, 248, 235);
+            lblEdadActual.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            lblEdadActual.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            lblEdadActual.ForeColor = System.Drawing.Color.FromArgb(30, 80, 40);
+            lblEdadActual.Location = new System.Drawing.Point(189, 81);
+            lblEdadActual.Name = "lblEdadActual";
+            lblEdadActual.Size = new System.Drawing.Size(65, 26);
+            lblEdadActual.TabIndex = 10;
+            lblEdadActual.Text = "0m";
+            lblEdadActual.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+
+            lblCobertura.BackColor = System.Drawing.Color.FromArgb(0, 230, 0);
+            lblCobertura.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            lblCobertura.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
+            lblCobertura.Location = new System.Drawing.Point(255, 81);
+            lblCobertura.Name = "lblCobertura";
+            lblCobertura.Size = new System.Drawing.Size(73, 26);
+            lblCobertura.TabIndex = 11;
+            lblCobertura.Text = " Cobertura:";
+            lblCobertura.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+
+            txtCobertura.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            txtCobertura.Font = new System.Drawing.Font("Segoe UI", 9F);
+            txtCobertura.Location = new System.Drawing.Point(328, 81);
+            txtCobertura.Name = "txtCobertura";
+            txtCobertura.Size = new System.Drawing.Size(124, 23);
+            txtCobertura.TabIndex = 12;
+
+            // Row 5: Email
             lblEmail.BackColor = System.Drawing.Color.FromArgb(0, 230, 0);
             lblEmail.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             lblEmail.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            lblEmail.Location = new System.Drawing.Point(0, 81);
+            lblEmail.Location = new System.Drawing.Point(0, 108);
             lblEmail.Name = "lblEmail";
             lblEmail.Size = new System.Drawing.Size(90, 26);
-            lblEmail.TabIndex = 6;
+            lblEmail.TabIndex = 13;
             lblEmail.Text = " Email:";
             lblEmail.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
             txtEmail.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             txtEmail.Font = new System.Drawing.Font("Segoe UI", 9F);
-            txtEmail.Location = new System.Drawing.Point(90, 81);
+            txtEmail.Location = new System.Drawing.Point(90, 108);
             txtEmail.Name = "txtEmail";
-            txtEmail.Size = new System.Drawing.Size(250, 23);
-            txtEmail.TabIndex = 7;
+            txtEmail.Size = new System.Drawing.Size(284, 23);
+            txtEmail.TabIndex = 14;
 
             btnGestionEmail1N.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
-            btnGestionEmail1N.Location = new System.Drawing.Point(342, 80);
+            btnGestionEmail1N.Location = new System.Drawing.Point(376, 107);
             btnGestionEmail1N.Name = "btnGestionEmail1N";
             btnGestionEmail1N.Size = new System.Drawing.Size(76, 25);
-            btnGestionEmail1N.TabIndex = 8;
+            btnGestionEmail1N.TabIndex = 15;
             btnGestionEmail1N.Text = "1:N";
             toolTipGeneral.SetToolTip(btnGestionEmail1N, "Gestionar múltiples emails para este cliente (Relación 1:N)");
             btnGestionEmail1N.UseVisualStyleBackColor = true;
             btnGestionEmail1N.Click += btnGestionContactos1N_Click;
 
-            // Row 5: Celular
+            // Row 6: Celular
             lblCelular.BackColor = System.Drawing.Color.FromArgb(0, 230, 0);
             lblCelular.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             lblCelular.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            lblCelular.Location = new System.Drawing.Point(0, 108);
+            lblCelular.Location = new System.Drawing.Point(0, 135);
             lblCelular.Name = "lblCelular";
             lblCelular.Size = new System.Drawing.Size(90, 26);
-            lblCelular.TabIndex = 9;
+            lblCelular.TabIndex = 16;
             lblCelular.Text = " Celular:";
             lblCelular.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
             txtCelular.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             txtCelular.Font = new System.Drawing.Font("Segoe UI", 9F);
-            txtCelular.Location = new System.Drawing.Point(90, 108);
+            txtCelular.Location = new System.Drawing.Point(90, 135);
             txtCelular.Name = "txtCelular";
-            txtCelular.Size = new System.Drawing.Size(250, 23);
-            txtCelular.TabIndex = 10;
+            txtCelular.Size = new System.Drawing.Size(284, 23);
+            txtCelular.TabIndex = 17;
 
             btnGestionCelular1N.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
-            btnGestionCelular1N.Location = new System.Drawing.Point(342, 107);
+            btnGestionCelular1N.Location = new System.Drawing.Point(376, 134);
             btnGestionCelular1N.Name = "btnGestionCelular1N";
             btnGestionCelular1N.Size = new System.Drawing.Size(76, 25);
-            btnGestionCelular1N.TabIndex = 11;
+            btnGestionCelular1N.TabIndex = 18;
             btnGestionCelular1N.Text = "1:N";
             toolTipGeneral.SetToolTip(btnGestionCelular1N, "Gestionar múltiples teléfonos/celulares para este cliente (Relación 1:N)");
             btnGestionCelular1N.UseVisualStyleBackColor = true;
             btnGestionCelular1N.Click += btnGestionContactos1N_Click;
 
-            // Row 6: Dirección
+            // Row 7: Dirección
             lblDireccion.BackColor = System.Drawing.Color.FromArgb(0, 230, 0);
             lblDireccion.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             lblDireccion.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            lblDireccion.Location = new System.Drawing.Point(0, 135);
+            lblDireccion.Location = new System.Drawing.Point(0, 162);
             lblDireccion.Name = "lblDireccion";
             lblDireccion.Size = new System.Drawing.Size(90, 26);
-            lblDireccion.TabIndex = 12;
+            lblDireccion.TabIndex = 19;
             lblDireccion.Text = " Dirección:";
             lblDireccion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
             txtDireccion.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             txtDireccion.Font = new System.Drawing.Font("Segoe UI", 9F);
-            txtDireccion.Location = new System.Drawing.Point(90, 135);
+            txtDireccion.Location = new System.Drawing.Point(90, 162);
             txtDireccion.Name = "txtDireccion";
-            txtDireccion.Size = new System.Drawing.Size(328, 23);
-            txtDireccion.TabIndex = 13;
+            txtDireccion.Size = new System.Drawing.Size(362, 23);
+            txtDireccion.TabIndex = 20;
 
             // 
-            // panelMensaje (Cuadro Mensaje: al centro, matching Excel)
+            // panelMensaje
             // 
             panelMensaje.Controls.Add(lblMensaje);
             panelMensaje.Controls.Add(txtMensaje);
-            panelMensaje.Location = new System.Drawing.Point(450, 245);
+            panelMensaje.Location = new System.Drawing.Point(485, 232);
             panelMensaje.Name = "panelMensaje";
-            panelMensaje.Size = new System.Drawing.Size(330, 162);
+            panelMensaje.Size = new System.Drawing.Size(295, 190);
             panelMensaje.TabIndex = 12;
 
             // 
@@ -497,14 +583,14 @@ namespace UI.PN1
             txtMensaje.Name = "txtMensaje";
             txtMensaje.ReadOnly = true;
             txtMensaje.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            txtMensaje.Size = new System.Drawing.Size(330, 140);
+            txtMensaje.Size = new System.Drawing.Size(295, 168);
             txtMensaje.TabIndex = 1;
 
             // 
             // panelSeparador
             // 
             panelSeparador.BackColor = System.Drawing.Color.FromArgb(190, 210, 195);
-            panelSeparador.Location = new System.Drawing.Point(20, 420);
+            panelSeparador.Location = new System.Drawing.Point(20, 427);
             panelSeparador.Name = "panelSeparador";
             panelSeparador.Size = new System.Drawing.Size(910, 1);
             panelSeparador.TabIndex = 13;
@@ -512,7 +598,7 @@ namespace UI.PN1
             // 
             // btnSerializar
             // 
-            btnSerializar.BackColor = System.Drawing.Color.FromArgb(245, 130, 32); // Orange button matching Excel
+            btnSerializar.BackColor = System.Drawing.Color.FromArgb(245, 130, 32);
             btnSerializar.Cursor = System.Windows.Forms.Cursors.Hand;
             btnSerializar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             btnSerializar.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
@@ -556,7 +642,7 @@ namespace UI.PN1
             // 
             // btnDesSerializar
             // 
-            btnDesSerializar.BackColor = System.Drawing.Color.FromArgb(245, 130, 32); // Orange button matching Excel
+            btnDesSerializar.BackColor = System.Drawing.Color.FromArgb(245, 130, 32);
             btnDesSerializar.Cursor = System.Windows.Forms.Cursors.Hand;
             btnDesSerializar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             btnDesSerializar.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
@@ -627,7 +713,6 @@ namespace UI.PN1
             Controls.Add(panelMensaje);
             Controls.Add(panelCampos);
             Controls.Add(btnSalir);
-            Controls.Add(btnBitacoraCambios);
             Controls.Add(btnCancelar);
             Controls.Add(btnAplicar);
             Controls.Add(btnEliminar);
@@ -638,7 +723,6 @@ namespace UI.PN1
             Controls.Add(btnAyudaContextual);
             Controls.Add(dgvClientes);
             Controls.Add(lblTituloMaestro);
-            Controls.Add(lblTituloSuperior);
             Name = "frmMaestroClientes_DNI101";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Text = "Maestro de Clientes - ABM con Serialización XML";
@@ -652,14 +736,15 @@ namespace UI.PN1
         }
 
         private System.Windows.Forms.ToolTip toolTipGeneral;
-
-        private System.Windows.Forms.Label lblTituloSuperior;
         private System.Windows.Forms.Label lblTituloMaestro;
 
         private System.Windows.Forms.DataGridView dgvClientes;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDni;
         private System.Windows.Forms.DataGridViewTextBoxColumn colApellidos;
         private System.Windows.Forms.DataGridViewTextBoxColumn colNombres;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colFechaNacimiento;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSexo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCobertura;
         private System.Windows.Forms.DataGridViewTextBoxColumn colEmail;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCelular;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDireccion;
@@ -667,10 +752,17 @@ namespace UI.PN1
         private System.Windows.Forms.Panel panelCampos;
         private System.Windows.Forms.Label lblDni;
         private System.Windows.Forms.TextBox txtDni;
+        private System.Windows.Forms.Label lblSexo;
+        private System.Windows.Forms.ComboBox cmbSexo;
         private System.Windows.Forms.Label lblApellidos;
         private System.Windows.Forms.TextBox txtApellidos;
         private System.Windows.Forms.Label lblNombres;
         private System.Windows.Forms.TextBox txtNombres;
+        private System.Windows.Forms.Label lblFechaNacimiento;
+        private System.Windows.Forms.DateTimePicker dtpFechaNacimiento;
+        private System.Windows.Forms.Label lblEdadActual;
+        private System.Windows.Forms.Label lblCobertura;
+        private System.Windows.Forms.TextBox txtCobertura;
         private System.Windows.Forms.Label lblEmail;
         private System.Windows.Forms.TextBox txtEmail;
         private System.Windows.Forms.Button btnGestionEmail1N;
@@ -691,7 +783,6 @@ namespace UI.PN1
         private UI.Controles.BotonFuturista btnAplicar;
         private UI.Controles.BotonFuturista btnCancelar;
         private UI.Controles.BotonFuturista btnSalir;
-        private UI.Controles.BotonFuturista btnBitacoraCambios;
         private UI.Controles.BotonFuturista btnAyudaContextual;
         private UI.Controles.BotonFuturista btnRevertirDni;
 

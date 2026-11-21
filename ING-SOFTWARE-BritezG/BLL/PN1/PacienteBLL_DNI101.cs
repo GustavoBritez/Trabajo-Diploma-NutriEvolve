@@ -220,7 +220,7 @@ namespace BLL
             return _pacienteDAL.ListarMaestro();
         }
 
-        public int GuardarMaestro(string dni, string apellidos, string nombres, string? email, string? celular, string? direccion)
+        public int GuardarMaestro(string dni, string apellidos, string nombres, string? email, string? celular, string? direccion, DateTime fechaNacimiento, string? sexo = "Masculino", string? cobertura = "Particular")
         {
             if (string.IsNullOrWhiteSpace(dni)) throw new ArgumentException("El DNI es obligatorio.");
             if (string.IsNullOrWhiteSpace(apellidos)) throw new ArgumentException("El apellido es obligatorio.");
@@ -234,7 +234,7 @@ namespace BLL
             }
 
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-            int id = _pacienteDAL.GuardarMaestro(dni, apellidos, nombres, email, celular, direccion, dniActual);
+            int id = _pacienteDAL.GuardarMaestro(dni, apellidos, nombres, email, celular, direccion, fechaNacimiento, sexo, cobertura, dniActual);
             try
             {
                 _bitacoraBLL.RegistrarBitacora(2, $"Alta de Cliente/Paciente: {apellidos}, {nombres} (DNI: {dni}) en Maestro ABM-C", dniActual, "MaestroClientes");
@@ -250,7 +250,7 @@ namespace BLL
             return id;
         }
 
-        public bool ModificarMaestro(int idPaciente, string dni, string apellidos, string nombres, string? email, string? celular, string? direccion)
+        public bool ModificarMaestro(int idPaciente, string dni, string apellidos, string nombres, string? email, string? celular, string? direccion, DateTime fechaNacimiento, string? sexo = "Masculino", string? cobertura = "Particular")
         {
             if (idPaciente <= 0) throw new ArgumentException("Identificador de paciente inválido.");
             if (string.IsNullOrWhiteSpace(dni)) throw new ArgumentException("El DNI es obligatorio.");
@@ -258,7 +258,7 @@ namespace BLL
             if (string.IsNullOrWhiteSpace(nombres)) throw new ArgumentException("El nombre es obligatorio.");
 
             int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-            bool ok = _pacienteDAL.ModificarMaestro(idPaciente, dni, apellidos, nombres, email, celular, direccion, dniActual);
+            bool ok = _pacienteDAL.ModificarMaestro(idPaciente, dni, apellidos, nombres, email, celular, direccion, fechaNacimiento, sexo, cobertura, dniActual);
             try
             {
                 _bitacoraBLL.RegistrarBitacora(2, $"Modificación en Maestro ABM-C del Cliente/Paciente ID {idPaciente} (DNI: {dni})", dniActual, "MaestroClientes");
@@ -372,25 +372,6 @@ namespace BLL
         {
             if (idTelefono <= 0) return;
             _pacienteDAL.EliminarTelefonoLogico1N(idTelefono);
-            try
-            {
-                new DigitoVerificadorBLL().RecalcularYPersistir();
-            }
-            catch { }
-        }
-
-        public void ImportarClientesDesdeXml(List<(string dni, string apellidos, string nombres, string email, string celular, string direccion)> clientes)
-        {
-            if (clientes == null || clientes.Count == 0) return;
-            int dniActual = ServicesSessionManager.Instancia.ObtenerDniUsuarioActual();
-            _pacienteDAL.ImportarClientesDesdeXml(clientes, dniActual);
-
-            try
-            {
-                _bitacoraBLL.RegistrarBitacora(2, $"Des-serialización XML: sincronizados {clientes.Count} clientes en la base de datos", dniActual, "MaestroClientes");
-            }
-            catch { }
-
             try
             {
                 new DigitoVerificadorBLL().RecalcularYPersistir();

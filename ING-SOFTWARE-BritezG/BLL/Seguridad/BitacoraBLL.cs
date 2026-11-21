@@ -27,8 +27,6 @@ namespace BLL
             }
         }
 
-        public List<BitacoraBE> BuscarEventos(DateTime desde, DateTime hasta) => BuscarBitacora(desde, hasta);
-
         public List<BitacoraBE> VerBitacora()
         {
             try
@@ -41,8 +39,6 @@ namespace BLL
                 throw;
             }
         }
-
-        public List<BitacoraBE> VerEventos() => VerBitacora();
 
         public bool RegistrarBitacora(int criticidad, string descripcion, int dni, string modulo)
         {
@@ -58,12 +54,5 @@ namespace BLL
                 return false;
             }
         }
-
-        public bool RegistrarEvento(int criticidad, string descripcion, int dni, string modulo) => RegistrarBitacora(criticidad, descripcion, dni, modulo);
-    }
-
-    [Obsolete("Usar BitacoraBLL")]
-    public class EventoBLL : BitacoraBLL
-    {
     }
 }

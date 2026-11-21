@@ -18,15 +18,15 @@ namespace UI.PN1
         private BotonFuturista btnContinuar = null!;
         private BotonFuturista btnCancelar = null!;
 
-        public frmConfirmarAltaCliente_DNI101(string dni, string apellidos, string nombres, string email, string celular, string direccion)
+        public frmConfirmarAltaCliente_DNI101(string dni, string apellidos, string nombres, string email, string celular, string direccion, DateTime? fechaNacimiento = null, string? sexo = null, string? cobertura = null)
         {
-            InicializarComponentes(dni, apellidos, nombres, email, celular, direccion);
+            InicializarComponentes(dni, apellidos, nombres, email, celular, direccion, fechaNacimiento ?? DateTime.Today, sexo ?? "Masculino", cobertura ?? "Particular");
         }
 
-        private void InicializarComponentes(string dni, string apellidos, string nombres, string email, string celular, string direccion)
+        private void InicializarComponentes(string dni, string apellidos, string nombres, string email, string celular, string direccion, DateTime fechaNacimiento, string sexo, string cobertura)
         {
             this.Text = "Añadir Cliente";
-            this.Size = new Size(460, 390);
+            this.Size = new Size(480, 460);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.StartPosition = FormStartPosition.CenterParent;
             this.MaximizeBox = false;
@@ -68,7 +68,7 @@ namespace UI.PN1
             pnlContenedor = new Panel
             {
                 Dock = DockStyle.Fill,
-                Padding = new Padding(22, 16, 22, 10),
+                Padding = new Padding(22, 14, 22, 10),
                 BackColor = Color.White
             };
 
@@ -76,23 +76,29 @@ namespace UI.PN1
             {
                 Dock = DockStyle.Fill,
                 ColumnCount = 2,
-                RowCount = 6,
+                RowCount = 9,
                 CellBorderStyle = TableLayoutPanelCellBorderStyle.None
             };
-            tblDatos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 32F));
-            tblDatos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 68F));
+            tblDatos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
+            tblDatos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65F));
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 9; i++)
             {
-                tblDatos.RowStyles.Add(new RowStyle(SizeType.Percent, 16.66F));
+                tblDatos.RowStyles.Add(new RowStyle(SizeType.Percent, 11.11F));
             }
+
+            int edadMeses = Math.Max(0, (DateTime.Today.Year - fechaNacimiento.Year) * 12 + (DateTime.Today.Month - fechaNacimiento.Month) - (DateTime.Today.Day < fechaNacimiento.Day ? 1 : 0));
+            string edadStr = edadMeses >= 12 ? $"{edadMeses / 12} año(s) ({edadMeses} m)" : $"{edadMeses} mes(es)";
 
             AgregarFilaDato(tblDatos, 0, "DNI:", dni);
             AgregarFilaDato(tblDatos, 1, "Apellidos:", apellidos);
             AgregarFilaDato(tblDatos, 2, "Nombres:", nombres);
-            AgregarFilaDato(tblDatos, 3, "Email:", string.IsNullOrWhiteSpace(email) ? "(Sin email)" : email);
-            AgregarFilaDato(tblDatos, 4, "Celular:", string.IsNullOrWhiteSpace(celular) ? "(Sin celular)" : celular);
-            AgregarFilaDato(tblDatos, 5, "Dirección:", string.IsNullOrWhiteSpace(direccion) ? "(Sin dirección)" : direccion);
+            AgregarFilaDato(tblDatos, 3, "Fecha Nac. / Edad:", $"{fechaNacimiento:dd/MM/yyyy} — {edadStr}");
+            AgregarFilaDato(tblDatos, 4, "Sexo:", string.IsNullOrWhiteSpace(sexo) ? "Masculino" : sexo);
+            AgregarFilaDato(tblDatos, 5, "Cobertura Médica:", string.IsNullOrWhiteSpace(cobertura) ? "Particular" : cobertura);
+            AgregarFilaDato(tblDatos, 6, "Email:", string.IsNullOrWhiteSpace(email) ? "(Sin email)" : email);
+            AgregarFilaDato(tblDatos, 7, "Celular:", string.IsNullOrWhiteSpace(celular) ? "(Sin celular)" : celular);
+            AgregarFilaDato(tblDatos, 8, "Dirección:", string.IsNullOrWhiteSpace(direccion) ? "(Sin dirección)" : direccion);
 
             pnlContenedor.Controls.Add(tblDatos);
 

@@ -556,11 +556,35 @@ namespace UI
         #endregion
 
         #region GUI
+        private sealed class MenuPrincipalToolStripColorTable : ProfessionalColorTable
+        {
+            public override Color ToolStripDropDownBackground => Color.FromArgb(245, 250, 246);
+            public override Color MenuItemSelected => Color.FromArgb(180, 215, 190);
+            public override Color MenuItemBorder => Color.FromArgb(76, 124, 89);
+            public override Color MenuBorder => Color.FromArgb(46, 94, 67);
+            public override Color ImageMarginGradientBegin => Color.FromArgb(236, 245, 238);
+            public override Color ImageMarginGradientMiddle => Color.FromArgb(236, 245, 238);
+            public override Color ImageMarginGradientEnd => Color.FromArgb(236, 245, 238);
+            public override Color ButtonSelectedHighlight => Color.FromArgb(95, 145, 108);
+            public override Color ButtonSelectedGradientBegin => Color.FromArgb(95, 145, 108);
+            public override Color ButtonSelectedGradientMiddle => Color.FromArgb(95, 145, 108);
+            public override Color ButtonSelectedGradientEnd => Color.FromArgb(95, 145, 108);
+            public override Color ButtonPressedGradientBegin => Color.FromArgb(46, 94, 67);
+            public override Color ButtonPressedGradientMiddle => Color.FromArgb(46, 94, 67);
+            public override Color ButtonPressedGradientEnd => Color.FromArgb(46, 94, 67);
+        }
+
         private void ConfigurarEstiloGrillas()
         {
+            TS_Gestion.Renderer = new ToolStripProfessionalRenderer(new MenuPrincipalToolStripColorTable())
+            {
+                RoundedEdges = false
+            };
+
             Color verdeOscuro = Color.FromArgb(46, 94, 67);
-            Color verdeSeleccion = Color.FromArgb(180, 210, 190);
+            Color verdeSeleccion = Color.FromArgb(170, 212, 182);
             Color fondoGrilla = Color.White;
+            Color fondoAlterno = Color.FromArgb(242, 249, 244);
             Color colorLineas = Color.FromArgb(200, 220, 205);
 
             DataGridView[] grillas = { dgvPerfiles, dgvFamilias, dgvPermisos };
@@ -571,33 +595,39 @@ namespace UI
 
                 dgv.ColumnHeadersDefaultCellStyle.BackColor = verdeOscuro;
                 dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-                dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-                dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold);
+                dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = verdeOscuro;
+                dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.White;
                 dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-                dgv.ColumnHeadersHeight = 35;
+                dgv.ColumnHeadersHeight = 32;
 
                 dgv.BackgroundColor = fondoGrilla;
-                dgv.BorderStyle = BorderStyle.None;
+                dgv.BorderStyle = BorderStyle.FixedSingle;
+                dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
                 dgv.GridColor = colorLineas;
+                dgv.RowTemplate.Height = 28;
                 dgv.DefaultCellStyle.BackColor = fondoGrilla;
-                dgv.DefaultCellStyle.ForeColor = Color.Black;
-                dgv.DefaultCellStyle.Font = new Font("Segoe UI", 9F);
+                dgv.DefaultCellStyle.ForeColor = Color.FromArgb(25, 35, 28);
+                dgv.DefaultCellStyle.Font = new Font("Segoe UI", 9.5F);
+                dgv.DefaultCellStyle.Padding = new Padding(6, 0, 6, 0);
+                dgv.AlternatingRowsDefaultCellStyle.BackColor = fondoAlterno;
 
                 // --- Estilo de Selección ---
                 dgv.DefaultCellStyle.SelectionBackColor = verdeSeleccion;
-                dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
+                dgv.DefaultCellStyle.SelectionForeColor = Color.FromArgb(20, 45, 25);
 
                 // --- Comportamientos Generales ---
                 dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
                 dgv.MultiSelect = false;
                 dgv.ReadOnly = true;
-                dgv.RowHeadersVisible = false; // Oculta la columna vacía de la izquierda
-                dgv.AllowUserToAddRows = false; // Saca la fila vacía extra del final
-                dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; // Hace que las columnas ocupen todo el ancho
+                dgv.RowHeadersVisible = false;
+                dgv.AllowUserToAddRows = false;
+                dgv.AllowUserToResizeRows = false;
+                dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
-            #endregion
-
         }
+        #endregion
         #region Idioma
         public void ActualizarIdioma()
         {

@@ -80,9 +80,9 @@ namespace UI.PN2
             lblSubtitulo.ForeColor = System.Drawing.Color.FromArgb(235, 245, 235);
             lblSubtitulo.Location = new System.Drawing.Point(20, 38);
             lblSubtitulo.Name = "lblSubtitulo";
-            lblSubtitulo.Size = new System.Drawing.Size(640, 17);
+            lblSubtitulo.Size = new System.Drawing.Size(340, 17);
             lblSubtitulo.TabIndex = 1;
-            lblSubtitulo.Text = "Cálculo de velocidad ponderal, pendientes de crecimiento percentilar OMS y proyección clínica a 90 días";
+            lblSubtitulo.Text = "Predicción de riesgo a 90 días";
 
             // gbListado
             gbListado.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
@@ -99,7 +99,9 @@ namespace UI.PN2
             // dgvReporte
             dgvReporte.AllowUserToAddRows = false;
             dgvReporte.AllowUserToDeleteRows = false;
-            dgvReporte.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            dgvReporte.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            dgvReporte.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.None;
+            dgvReporte.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             dgvReporte.BackgroundColor = System.Drawing.Color.White;
             dgvStyleHeader.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dgvStyleHeader.BackColor = System.Drawing.Color.FromArgb(76, 124, 89);
@@ -134,7 +136,7 @@ namespace UI.PN2
             gbDetallePredictivo.Size = new System.Drawing.Size(984, 215);
             gbDetallePredictivo.TabIndex = 2;
             gbDetallePredictivo.TabStop = false;
-            gbDetallePredictivo.Text = "Análisis Predictivo Individual y Recomendaciones Accionables del Motor de Decisión";
+            gbDetallePredictivo.Text = "Análisis Predictivo";
 
             // lblProyeccionTitulo
             lblProyeccionTitulo.AutoSize = true;

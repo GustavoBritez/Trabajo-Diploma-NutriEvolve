@@ -29,8 +29,7 @@ namespace DAL
                                          '__EFMigrationsHistory', 
                                          'Bitacora', 
                                          'Pacientes_Cambios_DNI101', 
-                                         'ConsultasNutricionales_Cambios_DNI101', 
-                                         'PlanesAlimentarios_Cambios_DNI101'
+                                         'ConsultasNutricionales_Cambios_DNI101'
                                      )
                                    ORDER BY TABLE_SCHEMA, TABLE_NAME";
 

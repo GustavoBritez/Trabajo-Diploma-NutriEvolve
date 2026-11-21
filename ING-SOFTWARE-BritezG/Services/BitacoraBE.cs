@@ -38,15 +38,6 @@ namespace BE
         public int _Dni { get => Dni; set => Dni = value; }
         public DateTime _Fecha { get => Fecha; set => Fecha = value; }
         public int _Id_Bitacora { get => Id_Bitacora; set => Id_Bitacora = value; }
-        public int _Id_Evento { get => Id_Bitacora; set => Id_Bitacora = value; }
         public string _Modulo { get => Modulo; set => Modulo = value; }
-    }
-
-    [Obsolete("Usar BitacoraBE")]
-    public class EventoBE : BitacoraBE
-    {
-        public EventoBE() : base() { }
-        public EventoBE(int criticidad, string descripcion, int dni, DateTime fecha, string modulo) : base(criticidad, descripcion, dni, fecha, modulo) { }
-        public EventoBE(int criticidad, string descripcion, int dni, DateTime fecha, string modulo, int id_evento) : base(criticidad, descripcion, dni, fecha, modulo, id_evento) { }
     }
 }

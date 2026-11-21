@@ -45,8 +45,8 @@ namespace UI
             lblDesde = new Label();
             btnSalir = new Button();
             groupBox1 = new GroupBox();
-            labelEvento = new Label();
-            cmbEvento = new ComboBox();
+            labelBitacora = new Label();
+            cmbBitacora = new ComboBox();
             cmbCriticidad = new ComboBox();
             labelCriticidad = new Label();
             cmbModulo = new ComboBox();
@@ -214,8 +214,8 @@ namespace UI
             // groupBox1
             // 
             groupBox1.BackColor = Color.FromArgb(180, 180, 180);
-            groupBox1.Controls.Add(labelEvento);
-            groupBox1.Controls.Add(cmbEvento);
+            groupBox1.Controls.Add(labelBitacora);
+            groupBox1.Controls.Add(cmbBitacora);
             groupBox1.Controls.Add(cmbCriticidad);
             groupBox1.Controls.Add(labelCriticidad);
             groupBox1.Controls.Add(cmbModulo);
@@ -229,23 +229,23 @@ namespace UI
             groupBox1.TabStop = false;
             groupBox1.Text = "Filtrar ";
             // 
-            // labelEvento
+            // labelBitacora
             // 
-            labelEvento.AutoSize = true;
-            labelEvento.Location = new Point(423, 29);
-            labelEvento.Name = "labelEvento";
-            labelEvento.Size = new Size(46, 15);
-            labelEvento.TabIndex = 12;
-            labelEvento.Text = "Evento";
+            labelBitacora.AutoSize = true;
+            labelBitacora.Location = new Point(417, 29);
+            labelBitacora.Name = "labelBitacora";
+            labelBitacora.Size = new Size(52, 15);
+            labelBitacora.TabIndex = 12;
+            labelBitacora.Text = "Bitácora";
             // 
-            // cmbEvento
+            // cmbBitacora
             // 
-            cmbEvento.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbEvento.Location = new Point(475, 26);
-            cmbEvento.Name = "cmbEvento";
-            cmbEvento.Size = new Size(115, 23);
-            cmbEvento.TabIndex = 11;
-            cmbEvento.SelectedIndexChanged += cmbEvento_SelectedIndexChanged;
+            cmbBitacora.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbBitacora.Location = new Point(475, 26);
+            cmbBitacora.Name = "cmbBitacora";
+            cmbBitacora.Size = new Size(115, 23);
+            cmbBitacora.TabIndex = 11;
+            cmbBitacora.SelectedIndexChanged += cmbBitacora_SelectedIndexChanged;
             // 
             // cmbCriticidad
             // 
@@ -398,8 +398,8 @@ namespace UI
         private Label labelCriticidad;
         private Label lbApellido;
         private Label lbNombre;
-        private Label labelEvento;
-        private ComboBox cmbEvento;
+        private Label labelBitacora;
+        private ComboBox cmbBitacora;
         private TextBox textBox1;
         private TextBox textBox2;
         private ComboBox cmbIdioma;

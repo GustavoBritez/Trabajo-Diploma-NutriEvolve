@@ -168,7 +168,10 @@ SELECT
     Nombre_DNI101 AS NOMBRES,
     ISNULL(Email_DNI101, '') AS EMAIL,
     ISNULL(Telefono_DNI101, '') AS CELULAR,
-    ISNULL(Direccion_DNI101, '') AS DIRECCION
+    ISNULL(Direccion_DNI101, '') AS DIRECCION,
+    FechaNacimiento_DNI101 AS FECHA_NACIMIENTO,
+    ISNULL(Sexo_DNI101, 'Masculino') AS SEXO,
+    ISNULL(ObraSocial_DNI101, 'Particular') AS COBERTURA
 FROM Pacientes_DNI101
 WHERE ISNULL(Activo_DNI101, 1) = 1
 ORDER BY Apellido_DNI101, Nombre_DNI101;";
@@ -182,7 +185,7 @@ ORDER BY Apellido_DNI101, Nombre_DNI101;";
             }
         }
 
-        public int GuardarMaestro(string dni, string apellidos, string nombres, string? email, string? celular, string? direccion, int usuarioDni = 11111111)
+        public int GuardarMaestro(string dni, string apellidos, string nombres, string? email, string? celular, string? direccion, DateTime fechaNacimiento, string? sexo, string? cobertura, int usuarioDni = 11111111)
         {
             return _conexion.ExecuteTransaction(tx =>
             {
@@ -196,7 +199,7 @@ ORDER BY Apellido_DNI101, Nombre_DNI101;";
 INSERT INTO Pacientes_DNI101 
 (DniNiño_DNI101, Nombre_DNI101, Apellido_DNI101, Telefono_DNI101, Email_DNI101, Direccion_DNI101, FechaNacimiento_DNI101, Sexo_DNI101, ObraSocial_DNI101, Activo_DNI101)
 VALUES 
-(@dni, @nombres, @apellidos, @celular, @email, @direccion, DATEADD(YEAR, -5, SYSDATETIME()), 'Otro', 'Particular', 1);
+(@dni, @nombres, @apellidos, @celular, @email, @direccion, @fechaNac, @sexo, @cobertura, 1);
 SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
                 int idPaciente;
@@ -208,6 +211,9 @@ SELECT CAST(SCOPE_IDENTITY() AS INT);";
                     cmd.Parameters.AddWithValue("@celular", (object?)celular?.Trim() ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@email", (object?)email?.Trim() ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@direccion", (object?)direccion?.Trim() ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@fechaNac", fechaNacimiento.Date);
+                    cmd.Parameters.AddWithValue("@sexo", string.IsNullOrWhiteSpace(sexo) ? "Masculino" : sexo.Trim());
+                    cmd.Parameters.AddWithValue("@cobertura", string.IsNullOrWhiteSpace(cobertura) ? "Particular" : cobertura.Trim());
                     idPaciente = Convert.ToInt32(cmd.ExecuteScalar());
                 }
 
@@ -239,7 +245,7 @@ SELECT CAST(SCOPE_IDENTITY() AS INT);";
             });
         }
 
-        public bool ModificarMaestro(int idPaciente, string dni, string apellidos, string nombres, string? email, string? celular, string? direccion, int usuarioDni = 11111111)
+        public bool ModificarMaestro(int idPaciente, string dni, string apellidos, string nombres, string? email, string? celular, string? direccion, DateTime fechaNacimiento, string? sexo, string? cobertura, int usuarioDni = 11111111)
         {
             return _conexion.ExecuteTransaction(tx =>
             {
@@ -256,7 +262,10 @@ SET DniNiño_DNI101 = @dni,
     Apellido_DNI101 = @apellidos,
     Telefono_DNI101 = @celular,
     Email_DNI101 = @email,
-    Direccion_DNI101 = @direccion
+    Direccion_DNI101 = @direccion,
+    FechaNacimiento_DNI101 = @fechaNac,
+    Sexo_DNI101 = @sexo,
+    ObraSocial_DNI101 = @cobertura
 WHERE IdPaciente_DNI101 = @id;";
 
                 using (var cmd = new SqlCommand(sqlUpd, tx.Connection, tx))
@@ -268,6 +277,9 @@ WHERE IdPaciente_DNI101 = @id;";
                     cmd.Parameters.AddWithValue("@celular", (object?)celular?.Trim() ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@email", (object?)email?.Trim() ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@direccion", (object?)direccion?.Trim() ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@fechaNac", fechaNacimiento.Date);
+                    cmd.Parameters.AddWithValue("@sexo", string.IsNullOrWhiteSpace(sexo) ? "Masculino" : sexo.Trim());
+                    cmd.Parameters.AddWithValue("@cobertura", string.IsNullOrWhiteSpace(cobertura) ? "Particular" : cobertura.Trim());
                     cmd.ExecuteNonQuery();
                 }
 
@@ -437,127 +449,6 @@ UPDATE Paciente_Telefonos_DNI101 SET Activo_DNI101 = 1 WHERE IdPaciente_DNI101 =
         {
             string sql = "UPDATE Paciente_Telefonos_DNI101 SET Activo_DNI101 = 0 WHERE IdTelefono_DNI101 = @id;";
             _conexion.ExecuteNonQuery(sql, new SqlParameter("@id", idTelefono));
-        }
-
-        public void ImportarClientesDesdeXml(List<(string dni, string apellidos, string nombres, string email, string celular, string direccion)> clientes, int usuarioDni = 11111111)
-        {
-            if (clientes == null || clientes.Count == 0) return;
-
-            _conexion.ExecuteTransaction(tx =>
-            {
-                using (var cmdCtx = new SqlCommand("EXEC sp_set_session_context @key=N'UsuarioDni', @value=@val;", tx.Connection, tx))
-                {
-                    cmdCtx.Parameters.AddWithValue("@val", usuarioDni);
-                    cmdCtx.ExecuteNonQuery();
-                }
-
-                foreach (var c in clientes)
-                {
-                    string dni = c.dni.Trim();
-                    // Si el DNI viene cifrado en Base64 desde el archivo XML, lo desciframos al valor original plano
-                    if (Services.ServicioCriptografiaAES.EsTextoCifrado(dni))
-                    {
-                        dni = Services.ServicioCriptografiaAES.DescifrarAES256(dni).Trim();
-                    }
-
-                    string apellidos = c.apellidos.Trim();
-                    string nombres = c.nombres.Trim();
-                    string email = c.email?.Trim() ?? "";
-                    string celular = c.celular?.Trim() ?? "";
-                    string direccion = c.direccion?.Trim() ?? "";
-
-                    if (string.IsNullOrWhiteSpace(dni) || (string.IsNullOrWhiteSpace(apellidos) && string.IsNullOrWhiteSpace(nombres))) continue;
-
-                    // 1. Verificar si ya existe por DNI (activo o inactivo)
-                    string sqlCheck = "SELECT IdPaciente_DNI101 FROM Pacientes_DNI101 WHERE DniNiño_DNI101 = @dni;";
-                    int idPaciente = 0;
-                    using (var cmd = new SqlCommand(sqlCheck, tx.Connection, tx))
-                    {
-                        cmd.Parameters.AddWithValue("@dni", dni);
-                        object? obj = cmd.ExecuteScalar();
-                        if (obj != null && obj != DBNull.Value)
-                        {
-                            idPaciente = Convert.ToInt32(obj);
-                        }
-                    }
-
-                    if (idPaciente > 0)
-                    {
-                        // Reactivar y actualizar datos
-                        string sqlUpd = @"
-UPDATE Pacientes_DNI101
-SET Nombre_DNI101 = @nombres,
-    Apellido_DNI101 = @apellidos,
-    Telefono_DNI101 = @celular,
-    Email_DNI101 = @email,
-    Direccion_DNI101 = @direccion,
-    Activo_DNI101 = 1
-WHERE IdPaciente_DNI101 = @id;";
-                        using (var cmdUpd = new SqlCommand(sqlUpd, tx.Connection, tx))
-                        {
-                            cmdUpd.Parameters.AddWithValue("@id", idPaciente);
-                            cmdUpd.Parameters.AddWithValue("@nombres", nombres);
-                            cmdUpd.Parameters.AddWithValue("@apellidos", apellidos);
-                            cmdUpd.Parameters.AddWithValue("@celular", string.IsNullOrWhiteSpace(celular) ? (object)DBNull.Value : celular);
-                            cmdUpd.Parameters.AddWithValue("@email", string.IsNullOrWhiteSpace(email) ? (object)DBNull.Value : email);
-                            cmdUpd.Parameters.AddWithValue("@direccion", string.IsNullOrWhiteSpace(direccion) ? (object)DBNull.Value : direccion);
-                            cmdUpd.ExecuteNonQuery();
-                        }
-                    }
-                    else
-                    {
-                        // Insertar nuevo registro
-                        string sqlIns = @"
-INSERT INTO Pacientes_DNI101 
-(DniNiño_DNI101, Nombre_DNI101, Apellido_DNI101, Telefono_DNI101, Email_DNI101, Direccion_DNI101, FechaNacimiento_DNI101, Sexo_DNI101, ObraSocial_DNI101, Activo_DNI101)
-VALUES 
-(@dni, @nombres, @apellidos, @celular, @email, @direccion, DATEADD(YEAR, -5, SYSDATETIME()), 'Otro', 'Particular', 1);
-SELECT CAST(SCOPE_IDENTITY() AS INT);";
-                        using (var cmdIns = new SqlCommand(sqlIns, tx.Connection, tx))
-                        {
-                            cmdIns.Parameters.AddWithValue("@dni", dni);
-                            cmdIns.Parameters.AddWithValue("@nombres", nombres);
-                            cmdIns.Parameters.AddWithValue("@apellidos", apellidos);
-                            cmdIns.Parameters.AddWithValue("@celular", string.IsNullOrWhiteSpace(celular) ? (object)DBNull.Value : celular);
-                            cmdIns.Parameters.AddWithValue("@email", string.IsNullOrWhiteSpace(email) ? (object)DBNull.Value : email);
-                            cmdIns.Parameters.AddWithValue("@direccion", string.IsNullOrWhiteSpace(direccion) ? (object)DBNull.Value : direccion);
-                            idPaciente = Convert.ToInt32(cmdIns.ExecuteScalar());
-                        }
-                    }
-
-                    // Sincronizar en tabla 1:N de emails
-                    if (!string.IsNullOrWhiteSpace(email))
-                    {
-                        string sqlEmail = @"
-IF EXISTS (SELECT 1 FROM Paciente_Emails_DNI101 WHERE IdPaciente_DNI101 = @id AND EsPrincipal_DNI101 = 1)
-    UPDATE Paciente_Emails_DNI101 SET Email_DNI101 = @email, Activo_DNI101 = 1 WHERE IdPaciente_DNI101 = @id AND EsPrincipal_DNI101 = 1;
-ELSE
-    INSERT INTO Paciente_Emails_DNI101 (IdPaciente_DNI101, Email_DNI101, EsPrincipal_DNI101, Activo_DNI101) VALUES (@id, @email, 1, 1);";
-                        using (var cmdEm = new SqlCommand(sqlEmail, tx.Connection, tx))
-                        {
-                            cmdEm.Parameters.AddWithValue("@id", idPaciente);
-                            cmdEm.Parameters.AddWithValue("@email", email);
-                            cmdEm.ExecuteNonQuery();
-                        }
-                    }
-
-                    // Sincronizar en tabla 1:N de teléfonos
-                    if (!string.IsNullOrWhiteSpace(celular))
-                    {
-                        string sqlTel = @"
-IF EXISTS (SELECT 1 FROM Paciente_Telefonos_DNI101 WHERE IdPaciente_DNI101 = @id AND EsPrincipal_DNI101 = 1)
-    UPDATE Paciente_Telefonos_DNI101 SET Numero_DNI101 = @cel, Tipo_DNI101 = 'Celular', Activo_DNI101 = 1 WHERE IdPaciente_DNI101 = @id AND EsPrincipal_DNI101 = 1;
-ELSE
-    INSERT INTO Paciente_Telefonos_DNI101 (IdPaciente_DNI101, Numero_DNI101, Tipo_DNI101, EsPrincipal_DNI101, Activo_DNI101) VALUES (@id, @cel, 'Celular', 1, 1);";
-                        using (var cmdTel = new SqlCommand(sqlTel, tx.Connection, tx))
-                        {
-                            cmdTel.Parameters.AddWithValue("@id", idPaciente);
-                            cmdTel.Parameters.AddWithValue("@cel", celular);
-                            cmdTel.ExecuteNonQuery();
-                        }
-                    }
-                }
-            });
         }
     }
 }

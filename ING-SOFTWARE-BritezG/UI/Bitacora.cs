@@ -65,7 +65,7 @@ namespace UI
 
                 if (cmbModulo.Items.Count > 0) cmbModulo.SelectedIndex = 0;
                 if (cmbCriticidad.Items.Count > 0) cmbCriticidad.SelectedIndex = 0;
-                if (cmbEvento.Items.Count > 0) cmbEvento.SelectedIndex = 0;
+                if (cmbBitacora.Items.Count > 0) cmbBitacora.SelectedIndex = 0;
 
                 CargarBitacora(_bitacoraCompleta ?? new List<BitacoraBE>());
                 ApuntarComboBox();
@@ -126,7 +126,7 @@ namespace UI
         {
             InicializarComboBoxCriticidad();
             InicializarComboBoxC();
-            InicializarComboBoxEvento();
+            InicializarComboBoxBitacora();
 
             cmbModulo.SelectedIndexChanged += CmbCriticidad_SelectedIndexChanged;
 
@@ -165,31 +165,31 @@ namespace UI
 
             cmbCriticidad.SelectedIndex = 0;
         }
-        private void InicializarComboBoxEvento()
+        private void InicializarComboBoxBitacora()
         {
-            cmbEvento.Items.Clear();
+            cmbBitacora.Items.Clear();
 
-            cmbEvento.Items.Add("Todos");
-            cmbEvento.Items.Add("Inicio de Sesion");
-            cmbEvento.Items.Add("Cierre de Sesion");
-            cmbEvento.Items.Add("Error");
-            cmbEvento.Items.Add("Creacion de Usuario");
-            cmbEvento.Items.Add("Modificar Usuario");
-            cmbEvento.Items.Add("Desbloqueo de Usuario");
-            cmbEvento.Items.Add("Bloqueo de Cuenta");
-            cmbEvento.Items.Add("Cambio de Estado");
-            cmbEvento.Items.Add("Cambio de Clave");
-            cmbEvento.Items.Add("Cambio de Idioma");
-            cmbEvento.Items.Add("Eliminacion de Perfil");
-            cmbEvento.Items.Add("Creacion de Perfil");
-            cmbEvento.Items.Add("Eliminacion de Patente");
-            cmbEvento.Items.Add("Creacion de Patente");
-            cmbEvento.Items.Add("Eliminacion de Familia");
-            cmbEvento.Items.Add("Creacion de Familia");
-            cmbEvento.Items.Add("BackUp");
-            cmbEvento.Items.Add("Restore");
+            cmbBitacora.Items.Add("Todos");
+            cmbBitacora.Items.Add("Inicio de Sesion");
+            cmbBitacora.Items.Add("Cierre de Sesion");
+            cmbBitacora.Items.Add("Error");
+            cmbBitacora.Items.Add("Creacion de Usuario");
+            cmbBitacora.Items.Add("Modificar Usuario");
+            cmbBitacora.Items.Add("Desbloqueo de Usuario");
+            cmbBitacora.Items.Add("Bloqueo de Cuenta");
+            cmbBitacora.Items.Add("Cambio de Estado");
+            cmbBitacora.Items.Add("Cambio de Clave");
+            cmbBitacora.Items.Add("Cambio de Idioma");
+            cmbBitacora.Items.Add("Eliminacion de Perfil");
+            cmbBitacora.Items.Add("Creacion de Perfil");
+            cmbBitacora.Items.Add("Eliminacion de Patente");
+            cmbBitacora.Items.Add("Creacion de Patente");
+            cmbBitacora.Items.Add("Eliminacion de Familia");
+            cmbBitacora.Items.Add("Creacion de Familia");
+            cmbBitacora.Items.Add("BackUp");
+            cmbBitacora.Items.Add("Restore");
 
-            cmbEvento.SelectedIndex = 0;
+            cmbBitacora.SelectedIndex = 0;
         }
         private void DtpFecha_ValueChanged(object? sender, EventArgs e)
         {
@@ -238,7 +238,7 @@ namespace UI
                 DateTime fechaHasta = dtpHasta.Value.Date;
                 string modulo = cmbModulo.SelectedItem?.ToString() ?? "Todos";
                 string criticidad = cmbCriticidad.SelectedItem?.ToString() ?? "Todas";
-                string evento = cmbEvento.SelectedItem?.ToString() ?? "Todos";
+                string filtroBitacora = cmbBitacora.SelectedItem?.ToString() ?? "Todos";
 
                 IEnumerable<BitacoraBE> filtrada = _bitacoraCompleta;
 
@@ -257,16 +257,16 @@ namespace UI
                     filtrada = filtrada.Where(b => b._Criticidad.ToString() == criticidad);
                 }
 
-                // Evento / Descripción
-                if (!string.IsNullOrEmpty(evento) && evento != "Todos" && evento != "Todas")
+                // Bitácora / Descripción
+                if (!string.IsNullOrEmpty(filtroBitacora) && filtroBitacora != "Todos" && filtroBitacora != "Todas")
                 {
-                    if (string.Equals(evento, "Error", StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(filtroBitacora, "Error", StringComparison.OrdinalIgnoreCase))
                     {
                         filtrada = filtrada.Where(b => b._Descripcion != null && b._Descripcion.StartsWith("error", StringComparison.OrdinalIgnoreCase));
                     }
                     else
                     {
-                        filtrada = filtrada.Where(b => b._Descripcion != null && b._Descripcion.Contains(evento, StringComparison.OrdinalIgnoreCase));
+                        filtrada = filtrada.Where(b => b._Descripcion != null && b._Descripcion.Contains(filtroBitacora, StringComparison.OrdinalIgnoreCase));
                     }
                 }
 
@@ -607,7 +607,7 @@ namespace UI
             }
         }
 
-        private void cmbEvento_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbBitacora_SelectedIndexChanged(object sender, EventArgs e)
         {
             AplicarFiltrosCombinados();
         }

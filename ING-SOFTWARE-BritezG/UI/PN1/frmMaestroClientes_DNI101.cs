@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -25,6 +26,9 @@ namespace UI.PN1
         public string DNI { get; set; } = string.Empty;
         public string APELLIDOS { get; set; } = string.Empty;
         public string NOMBRES { get; set; } = string.Empty;
+        public string FECHA_NACIMIENTO { get; set; } = string.Empty;
+        public string SEXO { get; set; } = "Masculino";
+        public string COBERTURA { get; set; } = "Particular";
         public string EMAIL { get; set; } = string.Empty;
         public string CELULAR { get; set; } = string.Empty;
         public string DIRECCION { get; set; } = string.Empty;
@@ -48,6 +52,9 @@ namespace UI.PN1
         public frmMaestroClientes_DNI101()
         {
             InitializeComponent();
+            dtpFechaNacimiento.MaxDate = DateTime.Today;
+            if (cmbSexo.Items.Count > 0) cmbSexo.SelectedIndex = 0;
+            dtpFechaNacimiento.ValueChanged += (_, _) => ActualizarEtiquetaEdad();
             ConfigurarEventosTextBoxesAlta();
             ConfigurarEstado(ModoOperacion.Inicio);
             CargarGrillaClientes();
@@ -56,11 +63,26 @@ namespace UI.PN1
             AgregarMensaje("Sistema iniciado. Matriz de clientes lista.");
         }
 
+        private void ActualizarEtiquetaEdad()
+        {
+            DateTime fn = dtpFechaNacimiento.Value.Date;
+            DateTime hoy = DateTime.Today;
+            int meses = (hoy.Year - fn.Year) * 12 + (hoy.Month - fn.Month);
+            if (hoy.Day < fn.Day) meses--;
+            meses = Math.Max(0, meses);
+
+            lblEdadActual.Text = meses >= 12
+                ? $"{meses / 12}a ({meses}m)"
+                : $"{meses}m";
+        }
+
         private void ConfigurarEventosTextBoxesAlta()
         {
             txtDni.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; txtApellidos.Focus(); } };
             txtApellidos.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; txtNombres.Focus(); } };
-            txtNombres.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; txtEmail.Focus(); } };
+            txtNombres.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; dtpFechaNacimiento.Focus(); } };
+            dtpFechaNacimiento.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; txtCobertura.Focus(); } };
+            txtCobertura.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; txtEmail.Focus(); } };
             txtEmail.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; txtCelular.Focus(); } };
             txtCelular.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; txtDireccion.Focus(); } };
             txtDireccion.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter && _modoActual == ModoOperacion.Alta) { e.SuppressKeyPress = true; EjecutarFlujoAltaCliente(); } };
@@ -95,6 +117,9 @@ namespace UI.PN1
             string email = txtEmail.Text.Trim();
             string celular = txtCelular.Text.Trim();
             string direccion = txtDireccion.Text.Trim();
+            DateTime fechaNacimiento = dtpFechaNacimiento.Value.Date;
+            string sexo = cmbSexo.SelectedItem?.ToString() ?? "Masculino";
+            string cobertura = string.IsNullOrWhiteSpace(txtCobertura.Text) ? "Particular" : txtCobertura.Text.Trim();
 
             if (string.IsNullOrWhiteSpace(dni))
             {
@@ -118,11 +143,10 @@ namespace UI.PN1
             _procesandoAltaDialogo = true;
             try
             {
-                using var dlg = new frmConfirmarAltaCliente_DNI101(dni, apellidos, nombres, email, celular, direccion);
+                using var dlg = new frmConfirmarAltaCliente_DNI101(dni, apellidos, nombres, email, celular, direccion, fechaNacimiento, sexo, cobertura);
                 if (dlg.ShowDialog(this) == DialogResult.OK)
                 {
-                    // Continuar -> persistir cliente y sincronizar
-                    _pacienteBLL.GuardarMaestro(dni, apellidos, nombres, email, celular, direccion);
+                    _pacienteBLL.GuardarMaestro(dni, apellidos, nombres, email, celular, direccion, fechaNacimiento, sexo, cobertura);
                     AgregarMensaje($"Alta exitosa: Cliente DNI {dni} ({apellidos}, {nombres}) registrado.");
                     MessageBox.Show("Cliente agregado exitosamente con sus tablas 1:N sincronizadas.", "Alta Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -131,7 +155,6 @@ namespace UI.PN1
                 }
                 else
                 {
-                    // Cancelar -> restaurar controles
                     ConfigurarEstado(ModoOperacion.Inicio);
                     CargarCamposDesdeGrilla();
                     AgregarMensaje("Operación de alta cancelada por el usuario. Controles liberados.");
@@ -179,7 +202,7 @@ namespace UI.PN1
                 ActualizarEstadoBotonRevertir();
                 if (dgvClientes.Columns["colDni"] != null)
                 {
-                    dgvClientes.Columns["colDni"].Width = 90;
+                    dgvClientes.Columns["colDni"].Width = 75;
                 }
                 lblDni.Text = " DNI:";
 
@@ -213,10 +236,14 @@ namespace UI.PN1
 
                     txtDni.ReadOnly = true;
                     txtDni.BackColor = Color.WhiteSmoke;
+                    cmbSexo.Enabled = false;
                     txtApellidos.ReadOnly = true;
                     txtApellidos.BackColor = Color.WhiteSmoke;
                     txtNombres.ReadOnly = true;
                     txtNombres.BackColor = Color.WhiteSmoke;
+                    dtpFechaNacimiento.Enabled = false;
+                    txtCobertura.ReadOnly = true;
+                    txtCobertura.BackColor = Color.WhiteSmoke;
                     txtEmail.ReadOnly = true;
                     txtEmail.BackColor = Color.WhiteSmoke;
                     txtCelular.ReadOnly = true;
@@ -245,7 +272,6 @@ namespace UI.PN1
                     txtRutaDesSerializar.Enabled = true;
                     btnLimpiar.Enabled = true;
                     btnAyudaContextual.Enabled = true;
-                    btnBitacoraCambios.Enabled = true;
                     btnRevertirDni.Enabled = true;
                     break;
 
@@ -256,10 +282,14 @@ namespace UI.PN1
 
                     txtDni.ReadOnly = false;
                     txtDni.BackColor = Color.White;
+                    cmbSexo.Enabled = true;
                     txtApellidos.ReadOnly = false;
                     txtApellidos.BackColor = Color.White;
                     txtNombres.ReadOnly = false;
                     txtNombres.BackColor = Color.White;
+                    dtpFechaNacimiento.Enabled = true;
+                    txtCobertura.ReadOnly = false;
+                    txtCobertura.BackColor = Color.White;
                     txtEmail.ReadOnly = false;
                     txtEmail.BackColor = Color.White;
                     txtCelular.ReadOnly = false;
@@ -272,12 +302,10 @@ namespace UI.PN1
                     btnModificar.Enabled = false;
                     btnEliminar.Enabled = false;
 
-                    // El botón Aplicar debe estar deshabilitado en Alta
                     btnAplicar.Enabled = false;
                     btnCancelar.Enabled = true;
                     btnSalir.Enabled = false;
                     btnAyudaContextual.Enabled = false;
-                    btnBitacoraCambios.Enabled = false;
                     btnLimpiar.Enabled = false;
 
                     btnGestionEmail1N.Enabled = false;
@@ -298,13 +326,16 @@ namespace UI.PN1
                 case ModoOperacion.Modificacion:
                     dgvClientes.Enabled = false;
 
-                    // En modificación la clave primaria DNI no se altera
                     txtDni.ReadOnly = true;
                     txtDni.BackColor = Color.FromArgb(235, 235, 235);
+                    cmbSexo.Enabled = true;
                     txtApellidos.ReadOnly = false;
                     txtApellidos.BackColor = Color.White;
                     txtNombres.ReadOnly = false;
                     txtNombres.BackColor = Color.White;
+                    dtpFechaNacimiento.Enabled = true;
+                    txtCobertura.ReadOnly = false;
+                    txtCobertura.BackColor = Color.White;
                     txtEmail.ReadOnly = false;
                     txtEmail.BackColor = Color.White;
                     txtCelular.ReadOnly = false;
@@ -317,12 +348,10 @@ namespace UI.PN1
                     btnModificar.Enabled = false;
                     btnEliminar.Enabled = false;
 
-                    // El botón Aplicar únicamente se habilita para Modificación
                     btnAplicar.Enabled = true;
                     btnCancelar.Enabled = true;
                     btnSalir.Enabled = false;
                     btnAyudaContextual.Enabled = false;
-                    btnBitacoraCambios.Enabled = false;
                     btnLimpiar.Enabled = false;
 
                     btnGestionEmail1N.Enabled = false;
@@ -345,12 +374,16 @@ namespace UI.PN1
         private void LimpiarCampos()
         {
             txtDni.Clear();
+            if (cmbSexo.Items.Count > 0) cmbSexo.SelectedIndex = 0;
             txtApellidos.Clear();
             txtNombres.Clear();
+            dtpFechaNacimiento.Value = DateTime.Today;
+            txtCobertura.Text = "Particular";
             txtEmail.Clear();
             txtCelular.Clear();
             txtDireccion.Clear();
             _idPacienteSeleccionado = 0;
+            ActualizarEtiquetaEdad();
         }
 
         private void CargarCamposDesdeGrilla()
@@ -375,6 +408,26 @@ namespace UI.PN1
                 txtEmail.Text = ObtenerValorCelda(row, "colEmail", "EMAIL");
                 txtCelular.Text = ObtenerValorCelda(row, "colCelular", "CELULAR");
                 txtDireccion.Text = ObtenerValorCelda(row, "colDireccion", "DIRECCION");
+
+                string sexoVal = ObtenerValorCelda(row, "colSexo", "SEXO");
+                if (string.Equals(sexoVal, "Femenino", StringComparison.OrdinalIgnoreCase))
+                    cmbSexo.SelectedItem = "Femenino";
+                else
+                    cmbSexo.SelectedItem = "Masculino";
+
+                string cobVal = ObtenerValorCelda(row, "colCobertura", "COBERTURA");
+                txtCobertura.Text = string.IsNullOrWhiteSpace(cobVal) ? "Particular" : cobVal;
+
+                string fnVal = ObtenerValorCelda(row, "colFechaNacimiento", "FECHA_NACIMIENTO");
+                if (DateTime.TryParse(fnVal, out DateTime parsedFn) && parsedFn >= dtpFechaNacimiento.MinDate && parsedFn <= dtpFechaNacimiento.MaxDate)
+                {
+                    dtpFechaNacimiento.Value = parsedFn.Date;
+                }
+                else
+                {
+                    dtpFechaNacimiento.Value = DateTime.Today;
+                }
+                ActualizarEtiquetaEdad();
             }
             catch { }
         }
@@ -521,30 +574,22 @@ namespace UI.PN1
 
                         if (_dniCifradoActivo)
                         {
-                            // Cifrar a AES-256 (Base64)
                             row["DNI"] = _pacienteBLL.CifrarDniAES256(valorActual);
                         }
                         else
                         {
-                            // Desrevertir a número DNI original
                             row["DNI"] = _pacienteBLL.DescifrarDniAES256(valorActual);
                         }
                     }
                 }
 
-                // Ajustar el ancho visual de la columna DNI
                 if (dgvClientes.Columns["colDni"] != null)
                 {
-                    dgvClientes.Columns["colDni"].Width = _dniCifradoActivo ? 210 : 90;
+                    dgvClientes.Columns["colDni"].Width = _dniCifradoActivo ? 190 : 75;
                 }
 
-                // Actualizar la etiqueta del panel de campos
                 lblDni.Text = _dniCifradoActivo ? " DNI (AES):" : " DNI:";
-
-                // Actualizar texto y tooltip del botón
                 ActualizarEstadoBotonRevertir();
-
-                // Reflejar el valor de la fila seleccionada en txtDni
                 CargarCamposDesdeGrilla();
 
                 if (_dniCifradoActivo)
@@ -600,7 +645,7 @@ namespace UI.PN1
                 _dniCifradoActivo = false;
                 if (dgvClientes.Columns["colDni"] != null)
                 {
-                    dgvClientes.Columns["colDni"].Width = 90;
+                    dgvClientes.Columns["colDni"].Width = 75;
                 }
                 lblDni.Text = " DNI:";
                 ActualizarEstadoBotonRevertir();
@@ -624,6 +669,9 @@ namespace UI.PN1
             string email = txtEmail.Text.Trim();
             string celular = txtCelular.Text.Trim();
             string direccion = txtDireccion.Text.Trim();
+            DateTime fechaNacimiento = dtpFechaNacimiento.Value.Date;
+            string sexo = cmbSexo.SelectedItem?.ToString() ?? "Masculino";
+            string cobertura = string.IsNullOrWhiteSpace(txtCobertura.Text) ? "Particular" : txtCobertura.Text.Trim();
 
             if (_idPacienteSeleccionado <= 0)
             {
@@ -646,7 +694,7 @@ namespace UI.PN1
 
             try
             {
-                _pacienteBLL.ModificarMaestro(_idPacienteSeleccionado, dni, apellidos, nombres, email, celular, direccion);
+                _pacienteBLL.ModificarMaestro(_idPacienteSeleccionado, dni, apellidos, nombres, email, celular, direccion, fechaNacimiento, sexo, cobertura);
                 AgregarMensaje($"Modificación exitosa: Cliente DNI {dni} actualizado.");
                 MessageBox.Show("Cliente modificado exitosamente con repercusión en sus contactos 1:N.", "Modificación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -670,23 +718,6 @@ namespace UI.PN1
         private void btnSalir_Click(object? sender, EventArgs e)
         {
             Close();
-        }
-
-        private void btnBitacoraCambios_Click(object? sender, EventArgs e)
-        {
-            string? dniSeleccionado = null;
-            if (dgvClientes.CurrentRow != null)
-            {
-                dniSeleccionado = ObtenerValorCelda(dgvClientes.CurrentRow, "colDni", "DNI");
-                if (_dniCifradoActivo || ServicioCriptografiaAES.EsTextoCifrado(dniSeleccionado))
-                {
-                    dniSeleccionado = _pacienteBLL.DescifrarDniAES256(dniSeleccionado);
-                }
-            }
-
-            using var frmBitacora = new UI.PN2.frmBitacoraCambiosConsultas(dniSeleccionado);
-            frmBitacora.ShowDialog(this);
-            CargarGrillaClientes();
         }
 
         private void btnGestionContactos1N_Click(object? sender, EventArgs e)
@@ -718,7 +749,7 @@ namespace UI.PN1
 
         #endregion
 
-        #region Serialización y Des-serialización XML
+        #region Serialización y Des-serialización XML (Directa en Grilla, Sin Tocar BD ni Dígito Verificador)
 
         private void btnExaminarSerializar_Click(object? sender, EventArgs e)
         {
@@ -770,11 +801,19 @@ namespace UI.PN1
                         dniVal = _pacienteBLL.DescifrarDniAES256(dniVal);
                     }
 
+                    string fnRaw = ObtenerValorCelda(row, "colFechaNacimiento", "FECHA_NACIMIENTO");
+                    string fnStr = DateTime.TryParse(fnRaw, out DateTime fnDate)
+                        ? fnDate.ToString("yyyy-MM-dd")
+                        : DateTime.Today.ToString("yyyy-MM-dd");
+
                     container.Clientes.Add(new ClienteXmlItem
                     {
                         DNI = dniVal,
                         APELLIDOS = ObtenerValorCelda(row, "colApellidos", "APELLIDOS"),
                         NOMBRES = ObtenerValorCelda(row, "colNombres", "NOMBRES"),
+                        FECHA_NACIMIENTO = fnStr,
+                        SEXO = string.IsNullOrWhiteSpace(ObtenerValorCelda(row, "colSexo", "SEXO")) ? "Masculino" : ObtenerValorCelda(row, "colSexo", "SEXO"),
+                        COBERTURA = string.IsNullOrWhiteSpace(ObtenerValorCelda(row, "colCobertura", "COBERTURA")) ? "Particular" : ObtenerValorCelda(row, "colCobertura", "COBERTURA"),
                         EMAIL = ObtenerValorCelda(row, "colEmail", "EMAIL"),
                         CELULAR = ObtenerValorCelda(row, "colCelular", "CELULAR"),
                         DIRECCION = ObtenerValorCelda(row, "colDireccion", "DIRECCION")
@@ -846,26 +885,74 @@ namespace UI.PN1
                     return;
                 }
 
-                // Sincronizar y persistir clientes en la base de datos
-                var lista = new List<(string dni, string apellidos, string nombres, string email, string celular, string direccion)>();
+                // Cargar directamente en la grilla en memoria (sin golpear la base de datos ni tocar el Dígito Verificador)
+                var dt = new DataTable();
+                dt.Columns.Add("IdPaciente_DNI101", typeof(int));
+                dt.Columns.Add("DNI", typeof(string));
+                dt.Columns.Add("APELLIDOS", typeof(string));
+                dt.Columns.Add("NOMBRES", typeof(string));
+                dt.Columns.Add("FECHA_NACIMIENTO", typeof(DateTime));
+                dt.Columns.Add("SEXO", typeof(string));
+                dt.Columns.Add("COBERTURA", typeof(string));
+                dt.Columns.Add("EMAIL", typeof(string));
+                dt.Columns.Add("CELULAR", typeof(string));
+                dt.Columns.Add("DIRECCION", typeof(string));
+
+                int idx = 1;
                 foreach (var item in container.Clientes)
                 {
-                    string dniLimpio = item.DNI;
+                    string dniLimpio = item.DNI?.Trim() ?? string.Empty;
                     if (ServicioCriptografiaAES.EsTextoCifrado(dniLimpio))
                     {
                         dniLimpio = _pacienteBLL.DescifrarDniAES256(dniLimpio);
                     }
-                    lista.Add((dniLimpio, item.APELLIDOS, item.NOMBRES, item.EMAIL, item.CELULAR, item.DIRECCION));
+
+                    DateTime fn = DateTime.Today;
+                    if (!string.IsNullOrWhiteSpace(item.FECHA_NACIMIENTO) && DateTime.TryParse(item.FECHA_NACIMIENTO, out DateTime parsedFn))
+                    {
+                        fn = parsedFn.Date;
+                    }
+
+                    string sexo = string.IsNullOrWhiteSpace(item.SEXO) ? "Masculino" : item.SEXO.Trim();
+                    string cobertura = string.IsNullOrWhiteSpace(item.COBERTURA) ? "Particular" : item.COBERTURA.Trim();
+
+                    dt.Rows.Add(
+                        idx++,
+                        dniLimpio,
+                        item.APELLIDOS ?? string.Empty,
+                        item.NOMBRES ?? string.Empty,
+                        fn,
+                        sexo,
+                        cobertura,
+                        item.EMAIL ?? string.Empty,
+                        item.CELULAR ?? string.Empty,
+                        item.DIRECCION ?? string.Empty
+                    );
                 }
 
-                _pacienteBLL.ImportarClientesDesdeXml(lista);
+                dgvClientes.DataSource = dt;
+                if (dgvClientes.Columns["IdPaciente_DNI101"] != null)
+                {
+                    dgvClientes.Columns["IdPaciente_DNI101"].Visible = false;
+                }
 
-                // Recargar grilla desde base de datos asegurando persistencia real y IDs válidos
-                CargarGrillaClientes();
+                _dniCifradoActivo = false;
+                ActualizarEstadoBotonRevertir();
+                if (dgvClientes.Columns["colDni"] != null)
+                {
+                    dgvClientes.Columns["colDni"].Width = 75;
+                }
+                lblDni.Text = " DNI:";
 
-                AgregarMensaje($"DES-SERIALIZACIÓN EXITOSA: {container.Clientes.Count} clientes cargados desde '{Path.GetFileName(ruta)}' y sincronizados en la base de datos.");
+                if (dgvClientes.Rows.Count > 0)
+                {
+                    dgvClientes.Rows[0].Selected = true;
+                    CargarCamposDesdeGrilla();
+                }
+
+                AgregarMensaje($"DES-SERIALIZACIÓN EXITOSA: {container.Clientes.Count} clientes cargados en la grilla desde '{Path.GetFileName(ruta)}'.");
                 MessageBox.Show(
-                    $"El archivo XML se ha des-serializado correctamente.\nSe sincronizaron {container.Clientes.Count} registros en la base de datos y la grilla.",
+                    $"El archivo XML se ha des-serializado correctamente.\nSe cargaron {container.Clientes.Count} registros en la matriz visual de clientes.",
                     "Des-serialización XML Exitosa",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
